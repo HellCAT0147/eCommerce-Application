@@ -1,0 +1,20 @@
+{
+  "name": "e-commerce",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "lint": "eslint . --ext .ts --color",
+    "lint:fix": "eslint . --ext .ts --fix --color",
+    "format": "npx prettier . --write",
+    "format:staged": "npx pretty-quick --staged",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [],
+  "author": "HAQ",
+  "license": "ISC",
+  "homepage": ""
+}
