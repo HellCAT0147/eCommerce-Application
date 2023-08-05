@@ -32,3 +32,12 @@ Our Tech Arsenal 🛠️:
 - 🃏 Jest: Unleashing unit testing prowess.
 - ✨ Prettier: Ensuring code is beautifully formatted.
 - 🐶 Husky: Ensuring code quality at every commit.
+
+## Project Installing Guide
+
+1. 📥 **[Download](https://nodejs.org/dist/v18.17.0/)** and 🔨 **install nodejs** v18.17.0 (it's the latest LTS version in developing period).
+1. 🆕 Update npm version by running "**npm i -g npm@9.8.1**" in your command line.
+1. 🖇 Copy link (https://github.com/HellCAT0147/eCommerce-Application.git) of this repository and use "**git clone _link_to_repository_**" to set local version in your IDE.
+1. 📂 Run "**npm i**" to install all dependencies.
+1. 🪄 Check scripts above in order to run the project, e.g. "**npm run serve**".
+1. 🍻 Enjoy!
