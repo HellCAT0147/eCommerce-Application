@@ -35,23 +35,23 @@ Our Tech Arsenal 🛠️:
 
 ## Scripts
 
-Run **npm run ...** :
+Run `npm run ...`:
 
-- 🚀 **serve**: to launch the development server using Webpack, opening the application in a browser;
-- 📂 **dev**: to compile the application in a "dist" folder;
-- 📁 **prod**: does the same thing as **dev**, but it compresses the code in all files as much as possible. This script is for deployment;
-- 🔎🪲 **lint**: to run ESLint analyzing TypeScript files in the project directory, highlighting any issues **without** making fixes.
-- 🩴🪲 **lint:fix**: to run ESLint and attempts to **automatically fix** issues in TypeScript files within the project directory.
-- 🖌️ **format**: to apply Prettier formatting to **all** files in the project;
-- 🖍️ **format:staged**: to use pretty-quick formatting **staged** files according to Prettier's rules;
-- 💉 **test**: to execute Jest tests checking the functionality of this application;
-- 🐶 **prepare**: to install Husky hooks in the project enabling pre-commit checks.
+- 🚀 `serve`: to launch the development server using Webpack, opening the application in a browser;
+- 📂 `dev`: to compile the application in a "dist" folder;
+- 📁 `prod`: does the same thing as `dev`, but it compresses the code in all files as much as possible. This script is for deployment;
+- 🔎🐞 `lint`: to run ESLint analyzing TypeScript files in the project directory, highlighting any issues **without** making fixes.
+- 👟🐞 `lint:fix`: to run ESLint and attempts to **automatically fix** issues in TypeScript files within the project directory.
+- 🖌️ `format`: to apply Prettier formatting to **all** files in the project;
+- 🖍️ `format:staged`: to use pretty-quick formatting **staged** files according to Prettier's rules;
+- 💉 `test`: to execute Jest tests checking the functionality of this application;
+- 🐶 `prepare`: to install Husky hooks in the project enabling pre-commit checks.
 
 ## Project Installing Guide
 
 1. 📥 **[Download](https://nodejs.org/dist/v18.17.0/)** and 🔨 **install nodejs** v18.17.0 (it's the latest LTS version in developing period).
-1. 🆕 Update npm version by running "**npm i -g npm@9.8.1**" in your command line.
-1. 🖇 Copy link (https://github.com/HellCAT0147/eCommerce-Application.git) of this repository and use "**git clone _link_to_repository_**" to set local version in your IDE.
-1. 🏃 Run "**npm i**" to install all dependencies.
-1. 🪄 Check scripts above in order to run the project, e.g. "**npm run serve**".
+1. 🆕 Update npm version by running `npm i -g npm@9.8.1` in your command line.
+1. 🖇 Copy link (https://github.com/HellCAT0147/eCommerce-Application.git) of this repository and use `git clone link_to_repository` to set local version in your IDE.
+1. 🏃 Run `npm i` to install all dependencies.
+1. ✅ Check scripts above in order to run the project, e.g. `npm run serve`.
 1. 🍻 Enjoy!
