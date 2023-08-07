@@ -5,7 +5,6 @@ class App {
   private controller: Controller = new Controller();
 
   public start(): void {
-    console.log('App connected');
     createTemplate();
 
     const body: HTMLElement | null = document.querySelector('.body');

@@ -16,7 +16,6 @@ export default function createTemplate(): HTMLBodyElement | null {
     body.append(main);
     body.append(footer);
   }
-  console.log('Template connected');
 
   return body || null;
 }

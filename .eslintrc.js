@@ -20,7 +20,7 @@ module.exports = {
   plugins: ['prettier', '@typescript-eslint'],
   rules: {
     'no-debugger': 'off',
-    'no-console': 0,
+    'no-console': 'error',
     'class-methods-use-this': 'off',
     'prettier/prettier': 'error',
     '@typescript-eslint/no-explicit-any': 'error',
