@@ -1,10 +1,22 @@
 @font-face {
-  font-family: 'Exo 2';
-  src: url('../assets/fonts/Exo 2 Regular.eot');
-  src: url('../assets/fonts/Exo 2 Regular.eot?#iefix') format('embedded-opentype'),
-    url('../assets/fonts/Exo 2 Regular.woff2') format('woff2'), url('../assets/fonts/Exo 2 Regular.woff') format('woff');
+  font-family: 'Oswald';
+  src: url('../assets/fonts/Oswald Regular.eot');
+  src: url('../assets/fonts/Oswald Regular.eot?#iefix') format('embedded-opentype'),
+    url('../assets/fonts/Oswald Regular.woff2') format('woff2'),
+    url('../assets/fonts/Oswald Regular.woff') format('woff');
   font-weight: 400;
   font-style: normal;
   font-stretch: normal;
-  unicode-range: U+0020-2039;
+  unicode-range: U+0020-2074;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('../assets/fonts/Roboto.eot');
+  src: url('../assets/fonts/Roboto.eot?#iefix') format('embedded-opentype'),
+    url('../assets/fonts/Roboto.woff2') format('woff2'), url('../assets/fonts/Roboto.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-stretch: normal;
+  unicode-range: U+0020-2044;
 }
