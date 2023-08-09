@@ -7,7 +7,7 @@ export default function createTemplate(): HTMLBodyElement | null {
   main.className = 'main';
   const title: HTMLElement = document.createElement('h1');
   title.className = 'title';
-  title.textContent = `eCommerce`;
+  title.textContent = `eCommerce - Registration Page`;
   const footer: HTMLElement = document.createElement('footer');
   footer.className = 'footer';
   if (body) {
