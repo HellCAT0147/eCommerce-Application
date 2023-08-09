@@ -1,7 +1,9 @@
+import createHeader from './header';
+
 export default function createTemplate(): HTMLBodyElement | null {
   const body: HTMLBodyElement | null = document.querySelector('body');
   if (body) body.className = 'body';
-  const header: HTMLElement = document.createElement('header');
+  const header: HTMLElement = createHeader();
   header.className = 'header';
   const main: HTMLElement = document.createElement('main');
   main.className = 'main';
