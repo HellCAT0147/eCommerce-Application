@@ -1,8 +1,14 @@
 .buttons {
   display: block;
-  opacity: 0.7;
+  @include font(500, 1.4rem, 100%, $color-dark);
   cursor: pointer;
-
+  &_colored {
+    border: none;
+    padding: 18px 55px;
+    color: $color-light;
+    background: $color-dark;
+    letter-spacing: 0.05rem;
+  }
   &:active {
     scale: 0.9;
   }

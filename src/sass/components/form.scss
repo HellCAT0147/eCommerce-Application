@@ -1,0 +1,14 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  @extend %font-second;
+  @include font(400, 1.6rem, 100%, $color-dark);
+  &__field {
+    display: flex;
+    border: none;
+  }
+  &__input {
+    padding: 14px 16px;
+    width: 100%;
+  }
+}
