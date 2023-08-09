@@ -13,8 +13,8 @@ export default function createForm(pageName: string): HTMLFormElement {
   const labelPassword: HTMLLabelElement = createLabel(pageName, 'password');
   const inputPassword: HTMLInputElement = createInput(pageName, 'password');
   const buttonForm: HTMLButtonElement = document.createElement('button');
-  buttonForm.className = `buttons buttons_colored form__button ${pageName}__button`;
-  buttonForm.textContent = 'create an account'.toUpperCase();
+  buttonForm.className = `buttons buttons_colored form__button ${pageName}__button ${pageName}__button_sign`;
+  buttonForm.textContent = 'sign in'.toUpperCase();
 
   formFieldEmail.append(labelEmail);
   formFieldEmail.append(inputEmail);
