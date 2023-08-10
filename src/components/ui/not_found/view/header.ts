@@ -4,8 +4,7 @@ export default function createHeader(): HTMLElement {
   const header: HTMLElement = document.createElement('header');
   header.className = 'header';
   const logo: HTMLElement = document.createElement('div');
-  logo.className = 'header__logo header__buttons';
-  logo.setAttribute('id', `${Pages.MAIN}`);
+  logo.className = 'header__logo';
   const navigation: HTMLElement = document.createElement('nav');
   navigation.className = 'header__nav';
   const signButton: HTMLElement = document.createElement('button');

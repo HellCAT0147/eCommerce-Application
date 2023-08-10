@@ -1,6 +1,6 @@
-import createHeader from '../../main/view/header';
+import createHeader from './header';
 
-export default function createTemplateLogin(): HTMLBodyElement | null {
+export default function createTemplateNotFound(): HTMLBodyElement | null {
   const body: HTMLBodyElement | null = document.querySelector('body');
   if (body) {
     body.className = 'body';
@@ -12,7 +12,7 @@ export default function createTemplateLogin(): HTMLBodyElement | null {
   main.className = 'main';
   const title: HTMLElement = document.createElement('h1');
   title.className = 'title';
-  title.textContent = `eCommerce - Login Page`;
+  title.textContent = `404 Not found`;
   const footer: HTMLElement = document.createElement('footer');
   footer.className = 'footer';
   if (body) {

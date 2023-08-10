@@ -1,7 +1,12 @@
-export default function createTemplate(): HTMLBodyElement | null {
+import createHeader from '../../main/view/header';
+
+export default function createTemplateRegistration(): HTMLBodyElement | null {
   const body: HTMLBodyElement | null = document.querySelector('body');
-  if (body) body.className = 'body';
-  const header: HTMLElement = document.createElement('header');
+  if (body) {
+    body.className = 'body';
+    body.innerHTML = '';
+  }
+  const header: HTMLElement = createHeader();
   header.className = 'header';
   const main: HTMLElement = document.createElement('main');
   main.className = 'main';
@@ -11,10 +16,8 @@ export default function createTemplate(): HTMLBodyElement | null {
   const footer: HTMLElement = document.createElement('footer');
   footer.className = 'footer';
   if (body) {
-    body.append(header);
     main.append(title);
-    body.append(main);
-    body.append(footer);
+    body.append(header, main, footer);
   }
 
   return body || null;
