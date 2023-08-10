@@ -6,10 +6,10 @@ export default function createHeader(): HTMLElement {
   const navigation: HTMLElement = document.createElement('nav');
   navigation.className = 'header__nav';
   const signButton: HTMLElement = document.createElement('button');
-  signButton.className = 'buttons';
+  signButton.className = 'buttons buttons_empty header__buttons header__buttons_sign';
   signButton.textContent = 'SIGN IN';
   const createButton: HTMLElement = document.createElement('button');
-  createButton.className = 'buttons';
+  createButton.className = 'buttons buttons_empty header__buttons header__buttons_create';
   createButton.textContent = 'CREATE AN ACCOUNT';
   const footer: HTMLElement = document.createElement('footer');
   footer.className = 'footer';
