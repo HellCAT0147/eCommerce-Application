@@ -13,8 +13,13 @@
   &__input {
     padding: 14px 16px;
     width: 100%;
-    border: 1px solid $color-dark;
+    border: $input-border solid $color-input;
+    border-collapse: collapse;
     outline: none;
+
+    &:focus {
+      box-shadow: 0 0 0 1px $color-input;
+    }
   }
   &__button_eye_opened {
     @include eye-wrapper;
@@ -24,12 +29,24 @@
     @include eye-wrapper;
     background-image: url('../assets/ico/login/eye-closed.svg');
   }
-  .valid {
-    border-color: $color-success-intensive;
-    color: darken($color: $color-success-intensive, $amount: 10);
+}
+
+.valid {
+  border-color: $color-success-intensive;
+
+  &:focus {
+    box-shadow: 0 0 0 1px $color-success-intensive;
   }
-  .invalid {
-    border-color: $color-main-second;
-    color: darken($color: $color-main-second, $amount: 10);
+}
+
+.invalid {
+  border-color: $color-main-second;
+
+  &:focus {
+    box-shadow: 0 0 0 1px $color-main-second;
   }
+}
+
+.required {
+  color: $color-main-second;
 }

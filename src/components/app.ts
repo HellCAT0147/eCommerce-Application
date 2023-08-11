@@ -7,11 +7,6 @@ class App {
   public start(): void {
     createTemplate();
 
-    const body: HTMLElement | null = document.querySelector('.body');
-    if (body) {
-      body.addEventListener('click', (e: MouseEvent): void => this.controller.getTest(e));
-    }
-
     const inputs: NodeListOf<HTMLInputElement> = document.querySelectorAll('input');
     inputs.forEach((input) => input.addEventListener('input', (e) => this.controller.checkField(e)));
   }

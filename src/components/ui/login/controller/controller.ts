@@ -11,8 +11,6 @@ class Controller {
     this.formView = new FormView();
   }
 
-  public getTest(event: MouseEvent): void {}
-
   public checkField(e: Event): void {
     const target: HTMLInputElement = e.target as HTMLInputElement;
     let isValid: boolean;

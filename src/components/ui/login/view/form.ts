@@ -46,6 +46,7 @@ export default class FormView {
       showPassword.classList.toggle('form__button_eye_closed');
       if (showPassword.classList.contains('form__button_eye_opened')) password.type = 'text';
       else password.type = 'password';
+      inputPassword.focus();
     });
     return showPassword;
   }
