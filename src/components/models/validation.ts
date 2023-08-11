@@ -11,7 +11,7 @@ enum PasswordErrors {
   digit = 'Password must contain at least one digit (0-9).',
   char = 'Password must contain at least one special character (e.g., !@#$%^&*).',
   short = 'Password must be at least 8 characters long.',
-  space = 'Password must not contain leading or trailing whitespace.',
+  space = 'Password must not contain whitespace.',
 }
 
 type Errors = MailErrors | PasswordErrors;

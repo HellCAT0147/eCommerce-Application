@@ -39,7 +39,7 @@ export default class ValidationModel {
   }
 
   public checkPassword(password: string): boolean {
-    const regexp: RegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[^\s]{8,}$/;
+    const regexp: RegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[^\s]{8,}$/;
     if (password.match(regexp)) {
       this.password = password;
       this.controller.setErrors('password', []);
@@ -53,7 +53,7 @@ export default class ValidationModel {
     if (!password.match(/[0-9]/)) errors.push(PasswordErrors.digit);
     if (!password.match(/[!@#$%^&*(),.?":{}|<>]/)) errors.push(PasswordErrors.char);
     if (password.length < 8) errors.push(PasswordErrors.short);
-    if (password !== password.trim()) errors.push(PasswordErrors.space);
+    if (password.match(/\s/)) errors.push(PasswordErrors.space);
 
     this.controller.setErrors('password', errors);
 
