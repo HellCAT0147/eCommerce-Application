@@ -1,20 +1,39 @@
+@import '../abstracts/constants';
 .login {
   &__form {
     margin: 20px auto;
-    row-gap: 15px;
+    row-gap: $base-intend;
   }
+
   &__field {
     min-width: 606px;
     justify-content: space-between;
     position: relative;
   }
+
   &__input {
     max-width: 443px;
   }
+
   &__button {
     max-width: fit-content;
   }
+
   &__input_password {
     padding-right: 30px;
+  }
+
+  &__errors {
+    max-width: fit-content;
+    width: 100%;
+    margin-top: -$base-intend;
+    padding: 5px 15px;
+    align-self: flex-end;
+    text-align: right;
+    background-color: $color-error;
+  }
+
+  &__error {
+    padding: 5px 0;
   }
 }

@@ -1,3 +1,5 @@
+import { InputType } from '../../../models/login';
+import { MailErrors } from '../../../models/validation';
 import createInput from './input';
 import createLabel from './label';
 
@@ -60,6 +62,22 @@ export default class FormView {
         input.classList.remove('valid');
         input.classList.add('invalid');
       }
+    }
+  }
+
+  public showErrors(place: HTMLElement | null, errors: MailErrors[], inputType: InputType): void {
+    if (place) {
+      const prevErrorsHolder: HTMLDivElement | null = document.querySelector(`.login__errors_${inputType}`);
+      if (prevErrorsHolder) prevErrorsHolder.outerHTML = '';
+      const errorsHolder: HTMLDivElement = document.createElement('div');
+      errorsHolder.className = `login__errors login__errors_${inputType}`;
+      errors.forEach((error) => {
+        const p: HTMLParagraphElement = document.createElement('p');
+        p.className = 'login__error';
+        p.textContent = error;
+        errorsHolder.append(p);
+      });
+      if (errors.length) place.after(errorsHolder);
     }
   }
 }

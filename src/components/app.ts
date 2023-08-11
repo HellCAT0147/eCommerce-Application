@@ -7,7 +7,7 @@ class App {
   public start(): void {
     createTemplate();
 
-    const inputs: NodeListOf<HTMLInputElement> = document.querySelectorAll('input');
+    const inputs: NodeListOf<HTMLInputElement> = document.querySelectorAll('.form__input');
     inputs.forEach((input) => input.addEventListener('input', (e) => this.controller.checkField(e)));
   }
 }

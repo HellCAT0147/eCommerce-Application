@@ -6,10 +6,12 @@
   flex-direction: column;
   @extend %font-second;
   @include font(400, 1.6rem, 100%, $color-dark);
+
   &__field {
     display: flex;
     border: none;
   }
+
   &__input {
     padding: 14px 16px;
     width: 100%;
@@ -21,32 +23,34 @@
       box-shadow: 0 0 0 1px $color-input;
     }
   }
+
   &__button_eye_opened {
     @include eye-wrapper;
     background-image: url('../assets/ico/login/eye-opened.svg');
   }
+
   &__button_eye_closed {
     @include eye-wrapper;
     background-image: url('../assets/ico/login/eye-closed.svg');
   }
-}
 
-.valid {
-  border-color: $color-success-intensive;
+  .valid {
+    border-color: $color-success-intensive;
 
-  &:focus {
-    box-shadow: 0 0 0 1px $color-success-intensive;
+    &:focus {
+      box-shadow: 0 0 0 1px $color-success-intensive;
+    }
   }
-}
 
-.invalid {
-  border-color: $color-main-second;
+  .invalid {
+    border-color: $color-main-second;
 
-  &:focus {
-    box-shadow: 0 0 0 1px $color-main-second;
+    &:focus {
+      box-shadow: 0 0 0 1px $color-main-second;
+    }
   }
-}
 
-.required {
-  color: $color-main-second;
+  .required {
+    color: $color-main-second;
+  }
 }

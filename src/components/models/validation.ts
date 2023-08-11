@@ -5,4 +5,13 @@ enum MailErrors {
   format = 'Email address must be properly formatted (e.g., user@example.com).',
 }
 
-export default MailErrors;
+enum PasswordErrors {
+  lower = 'Password must contain at least one lowercase letter (a-z).',
+  upper = 'Password must contain at least one uppercase letter (A-Z).',
+  digit = 'Password must contain at least one digit (0-9).',
+  char = 'Password must contain at least one special character (e.g., !@#$%^&*).',
+  short = 'Password must be at least 8 characters long.',
+  space = 'Password must not contain leading or trailing whitespace.',
+}
+
+export { MailErrors, PasswordErrors };
