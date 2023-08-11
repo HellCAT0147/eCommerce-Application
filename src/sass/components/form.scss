@@ -1,3 +1,6 @@
+@import '../abstracts/mixins';
+@import '../abstracts/constants';
+
 .form {
   display: flex;
   flex-direction: column;
@@ -10,5 +13,23 @@
   &__input {
     padding: 14px 16px;
     width: 100%;
+    border: 1px solid $color-dark;
+    outline: none;
+  }
+  &__button_eye_opened {
+    @include eye-wrapper;
+    background-image: url('../assets/ico/login/eye-opened.svg');
+  }
+  &__button_eye_closed {
+    @include eye-wrapper;
+    background-image: url('../assets/ico/login/eye-closed.svg');
+  }
+  .valid {
+    border-color: $color-success-intensive;
+    color: darken($color: $color-success-intensive, $amount: 10);
+  }
+  .invalid {
+    border-color: $color-main-second;
+    color: darken($color: $color-main-second, $amount: 10);
   }
 }

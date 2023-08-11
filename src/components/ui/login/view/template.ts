@@ -1,4 +1,4 @@
-import createForm from './form';
+import FormView from './form';
 
 export default function createTemplate(): HTMLBodyElement | null {
   const body: HTMLBodyElement | null = document.querySelector('body');
@@ -10,7 +10,8 @@ export default function createTemplate(): HTMLBodyElement | null {
   const title: HTMLElement = document.createElement('h1');
   title.className = 'title';
   title.textContent = `eCommerce - Login Page`;
-  const form: HTMLFormElement = createForm('login');
+  const formView: FormView = new FormView('login');
+  const form: HTMLFormElement = formView.getForm();
   const footer: HTMLElement = document.createElement('footer');
   footer.className = 'footer';
   if (body) {

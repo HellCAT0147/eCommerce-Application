@@ -6,11 +6,15 @@
   &__field {
     min-width: 606px;
     justify-content: space-between;
+    position: relative;
   }
   &__input {
     max-width: 443px;
   }
   &__button {
     max-width: fit-content;
+  }
+  &__input_password {
+    padding-right: 30px;
   }
 }

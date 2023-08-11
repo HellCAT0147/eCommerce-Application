@@ -10,3 +10,16 @@
     @content;
   }
 }
+
+@mixin eye-wrapper {
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-size: contain;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}

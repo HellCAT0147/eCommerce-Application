@@ -11,6 +11,9 @@ class App {
     if (body) {
       body.addEventListener('click', (e: MouseEvent): void => this.controller.getTest(e));
     }
+
+    const inputs: NodeListOf<HTMLInputElement> = document.querySelectorAll('input');
+    inputs.forEach((input) => input.addEventListener('input', (e) => this.controller.checkField(e)));
   }
 }
 export default App;
