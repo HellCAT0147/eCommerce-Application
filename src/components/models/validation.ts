@@ -1,8 +1,8 @@
 enum MailErrors {
-  at = "Email address must contain an '@' symbol separating local part and domain name.",
-  domain = 'Email address must contain a domain name (e.g., example.com).',
-  space = 'Email address must not contain leading or trailing whitespace.',
-  format = 'Email address must be properly formatted (e.g., user@example.com).',
+  at = "Email must contain an '@'.",
+  domain = 'Email must contain a domain name (e.g., example.com).',
+  space = 'Email must not contain leading or trailing whitespace.',
+  format = 'Email must be properly formatted (e.g., user@example.com).',
 }
 
 enum PasswordErrors {
@@ -14,4 +14,6 @@ enum PasswordErrors {
   space = 'Password must not contain leading or trailing whitespace.',
 }
 
-export { MailErrors, PasswordErrors };
+type Errors = MailErrors | PasswordErrors;
+
+export { MailErrors, PasswordErrors, Errors };

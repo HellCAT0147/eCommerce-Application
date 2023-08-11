@@ -1,4 +1,4 @@
-import { MailErrors } from '../../../models/validation';
+import { MailErrors, PasswordErrors } from '../../../models/validation';
 import type Controller from '../controller/controller';
 
 export default class ValidationModel {
@@ -42,9 +42,21 @@ export default class ValidationModel {
     const regexp: RegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[^\s]{8,}$/;
     if (password.match(regexp)) {
       this.password = password;
+      this.controller.setErrors('password', []);
       return true;
     }
     this.password = '';
+
+    const errors: PasswordErrors[] = [];
+    if (!password.match(/[a-z]/)) errors.push(PasswordErrors.lower);
+    if (!password.match(/[A-Z]/)) errors.push(PasswordErrors.upper);
+    if (!password.match(/[0-9]/)) errors.push(PasswordErrors.digit);
+    if (!password.match(/[!@#$%^&*(),.?":{}|<>]/)) errors.push(PasswordErrors.char);
+    if (password.length < 8) errors.push(PasswordErrors.short);
+    if (password !== password.trim()) errors.push(PasswordErrors.space);
+
+    this.controller.setErrors('password', errors);
+
     return false;
   }
 }

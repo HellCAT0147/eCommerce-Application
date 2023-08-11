@@ -1,7 +1,7 @@
 import { InputType } from '../../../models/login';
 import ValidationModel from '../model/validation';
 import FormView from '../view/form';
-import { MailErrors, PasswordErrors } from '../../../models/validation';
+import { Errors } from '../../../models/validation';
 
 class Controller {
   private validationModel: ValidationModel;
@@ -24,7 +24,7 @@ class Controller {
     this.formView.highlightInput(target, isValid);
   }
 
-  public setErrors(inputType: InputType, errors: MailErrors[]): void {
+  public setErrors(inputType: InputType, errors: Errors[]): void {
     const inputs: NodeListOf<HTMLInputElement> = document.querySelectorAll('.form__input');
     inputs.forEach((input) => {
       if (input.classList.contains(`login__input_${inputType}`)) {

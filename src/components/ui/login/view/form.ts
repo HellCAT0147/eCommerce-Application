@@ -1,5 +1,5 @@
 import { InputType } from '../../../models/login';
-import { MailErrors } from '../../../models/validation';
+import { Errors } from '../../../models/validation';
 import createInput from './input';
 import createLabel from './label';
 
@@ -65,7 +65,7 @@ export default class FormView {
     }
   }
 
-  public showErrors(place: HTMLElement | null, errors: MailErrors[], inputType: InputType): void {
+  public showErrors(place: HTMLElement | null, errors: Errors[], inputType: InputType): void {
     if (place) {
       const prevErrorsHolder: HTMLDivElement | null = document.querySelector(`.login__errors_${inputType}`);
       if (prevErrorsHolder) prevErrorsHolder.outerHTML = '';
