@@ -6,6 +6,12 @@ class Router {
 
   constructor(routes: Routes[]) {
     this.routes = routes;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      this.browserChangePath();
+    });
+
+    window.addEventListener('popstate', this.browserChangePath.bind(this));
   }
 
   public parseUrl(url: string): UrlParsed {
@@ -23,6 +29,7 @@ class Router {
     const urlParsed: UrlParsed = this.parseUrl(url);
     const pathForFind: string = urlParsed.resource === '' ? urlParsed.path : `${urlParsed.path}/${urlParsed.resource}`;
     const route: Routes | undefined = this.routes.find((routeExisting) => routeExisting.path === pathForFind);
+
     if (!route) {
       this.navigate(Pages.NOT_FOUND);
     } else {
@@ -48,7 +55,7 @@ class Router {
     const idElement: string | null = element.getAttribute('id');
 
     if (idElement) {
-      url = idElement;
+      url = `${idElement}`;
     }
 
     return url;
@@ -61,6 +68,16 @@ class Router {
     if (navButton) {
       this.navigate(this.getUrlElement(navButton));
     }
+  }
+
+  private getBrowserPath(): string {
+    const positionFirstSymbol: number = 1;
+    return window.location.pathname.slice(positionFirstSymbol);
+  }
+
+  private browserChangePath(): void {
+    const path: string = this.getBrowserPath();
+    this.navigate(path);
   }
 }
 

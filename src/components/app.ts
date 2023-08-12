@@ -1,6 +1,5 @@
 import { Routes } from './models/types';
 import createTemplateLogin from './ui/login/view/template';
-import Controller from './ui/main/controller/controller';
 import createTemplate from './ui/main/view/template';
 import createTemplateNotFound from './ui/not_found/view/template';
 import createTemplateRegistration from './ui/registration/view/template';
@@ -8,8 +7,6 @@ import { Pages } from './ui/router/pages';
 import Router from './ui/router/router';
 
 class App {
-  private controller: Controller = new Controller();
-
   public router: Router;
 
   constructor() {
@@ -17,6 +14,7 @@ class App {
     this.router = new Router(routes);
   }
 
+  // eslint-disable-next-line max-lines-per-function
   public createRoutes(): Routes[] {
     return [
       {
@@ -34,6 +32,15 @@ class App {
       {
         path: `${Pages.LOGIN}`,
         callback: (): void => {
+          // const currentLocation: string = window.location.origin;
+          // const newLocation: string = `${currentLocation}/login`;
+          // const obj = {
+          //   Title: 'title',
+          //   Url: newLocation,
+          // };
+          // window.history.pushState(obj, obj.Title, obj.Url);
+          // // window.history.pushState(currentLocation, );
+          // console.log(window.location);
           createTemplateLogin();
         },
       },
