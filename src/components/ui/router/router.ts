@@ -1,5 +1,4 @@
-import { Routes, UrlParsed } from '../../models/types';
-import { Pages } from './pages';
+import { Pages, Routes, UrlParsed } from '../../models/types';
 
 class Router {
   public routes: Routes[];
@@ -34,39 +33,6 @@ class Router {
       this.navigate(Pages.NOT_FOUND);
     } else {
       route.callback();
-    }
-  }
-
-  private isNavigation(target: HTMLElement): HTMLElement | null {
-    let navButton: HTMLElement | null = null;
-    const navButtons: NodeListOf<HTMLElement> = document.querySelectorAll('.header__buttons');
-
-    navButtons.forEach((button: HTMLElement) => {
-      if (target === button) {
-        navButton = button;
-      }
-    });
-
-    return navButton;
-  }
-
-  private getUrlElement(element: HTMLElement): string {
-    let url: string = '';
-    const idElement: string | null = element.getAttribute('id');
-
-    if (idElement) {
-      url = `${idElement}`;
-    }
-
-    return url;
-  }
-
-  public delegateEvent(event: MouseEvent): void {
-    const target: HTMLElement = <HTMLElement>event.target;
-    const navButton: HTMLElement | null = this.isNavigation(target);
-
-    if (navButton) {
-      this.navigate(this.getUrlElement(navButton));
     }
   }
 

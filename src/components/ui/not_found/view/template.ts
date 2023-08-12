@@ -1,4 +1,4 @@
-import createHeader from './header';
+import createHeader from '../../main/view/header';
 
 export default function createTemplateNotFound(): HTMLBodyElement | null {
   const body: HTMLBodyElement | null = document.querySelector('body');

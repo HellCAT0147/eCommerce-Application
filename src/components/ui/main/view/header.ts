@@ -1,4 +1,4 @@
-import { Pages } from '../../router/pages';
+import { Pages } from '../../../models/types';
 
 export default function createHeader(): HTMLElement {
   const header: HTMLElement = document.createElement('header');

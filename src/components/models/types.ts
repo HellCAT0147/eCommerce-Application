@@ -1,10 +1,3 @@
-export interface OptionRouter {
-  mode: string;
-  root: string;
-}
-
-// export type Callback<T> = (data: T) => void;
-
 export type Callback = () => void;
 
 export interface Routes {
@@ -15,4 +8,11 @@ export interface Routes {
 export interface UrlParsed {
   path: string;
   resource: string;
+}
+
+export enum Pages {
+  MAIN = 'main',
+  LOGIN = 'login',
+  REGISTRATION = 'registration',
+  NOT_FOUND = 'not-found',
 }
