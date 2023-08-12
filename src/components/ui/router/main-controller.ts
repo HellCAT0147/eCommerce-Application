@@ -1,3 +1,4 @@
+import { Pages } from '../../models/types';
 import Router from './router';
 
 class MainController {
@@ -26,6 +27,9 @@ class MainController {
 
     if (idElement) {
       url = `${idElement}`;
+      if (url === Pages.GO_TO_MAIN_PAGE) {
+        url = Pages.MAIN;
+      }
     }
 
     return url;
