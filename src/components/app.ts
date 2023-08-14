@@ -8,7 +8,10 @@ class App {
     createTemplate();
 
     const inputs: NodeListOf<HTMLInputElement> = document.querySelectorAll('.form__input');
-    inputs.forEach((input) => input.addEventListener('input', (e) => this.controller.checkField(e)));
+    inputs.forEach((input) => input.addEventListener('input', (e: Event) => this.controller.checkField(e)));
+
+    const form: HTMLFormElement | null = document.querySelector('.form');
+    if (form) form.addEventListener('click', (e: Event) => this.controller.buttonEvent(e));
   }
 }
 export default App;

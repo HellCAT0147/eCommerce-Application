@@ -1,36 +1,24 @@
-import { InputType } from '../../../models/login';
 import ValidationModel from '../model/validation';
-import FormView from '../view/form';
-import { Errors } from '../../../models/validation';
 
 class Controller {
   private validationModel: ValidationModel;
 
-  private formView: FormView;
-
   constructor() {
-    this.validationModel = new ValidationModel(this);
-    this.formView = new FormView();
+    this.validationModel = new ValidationModel();
   }
 
   public checkField(e: Event): void {
     const target: HTMLInputElement = e.target as HTMLInputElement;
-    let isValid: boolean;
-    if (target.id.includes('email')) {
-      isValid = this.validationModel.checkMail(target.value);
-    } else {
-      isValid = this.validationModel.checkPassword(target.value);
-    }
-    this.formView.highlightInput(target, isValid);
+    if (target.id.includes('email')) this.validationModel.checkMail(target.value);
+    else this.validationModel.checkPassword(target.value);
   }
 
-  public setErrors(inputType: InputType, errors: Errors[]): void {
-    const inputs: NodeListOf<HTMLInputElement> = document.querySelectorAll('.form__input');
-    inputs.forEach((input) => {
-      if (input.classList.contains(`login__input_${inputType}`)) {
-        this.formView.showErrors(input.parentElement, errors, inputType);
-      }
-    });
+  public buttonEvent(e: Event): void {
+    if (e.target) {
+      const target: HTMLElement = e.target as HTMLElement;
+      const showPassword: HTMLButtonElement | null = target.closest('#show-password');
+      this.validationModel.switchPasswordView(showPassword, e);
+    }
   }
 }
 

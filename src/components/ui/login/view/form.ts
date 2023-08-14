@@ -17,7 +17,7 @@ export default class FormView {
     formFieldPassword.className = `form__field ${pageName}__field ${pageName}__field_password`;
     const labelPassword: HTMLLabelElement = createLabel(pageName, 'password');
     const inputPassword: HTMLInputElement = createInput(pageName, 'password');
-    const showPassword: HTMLButtonElement = this.createShowPassword(inputPassword);
+    const showPassword: HTMLButtonElement = this.createShowPassword();
     const buttonForm: HTMLButtonElement = document.createElement('button');
     buttonForm.className = `buttons buttons_colored form__button ${pageName}__button ${pageName}__button_sign`;
     buttonForm.textContent = 'sign in'.toUpperCase();
@@ -38,22 +38,14 @@ export default class FormView {
     return this.form;
   }
 
-  private createShowPassword(inputPassword: HTMLInputElement): HTMLButtonElement {
+  private createShowPassword(): HTMLButtonElement {
     const showPassword: HTMLButtonElement = document.createElement('button');
-    const password: HTMLInputElement = inputPassword;
     showPassword.className = 'form__button form__button_eye_closed';
-    showPassword.addEventListener('click', (e) => {
-      e.preventDefault();
-      showPassword.classList.toggle('form__button_eye_opened');
-      showPassword.classList.toggle('form__button_eye_closed');
-      if (showPassword.classList.contains('form__button_eye_opened')) password.type = 'text';
-      else password.type = 'password';
-      inputPassword.focus();
-    });
+    showPassword.id = 'show-password';
     return showPassword;
   }
 
-  public highlightInput(input: HTMLInputElement, isValid: boolean): void {
+  private highlightInput(input: HTMLInputElement | null, isValid: boolean): void {
     if (input) {
       if (isValid) {
         input.classList.add('valid');
@@ -77,7 +69,22 @@ export default class FormView {
         p.textContent = error;
         errorsHolder.append(p);
       });
-      if (errors.length) place.after(errorsHolder);
+      const input: HTMLInputElement | null = document.querySelector(`.login__input_${inputType}`);
+      if (errors.length) {
+        place.after(errorsHolder);
+        this.highlightInput(input, false);
+      } else {
+        this.highlightInput(input, true);
+      }
     }
+  }
+
+  public switchPasswordView(icon: HTMLButtonElement, passwordInput: HTMLInputElement): void {
+    const input: HTMLInputElement = passwordInput;
+    icon.classList.toggle('form__button_eye_opened');
+    icon.classList.toggle('form__button_eye_closed');
+    if (icon.classList.contains('form__button_eye_opened')) input.type = 'text';
+    else input.type = 'password';
+    input.focus();
   }
 }

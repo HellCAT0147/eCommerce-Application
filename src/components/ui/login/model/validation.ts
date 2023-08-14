@@ -1,5 +1,6 @@
-import { MailErrors, PasswordErrors } from '../../../models/validation';
-import type Controller from '../controller/controller';
+import { InputType } from '../../../models/login';
+import { Errors, MailErrors, PasswordErrors } from '../../../models/validation';
+import FormView from '../view/form';
 
 export default class ValidationModel {
   private mail: string;
@@ -8,20 +9,24 @@ export default class ValidationModel {
 
   private isValid: boolean;
 
-  private controller: Controller;
+  private formView: FormView;
 
-  constructor(controller: Controller) {
+  private mailInput: HTMLInputElement = document.querySelector('.login__input_email') as HTMLInputElement;
+
+  private passwordInput: HTMLInputElement = document.querySelector('.login__input_password') as HTMLInputElement;
+
+  constructor() {
     this.mail = '';
     this.password = '';
     this.isValid = false;
-    this.controller = controller;
+    this.formView = new FormView('login');
   }
 
   public checkMail(mail: string): boolean {
     const regexp: RegExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (mail.match(regexp)) {
       this.mail = mail;
-      this.controller.setErrors('email', []);
+      this.setErrors('email', []);
       return true;
     }
     this.mail = '';
@@ -33,7 +38,7 @@ export default class ValidationModel {
     } else if (mail.split('@').pop() === '') errors.push(MailErrors.domain);
     if (mail !== mail.trim()) errors.push(MailErrors.space);
     if (!errors.length) errors.push(MailErrors.format);
-    this.controller.setErrors('email', errors);
+    this.setErrors('email', errors);
 
     return false;
   }
@@ -42,7 +47,7 @@ export default class ValidationModel {
     const regexp: RegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[^\s]{8,}$/;
     if (password.match(regexp)) {
       this.password = password;
-      this.controller.setErrors('password', []);
+      this.setErrors('password', []);
       return true;
     }
     this.password = '';
@@ -54,9 +59,24 @@ export default class ValidationModel {
     if (!password.match(/[!@#$%^&*(),.?":{}|<>]/)) errors.push(PasswordErrors.char);
     if (password.length < 8) errors.push(PasswordErrors.short);
     if (password.match(/\s/)) errors.push(PasswordErrors.space);
-
-    this.controller.setErrors('password', errors);
+    this.setErrors('password', errors);
 
     return false;
+  }
+
+  public setErrors(inputType: InputType, errors: Errors[]): void {
+    const inputs: NodeListOf<HTMLInputElement> = document.querySelectorAll('.form__input');
+    inputs.forEach((input) => {
+      if (input.classList.contains(`login__input_${inputType}`)) {
+        this.formView.showErrors(input.parentElement, errors, inputType);
+      }
+    });
+  }
+
+  public switchPasswordView(button: HTMLButtonElement | null, e: Event): void {
+    if (button) {
+      e.preventDefault();
+      this.formView.switchPasswordView(button, this.passwordInput);
+    }
   }
 }
