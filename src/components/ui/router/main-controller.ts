@@ -1,4 +1,4 @@
-import { Pages } from '../../models/types';
+import { Pages } from '../../models/router';
 import Router from './router';
 
 class MainController {
@@ -8,7 +8,7 @@ class MainController {
     this.router = router;
   }
 
-  private isNavigation(target: EventTarget): HTMLElement | null {
+  private isNavigation(target: HTMLElement): HTMLElement | null {
     let navButton: HTMLElement | null = null;
     const navButtons: NodeListOf<HTMLElement> = document.querySelectorAll('.header__buttons');
 
@@ -37,8 +37,10 @@ class MainController {
 
   public delegateEvent(event: MouseEvent): void {
     const { target } = event;
-    if (target) {
-      const navButton: HTMLElement | null = this.isNavigation(target);
+
+    if (target instanceof HTMLElement) {
+      const targetHtmlElement: HTMLElement | null = target;
+      const navButton: HTMLElement | null = this.isNavigation(targetHtmlElement);
 
       if (navButton) {
         const urlButton: string = this.getUrlElement(navButton);

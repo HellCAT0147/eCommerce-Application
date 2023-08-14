@@ -1,4 +1,4 @@
-import { Pages, Routes, UrlParsed } from '../../models/types';
+import { Pages, Routes, UrlParsed } from '../../models/router';
 
 class Router {
   public routes: Routes[];

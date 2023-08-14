@@ -1,10 +1,8 @@
-import { Pages, Routes } from './models/types';
-import createTemplateLogin from './ui/login/view/template';
+import { Routes } from './models/router';
 import createTemplate from './ui/main/view/template';
-import createTemplateNotFound from './ui/not_found/view/template';
-import createTemplateRegistration from './ui/registration/view/template';
 import MainController from './ui/router/main-controller';
 import Router from './ui/router/router';
+import basicRoutes from './ui/router/routes';
 
 class App {
   public router: Router;
@@ -18,38 +16,7 @@ class App {
   }
 
   public createRoutes(): Routes[] {
-    return [
-      {
-        path: ``,
-        callback: (): void => {
-          createTemplate();
-        },
-      },
-      {
-        path: `${Pages.MAIN}`,
-        callback: (): void => {
-          createTemplate();
-        },
-      },
-      {
-        path: `${Pages.LOGIN}`,
-        callback: (): void => {
-          createTemplateLogin();
-        },
-      },
-      {
-        path: `${Pages.REGISTRATION}`,
-        callback: (): void => {
-          createTemplateRegistration();
-        },
-      },
-      {
-        path: `${Pages.NOT_FOUND}`,
-        callback: (): void => {
-          createTemplateNotFound();
-        },
-      },
-    ];
+    return basicRoutes;
   }
 
   public start(): void {

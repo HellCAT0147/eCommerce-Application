@@ -1,4 +1,4 @@
-import { Pages } from '../../../models/types';
+import { Pages } from '../../../models/router';
 
 export default function createMainForNotFound(): HTMLElement {
   const main: HTMLElement = document.createElement('main');
