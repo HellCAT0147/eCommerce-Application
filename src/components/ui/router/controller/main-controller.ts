@@ -35,8 +35,8 @@ class MainController {
     return url;
   }
 
-  public delegateEvent(event: MouseEvent): void {
-    const { target } = event;
+  public delegateMouseEvent(e: MouseEvent): void {
+    const { target } = e;
 
     if (target instanceof HTMLElement) {
       const targetHtmlElement: HTMLElement | null = target;
@@ -48,6 +48,8 @@ class MainController {
         this.router.navigate(urlButton);
       }
     }
+
+    this.router.controllerLogin.buttonEvent(e);
   }
 }
 

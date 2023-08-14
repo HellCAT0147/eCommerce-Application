@@ -1,5 +1,5 @@
-class Controller {
-  public getTest(event: MouseEvent): void {}
+class ControlleRegistration {
+  public checkField(e: Event): void {}
 }
 
-export default Controller;
+export default ControlleRegistration;

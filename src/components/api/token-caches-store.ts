@@ -2,7 +2,9 @@ import { TokenCacheOptions, TokenStore } from '@commercetools/sdk-client-v2/dist
 
 export default class TokenCachesStore {
   private storage: Storage;
+
   private readonly prefix: string = 'tokens_';
+
   private readonly defaultId: string = `${this.prefix}default`;
 
   private defaultTokenStore: TokenStore = {
