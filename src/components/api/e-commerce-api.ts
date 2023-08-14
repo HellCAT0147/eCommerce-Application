@@ -1,6 +1,7 @@
 import {
   Client,
   ClientBuilder,
+  getErrorByCode,
   HttpMiddlewareOptions,
   RefreshAuthMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
@@ -11,8 +12,10 @@ import {
   createApiBuilderFromCtpClient,
   Customer,
   CustomerSignInResult,
+  GeneralError,
 } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
+import { ErrorObject } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/error';
 import TokenCachesStore from './token-caches-store';
 
 export default class ECommerceApi {
@@ -88,7 +91,18 @@ export default class ECommerceApi {
     });
   }
 
-  public async login(email: string, password: string): Promise<boolean> {
+  private checkError(e: unknown): ErrorObject | null {
+    if (e != null && typeof e === 'object') {
+      const { status } = e as { status: number | undefined };
+
+      if (status != null) {
+        return e as ErrorObject;
+      }
+    }
+    return null;
+  }
+
+  public async login(email: string, password: string): Promise<ErrorObject | null> {
     const authParams: PasswordAuthMiddlewareOptions = { ...this.baseAuthParams }; // copy of base auth params
     authParams.credentials.user.username = email;
     authParams.credentials.user.password = password;
@@ -103,12 +117,16 @@ export default class ECommerceApi {
 
       if (meResponse.statusCode === 200) {
         this.apiRoot = apiRoot;
-        return true;
+        return null;
       }
-    } catch (_) {
-      return false;
+    } catch (e) {
+      const castedE = this.checkError(e);
+      if (castedE != null) {
+        return castedE;
+      }
+      throw e;
     }
-    return false;
+    return null;
   }
 
   public async register(
@@ -117,15 +135,16 @@ export default class ECommerceApi {
     firstName: string,
     lastName: string,
     dateOfBirth: Date,
-    billingAddress: Address,
-    shippingAddress: Address = billingAddress
-  ): Promise<boolean> {
+    addresses: Array<Address>,
+    defaultBillingAddress: number = 0,
+    defaultShippingAddress: number = 0
+  ): Promise<ErrorObject | null> {
     const authParams = this.baseAuthParams;
     authParams.credentials.user.username = email;
     authParams.credentials.user.password = password;
 
     try {
-      const registered: ClientResponse<CustomerSignInResult> = await this.apiRoot
+      await this.apiRoot
         .me()
         .signup()
         .post({
@@ -135,20 +154,20 @@ export default class ECommerceApi {
             firstName,
             lastName,
             dateOfBirth: `${dateOfBirth.getFullYear()}-${dateOfBirth.getMonth()}-${dateOfBirth.getDay()}`,
-            addresses: [billingAddress, shippingAddress],
-            defaultBillingAddress: 0,
-            defaultShippingAddress: 1,
+            addresses,
+            defaultBillingAddress,
+            defaultShippingAddress,
           },
         })
         .execute();
-
-      if (registered.statusCode === 200) {
-        return true;
+    } catch (e) {
+      const castedE = this.checkError(e);
+      if (castedE != null) {
+        return castedE;
       }
-    } catch (_) {
-      return false;
+      throw e;
     }
-    return false;
+    return null;
   }
 
   public logout(): void {
