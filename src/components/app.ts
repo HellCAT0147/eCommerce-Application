@@ -1,5 +1,5 @@
-import Controller from './ui/main/controller/controller';
-import createTemplate from './ui/main/view/template';
+import Controller from './ui/login/controller/controller';
+import createTemplate from './ui/login/view/template';
 
 class App {
   private controller: Controller = new Controller();
@@ -7,10 +7,11 @@ class App {
   public start(): void {
     createTemplate();
 
-    const body: HTMLElement | null = document.querySelector('.body');
-    if (body) {
-      body.addEventListener('click', (e: MouseEvent): void => this.controller.getTest(e));
-    }
+    const inputs: NodeListOf<HTMLInputElement> = document.querySelectorAll('.form__input');
+    inputs.forEach((input) => input.addEventListener('input', (e: Event) => this.controller.checkField(e)));
+
+    const form: HTMLFormElement | null = document.querySelector('.form');
+    if (form) form.addEventListener('click', (e: Event) => this.controller.buttonEvent(e));
   }
 }
 export default App;
