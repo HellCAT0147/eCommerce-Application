@@ -1,5 +1,8 @@
 class Controller {
-  public getTest(event: MouseEvent): void {}
+  public getTest(e: MouseEvent): void {
+    e.preventDefault();
+    // TODO create controller for main page;
+  }
 }
 
 export default Controller;
