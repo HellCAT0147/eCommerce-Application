@@ -11,10 +11,6 @@ export default class ValidationModel {
 
   private formView: FormView;
 
-  private mailInput: HTMLInputElement = document.querySelector('.login__input_email') as HTMLInputElement;
-
-  private passwordInput: HTMLInputElement = document.querySelector('.login__input_password') as HTMLInputElement;
-
   constructor() {
     this.mail = '';
     this.password = '';
@@ -71,12 +67,27 @@ export default class ValidationModel {
         this.formView.showErrors(input.parentElement, errors, inputType);
       }
     });
+    this.checkSendable();
   }
 
   public switchPasswordView(button: HTMLButtonElement | null, e: Event): void {
     if (button) {
       e.preventDefault();
-      this.formView.switchPasswordView(button, this.passwordInput);
+      this.formView.switchPasswordView(button);
+    }
+  }
+
+  private checkSendable(): boolean {
+    if (this.mail !== '' && this.password !== '') this.isValid = true;
+    else this.isValid = false;
+    return this.isValid;
+  }
+
+  public send(): void {
+    if (this.checkSendable()) {
+      // TODO send data this.mail & this.password
+    } else {
+      // TODO remind validation
     }
   }
 }

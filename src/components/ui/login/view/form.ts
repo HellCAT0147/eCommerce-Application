@@ -79,10 +79,11 @@ export default class FormView {
     }
   }
 
-  public switchPasswordView(icon: HTMLButtonElement, passwordInput: HTMLInputElement): void {
-    const input: HTMLInputElement = passwordInput;
+  public switchPasswordView(icon: HTMLButtonElement): void {
+    const input: HTMLInputElement | null = document.querySelector('#login-password');
     icon.classList.toggle('form__button_eye_opened');
     icon.classList.toggle('form__button_eye_closed');
+    if (!input) return;
     if (icon.classList.contains('form__button_eye_opened')) input.type = 'text';
     else input.type = 'password';
     input.focus();
