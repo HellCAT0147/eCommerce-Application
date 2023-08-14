@@ -21,7 +21,7 @@ export default function createMainForNotFound(): HTMLElement {
   title.className = 'title not-found__title';
   title.textContent = `PAGE NOT FOUND`;
   const goToMainButton: HTMLElement = document.createElement('button');
-  goToMainButton.className = 'buttons buttons_colored not-found__go-home header__buttons';
+  goToMainButton.className = 'buttons buttons_colored not-found__go-home redirect__buttons';
   goToMainButton.setAttribute('id', `${Pages.GO_TO_MAIN_PAGE}`);
   goToMainButton.textContent = `GO TO MAIN PAGE`;
   const footer: HTMLElement = document.createElement('footer');

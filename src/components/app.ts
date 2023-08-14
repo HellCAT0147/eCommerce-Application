@@ -1,8 +1,8 @@
 import { Routes } from './models/router';
 import createTemplate from './ui/main/view/template';
-import MainController from './ui/router/main-controller';
-import Router from './ui/router/router';
-import basicRoutes from './ui/router/routes';
+import MainController from './ui/router/controller/main-controller';
+import Router from './ui/router/model/router';
+import basicRoutes from './ui/router/model/routes';
 
 class App {
   public router: Router;

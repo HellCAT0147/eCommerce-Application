@@ -1,4 +1,5 @@
-import { Pages, Routes, UrlParsed } from '../../models/router';
+import { Pages, Routes, UrlParsed } from '../../../models/router';
+import selectCurrentPage from '../view/viewPage';
 
 class Router {
   public routes: Routes[];
@@ -33,6 +34,7 @@ class Router {
       this.navigate(Pages.NOT_FOUND);
     } else {
       route.callback();
+      selectCurrentPage(url);
     }
   }
 

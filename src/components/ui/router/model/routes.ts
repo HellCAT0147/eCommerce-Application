@@ -1,8 +1,8 @@
-import { Pages } from '../../models/router';
-import createTemplateLogin from '../login/view/template';
-import createTemplate from '../main/view/template';
-import createTemplateNotFound from '../not_found/view/template';
-import createTemplateRegistration from '../registration/view/template';
+import { Pages } from '../../../models/router';
+import createTemplateLogin from '../../login/view/template';
+import createTemplate from '../../main/view/template';
+import createTemplateNotFound from '../../not_found/view/template';
+import createTemplateRegistration from '../../registration/view/template';
 
 const basicRoutes = [
   {

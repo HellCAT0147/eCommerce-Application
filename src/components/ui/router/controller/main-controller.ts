@@ -1,5 +1,5 @@
-import { Pages } from '../../models/router';
-import Router from './router';
+import { Pages } from '../../../models/router';
+import Router from '../model/router';
 
 class MainController {
   public router: Router;
@@ -8,9 +8,9 @@ class MainController {
     this.router = router;
   }
 
-  private isNavigation(target: HTMLElement): HTMLElement | null {
+  private isRedirectButton(target: HTMLElement): HTMLElement | null {
     let navButton: HTMLElement | null = null;
-    const navButtons: NodeListOf<HTMLElement> = document.querySelectorAll('.header__buttons');
+    const navButtons: NodeListOf<HTMLElement> = document.querySelectorAll('.redirect__buttons');
 
     navButtons.forEach((button: HTMLElement) => {
       if (target === button) {
@@ -40,7 +40,7 @@ class MainController {
 
     if (target instanceof HTMLElement) {
       const targetHtmlElement: HTMLElement | null = target;
-      const navButton: HTMLElement | null = this.isNavigation(targetHtmlElement);
+      const navButton: HTMLElement | null = this.isRedirectButton(targetHtmlElement);
 
       if (navButton) {
         const urlButton: string = this.getUrlElement(navButton);
