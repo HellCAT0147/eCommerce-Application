@@ -1,4 +1,5 @@
 import createHeader from '../../main/view/header';
+import FormView from './form';
 
 export default function createTemplateLogin(): HTMLBodyElement | null {
   const body: HTMLBodyElement | null = document.querySelector('body');
@@ -9,15 +10,20 @@ export default function createTemplateLogin(): HTMLBodyElement | null {
   const header: HTMLElement = createHeader();
   header.className = 'header';
   const main: HTMLElement = document.createElement('main');
-  main.className = 'main';
+  main.className = 'main login';
   const title: HTMLElement = document.createElement('h1');
   title.className = 'title';
   title.textContent = `eCommerce - Login Page`;
+  const formView: FormView = new FormView('login');
+  const form: HTMLFormElement = formView.getForm();
   const footer: HTMLElement = document.createElement('footer');
   footer.className = 'footer';
   if (body) {
     main.append(title);
     body.append(header, main, footer);
+    main.append(form);
+    body.append(main);
+    body.append(footer);
   }
 
   return body || null;

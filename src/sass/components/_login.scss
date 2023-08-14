@@ -1,0 +1,41 @@
+.login {
+  &__form {
+    margin: 20px auto;
+    row-gap: $base-intend;
+  }
+
+  &__field {
+    min-width: 606px;
+    justify-content: space-between;
+    position: relative;
+  }
+
+  &__input {
+    max-width: 443px;
+  }
+
+  &__button {
+    max-width: fit-content;
+  }
+
+  &__input_password {
+    padding-right: 30px;
+  }
+
+  &__errors {
+    max-width: fit-content;
+    width: 100%;
+    margin-top: -$base-intend;
+    padding: 5px 10px;
+    align-self: flex-end;
+    text-align: right;
+    background-color: $color-error;
+  }
+
+  &__error {
+    padding: 5px 20px 5px 5px;
+    background-image: url('../assets/ico/login/x-marks-the-spot.svg');
+    background-repeat: no-repeat;
+    background-position: right;
+  }
+}
