@@ -1,24 +1,17 @@
-import createHeader from '../../main/view/header';
+import { Base, Blocks, Elem, Titles } from '../../../models/builder';
+import { Pages } from '../../../models/router';
+import Builder from '../../builder/html-builder';
 
-export default function createTemplateRegistration(): HTMLBodyElement | null {
-  const body: HTMLBodyElement | null = document.querySelector('body');
-  if (body) {
-    body.className = 'body';
-    body.innerHTML = '';
+export default function createTemplateRegistration(): void {
+  const main: HTMLElement | null = document.querySelector('main');
+  if (main) {
+    main.className = `main main__${Pages.REGISTRATION}`;
+    main.innerHTML = '';
   }
-  const header: HTMLElement = createHeader();
-  header.className = 'header';
-  const main: HTMLElement = document.createElement('main');
-  main.className = 'main';
-  const title: HTMLElement = document.createElement('h1');
-  title.className = 'title';
-  title.textContent = `eCommerce - Registration Page`;
-  const footer: HTMLElement = document.createElement('footer');
-  footer.className = 'footer';
-  if (body) {
+  const title: HTMLElement = new Builder('h1', Base.titles, Blocks.main, Elem.title, '').element();
+  title.textContent = `eCommerce - ${Titles.REGISTRATION} Page`;
+
+  if (main) {
     main.append(title);
-    body.append(header, main, footer);
   }
-
-  return body || null;
 }

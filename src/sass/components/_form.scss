@@ -21,14 +21,18 @@
     }
   }
 
-  &__button_eye_opened {
-    @include eye-wrapper;
-    background-image: url('../assets/ico/login/eye-opened.svg');
+  &__button {
+    &_eye-opened {
+      @include eye-wrapper;
+      background-image: url('../assets/ico/login/eye-opened.svg');
+    }
   }
 
-  &__button_eye_closed {
-    @include eye-wrapper;
-    background-image: url('../assets/ico/login/eye-closed.svg');
+  &__button {
+    &_eye-closed {
+      @include eye-wrapper;
+      background-image: url('../assets/ico/login/eye-closed.svg');
+    }
   }
 
   .valid {
