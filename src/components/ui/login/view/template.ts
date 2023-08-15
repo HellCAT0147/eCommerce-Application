@@ -1,7 +1,7 @@
 import { Base, Blocks, Elem, Titles } from '../../../models/builder';
 import { Pages } from '../../../models/router';
 import Builder from '../../builder/html-builder';
-import FormView from './form';
+import FormViewLogin from './form';
 
 export default function createTemplateLogin(): void {
   const main: HTMLElement | null = document.querySelector('main');
@@ -11,7 +11,7 @@ export default function createTemplateLogin(): void {
   }
   const title: HTMLElement = new Builder('h1', Base.titles, Blocks.main, Elem.title, '').element();
   title.textContent = `eCommerce - ${Titles.LOGIN} Page`;
-  const formView: FormView = new FormView(Blocks.login);
+  const formView: FormViewLogin = new FormViewLogin(Blocks.login);
   const form: HTMLFormElement = formView.getForm();
 
   if (main) {

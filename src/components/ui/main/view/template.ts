@@ -9,7 +9,7 @@ export default function createTemplate(): HTMLBodyElement | null {
     body.innerHTML = '';
   }
   const header: HTMLElement = createHeader();
-  const main: HTMLElement = new Builder('main', '', Blocks.main, '', '').element();
+  const main: HTMLElement = new Builder('main', Blocks.main, Blocks.main, Blocks.main, '').element();
   const title: HTMLElement = new Builder('h1', Base.titles, Blocks.main, Elem.title, '').element();
   title.textContent = `eCommerce - ${Titles.MAIN} Page`;
   const footer: HTMLElement = new Builder('footer', '', Blocks.footer, '', '').element();

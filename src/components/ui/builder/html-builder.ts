@@ -13,7 +13,7 @@ class Builder {
     this.mode = mode;
   }
 
-  private setPropertes(element: HTMLElement | HTMLInputElement): void {
+  private setProperties(element: HTMLElement | HTMLInputElement): void {
     if (this.block && this.elem) {
       element.classList.add(`${this.block}__${this.elem}`);
     } else if (this.block) {
@@ -25,42 +25,42 @@ class Builder {
   public form(): HTMLFormElement {
     const form: HTMLFormElement = document.createElement('form');
     form.className = `${this.base}`;
-    this.setPropertes(form);
+    this.setProperties(form);
     return form;
   }
 
   public field(): HTMLFieldSetElement {
     const field: HTMLFieldSetElement = document.createElement('fieldset');
     field.className = `${this.base}`;
-    this.setPropertes(field);
+    this.setProperties(field);
     return field;
   }
 
   public input(): HTMLInputElement {
     const input: HTMLInputElement = document.createElement('input');
     input.className = `${this.base}`;
-    this.setPropertes(input);
+    this.setProperties(input);
     return input;
   }
 
   public label(): HTMLLabelElement {
     const label: HTMLLabelElement = document.createElement('label');
     label.className = `${this.base}`;
-    this.setPropertes(label);
+    this.setProperties(label);
     return label;
   }
 
   public button(): HTMLButtonElement {
     const button: HTMLButtonElement = document.createElement('button');
     button.className = `${this.base}`;
-    this.setPropertes(button);
+    this.setProperties(button);
     return button;
   }
 
   public element(): HTMLElement {
     const element: HTMLElement = document.createElement(this.tag);
     element.className = `${this.base}`;
-    this.setPropertes(element);
+    this.setProperties(element);
     return element;
   }
 }

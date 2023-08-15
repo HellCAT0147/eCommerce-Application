@@ -3,6 +3,7 @@ export enum Blocks {
   header = 'header',
   footer = 'footer',
   login = 'login',
+  reg = 'registration',
   form = `form`,
   not_found = `not-found`,
 }
@@ -36,6 +37,13 @@ export enum Mode {
   last = 'last',
   big = 'big',
   small = 'small',
+  f_name = 'first-name',
+  l_name = 'last-name',
+  date = 'date-of-birth',
+  street = 'street',
+  city = 'city',
+  postal = 'postal-code',
+  country = 'country',
 }
 
 export enum Base {
