@@ -1,6 +1,6 @@
 import ValidationModel from '../model/validation';
 
-class Controller {
+class ControllerLogin {
   private validationModel: ValidationModel;
 
   constructor() {
@@ -15,17 +15,16 @@ class Controller {
   }
 
   public buttonEvent(e: Event): void {
-    if (e.target) {
-      const { target } = e;
-      if (!(target instanceof HTMLElement)) return;
+    e.preventDefault();
+    const { target } = e;
+    if (!(target instanceof HTMLElement)) return;
 
-      const showPassword: HTMLButtonElement | null = target.closest('#show-password');
-      this.validationModel.switchPasswordView(showPassword, e);
+    const showPassword: HTMLButtonElement | null = target.closest('#show-password');
+    this.validationModel.switchPasswordView(showPassword);
 
-      const signIn: HTMLButtonElement | null = target.closest('.login__button_sign');
-      if (signIn) this.validationModel.send();
-    }
+    const signIn: HTMLButtonElement | null = target.closest('.login__button_sign');
+    if (signIn) this.validationModel.send();
   }
 }
 
-export default Controller;
+export default ControllerLogin;

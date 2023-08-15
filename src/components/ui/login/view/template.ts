@@ -1,9 +1,13 @@
+import createHeader from '../../main/view/header';
 import FormView from './form';
 
-export default function createTemplate(): HTMLBodyElement | null {
+export default function createTemplateLogin(): HTMLBodyElement | null {
   const body: HTMLBodyElement | null = document.querySelector('body');
-  if (body) body.className = 'body';
-  const header: HTMLElement = document.createElement('header');
+  if (body) {
+    body.className = 'body';
+    body.innerHTML = '';
+  }
+  const header: HTMLElement = createHeader();
   header.className = 'header';
   const main: HTMLElement = document.createElement('main');
   main.className = 'main login';
@@ -15,8 +19,8 @@ export default function createTemplate(): HTMLBodyElement | null {
   const footer: HTMLElement = document.createElement('footer');
   footer.className = 'footer';
   if (body) {
-    body.append(header);
     main.append(title);
+    body.append(header, main, footer);
     main.append(form);
     body.append(main);
     body.append(footer);
