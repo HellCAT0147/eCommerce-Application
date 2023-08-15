@@ -70,9 +70,8 @@ export default class ValidationModel {
     this.checkSendable();
   }
 
-  public switchPasswordView(button: HTMLButtonElement | null, e: Event): void {
+  public switchPasswordView(button: HTMLButtonElement | null): void {
     if (button) {
-      e.preventDefault();
       this.formView.switchPasswordView(button);
     }
   }

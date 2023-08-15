@@ -1,19 +1,11 @@
 import {
   Client,
   ClientBuilder,
-  getErrorByCode,
   HttpMiddlewareOptions,
   RefreshAuthMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
 import { PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2/dist/declarations/src/types/sdk';
-import {
-  Address,
-  ClientResponse,
-  createApiBuilderFromCtpClient,
-  Customer,
-  CustomerSignInResult,
-  GeneralError,
-} from '@commercetools/platform-sdk';
+import { Address, ClientResponse, createApiBuilderFromCtpClient, Customer } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import { ErrorObject } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/error';
 import TokenCachesStore from './token-caches-store';

@@ -4,4 +4,9 @@
   flex-grow: 1;
   position: relative;
   padding: 21px;
+  &__not-found {
+    align-items: center;
+    justify-content: center;
+    row-gap: 30px;
+  }
 }

@@ -1,6 +1,6 @@
 import ValidationModel from '../model/validation';
 
-class Controller {
+class ControllerLogin {
   private validationModel: ValidationModel;
 
   constructor() {
@@ -8,22 +8,23 @@ class Controller {
   }
 
   public checkField(e: Event): void {
-    const target: HTMLInputElement = e.target as HTMLInputElement;
+    const { target } = e;
+    if (!(target instanceof HTMLInputElement)) return;
     if (target.id.includes('email')) this.validationModel.checkMail(target.value);
     else this.validationModel.checkPassword(target.value);
   }
 
   public buttonEvent(e: Event): void {
-    if (e.target) {
-      const target: HTMLElement = e.target as HTMLElement;
+    e.preventDefault();
+    const { target } = e;
+    if (!(target instanceof HTMLElement)) return;
 
-      const showPassword: HTMLButtonElement | null = target.closest('#show-password');
-      this.validationModel.switchPasswordView(showPassword, e);
+    const showPassword: HTMLButtonElement | null = target.closest('#show-password');
+    this.validationModel.switchPasswordView(showPassword);
 
-      const signIn: HTMLButtonElement | null = target.closest('.login__button_sign');
-      if (signIn) this.validationModel.send();
-    }
+    const signIn: HTMLButtonElement | null = target.closest('.login__button_sign');
+    if (signIn) this.validationModel.send();
   }
 }
 
-export default Controller;
+export default ControllerLogin;

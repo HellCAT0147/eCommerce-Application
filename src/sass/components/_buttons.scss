@@ -9,11 +9,11 @@
     background: $color-dark;
     letter-spacing: 0.05rem;
   }
+  &_empty {
+    border: none;
+    background: inherit;
+  }
   &:active {
     scale: 0.9;
-  }
-
-  &:hover {
-    opacity: 1;
   }
 }
