@@ -40,7 +40,7 @@ export default class FormView {
 
   private createShowPassword(): HTMLButtonElement {
     const showPassword: HTMLButtonElement = document.createElement('button');
-    showPassword.className = 'form__button form__button_eye_closed';
+    showPassword.className = 'form__button form__button_eye-closed';
     showPassword.id = 'show-password';
     return showPassword;
   }
@@ -81,10 +81,10 @@ export default class FormView {
 
   public switchPasswordView(icon: HTMLButtonElement): void {
     const input: HTMLInputElement | null = document.querySelector('#login-password');
-    icon.classList.toggle('form__button_eye_opened');
-    icon.classList.toggle('form__button_eye_closed');
+    icon.classList.toggle('form__button_eye-opened');
+    icon.classList.toggle('form__button_eye-closed');
     if (!input) return;
-    if (icon.classList.contains('form__button_eye_opened')) input.type = 'text';
+    if (icon.classList.contains('form__button_eye-opened')) input.type = 'text';
     else input.type = 'password';
     input.focus();
   }

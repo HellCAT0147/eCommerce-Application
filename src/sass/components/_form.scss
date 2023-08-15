@@ -21,12 +21,12 @@
     }
   }
 
-  &__button_eye_opened {
+  &__button_eye-opened {
     @include eye-wrapper;
     background-image: url('../assets/ico/login/eye-opened.svg');
   }
 
-  &__button_eye_closed {
+  &__button_eye-closed {
     @include eye-wrapper;
     background-image: url('../assets/ico/login/eye-closed.svg');
   }
