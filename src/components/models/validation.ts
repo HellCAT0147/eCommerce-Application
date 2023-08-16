@@ -1,3 +1,8 @@
+type InputType = 'email' | 'password';
+
+type AddressFields = 'street' | 'city' | 'postal-code' | 'country';
+type RegistrationInputType = InputType | 'first-name' | 'last-name' | 'date-of-birth' | AddressFields;
+
 enum MailErrors {
   at = "Email must contain an '@'.",
   domain = 'Email must contain a domain name (e.g., example.com).',
@@ -16,4 +21,4 @@ enum PasswordErrors {
 
 type Errors = MailErrors | PasswordErrors;
 
-export { MailErrors, PasswordErrors, Errors };
+export { MailErrors, PasswordErrors, Errors, InputType, RegistrationInputType };

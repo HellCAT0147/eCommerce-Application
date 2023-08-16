@@ -1,5 +1,4 @@
-import { InputType } from '../../../models/login';
-import { Errors, MailErrors, PasswordErrors } from '../../../models/validation';
+import { Errors, MailErrors, PasswordErrors, InputType } from '../../../models/validation';
 import FormView from '../view/form';
 
 export default class ValidationModel {
@@ -9,9 +8,9 @@ export default class ValidationModel {
 
   private isValid: boolean;
 
-  private formView: FormView;
+  protected formView: FormView;
 
-  constructor() {
+  public constructor() {
     this.mail = '';
     this.password = '';
     this.isValid = false;
@@ -60,7 +59,7 @@ export default class ValidationModel {
     return false;
   }
 
-  public setErrors(inputType: InputType, errors: Errors[]): void {
+  protected setErrors(inputType: InputType, errors: Errors[]): void {
     const inputs: NodeListOf<HTMLInputElement> = document.querySelectorAll('.form__input');
     inputs.forEach((input) => {
       if (input.classList.contains(`login__input_${inputType}`)) {

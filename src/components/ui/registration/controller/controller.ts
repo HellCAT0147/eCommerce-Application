@@ -1,8 +1,18 @@
-class ControlleRegistration {
+import ControllerLogin from '../../login/controller/controller';
+import RegistrationValidationModel from '../model/validation';
+
+class ControllerRegistration extends ControllerLogin {
+  protected validationModel: RegistrationValidationModel;
+
+  constructor() {
+    super();
+    this.validationModel = new RegistrationValidationModel();
+  }
+
   public checkField(e: Event): void {
     e.preventDefault();
-    // TODO create controller for registration page;
+    this.validationModel.testCheck('Name');
   }
 }
 
-export default ControlleRegistration;
+export default ControllerRegistration;

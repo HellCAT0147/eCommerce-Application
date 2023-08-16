@@ -1,4 +1,4 @@
-import { InputType } from '../../../models/login';
+import { InputType } from '../../../models/validation';
 
 export default function createInput(pageName: string, inputName: InputType): HTMLInputElement {
   const input: HTMLInputElement = document.createElement('input');

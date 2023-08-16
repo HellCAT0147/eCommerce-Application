@@ -1,5 +1,4 @@
-import { InputType } from '../../../models/login';
-import { Errors } from '../../../models/validation';
+import { Errors, InputType } from '../../../models/validation';
 import createInput from './input';
 import createLabel from './label';
 
