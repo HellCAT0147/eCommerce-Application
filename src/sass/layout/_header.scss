@@ -20,7 +20,7 @@
     justify-content: space-between;
     column-gap: 12px;
   }
-  &__buttons {
+  &__button {
     position: relative;
     @extend %font-main;
     @include font(600, 1.4rem, 100%, $color-light);

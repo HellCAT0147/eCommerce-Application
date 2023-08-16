@@ -1,17 +1,22 @@
 .form {
   display: flex;
   flex-direction: column;
+  margin: 20px auto;
+  row-gap: $base-intend;
   @extend %font-second;
   @include font(400, 1.6rem, 100%, $color-dark);
-
   &__field {
     display: flex;
+    position: relative;
+    min-width: 606px;
+    justify-content: space-between;
     border: none;
   }
 
   &__input {
     padding: 14px 16px;
     width: 100%;
+    max-width: 443px;
     border: $input-border solid $color-input;
     border-collapse: collapse;
     outline: none;
@@ -21,14 +26,18 @@
     }
   }
 
-  &__button_eye-opened {
-    @include eye-wrapper;
-    background-image: url('../assets/ico/login/eye-opened.svg');
+  &__button {
+    &_eye-opened {
+      @include eye-wrapper;
+      background-image: url('../assets/ico/login/eye-opened.svg');
+    }
   }
 
-  &__button_eye-closed {
-    @include eye-wrapper;
-    background-image: url('../assets/ico/login/eye-closed.svg');
+  &__button {
+    &_eye-closed {
+      @include eye-wrapper;
+      background-image: url('../assets/ico/login/eye-closed.svg');
+    }
   }
 
   .valid {

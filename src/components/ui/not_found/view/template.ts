@@ -1,21 +1,11 @@
-import createHeader from '../../main/view/header';
+import { Pages } from '../../../models/router';
 import createMainForNotFound from './main';
 
-export default function createTemplateNotFound(): HTMLBodyElement | null {
-  const body: HTMLBodyElement | null = document.querySelector('body');
-  if (body) {
-    body.className = 'body';
-    body.innerHTML = '';
+export default function createTemplateNotFound(): void {
+  const main: HTMLElement | null = document.querySelector('main');
+  if (main) {
+    main.className = `main main__${Pages.NOT_FOUND}`;
+    main.innerHTML = '';
+    createMainForNotFound(main);
   }
-  const header: HTMLElement = createHeader();
-  header.className = 'header';
-  const main: HTMLElement = createMainForNotFound();
-  const footer: HTMLElement = document.createElement('footer');
-  footer.className = 'footer';
-
-  if (body) {
-    body.append(header, main, footer);
-  }
-
-  return body || null;
 }
