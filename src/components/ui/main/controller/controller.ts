@@ -1,8 +1,13 @@
-class Controller {
-  public getTest(e: MouseEvent): void {
+class ControllerMain {
+  public checkField(e: Event): void {
     e.preventDefault();
-    // TODO create controller for main page;
+    // TODO create controller for Main page;
+  }
+
+  public buttonEvent(e: Event): void {
+    e.preventDefault();
+    // TODO create controller for Main page;
   }
 }
 
-export default Controller;
+export default ControllerMain;

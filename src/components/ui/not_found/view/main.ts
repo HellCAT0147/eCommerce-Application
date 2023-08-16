@@ -1,35 +1,31 @@
+import { Base, Blocks, Buttons, Elem, Mode, Titles } from '../../../models/builder';
 import { Pages } from '../../../models/router';
+import Builder from '../../builder/html-builder';
 
-export default function createMainForNotFound(): HTMLElement {
-  const main: HTMLElement = document.createElement('main');
-  main.className = 'main main__not-found';
-  const notFound: HTMLElement = document.createElement('div');
-  notFound.className = 'not-found';
-  const numberFirst: HTMLElement = document.createElement('span');
-  numberFirst.className = 'not-found__number number_first';
-  numberFirst.textContent = `4`;
-  const numberLast: HTMLElement = document.createElement('span');
-  numberLast.className = 'number number_last';
-  numberLast.textContent = `4`;
-  const circleBig: HTMLElement = document.createElement('div');
-  circleBig.className = 'not-found__circle not-found__circle_big';
-  const circleSmall: HTMLElement = document.createElement('div');
-  circleSmall.className = 'not-found__circle not-found__circle_small';
-  const eye: HTMLElement = document.createElement('div');
-  eye.className = 'not-found__eye';
-  const title: HTMLElement = document.createElement('h1');
-  title.className = 'title not-found__title';
-  title.textContent = `PAGE NOT FOUND`;
-  const goToMainButton: HTMLElement = document.createElement('button');
-  goToMainButton.className = 'buttons buttons_colored not-found__go-home redirect__buttons';
+export default function createMainForNotFound(main: HTMLElement): void {
+  const numberFour: string = '4';
+  const notFound: HTMLElement = new Builder('div', '', Blocks.not_found, '', '').element();
+  const numberFirst: HTMLElement = new Builder('span', '', Blocks.not_found, Elem.number, Mode.first).element();
+  numberFirst.textContent = numberFour;
+  const numberLast: HTMLElement = new Builder('span', '', Blocks.not_found, Elem.number, Mode.last).element();
+  numberLast.textContent = numberFour;
+  const circleBig: HTMLElement = new Builder('div', '', Blocks.not_found, Elem.circle, Mode.big).element();
+  const circleSmall: HTMLElement = new Builder('div', '', Blocks.not_found, Elem.circle, Mode.small).element();
+  const eye: HTMLElement = new Builder('div', '', Blocks.not_found, 'eye', '').element();
+  const title: HTMLElement = new Builder('h1', Base.titles, Blocks.not_found, Elem.title, '').element();
+  title.textContent = Titles.PAGE_NOT_FOUND.toUpperCase();
+  const goToMainButton: HTMLButtonElement = new Builder(
+    '',
+    Base.btns_colored,
+    Blocks.not_found,
+    Elem.go_home,
+    ''
+  ).button();
+  goToMainButton.classList.add('redirect__buttons');
   goToMainButton.setAttribute('id', `${Pages.GO_TO_MAIN_PAGE}`);
-  goToMainButton.textContent = `GO TO MAIN PAGE`;
-  const footer: HTMLElement = document.createElement('footer');
-  footer.className = 'footer';
+  goToMainButton.textContent = Buttons.go_home;
 
   circleBig.append(circleSmall, eye);
   notFound.append(numberFirst, circleBig, numberLast);
   main.append(notFound, title, goToMainButton);
-
-  return main;
 }

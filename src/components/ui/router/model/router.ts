@@ -1,21 +1,25 @@
 import { Pages, Routes, UrlParsed } from '../../../models/router';
 import selectCurrentPage from '../view/viewPage';
 import ControllerLogin from '../../login/controller/controller';
-import ControlleRegistration from '../../registration/controller/controller';
+import ControllerRegistration from '../../registration/controller/controller';
+import ControllerMain from '../../main/controller/controller';
 
 class Router {
   public routes: Routes[];
 
+  public controllerMain: ControllerMain;
+
   public controllerLogin: ControllerLogin;
 
-  public controllerRegistration: ControlleRegistration;
+  public controllerRegistration: ControllerRegistration;
 
   public inputs: NodeListOf<HTMLInputElement>;
 
   constructor(routes: Routes[]) {
     this.routes = routes;
+    this.controllerMain = new ControllerMain();
     this.controllerLogin = new ControllerLogin();
-    this.controllerRegistration = new ControlleRegistration();
+    this.controllerRegistration = new ControllerRegistration();
     this.inputs = this.getInputsOnPage();
 
     document.addEventListener('DOMContentLoaded', () => {
