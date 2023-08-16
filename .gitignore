@@ -105,3 +105,6 @@ dist
 
 # Idea
 .idea/
+
+# eCommerceAPIFile
+src/components/api/e-commerce-api-config-realization.ts
