@@ -7,7 +7,7 @@ export default class TokenCachesStore {
 
   private readonly defaultId: string = `${this.prefix}default`;
 
-  private defaultTokenStore: TokenStore = {
+  public readonly defaultTokenStore: TokenStore = {
     token: '',
     expirationTime: 0,
   };
@@ -29,7 +29,7 @@ export default class TokenCachesStore {
     return JSON.parse(tokenStore);
   }
 
-  public getDefault(): TokenStore | null {
+  public getDefault(): TokenStore {
     return this.get(undefined);
   }
 
@@ -38,6 +38,14 @@ export default class TokenCachesStore {
       this.storage.setItem(this.defaultId, JSON.stringify(cache));
     } else {
       this.storage.setItem(`${this.prefix}${tokenCacheOptions.clientId}`, JSON.stringify(cache));
+    }
+  }
+
+  public unset(tokenCacheOptions?: TokenCacheOptions): void {
+    if (tokenCacheOptions == null) {
+      this.storage.removeItem(this.defaultId);
+    } else {
+      this.storage.removeItem(`${this.prefix}${tokenCacheOptions.clientId}`);
     }
   }
 
