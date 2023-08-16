@@ -1,10 +1,20 @@
 import ValidationModel from '../model/validation';
+import ECommerceApi from '../../../api/e-commerce-api';
+import eCommerceAPIConfig from '../../../api/e-commerce-api-config-realization';
 
 class ControllerLogin {
+  private eCommerceApi: ECommerceApi;
+
   private validationModel: ValidationModel;
 
   constructor() {
-    this.validationModel = new ValidationModel();
+    this.eCommerceApi = new ECommerceApi(
+      eCommerceAPIConfig.projectKey,
+      eCommerceAPIConfig.clientId,
+      eCommerceAPIConfig.clientSecret,
+      eCommerceAPIConfig.region
+    );
+    this.validationModel = new ValidationModel(this.eCommerceApi);
   }
 
   public checkField(e: Event): void {

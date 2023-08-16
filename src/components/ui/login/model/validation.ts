@@ -1,5 +1,7 @@
+import { ErrorObject } from '@commercetools/platform-sdk';
+import ECommerceApi from '../../../api/e-commerce-api';
 import { Errors, InputTypeLogin, MailErrors, PasswordErrors } from '../../../models/validation';
-import FormView from '../../builder/form';
+import FormViewLogin from '../view/form';
 
 export default class ValidationModel {
   private mail: string;
@@ -8,13 +10,16 @@ export default class ValidationModel {
 
   private isValid: boolean;
 
-  private formView: FormView;
+  private formView: FormViewLogin;
 
-  constructor() {
+  private eCommerceApi: ECommerceApi;
+
+  constructor(eCommerceApi: ECommerceApi) {
+    this.eCommerceApi = eCommerceApi;
     this.mail = '';
     this.password = '';
     this.isValid = false;
-    this.formView = new FormView('login');
+    this.formView = new FormViewLogin('login');
   }
 
   public checkMail(mail: string): boolean {
@@ -24,7 +29,8 @@ export default class ValidationModel {
       this.setErrors('email', []);
       return true;
     }
-    this.mail = '';
+    // this.mail = '';
+    this.mail = mail;
 
     const errors: MailErrors[] = [];
     if (!mail.includes('@')) {
@@ -45,7 +51,8 @@ export default class ValidationModel {
       this.setErrors('password', []);
       return true;
     }
-    this.password = '';
+    // this.password = '';
+    this.password = password;
 
     const errors: PasswordErrors[] = [];
     if (!password.match(/[a-z]/)) errors.push(PasswordErrors.lower);
@@ -81,11 +88,20 @@ export default class ValidationModel {
     return this.isValid;
   }
 
-  public send(): void {
-    if (this.checkSendable()) {
-      // TODO send data this.mail & this.password
-    } else {
-      // TODO remind validation
-    }
+  public async send(): Promise<void> {
+    // if (this.checkSendable()) {
+    // TODO send data this.mail & this.password
+    // console.log(this.mail);
+    // console.log(this.password);
+    const response: ErrorObject | null = await this.eCommerceApi.login(this.mail, this.password);
+    // console.log(response);
+    /* try {
+    } catch (error) {
+      if (error instanceof Error) this.formView.showAuthResponse(error.message);
+    } */
+
+    // } else {
+    // TODO remind validation
+    // }
   }
 }

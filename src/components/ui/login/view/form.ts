@@ -16,4 +16,8 @@ export default class FormViewLogin extends FormView {
 
     this.form = form;
   }
+
+  public showAuthResponse(responseMsg: string): void {
+    // TODO console.log(responseMsg);
+  }
 }

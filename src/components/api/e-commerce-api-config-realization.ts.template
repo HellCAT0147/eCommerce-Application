@@ -1,0 +1,10 @@
+import { ECommerceAPIConfig } from './e-commerce-api-config';
+
+const eCommerceAPIConfig: ECommerceAPIConfig = {
+  projectKey: '',
+  clientId: '',
+  clientSecret: '',
+  region: '',
+};
+
+export default eCommerceAPIConfig;
