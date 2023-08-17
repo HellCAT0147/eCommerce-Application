@@ -4,17 +4,17 @@ import { Errors, InputTypeLogin, MailErrors, PasswordErrors } from '../../../mod
 import FormViewLogin from '../view/form';
 
 export default class ValidationModel {
-  private mail: string;
+  protected mail: string;
 
-  private password: string;
+  protected password: string;
 
-  private isValid: boolean;
+  protected isValid: boolean;
 
-  private formView: FormViewLogin;
+  protected formView: FormViewLogin;
 
   private eCommerceApi: ECommerceApi;
 
-  constructor(eCommerceApi: ECommerceApi) {
+  public constructor(eCommerceApi: ECommerceApi) {
     this.eCommerceApi = eCommerceApi;
     this.mail = '';
     this.password = '';
@@ -64,7 +64,7 @@ export default class ValidationModel {
     return false;
   }
 
-  public setErrors(inputType: InputTypeLogin, errors: Errors[]): void {
+  protected setErrors(inputType: InputTypeLogin, errors: Errors[]): void {
     const inputs: NodeListOf<HTMLInputElement> = document.querySelectorAll('.form__input');
     inputs.forEach((input) => {
       if (input.classList.contains(`login__input_${inputType}`)) {
@@ -80,7 +80,7 @@ export default class ValidationModel {
     }
   }
 
-  private checkSendable(): boolean {
+  protected checkSendable(): boolean {
     if (this.mail !== '' && this.password !== '') this.isValid = true;
     else this.isValid = false;
     return this.isValid;

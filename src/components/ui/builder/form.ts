@@ -4,9 +4,9 @@ import { Pages } from '../../models/router';
 import Builder from './html-builder';
 
 export default class FormView {
-  public form: HTMLFormElement;
+  protected form: HTMLFormElement;
 
-  public pageName: string;
+  protected pageName: string;
 
   constructor(pageName: string = Pages.LOGIN) {
     this.pageName = pageName;

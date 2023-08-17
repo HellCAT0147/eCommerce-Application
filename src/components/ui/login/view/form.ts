@@ -3,9 +3,9 @@ import FormView from '../../builder/form';
 import Builder from '../../builder/html-builder';
 
 export default class FormViewLogin extends FormView {
-  public form: HTMLFormElement;
+  protected form: HTMLFormElement;
 
-  constructor(pageName: string) {
+  public constructor(pageName: string) {
     super(pageName);
     const form: HTMLFormElement = this.getForm();
     const buttonForm: HTMLButtonElement = new Builder('', Base.btns_colored, pageName, Elem.btn, Mode.sign).button();
