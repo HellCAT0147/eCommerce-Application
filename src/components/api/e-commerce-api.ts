@@ -59,42 +59,58 @@ export default class ECommerceApi {
 
     // ClientBuilder
     this.clientBuilder = new ClientBuilder().withHttpMiddleware(httpMiddlewareOptions).withLoggerMiddleware(); // Include middleware for logging;
-    this.initClient();
+    this.initClientAndApiRoot();
   }
 
-  private createTcpClient(): Client {
+  private initClientAndApiRoot(): void {
     const creds = this.tokenCachesStore.getDefault();
-    if (creds === null) {
-      return this.clientBuilder.withAnonymousSessionFlow(this.baseAuthParams).build();
+    let preClient: Client = this.clientBuilder.withAnonymousSessionFlow(this.baseAuthParams).build();
+
+    if (creds !== this.tokenCachesStore.defaultTokenStore) {
+      const authParams: RefreshAuthMiddlewareOptions = {
+        ...this.baseAuthParams,
+        refreshToken: creds.refreshToken as string,
+        tokenCache: this.tokenCachesStore,
+      };
+      preClient = this.clientBuilder.withRefreshTokenFlow(authParams).build();
     }
-
-    const authParams: RefreshAuthMiddlewareOptions = {
-      ...this.baseAuthParams,
-      refreshToken: creds.refreshToken as string,
-      tokenCache: this.tokenCachesStore,
-    };
-    return this.clientBuilder.withRefreshTokenFlow(authParams).build();
-  }
-
-  private initClient(): void {
-    this.ctpClient = this.createTcpClient();
-    this.apiRoot = createApiBuilderFromCtpClient(this.ctpClient).withProjectKey({
+    const preApiRoot: ByProjectKeyRequestBuilder = createApiBuilderFromCtpClient(preClient).withProjectKey({
       projectKey: this.baseAuthParams.projectKey,
     });
+
+    this.ctpClient = preClient;
+    this.apiRoot = preApiRoot;
+
+    if (creds !== this.tokenCachesStore.defaultTokenStore) {
+      preApiRoot
+        .me()
+        .get()
+        .execute()
+        .then((result) => {
+          if (result.statusCode !== 200) {
+            this.tokenCachesStore.unset();
+            this.initClientAndApiRoot();
+          }
+        })
+        .catch(() => {
+          this.tokenCachesStore.unset();
+          this.initClientAndApiRoot();
+        });
+    }
   }
 
   private checkError(e: unknown): ErrorObject | null {
     if (e != null && typeof e === 'object') {
-      const { status } = e as { status: number | undefined };
+      const { message } = e as { message: string | undefined };
 
-      if (status != null) {
+      if (message != null) {
         return e as ErrorObject;
       }
     }
     return null;
   }
 
-  public async login(email: string, password: string): Promise<ErrorObject | null> {
+  public async login(email: string, password: string): Promise<ErrorObject | true> {
     const authParams: PasswordAuthMiddlewareOptions = { ...this.baseAuthParams }; // copy of base auth params
     authParams.credentials.user.username = email;
     authParams.credentials.user.password = password;
@@ -109,7 +125,7 @@ export default class ECommerceApi {
 
       if (meResponse.statusCode === 200) {
         this.apiRoot = apiRoot;
-        return null;
+        return true;
       }
     } catch (e) {
       const castedE = this.checkError(e);
@@ -118,7 +134,7 @@ export default class ECommerceApi {
       }
       throw e;
     }
-    return null;
+    return true;
   }
 
   public async register(
@@ -130,7 +146,7 @@ export default class ECommerceApi {
     addresses: Array<Address>,
     defaultBillingAddress: number = 0,
     defaultShippingAddress: number = 0
-  ): Promise<ErrorObject | null> {
+  ): Promise<ErrorObject | true> {
     const authParams = this.baseAuthParams;
     authParams.credentials.user.username = email;
     authParams.credentials.user.password = password;
@@ -145,7 +161,7 @@ export default class ECommerceApi {
             password,
             firstName,
             lastName,
-            dateOfBirth: `${dateOfBirth.getFullYear()}-${dateOfBirth.getMonth()}-${dateOfBirth.getDay()}`,
+            dateOfBirth: `${dateOfBirth.getFullYear()}-${dateOfBirth.getMonth() + 1}-${dateOfBirth.getDate()}`,
             addresses,
             defaultBillingAddress,
             defaultShippingAddress,
@@ -159,11 +175,11 @@ export default class ECommerceApi {
       }
       throw e;
     }
-    return null;
+    return true;
   }
 
   public logout(): void {
     this.tokenCachesStore.clear();
-    this.initClient();
+    this.initClientAndApiRoot();
   }
 }
