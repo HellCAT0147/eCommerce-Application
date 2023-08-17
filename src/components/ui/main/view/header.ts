@@ -15,7 +15,7 @@ export default function createHeader(login?: boolean): HTMLElement {
   const signOutButton: HTMLElement = new Builder('', Base.btns_empty, Blocks.header, Elem.btn, Mode.sign_out).button();
   signOutButton.classList.add('redirect__buttons');
   signOutButton.textContent = `${Buttons.SIGN_OUT}`;
-  signOutButton.setAttribute('id', `${Pages.GO_TO_MAIN_PAGE}`);
+  signOutButton.setAttribute('id', `${Pages.SIGN_OUT}`);
   const createButton: HTMLElement = new Builder('', Base.btns_empty, Blocks.header, Elem.btn, Mode.create).button();
   createButton.classList.add('redirect__buttons');
   createButton.textContent = `${Buttons.CREATE}`;

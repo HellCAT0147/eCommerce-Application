@@ -65,7 +65,7 @@ export enum Buttons {
   SIGN = 'SIGN IN',
   SIGN_OUT = 'SIGN OUT',
   CREATE = 'CREATE AN ACCOUNT',
-  go_home = 'GO TO MAIN PAGE',
+  GO_HOME = 'GO TO MAIN PAGE',
 }
 
 export enum Titles {

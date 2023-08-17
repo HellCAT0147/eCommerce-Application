@@ -65,7 +65,7 @@ class Router {
     if (!route) {
       this.navigate(Pages.NOT_FOUND);
     } else {
-      const token = this.tokenCachesStore.get();
+      const token = this.tokenCachesStore.getDefault();
       if (token.token) {
         if (route.path === Pages.LOGIN) {
           this.navigate(Pages.MAIN);
