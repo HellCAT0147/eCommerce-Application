@@ -20,13 +20,17 @@ export default class FormViewLogin extends FormView {
   public reminder(customMsg: string | null = null): void {
     const reminder: HTMLElement = new Builder('p', '', 'login', Elem.err, '').element();
     const errorsHolder: HTMLElement = new Builder('div', '', this.pageName, Elem.errs, Mode.response).element();
-    const sendButton: HTMLButtonElement | null = document.querySelector('.login__button_sign');
+    const form: HTMLFormElement | null = document.querySelector('.login__form');
+
+    setTimeout(() => {
+      errorsHolder.outerHTML = '';
+    }, 2500);
 
     if (customMsg === null) reminder.textContent = 'Please fill in the required fields correctly';
     else reminder.textContent = customMsg;
 
-    if (!sendButton) return;
+    if (!form) return;
     errorsHolder.appendChild(reminder);
-    sendButton.after(errorsHolder);
+    form.appendChild(errorsHolder);
   }
 }
