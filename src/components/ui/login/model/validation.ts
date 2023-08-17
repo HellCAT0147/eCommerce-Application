@@ -29,8 +29,7 @@ export default class ValidationModel {
       this.setErrors('email', []);
       return true;
     }
-    // this.mail = '';
-    this.mail = mail;
+    this.mail = '';
 
     const errors: MailErrors[] = [];
     if (!mail.includes('@')) {
@@ -51,8 +50,7 @@ export default class ValidationModel {
       this.setErrors('password', []);
       return true;
     }
-    // this.password = '';
-    this.password = password;
+    this.password = '';
 
     const errors: PasswordErrors[] = [];
     if (!password.match(/[a-z]/)) errors.push(PasswordErrors.lower);
@@ -89,19 +87,19 @@ export default class ValidationModel {
   }
 
   public async send(): Promise<void> {
-    // if (this.checkSendable()) {
-    // TODO send data this.mail & this.password
-    // console.log(this.mail);
-    // console.log(this.password);
-    const response: ErrorObject | null = await this.eCommerceApi.login(this.mail, this.password);
-    // console.log(response);
-    /* try {
-    } catch (error) {
-      if (error instanceof Error) this.formView.showAuthResponse(error.message);
-    } */
-
-    // } else {
-    // TODO remind validation
-    // }
+    if (this.checkSendable()) {
+      try {
+        const response: ErrorObject | true = await this.eCommerceApi.login(this.mail, this.password);
+        if (response === true) {
+          // TODO redirect
+        } else {
+          this.formView.showAuthResponse(response.message);
+        }
+      } catch (error) {
+        if (error instanceof Error) this.formView.showAuthResponse(error.message);
+      }
+    } else {
+      // TODO remind validation
+    }
   }
 }
