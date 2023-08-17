@@ -2,7 +2,7 @@ import { Base, Blocks, Buttons, Elem, Mode } from '../../../models/builder';
 import { Pages } from '../../../models/router';
 import Builder from '../../builder/html-builder';
 
-export default function createHeader(): HTMLElement {
+export default function createHeader(login?: boolean): HTMLElement {
   const header: HTMLElement = new Builder('header', '', Blocks.header, '', '').element();
   const logo: HTMLElement = new Builder('div', '', Blocks.header, Elem.logo, '').element();
   logo.classList.add('redirect__buttons');
@@ -12,11 +12,18 @@ export default function createHeader(): HTMLElement {
   signButton.classList.add('redirect__buttons');
   signButton.textContent = `${Buttons.SIGN}`;
   signButton.setAttribute('id', `${Pages.LOGIN}`);
+  const signOutButton: HTMLElement = new Builder('', Base.btns_empty, Blocks.header, Elem.btn, Mode.sign_out).button();
+  signOutButton.classList.add('redirect__buttons');
+  signOutButton.textContent = `${Buttons.SIGN_OUT}`;
+  signOutButton.setAttribute('id', `${Pages.GO_TO_MAIN_PAGE}`);
   const createButton: HTMLElement = new Builder('', Base.btns_empty, Blocks.header, Elem.btn, Mode.create).button();
   createButton.classList.add('redirect__buttons');
   createButton.textContent = `${Buttons.CREATE}`;
   createButton.setAttribute('id', `${Pages.REGISTRATION}`);
   navigation.append(signButton, createButton);
+  if (login) {
+    navigation.append(signOutButton);
+  }
   header.append(logo, navigation);
 
   return header;

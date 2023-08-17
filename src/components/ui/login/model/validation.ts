@@ -2,6 +2,8 @@ import { ErrorObject } from '@commercetools/platform-sdk';
 import ECommerceApi from '../../../api/e-commerce-api';
 import { Errors, InputTypeLogin, MailErrors, PasswordErrors } from '../../../models/validation';
 import FormViewLogin from '../view/form';
+import { Pages, Routes } from '../../../models/router';
+import basicRoutes from '../../router/model/routes';
 
 export default class ValidationModel {
   private mail: string;
@@ -91,7 +93,9 @@ export default class ValidationModel {
       try {
         const response: ErrorObject | true = await this.eCommerceApi.login(this.mail, this.password);
         if (response === true) {
-          // TODO redirect
+          const route: Routes | undefined = basicRoutes.find((routeExisting) => routeExisting.path === Pages.MAIN);
+          if (route) route.callback(true);
+          window.history.pushState(null, '', `/${Pages.MAIN}`);
         } else {
           this.formView.reminder(response.message);
         }

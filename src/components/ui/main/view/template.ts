@@ -2,13 +2,13 @@ import { Base, Blocks, Elem, Titles } from '../../../models/builder';
 import Builder from '../../builder/html-builder';
 import createHeader from './header';
 
-export default function createTemplate(): HTMLBodyElement | null {
+export default function createTemplate(login?: boolean): HTMLBodyElement | null {
   const body: HTMLBodyElement | null = document.querySelector('body');
   if (body) {
     body.className = 'body';
     body.innerHTML = '';
   }
-  const header: HTMLElement = createHeader();
+  const header: HTMLElement = createHeader(login);
   const main: HTMLElement = new Builder('main', Blocks.main, Blocks.main, Blocks.main, '').element();
   const title: HTMLElement = new Builder('h1', Base.titles, Blocks.main, Elem.title, '').element();
   title.textContent = `eCommerce - ${Titles.MAIN} Page`;

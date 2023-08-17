@@ -30,6 +30,7 @@ export enum Mode {
   eye_closed = 'eye-closed',
   eye_opened = 'eye-opened',
   sign = 'sign',
+  sign_out = 'sign-out',
   create = 'create',
   valid = 'valid',
   invalid = 'invalid',
@@ -62,6 +63,7 @@ export enum Base {
 
 export enum Buttons {
   SIGN = 'SIGN IN',
+  SIGN_OUT = 'SIGN OUT',
   CREATE = 'CREATE AN ACCOUNT',
   go_home = 'GO TO MAIN PAGE',
 }
