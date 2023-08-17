@@ -5,9 +5,9 @@ import eCommerceAPIConfig from '../../../api/e-commerce-api-config-realization';
 class ControllerLogin {
   private eCommerceApi: ECommerceApi;
 
-  private validationModel: ValidationModel;
+  protected validationModel: ValidationModel;
 
-  constructor() {
+  public constructor() {
     this.eCommerceApi = new ECommerceApi(
       eCommerceAPIConfig.projectKey,
       eCommerceAPIConfig.clientId,
