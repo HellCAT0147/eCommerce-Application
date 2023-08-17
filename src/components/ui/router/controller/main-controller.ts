@@ -47,9 +47,14 @@ class MainController {
         window.history.pushState(null, '', `/${urlButton}`);
         this.router.navigate(urlButton);
       }
+      if (targetHtmlElement.closest(`.main__${Pages.MAIN}`)) {
+        this.router.controllerMain.buttonEvent(e);
+      } else if (targetHtmlElement.closest(`.main__${Pages.LOGIN}`)) {
+        this.router.controllerLogin.buttonEvent(e);
+      } else if (targetHtmlElement.closest(`.main__${Pages.REGISTRATION}`)) {
+        this.router.controllerRegistration.buttonEvent(e);
+      }
     }
-
-    this.router.controllerLogin.buttonEvent(e);
   }
 }
 

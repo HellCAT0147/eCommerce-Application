@@ -1,5 +1,5 @@
-import { Errors, MailErrors, PasswordErrors, InputType } from '../../../models/validation';
-import FormView from '../view/form';
+import { Errors, InputTypeLogin, MailErrors, PasswordErrors } from '../../../models/validation';
+import FormView from '../../builder/form';
 
 export default class ValidationModel {
   private mail: string;
@@ -59,7 +59,7 @@ export default class ValidationModel {
     return false;
   }
 
-  protected setErrors(inputType: InputType, errors: Errors[]): void {
+  public setErrors(inputType: InputTypeLogin, errors: Errors[]): void {
     const inputs: NodeListOf<HTMLInputElement> = document.querySelectorAll('.form__input');
     inputs.forEach((input) => {
       if (input.classList.contains(`login__input_${inputType}`)) {

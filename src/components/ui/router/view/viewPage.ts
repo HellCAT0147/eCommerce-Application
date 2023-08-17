@@ -1,5 +1,5 @@
 export default function selectCurrentPage(url: string): void {
-  const headerButtons: NodeListOf<HTMLElement> = document.querySelectorAll('.header__buttons');
+  const headerButtons: NodeListOf<HTMLElement> = document.querySelectorAll('.header__button');
 
   headerButtons.forEach((button: HTMLElement) => {
     button.classList.remove('current-page');
