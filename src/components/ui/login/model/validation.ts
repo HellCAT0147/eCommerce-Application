@@ -93,13 +93,13 @@ export default class ValidationModel {
         if (response === true) {
           // TODO redirect
         } else {
-          this.formView.showAuthResponse(response.message);
+          this.formView.reminder(response.message);
         }
       } catch (error) {
-        if (error instanceof Error) this.formView.showAuthResponse(error.message);
+        if (error instanceof Error) this.formView.reminder(error.message);
       }
     } else {
-      // TODO remind validation
+      this.formView.reminder();
     }
   }
 }

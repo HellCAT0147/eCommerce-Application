@@ -17,7 +17,16 @@ export default class FormViewLogin extends FormView {
     this.form = form;
   }
 
-  public showAuthResponse(responseMsg: string): void {
-    // TODO console.log(responseMsg);
+  public reminder(customMsg: string | null = null): void {
+    const reminder: HTMLElement = new Builder('p', '', 'login', Elem.err, '').element();
+    const errorsHolder: HTMLElement = new Builder('div', '', this.pageName, Elem.errs, Mode.response).element();
+    const sendButton: HTMLButtonElement | null = document.querySelector('.login__button_sign');
+
+    if (customMsg === null) reminder.textContent = 'Please fill in the required fields correctly';
+    else reminder.textContent = customMsg;
+
+    if (!sendButton) return;
+    errorsHolder.appendChild(reminder);
+    sendButton.after(errorsHolder);
   }
 }
