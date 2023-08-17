@@ -8,7 +8,7 @@ export default class FormView {
 
   protected pageName: string;
 
-  constructor(pageName: string = Pages.LOGIN) {
+  public constructor(pageName: string = Pages.LOGIN) {
     this.pageName = pageName;
     const form: HTMLFormElement = new Builder('', Base.form, pageName, Blocks.form, '').form();
     const formFieldEmail: HTMLFieldSetElement = new Builder('', Base.field, pageName, Elem.field, Mode.email).field();
@@ -30,13 +30,13 @@ export default class FormView {
     return this.form;
   }
 
-  public createShowPassword(): HTMLButtonElement {
+  private createShowPassword(): HTMLButtonElement {
     const showPassword: HTMLButtonElement = new Builder('', '', Blocks.form, Elem.btn, Mode.eye_closed).button();
     showPassword.id = 'show-password';
     return showPassword;
   }
 
-  public createInput(pageName: string, inputName: InputType): HTMLInputElement {
+  protected createInput(pageName: string, inputName: InputType): HTMLInputElement {
     const input: HTMLInputElement = new Builder('', Base.inputs, pageName, Elem.input, inputName).input();
 
     if (inputName === Mode.email) input.setAttribute('type', 'text');
@@ -48,7 +48,7 @@ export default class FormView {
     return input;
   }
 
-  public createLabel(pageName: string, labelName: string): HTMLLabelElement {
+  protected createLabel(pageName: string, labelName: string): HTMLLabelElement {
     const label: HTMLLabelElement = new Builder('', Base.labels, pageName, Elem.label, labelName).label();
     label.setAttribute('for', `${pageName}-${labelName}`);
     const asterisk: HTMLElement = new Builder('span', '', 'required', '', '').element();
@@ -63,7 +63,7 @@ export default class FormView {
     return label;
   }
 
-  public highlightInput(input: HTMLInputElement | null, isValid: boolean): void {
+  private highlightInput(input: HTMLInputElement | null, isValid: boolean): void {
     if (input) {
       if (isValid) {
         input.classList.add(Mode.valid);
