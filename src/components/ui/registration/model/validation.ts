@@ -1,7 +1,7 @@
 // TODO adapt setErrors
 // import { Errors, RegistrationInputType } from '../../../models/validation';
 import ECommerceApi from '../../../api/e-commerce-api';
-import { Errors, InputType, NameErrors } from '../../../models/validation';
+import { DateErrors, Errors, InputType, NameErrors } from '../../../models/validation';
 import ValidationModel from '../../login/model/validation';
 import FormViewReg from '../view/form';
 
@@ -11,6 +11,8 @@ export default class RegistrationValidationModel extends ValidationModel {
   private lastName: string = '';
 
   private city: string = '';
+
+  private date: string = '';
 
   protected formViewReg: FormViewReg;
 
@@ -68,17 +70,28 @@ export default class RegistrationValidationModel extends ValidationModel {
 
   public checkBirthDate(date: string): boolean {
     const regexp: RegExp = /^\d{4}-\d{2}-\d{2}$/;
-    if (!date.match(regexp)) return false;
-
     const minDate = new Date();
     const maxDate = new Date();
     const inputDate = new Date(date);
 
-    minDate.setFullYear(minDate.getFullYear() - 150);
-    maxDate.setFullYear(maxDate.getFullYear() - 13);
-    if (inputDate < minDate || inputDate > maxDate) return false;
+    if (date.match(regexp)) {
+      minDate.setFullYear(minDate.getFullYear() - 150);
+      maxDate.setFullYear(maxDate.getFullYear() - 13);
+      if (inputDate >= minDate && inputDate <= maxDate) {
+        this.date = date;
+        this.setErrors('date-of-birth', []);
+        return true;
+      }
+    }
 
-    return true;
+    this.date = '';
+    const errors: DateErrors[] = [];
+    if (inputDate < minDate) errors.push(DateErrors.correct);
+    else if (inputDate > maxDate) errors.push(DateErrors.noChild);
+    else errors.push(DateErrors.invalid);
+    this.setErrors('date-of-birth', errors);
+
+    return false;
   }
 
   public checkStreet(street: string): boolean {

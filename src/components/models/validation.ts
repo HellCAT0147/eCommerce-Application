@@ -31,9 +31,9 @@ export enum NameErrors {
 }
 
 export enum DateErrors {
-  invalid = 'Invalid date',
-  correct = 'Your age must be correct',
+  correct = 'Your birthday must be real',
   noChild = 'You must be over 13 years old',
+  invalid = 'Invalid date',
 }
 
 export enum PostalErrors {
