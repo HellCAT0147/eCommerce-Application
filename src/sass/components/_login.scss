@@ -15,6 +15,11 @@
     align-self: flex-end;
     text-align: right;
     background-color: $color-error;
+
+    &_response {
+      margin-top: 0;
+      animation: disappear 0.5s linear 2s forwards;
+    }
   }
 
   &__error {
@@ -22,5 +27,14 @@
     background-image: url('../assets/ico/login/x-marks-the-spot.svg');
     background-repeat: no-repeat;
     background-position: right;
+  }
+}
+
+@keyframes disappear {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }
