@@ -2,9 +2,11 @@ export type InputTypeLogin = 'email' | 'password';
 
 export type AddressFields = 'street' | 'city' | 'postal-code' | 'country';
 
+export type BillAddressFields = 'street-bill' | 'city-bill' | 'postal-code-bill' | 'country-bill';
+
 export type PersonFields = 'first-name' | 'last-name' | 'date-of-birth';
 
-export type InputType = InputTypeLogin | PersonFields | AddressFields;
+export type InputType = InputTypeLogin | PersonFields | AddressFields | BillAddressFields;
 
 export enum MailErrors {
   at = "Email must contain an '@'.",
