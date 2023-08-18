@@ -2,7 +2,7 @@ export type InputTypeLogin = 'email' | 'password';
 
 export type AddressFields = 'street' | 'city' | 'postal-code' | 'country';
 
-export type BillAddressFields = 'street-bill' | 'city-bill' | 'postal-code-bill' | 'country-bill';
+export type BillAddressFields = 'street-bill' | 'city-bill' | 'postal-code-bill' | 'country-bill' | 'check-bill';
 
 export type PersonFields = 'first-name' | 'last-name' | 'date-of-birth';
 
