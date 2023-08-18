@@ -44,6 +44,7 @@ export enum Mode {
   city = 'city',
   postal = 'postal-code',
   country = 'country',
+  response = 'response',
 }
 
 export enum Base {

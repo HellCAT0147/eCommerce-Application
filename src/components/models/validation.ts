@@ -22,4 +22,23 @@ export enum PasswordErrors {
   space = 'Password must not contain whitespace.',
 }
 
+export enum NameErrors {
+  short = ' name must contain at least one character',
+  noDigit = ' name must not contain special characters',
+  noChar = ' name must not contain digits',
+}
+
+export enum DateErrors {
+  invalid = 'Invalid date',
+  correct = 'Your age must be correct',
+  noChild = 'You must be over 13 years old',
+}
+
+export enum PostalErrors {
+  BY = 'Belarus: six-digit postal code',
+  RU = 'Russia: six-digit postal code',
+  UZ = 'Uzbekistan: six-digit postal code',
+  US = 'USA: five-digit postal code or with DDDDD-DDDD template where D = digit',
+}
+
 export type Errors = MailErrors | PasswordErrors;

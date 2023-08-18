@@ -4,11 +4,11 @@ import { Pages } from '../../models/router';
 import Builder from './html-builder';
 
 export default class FormView {
-  public form: HTMLFormElement;
+  protected form: HTMLFormElement;
 
-  public pageName: string;
+  protected pageName: string;
 
-  constructor(pageName: string = Pages.LOGIN) {
+  public constructor(pageName: string = Pages.LOGIN) {
     this.pageName = pageName;
     const form: HTMLFormElement = new Builder('', Base.form, pageName, Blocks.form, '').form();
     const formFieldEmail: HTMLFieldSetElement = new Builder('', Base.field, pageName, Elem.field, Mode.email).field();
@@ -30,25 +30,37 @@ export default class FormView {
     return this.form;
   }
 
-  public createShowPassword(): HTMLButtonElement {
+  private createShowPassword(): HTMLButtonElement {
     const showPassword: HTMLButtonElement = new Builder('', '', Blocks.form, Elem.btn, Mode.eye_closed).button();
     showPassword.id = 'show-password';
     return showPassword;
   }
 
-  public createInput(pageName: string, inputName: InputType): HTMLInputElement {
+  protected createInput(pageName: string, inputName: InputType): HTMLInputElement {
     const input: HTMLInputElement = new Builder('', Base.inputs, pageName, Elem.input, inputName).input();
 
     if (inputName === Mode.email) input.setAttribute('type', 'text');
     else if (inputName === Mode.pass) input.setAttribute('type', 'password');
-    else if (inputName === Mode.date) input.setAttribute('type', 'date');
+    else if (inputName === Mode.date) {
+      const currentDate: Date = new Date();
+      const yearMin: number = currentDate.getFullYear() - 150;
+      const yearMax: number = currentDate.getFullYear() - 13;
+      const month: string = String(currentDate.getMonth() + 1).padStart(2, '0');
+      const day: string = String(currentDate.getDate()).padStart(2, '0');
+      const formattedMinDate: string = `${yearMin}-${month}-${day}`;
+      const formattedMaxDate: string = `${yearMax}-${month}-${day}`;
+
+      input.setAttribute('type', 'date');
+      input.setAttribute('min', formattedMinDate);
+      input.setAttribute('max', formattedMaxDate);
+    }
 
     input.setAttribute('id', `${pageName}-${inputName}`);
 
     return input;
   }
 
-  public createLabel(pageName: string, labelName: string): HTMLLabelElement {
+  protected createLabel(pageName: string, labelName: string): HTMLLabelElement {
     const label: HTMLLabelElement = new Builder('', Base.labels, pageName, Elem.label, labelName).label();
     label.setAttribute('for', `${pageName}-${labelName}`);
     const asterisk: HTMLElement = new Builder('span', '', 'required', '', '').element();
@@ -63,7 +75,7 @@ export default class FormView {
     return label;
   }
 
-  public highlightInput(input: HTMLInputElement | null, isValid: boolean): void {
+  private highlightInput(input: HTMLInputElement | null, isValid: boolean): void {
     if (input) {
       if (isValid) {
         input.classList.add(Mode.valid);

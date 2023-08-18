@@ -1,20 +1,25 @@
+import { ErrorObject } from '@commercetools/platform-sdk';
+import ECommerceApi from '../../../api/e-commerce-api';
 import { Errors, InputTypeLogin, MailErrors, PasswordErrors } from '../../../models/validation';
-import FormView from '../../builder/form';
+import FormViewLogin from '../view/form';
 
 export default class ValidationModel {
-  private mail: string;
+  protected mail: string;
 
-  private password: string;
+  protected password: string;
 
-  private isValid: boolean;
+  protected isValid: boolean;
 
-  protected formView: FormView;
+  protected formView: FormViewLogin;
 
-  public constructor() {
+  private eCommerceApi: ECommerceApi;
+
+  public constructor(eCommerceApi: ECommerceApi) {
+    this.eCommerceApi = eCommerceApi;
     this.mail = '';
     this.password = '';
     this.isValid = false;
-    this.formView = new FormView('login');
+    this.formView = new FormViewLogin('login');
   }
 
   public checkMail(mail: string): boolean {
@@ -59,7 +64,7 @@ export default class ValidationModel {
     return false;
   }
 
-  public setErrors(inputType: InputTypeLogin, errors: Errors[]): void {
+  protected setErrors(inputType: InputTypeLogin, errors: Errors[]): void {
     const inputs: NodeListOf<HTMLInputElement> = document.querySelectorAll('.form__input');
     inputs.forEach((input) => {
       if (input.classList.contains(`login__input_${inputType}`)) {
@@ -75,17 +80,26 @@ export default class ValidationModel {
     }
   }
 
-  private checkSendable(): boolean {
+  protected checkSendable(): boolean {
     if (this.mail !== '' && this.password !== '') this.isValid = true;
     else this.isValid = false;
     return this.isValid;
   }
 
-  public send(): void {
+  public async send(): Promise<void> {
     if (this.checkSendable()) {
-      // TODO send data this.mail & this.password
+      try {
+        const response: ErrorObject | true = await this.eCommerceApi.login(this.mail, this.password);
+        if (response === true) {
+          // TODO redirect
+        } else {
+          this.formView.reminder(response.message);
+        }
+      } catch (error) {
+        if (error instanceof Error) this.formView.reminder(error.message);
+      }
     } else {
-      // TODO remind validation
+      this.formView.reminder();
     }
   }
 }

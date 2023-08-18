@@ -1,19 +1,20 @@
+import ValidationModel from '../model/validation';
 import ECommerceApi from '../../../api/e-commerce-api';
 import eCommerceAPIConfig from '../../../api/e-commerce-api-config-realization';
-import ValidationModel from '../model/validation';
 
 class ControllerLogin {
-  protected eCommerceApi = new ECommerceApi(
-    eCommerceAPIConfig.projectKey,
-    eCommerceAPIConfig.clientId,
-    eCommerceAPIConfig.clientSecret,
-    eCommerceAPIConfig.region
-  );
+  private eCommerceApi: ECommerceApi;
 
   protected validationModel: ValidationModel;
 
-  constructor() {
-    this.validationModel = new ValidationModel();
+  public constructor() {
+    this.eCommerceApi = new ECommerceApi(
+      eCommerceAPIConfig.projectKey,
+      eCommerceAPIConfig.clientId,
+      eCommerceAPIConfig.clientSecret,
+      eCommerceAPIConfig.region
+    );
+    this.validationModel = new ValidationModel(this.eCommerceApi);
   }
 
   public checkField(e: Event): void {
@@ -33,6 +34,10 @@ class ControllerLogin {
 
     const signIn: HTMLButtonElement | null = target.closest('.login__button_sign');
     if (signIn) this.validationModel.send();
+  }
+
+  protected getAPI(): ECommerceApi {
+    return this.eCommerceApi;
   }
 }
 
