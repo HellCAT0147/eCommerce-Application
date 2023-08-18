@@ -1,11 +1,12 @@
 import { Base, Buttons, Elem, Mode } from '../../../models/builder';
+import { Pages } from '../../../models/router';
 import FormView from '../../builder/form';
 import Builder from '../../builder/html-builder';
 
 export default class FormViewLogin extends FormView {
   protected form: HTMLFormElement;
 
-  public constructor(pageName: string) {
+  public constructor(pageName: string = Pages.LOGIN) {
     super(pageName);
     const form: HTMLFormElement = this.getForm();
     const buttonForm: HTMLButtonElement = new Builder('', Base.btns_colored, pageName, Elem.btn, Mode.sign).button();

@@ -1,11 +1,12 @@
 import { Base, Buttons, Elem, Mode } from '../../../models/builder';
+import { Pages } from '../../../models/router';
 import FormView from '../../builder/form';
 import Builder from '../../builder/html-builder';
 
 export default class FormViewReg extends FormView {
   public form: HTMLFormElement;
 
-  constructor(pageName: string) {
+  constructor(pageName: string = Pages.REGISTRATION) {
     super(pageName);
     const form: HTMLFormElement = this.getForm();
     const formFieldFirstName: HTMLFieldSetElement = new Builder('', Base.field, pageName, 'field', Mode.f_name).field();

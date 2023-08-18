@@ -1,6 +1,5 @@
 import { Base, Blocks, Elem, Mode } from '../../models/builder';
 import { Errors, InputType } from '../../models/validation';
-import { Pages } from '../../models/router';
 import Builder from './html-builder';
 
 export default class FormView {
@@ -8,7 +7,7 @@ export default class FormView {
 
   protected pageName: string;
 
-  public constructor(pageName: string = Pages.LOGIN) {
+  public constructor(pageName: string) {
     this.pageName = pageName;
     const form: HTMLFormElement = new Builder('', Base.form, pageName, Blocks.form, '').form();
     const formFieldEmail: HTMLFieldSetElement = new Builder('', Base.field, pageName, Elem.field, Mode.email).field();
@@ -87,7 +86,7 @@ export default class FormView {
     }
   }
 
-  public showErrors(place: HTMLElement | null, errors: Errors[], inputType: InputType): void {
+  public showErrors(place: HTMLElement | null, errors: Errors[] | string[], inputType: InputType): void {
     if (place) {
       const prevErrorsHolder: HTMLDivElement | null = document.querySelector(`.${this.pageName}__errors_${inputType}`);
 
@@ -110,8 +109,10 @@ export default class FormView {
     }
   }
 
-  public switchPasswordView(icon: HTMLButtonElement): void {
-    const input: HTMLInputElement | null = document.querySelector(`#${this.pageName}-password`);
+  public switchPasswordView(icon: HTMLButtonElement, pageName?: string): void {
+    let input: HTMLInputElement | null;
+    input = document.querySelector(`#${this.pageName}-password`);
+    if (pageName) input = document.querySelector(`#${pageName}-password`);
     icon.classList.toggle(`form__button_${Mode.eye_opened}`);
     icon.classList.toggle(`form__button_${Mode.eye_closed}`);
 

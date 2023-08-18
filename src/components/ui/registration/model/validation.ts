@@ -1,20 +1,69 @@
 // TODO adapt setErrors
 // import { Errors, RegistrationInputType } from '../../../models/validation';
+import ECommerceApi from '../../../api/e-commerce-api';
+import { Errors, InputType, NameErrors } from '../../../models/validation';
 import ValidationModel from '../../login/model/validation';
+import FormViewReg from '../view/form';
 
 export default class RegistrationValidationModel extends ValidationModel {
   private firstName: string = '';
 
-  public checkName(name: string): boolean {
-    const regexp: RegExp = /^[a-zA-Zа-яА-ЯёЁғҒиИйЙкКқҚлЛмМнНоОпПрРсСтТуУфФхХцЦчЧшШъЪьЬэЭюЮяЯ]+$/u;
+  private lastName: string = '';
+
+  private city: string = '';
+
+  protected formViewReg: FormViewReg;
+
+  public constructor(eCommerceApi: ECommerceApi) {
+    super(eCommerceApi);
+    this.formViewReg = new FormViewReg();
+  }
+
+  public checkName(name: string, target: string): boolean {
+    const regexp: RegExp = /^[a-zA-Zа-яА-ЯёЁғҒиИйЙкКқҚлЛмМнНоОпПрРсСтТуУфФхХцЦчЧшШъЪьЬэЭюЮяЯ\s'-]+$/u;
     if (name.match(regexp)) {
-      this.firstName = name;
-      // TODO adapt setErrors
-      // this.setErrors('first-name', []);
+      if (target.includes('city')) {
+        this.city = name;
+        this.setErrors('city', []);
+      } else if (target.includes('first')) {
+        this.firstName = name;
+        this.setErrors('first-name', []);
+      } else {
+        this.lastName = name;
+        this.setErrors('last-name', []);
+      }
       return true;
     }
-    this.firstName = '';
+
+    this.getNameErrors(target, name);
+
     return false;
+  }
+
+  private getNameErrors(target: string, name: string): string[] {
+    const errors: string[] = [];
+
+    function errorsHandling(textName: string): void {
+      if (!name.length) errors.push(`${textName} ${NameErrors.short}`);
+      else if (name.match(/\d/)) errors.push(`${textName} ${NameErrors.noDigit}`);
+      else errors.push(`${textName} ${NameErrors.noChar}`);
+    }
+
+    if (target.includes('city')) {
+      this.city = '';
+      errorsHandling('City');
+      this.setErrors('city', errors);
+    } else if (target.includes('first')) {
+      this.firstName = '';
+      errorsHandling('First');
+      this.setErrors('first-name', errors);
+    } else {
+      this.lastName = '';
+      errorsHandling('Last');
+      this.setErrors('last-name', errors);
+    }
+
+    return errors;
   }
 
   public checkBirthDate(date: string): boolean {
@@ -44,14 +93,13 @@ export default class RegistrationValidationModel extends ValidationModel {
     return true;
   }
 
-  // TODO adapt setErrors
-  /* protected setErrors(inputType: RegistrationInputType, errors: Errors[]): void {
+  protected setErrors(inputType: InputType, errors: Errors[] | string[]): void {
     const inputs: NodeListOf<HTMLInputElement> = document.querySelectorAll('.form__input');
     inputs.forEach((input) => {
-      if (input.classList.contains(`login__input_${inputType}`)) {
-        this.formView.showErrors(input.parentElement, errors, inputType);
+      if (input.classList.contains(`registration__input_${inputType}`)) {
+        this.formViewReg.showErrors(input.parentElement, errors, inputType);
       }
     });
     this.checkSendable();
-  } */
+  }
 }

@@ -1,6 +1,6 @@
 import { ErrorObject } from '@commercetools/platform-sdk';
 import ECommerceApi from '../../../api/e-commerce-api';
-import { Errors, InputTypeLogin, MailErrors, PasswordErrors } from '../../../models/validation';
+import { LoginErrors, InputTypeLogin, MailErrors, PasswordErrors } from '../../../models/validation';
 import FormViewLogin from '../view/form';
 
 export default class ValidationModel {
@@ -64,7 +64,7 @@ export default class ValidationModel {
     return false;
   }
 
-  protected setErrors(inputType: InputTypeLogin, errors: Errors[]): void {
+  protected setErrors(inputType: InputTypeLogin, errors: LoginErrors[]): void {
     const inputs: NodeListOf<HTMLInputElement> = document.querySelectorAll('.form__input');
     inputs.forEach((input) => {
       if (input.classList.contains(`login__input_${inputType}`)) {
@@ -74,8 +74,12 @@ export default class ValidationModel {
     this.checkSendable();
   }
 
-  public switchPasswordView(button: HTMLButtonElement | null): void {
+  public switchPasswordView(button: HTMLButtonElement | null, pageName?: string): void {
     if (button) {
+      if (pageName) {
+        this.formView.switchPasswordView(button, pageName);
+        return;
+      }
       this.formView.switchPasswordView(button);
     }
   }

@@ -23,9 +23,9 @@ export enum PasswordErrors {
 }
 
 export enum NameErrors {
-  short = ' name must contain at least one character',
-  noDigit = ' name must not contain special characters',
-  noChar = ' name must not contain digits',
+  short = 'name must contain at least one character',
+  noDigit = 'name must not contain digits',
+  noChar = 'name must not contain special characters',
 }
 
 export enum DateErrors {
@@ -41,4 +41,6 @@ export enum PostalErrors {
   US = 'USA: five-digit postal code or with DDDDD-DDDD template where D = digit',
 }
 
-export type Errors = MailErrors | PasswordErrors;
+export type LoginErrors = MailErrors | PasswordErrors;
+
+export type Errors = LoginErrors | NameErrors | DateErrors | PostalErrors;
