@@ -6,7 +6,7 @@ import Builder from '../../builder/html-builder';
 export default class FormViewReg extends FormView {
   public form: HTMLFormElement;
 
-  constructor(pageName: string = Pages.REGISTRATION) {
+  public constructor(pageName: string = Pages.REGISTRATION) {
     super(pageName);
     const form: HTMLFormElement = this.getForm();
     const formFieldFirstName: HTMLFieldSetElement = new Builder('', Base.field, pageName, 'field', Mode.f_name).field();
@@ -46,4 +46,6 @@ export default class FormViewReg extends FormView {
     form.append(formFieldCountry, buttonForm);
     this.form = form;
   }
+
+  public resetPostal(): void {}
 }

@@ -1,4 +1,5 @@
 import { Pages } from '../../../models/router';
+import { Countries } from '../../../models/validation';
 import ControllerLogin from '../../login/controller/controller';
 import RegistrationValidationModel from '../model/validation';
 
@@ -21,7 +22,7 @@ class ControllerRegistration extends ControllerLogin {
     else if (target.id.includes('date-of-birth')) this.validationModel.checkBirthDate(target.value);
     else if (target.id.includes('street')) this.validationModel.checkStreet(target.value);
     else if (target.id.includes('postal-code')) this.validationModel.checkPostal(target.value);
-    else this.validationModel.checkCountry(target.value);
+    else this.validationModel.checkCountry(target.value as Countries);
   }
 
   public buttonEvent(e: Event): void {

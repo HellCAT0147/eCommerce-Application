@@ -1,7 +1,7 @@
 // TODO adapt setErrors
 // import { Errors, RegistrationInputType } from '../../../models/validation';
 import ECommerceApi from '../../../api/e-commerce-api';
-import { DateErrors, Errors, InputType, NameErrors } from '../../../models/validation';
+import { Countries, DateErrors, Errors, InputType, NameErrors } from '../../../models/validation';
 import ValidationModel from '../../login/model/validation';
 import FormViewReg from '../view/form';
 
@@ -12,7 +12,11 @@ export default class RegistrationValidationModel extends ValidationModel {
 
   private city: string = '';
 
+  private cityBill: string = '';
+
   private date: string = '';
+
+  private postal: string = '';
 
   protected formViewReg: FormViewReg;
 
@@ -24,7 +28,10 @@ export default class RegistrationValidationModel extends ValidationModel {
   public checkName(name: string, target: string): boolean {
     const regexp: RegExp = /^[a-zA-Zа-яА-ЯёЁғҒиИйІіЙкКқҚлЛмМнНоОпПрРсСтТуУЎўфФхХцЦчЧшШъЪьЬэЭюЮяЯ\s'-]+$/u;
     if (name.match(regexp)) {
-      if (target.includes('city')) {
+      if (target.includes('city') && target.includes('bill')) {
+        this.cityBill = name;
+        this.setErrors('city-bill', []);
+      } else if (target.includes('city')) {
         this.city = name;
         this.setErrors('city', []);
       } else if (target.includes('first')) {
@@ -94,7 +101,9 @@ export default class RegistrationValidationModel extends ValidationModel {
     return false;
   }
 
-  public checkStreet(street: string): boolean {
+  public checkCountry(country: Countries): boolean {
+    this.postal = '';
+    this.formViewReg.resetPostal();
     return true;
   }
 
@@ -102,7 +111,7 @@ export default class RegistrationValidationModel extends ValidationModel {
     return true;
   }
 
-  public checkCountry(country: string): boolean {
+  public checkStreet(street: string): boolean {
     return true;
   }
 
