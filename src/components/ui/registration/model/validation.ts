@@ -20,7 +20,7 @@ export default class RegistrationValidationModel extends ValidationModel {
   }
 
   public checkName(name: string, target: string): boolean {
-    const regexp: RegExp = /^[a-zA-Zа-яА-ЯёЁғҒиИйЙкКқҚлЛмМнНоОпПрРсСтТуУфФхХцЦчЧшШъЪьЬэЭюЮяЯ\s'-]+$/u;
+    const regexp: RegExp = /^[a-zA-Zа-яА-ЯёЁғҒиИйІіЙкКқҚлЛмМнНоОпПрРсСтТуУЎўфФхХцЦчЧшШъЪьЬэЭюЮяЯ\s'-]+$/u;
     if (name.match(regexp)) {
       if (target.includes('city')) {
         this.city = name;
