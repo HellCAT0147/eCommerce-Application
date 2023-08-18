@@ -25,15 +25,20 @@ class ControllerRegistration extends ControllerLogin {
   }
 
   public buttonEvent(e: Event): void {
-    e.preventDefault();
     const { target } = e;
     if (!(target instanceof HTMLElement)) return;
 
     const showPassword: HTMLButtonElement | null = target.closest('#show-password');
-    this.validationModel.switchPasswordView(showPassword, Pages.REGISTRATION);
+    if (showPassword) {
+      e.preventDefault();
+      this.validationModel.switchPasswordView(showPassword, Pages.REGISTRATION);
+    }
 
     const signIn: HTMLButtonElement | null = target.closest('.registration__button_create');
-    if (signIn) this.validationModel.send();
+    if (signIn) {
+      e.preventDefault();
+      this.validationModel.send();
+    }
   }
 }
 
