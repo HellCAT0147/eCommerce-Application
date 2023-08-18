@@ -52,19 +52,23 @@ export default class FormView {
       input.setAttribute('type', 'date');
       input.setAttribute('min', formattedMinDate);
       input.setAttribute('max', formattedMaxDate);
-    }
+    } else if (inputName === Mode.check_bill) input.setAttribute('type', 'checkbox');
 
     input.setAttribute('id', `${pageName}-${inputName}`);
 
     return input;
   }
 
-  protected createLabel(pageName: string, labelName: string): HTMLLabelElement {
+  protected createLabel(pageName: string, labelName: string, labelText?: string): HTMLLabelElement {
     const label: HTMLLabelElement = new Builder('', Base.labels, pageName, Elem.label, labelName).label();
     label.setAttribute('for', `${pageName}-${labelName}`);
     const asterisk: HTMLElement = new Builder('span', '', 'required', '', '').element();
     asterisk.textContent = ' *';
-    const prettyLabelName: string = `${labelName
+    let labelTitle: string = labelName;
+    if (labelText) {
+      labelTitle = labelText;
+    }
+    const prettyLabelName: string = `${labelTitle
       .split('-')
       .map((word) => `${word[0].toUpperCase()}${word.slice(1)}`)
       .join(' ')}`;
@@ -72,6 +76,36 @@ export default class FormView {
     label.appendChild(asterisk);
 
     return label;
+  }
+
+  protected createAddress(
+    street: InputType,
+    city: InputType,
+    postal: InputType,
+    country: InputType
+  ): HTMLFieldSetElement {
+    const page: string = this.pageName;
+    const formFieldAddress: HTMLFieldSetElement = new Builder('', Base.subform, page, Elem.address, '').field();
+    const formFieldCountry: HTMLFieldSetElement = new Builder('', Base.field, page, 'field', country).field();
+    const labelCountry: HTMLLabelElement = this.createLabel(page, country, Mode.country);
+    const inputCountry: HTMLInputElement = this.createInput(page, country);
+    const formFieldPostal: HTMLFieldSetElement = new Builder('', Base.field, page, 'field', postal).field();
+    const labelPostal: HTMLLabelElement = this.createLabel(page, postal, Mode.postal);
+    const inputPostal: HTMLInputElement = this.createInput(page, postal);
+    const formFieldCity: HTMLFieldSetElement = new Builder('', Base.field, page, 'field', city).field();
+    const labelCity: HTMLLabelElement = this.createLabel(page, city, Mode.city);
+    const inputCity: HTMLInputElement = this.createInput(page, city);
+    const formFieldStreet: HTMLFieldSetElement = new Builder('', Base.field, page, 'field', street).field();
+    const labelStreet: HTMLLabelElement = this.createLabel(page, street, Mode.street);
+    const inputStreet: HTMLInputElement = this.createInput(page, street);
+
+    formFieldStreet.append(labelStreet, inputStreet);
+    formFieldCity.append(labelCity, inputCity);
+    formFieldPostal.append(labelPostal, inputPostal);
+    formFieldCountry.append(labelCountry, inputCountry);
+    formFieldAddress.append(formFieldCountry, formFieldPostal, formFieldCity, formFieldStreet);
+
+    return formFieldAddress;
   }
 
   private highlightInput(input: HTMLInputElement | null, isValid: boolean): void {

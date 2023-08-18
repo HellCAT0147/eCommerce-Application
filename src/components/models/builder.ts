@@ -22,6 +22,7 @@ export enum Elem {
   number = 'number',
   circle = 'circle',
   go_home = 'go-home',
+  address = 'address',
 }
 
 export enum Mode {
@@ -45,15 +46,26 @@ export enum Mode {
   city = 'city',
   postal = 'postal-code',
   country = 'country',
+  street_bill = 'street-bill',
+  city_bill = 'city-bill',
+  postal_bill = 'postal-code-bill',
+  country_bill = 'country-bill',
   response = 'response',
+  contact = 'contact',
+  ship = 'shipping',
+  bill = 'billing',
+  check_bill = 'check-bill',
 }
 
 export enum Base {
   form = 'form',
+  subform = `${form} ${form}__subform`,
   field = `${form}__field`,
+  form_section = `${form}__section`,
   inputs = `${form}__input`,
   labels = `${form}__label`,
   titles = `titles`,
+  form_title = `${form}__${titles}`,
   btns = 'buttons',
   errs = 'errors',
   btns_colored = `${btns} ${btns}_colored`,
@@ -73,4 +85,8 @@ export enum Titles {
   LOGIN = 'Login',
   REGISTRATION = 'Registration',
   PAGE_NOT_FOUND = 'Page not found',
+  FORM_CONTACT = 'Contact Information',
+  SHIPPING = 'Shipping',
+  BILLING = 'Billing',
+  ADDRESS = 'Address',
 }
