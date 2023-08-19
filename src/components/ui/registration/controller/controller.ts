@@ -1,5 +1,4 @@
 import { Pages } from '../../../models/router';
-import { Countries } from '../../../models/validation';
 import ControllerLogin from '../../login/controller/controller';
 import RegistrationValidationModel from '../model/validation';
 

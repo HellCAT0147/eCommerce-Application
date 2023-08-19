@@ -1,9 +1,13 @@
 // TODO adapt setErrors
 // import { Errors, RegistrationInputType } from '../../../models/validation';
+import { Address, ErrorObject } from '@commercetools/platform-sdk';
 import ECommerceApi from '../../../api/e-commerce-api';
 import { Countries, DateErrors, Errors, InputType, NameErrors, PostalErrors } from '../../../models/validation';
 import ValidationModel from '../../login/model/validation';
 import FormViewReg from '../view/form';
+import { Pages, Routes } from '../../../models/router';
+import basicRoutes from '../../router/model/routes';
+import { Blocks } from '../../../models/builder';
 
 export default class RegistrationValidationModel extends ValidationModel {
   private firstName: string;
@@ -26,6 +30,7 @@ export default class RegistrationValidationModel extends ValidationModel {
 
   public constructor(eCommerceApi: ECommerceApi) {
     super(eCommerceApi);
+    this.eCommerceApi = eCommerceApi;
     this.formViewReg = new FormViewReg();
     this.firstName = '';
     this.lastName = '';
@@ -194,5 +199,54 @@ export default class RegistrationValidationModel extends ValidationModel {
       }
     });
     this.checkSendable();
+  }
+
+  protected checkSendable(): boolean {
+    if (
+      this.mail !== '' &&
+      this.password !== '' &&
+      this.firstName &&
+      this.lastName &&
+      this.date &&
+      this.country &&
+      this.postal &&
+      this.city &&
+      this.street
+    )
+      this.isValid = true;
+    else this.isValid = false;
+    return this.isValid;
+  }
+
+  public async send(): Promise<void> {
+    if (this.checkSendable()) {
+      try {
+        const address: Address = {
+          country: this.country,
+          postalCode: this.postal,
+          city: this.city,
+          streetName: this.street,
+        };
+        const response: ErrorObject | true = await this.eCommerceApi.register(
+          this.mail,
+          this.password,
+          this.firstName,
+          this.lastName,
+          new Date(this.date),
+          [address]
+        );
+        if (response === true) {
+          const route: Routes | undefined = basicRoutes.find((routeExisting) => routeExisting.path === Pages.MAIN);
+          if (route) route.callback(true);
+          window.history.pushState(null, '', `/${Pages.MAIN}`);
+        } else {
+          this.formView.reminder(response.message);
+        }
+      } catch (error) {
+        if (error instanceof Error) this.formView.reminder(error.message);
+      }
+    } else {
+      this.formView.reminder(null, Blocks.reg);
+    }
   }
 }

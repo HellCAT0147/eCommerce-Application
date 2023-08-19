@@ -14,7 +14,7 @@ export default class ValidationModel {
 
   protected formView: FormViewLogin;
 
-  private eCommerceApi: ECommerceApi;
+  protected eCommerceApi: ECommerceApi;
 
   public constructor(eCommerceApi: ECommerceApi) {
     this.eCommerceApi = eCommerceApi;

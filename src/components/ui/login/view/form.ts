@@ -1,4 +1,4 @@
-import { Base, Buttons, Elem, Mode } from '../../../models/builder';
+import { Base, Blocks, Buttons, Elem, Mode } from '../../../models/builder';
 import { Pages } from '../../../models/router';
 import FormView from '../../builder/form';
 import Builder from '../../builder/html-builder';
@@ -18,14 +18,14 @@ export default class FormViewLogin extends FormView {
     this.form = form;
   }
 
-  public reminder(customMsg: string | null = null): void {
-    const reminder: HTMLElement = new Builder('p', '', 'login', Elem.err, '').element();
-    const errorsHolder: HTMLElement = new Builder('div', '', this.pageName, Elem.errs, Mode.response).element();
-    const form: HTMLFormElement | null = document.querySelector('.login__form');
+  public reminder(customMsg: string | null = null, block: Blocks = Blocks.login): void {
+    const reminder: HTMLElement = new Builder('p', '', block, Elem.err, '').element();
+    const errorsHolder: HTMLElement = new Builder('div', '', block, Elem.errs, Mode.response).element();
+    const form: HTMLFormElement | null = document.querySelector('.form');
 
     setTimeout(() => {
       errorsHolder.outerHTML = '';
-    }, 2500);
+    }, 5000);
 
     if (customMsg === null) reminder.textContent = 'Please fill in the required fields correctly';
     else reminder.textContent = customMsg;
