@@ -19,7 +19,8 @@
     border: none;
   }
 
-  &__input {
+  &__input,
+  &__menu {
     padding: 14px 16px;
     width: 100%;
     max-width: 443px;
@@ -29,6 +30,11 @@
 
     &:focus {
       box-shadow: 0 0 0 1px $color-input;
+    }
+
+    option {
+      background-color: $color-dark;
+      color: $color-main;
     }
   }
 

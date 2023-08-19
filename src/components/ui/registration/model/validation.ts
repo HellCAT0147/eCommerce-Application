@@ -16,6 +16,8 @@ export default class RegistrationValidationModel extends ValidationModel {
 
   private date: string = '';
 
+  private country: Countries | string = '';
+
   private postal: string = '';
 
   protected formViewReg: FormViewReg;
@@ -101,9 +103,11 @@ export default class RegistrationValidationModel extends ValidationModel {
     return false;
   }
 
-  public checkCountry(country: Countries): boolean {
+  public checkCountry(select: HTMLSelectElement): boolean {
+    const country: string = select.value;
+    this.country = select.value;
     this.postal = '';
-    this.formViewReg.resetPostal();
+    this.formViewReg.resetPostal(select.parentElement);
     return true;
   }
 

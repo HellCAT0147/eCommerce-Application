@@ -63,6 +63,13 @@ class Builder {
     this.setProperties(element);
     return element;
   }
+
+  public menu(): HTMLSelectElement {
+    const menu: HTMLSelectElement = document.createElement('select');
+    menu.className = `${this.base}`;
+    this.setProperties(menu);
+    return menu;
+  }
 }
 
 export default Builder;

@@ -22,7 +22,6 @@ class ControllerRegistration extends ControllerLogin {
     else if (target.id.includes('date-of-birth')) this.validationModel.checkBirthDate(target.value);
     else if (target.id.includes('street')) this.validationModel.checkStreet(target.value);
     else if (target.id.includes('postal-code')) this.validationModel.checkPostal(target.value);
-    else this.validationModel.checkCountry(target.value as Countries);
   }
 
   public buttonEvent(e: Event): void {
@@ -35,11 +34,18 @@ class ControllerRegistration extends ControllerLogin {
       this.validationModel.switchPasswordView(showPassword, Pages.REGISTRATION);
     }
 
-    const signIn: HTMLButtonElement | null = target.closest('.registration__button_create');
+    const signIn: HTMLButtonElement | null = target.closest(`.${Pages.REGISTRATION}__button_create`);
     if (signIn) {
       e.preventDefault();
       this.validationModel.send();
     }
+  }
+
+  public selectMenu(e: Event): void {
+    const { target } = e;
+    if (!(target instanceof HTMLSelectElement)) return;
+    e.preventDefault();
+    this.validationModel.checkCountry(target);
   }
 }
 

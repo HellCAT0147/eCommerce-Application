@@ -1,5 +1,5 @@
 import { Base, Blocks, Elem, Mode } from '../../models/builder';
-import { Errors, InputType } from '../../models/validation';
+import { Countries, Errors, InputType } from '../../models/validation';
 import Builder from './html-builder';
 
 export default class FormView {
@@ -59,6 +59,28 @@ export default class FormView {
     return input;
   }
 
+  protected createSelectMenu(pageName: string, inputName: InputType): HTMLSelectElement {
+    const menu: HTMLSelectElement = new Builder('select', Base.menu, pageName, Elem.select, inputName).menu();
+
+    if (inputName === Mode.country) {
+      const defaultOption: HTMLOptionElement = document.createElement('option');
+      defaultOption.value = '';
+      defaultOption.textContent = 'Select the country';
+      menu.appendChild(defaultOption);
+      Object.values(Countries).forEach((country) => {
+        const option: HTMLOptionElement = document.createElement('option');
+        option.value = country;
+        option.textContent = country;
+        option.className = 'select__option';
+        menu.appendChild(option);
+      });
+    }
+
+    menu.setAttribute('id', `${pageName}-${inputName}`);
+
+    return menu;
+  }
+
   protected createLabel(pageName: string, labelName: string, labelText?: string): HTMLLabelElement {
     const label: HTMLLabelElement = new Builder('', Base.labels, pageName, Elem.label, labelName).label();
     label.setAttribute('for', `${pageName}-${labelName}`);
@@ -88,7 +110,7 @@ export default class FormView {
     const formFieldAddress: HTMLFieldSetElement = new Builder('', Base.subform, page, Elem.address, '').field();
     const formFieldCountry: HTMLFieldSetElement = new Builder('', Base.field, page, 'field', country).field();
     const labelCountry: HTMLLabelElement = this.createLabel(page, country, Mode.country);
-    const inputCountry: HTMLInputElement = this.createInput(page, country);
+    const inputCountry: HTMLSelectElement = this.createSelectMenu(page, country);
     const formFieldPostal: HTMLFieldSetElement = new Builder('', Base.field, page, 'field', postal).field();
     const labelPostal: HTMLLabelElement = this.createLabel(page, postal, Mode.postal);
     const inputPostal: HTMLInputElement = this.createInput(page, postal);

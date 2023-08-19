@@ -47,5 +47,12 @@ export default class FormViewReg extends FormView {
     this.form = form;
   }
 
-  public resetPostal(): void {}
+  public resetPostal(menuField: HTMLElement | null): void {
+    if (!menuField) return;
+    const fieldset: Element | null = menuField.nextElementSibling;
+    if (!fieldset) return;
+    const postal: HTMLElement | null = fieldset.querySelector('.form__input');
+    if (!postal) return;
+    if (postal instanceof HTMLInputElement) postal.value = '';
+  }
 }

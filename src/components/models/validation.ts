@@ -8,7 +8,12 @@ export type PersonFields = 'first-name' | 'last-name' | 'date-of-birth';
 
 export type InputType = InputTypeLogin | PersonFields | AddressFields | BillAddressFields;
 
-export type Countries = 'Belarus' | 'Russia' | 'USA' | 'Uzbekistan';
+export enum Countries {
+  BY = 'Belarus',
+  RU = 'Russia',
+  US = 'USA',
+  UZ = 'Uzbekistan',
+}
 
 export enum MailErrors {
   at = "Email must contain an '@'.",

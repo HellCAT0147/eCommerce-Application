@@ -23,6 +23,7 @@ export enum Elem {
   circle = 'circle',
   go_home = 'go-home',
   address = 'address',
+  select = 'select',
 }
 
 export enum Mode {
@@ -71,6 +72,7 @@ export enum Base {
   btns_colored = `${btns} ${btns}_colored`,
   btns_bordered = `${btns} ${btns}_bordered`,
   btns_empty = `${btns} ${btns}_empty`,
+  menu = `${form}__menu`,
 }
 
 export enum Buttons {
