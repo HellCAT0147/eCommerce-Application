@@ -27,8 +27,17 @@ export default class FormViewLogin extends FormView {
       errorsHolder.outerHTML = '';
     }, 5000);
 
-    if (customMsg === null) reminder.textContent = 'Please fill in the required fields correctly';
-    else reminder.textContent = customMsg;
+    if (customMsg === null) {
+      const inputs: NodeListOf<HTMLInputElement> = document.querySelectorAll(`.${Base.inputs}`);
+      const select: HTMLSelectElement | null = document.querySelector(`.${Base.select}`);
+
+      inputs.forEach((el) => {
+        if (el instanceof HTMLInputElement && !el.value.length) this.highlightInput(el, false);
+      });
+      if (select instanceof HTMLSelectElement && select.value === '') this.highlightInput(select, false);
+
+      reminder.textContent = 'Please fill in the required fields correctly';
+    } else reminder.textContent = customMsg;
 
     if (!form) return;
     errorsHolder.appendChild(reminder);

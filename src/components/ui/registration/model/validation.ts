@@ -14,17 +14,25 @@ export default class RegistrationValidationModel extends ValidationModel {
 
   private lastName: string;
 
-  private city: string;
-
-  private cityBill: string;
-
   private date: string;
 
   private country: Countries | string;
 
+  private countryBill: Countries | string;
+
   private postal: string;
 
+  private postalBill: string;
+
+  private city: string;
+
+  private cityBill: string;
+
   private street: string;
+
+  private streetBill: string;
+
+  private shippingIsBilling: boolean;
 
   protected formViewReg: FormViewReg;
 
@@ -34,12 +42,16 @@ export default class RegistrationValidationModel extends ValidationModel {
     this.formViewReg = new FormViewReg();
     this.firstName = '';
     this.lastName = '';
-    this.city = '';
-    this.cityBill = '';
     this.date = '';
     this.country = '';
+    this.countryBill = '';
     this.postal = '';
+    this.postalBill = '';
+    this.city = '';
+    this.cityBill = '';
     this.street = '';
+    this.streetBill = '';
+    this.shippingIsBilling = true;
   }
 
   public checkName(name: string, target: string): boolean {
@@ -186,8 +198,9 @@ export default class RegistrationValidationModel extends ValidationModel {
     return false;
   }
 
-  public checkBothAddress(target: EventTarget): void {
-    // console.log(target);
+  public checkBothAddress(): boolean {
+    this.shippingIsBilling = !this.shippingIsBilling;
+    return this.shippingIsBilling;
   }
 
   protected setErrors(inputType: InputType, errors: Errors[] | string[], select?: HTMLSelectElement): void {
@@ -209,16 +222,20 @@ export default class RegistrationValidationModel extends ValidationModel {
     if (
       this.mail !== '' &&
       this.password !== '' &&
-      this.firstName &&
-      this.lastName &&
-      this.date &&
-      this.country &&
-      this.postal &&
-      this.city &&
-      this.street
-    )
-      this.isValid = true;
-    else this.isValid = false;
+      this.firstName !== '' &&
+      this.lastName !== '' &&
+      this.date !== '' &&
+      this.country !== '' &&
+      this.postal !== '' &&
+      this.city !== '' &&
+      this.street !== ''
+    ) {
+      if (this.shippingIsBilling) this.isValid = true;
+      else if (this.countryBill !== '' && this.postalBill !== '' && this.cityBill !== '' && this.streetBill !== '')
+        this.isValid = true;
+      else this.isValid = false;
+    } else this.isValid = false;
+
     return this.isValid;
   }
 

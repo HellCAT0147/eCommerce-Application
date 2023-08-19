@@ -20,7 +20,7 @@ class ControllerRegistration extends ControllerLogin {
     else if (target.id.includes('date-of-birth')) this.validationModel.checkBirthDate(target.value);
     else if (target.id.includes('street')) this.validationModel.checkStreet(target.value);
     else if (target.id.includes('postal-code')) this.validationModel.checkPostal(target.value);
-    else if (target.id.includes('both-address')) this.validationModel.checkBothAddress(target);
+    else if (target.id.includes('both-address')) this.validationModel.checkBothAddress();
   }
 
   public buttonEvent(e: Event): void {

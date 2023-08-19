@@ -144,7 +144,7 @@ export default class FormView {
     return formFieldAddress;
   }
 
-  private highlightInput(input: HTMLInputElement | null, isValid: boolean): void {
+  protected highlightInput(input: HTMLElement | null, isValid: boolean): void {
     if (input) {
       if (isValid) {
         input.classList.add(Mode.valid);
