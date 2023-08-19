@@ -6,6 +6,7 @@ export enum Blocks {
   reg = 'registration',
   form = `form`,
   not_found = `not-found`,
+  select = 'select',
 }
 
 export enum Elem {
@@ -24,6 +25,7 @@ export enum Elem {
   go_home = 'go-home',
   address = 'address',
   select = 'select',
+  option = 'option',
 }
 
 export enum Mode {
@@ -56,6 +58,7 @@ export enum Mode {
   ship = 'shipping',
   bill = 'billing',
   check_bill = 'check-bill',
+  default = 'default',
 }
 
 export enum Base {
@@ -73,6 +76,7 @@ export enum Base {
   btns_bordered = `${btns} ${btns}_bordered`,
   btns_empty = `${btns} ${btns}_empty`,
   select = `${form}__select`,
+  options = `${form}__options`,
 }
 
 export enum Buttons {

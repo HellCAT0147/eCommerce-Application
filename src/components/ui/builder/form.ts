@@ -60,18 +60,29 @@ export default class FormView {
   }
 
   protected createSelectMenu(pageName: string, inputName: InputType): HTMLSelectElement {
-    const select: HTMLSelectElement = new Builder('', Base.select, pageName, Elem.select, inputName).menu();
+    const select: HTMLSelectElement = new Builder('', Base.select, pageName, Elem.select, inputName).select();
 
     if (inputName === Mode.country) {
-      const defaultOption: HTMLOptionElement = document.createElement('option');
+      const defaultOption: HTMLOptionElement = new Builder(
+        '',
+        Base.options,
+        Blocks.select,
+        Elem.option,
+        Mode.default
+      ).option();
       defaultOption.value = '';
       defaultOption.textContent = PostalErrors.notSelected;
       select.appendChild(defaultOption);
       Object.values(Countries).forEach((country) => {
-        const option: HTMLOptionElement = document.createElement('option');
+        const option: HTMLOptionElement = new Builder(
+          '',
+          Base.options,
+          Blocks.select,
+          Elem.option,
+          country.toLowerCase()
+        ).option();
         option.value = country;
         option.textContent = country;
-        option.className = 'select__option';
         select.appendChild(option);
       });
     }

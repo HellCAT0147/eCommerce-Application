@@ -64,11 +64,18 @@ class Builder {
     return element;
   }
 
-  public menu(): HTMLSelectElement {
-    const menu: HTMLSelectElement = document.createElement('select');
-    menu.className = `${this.base}`;
-    this.setProperties(menu);
-    return menu;
+  public select(): HTMLSelectElement {
+    const select: HTMLSelectElement = document.createElement('select');
+    select.className = `${this.base}`;
+    this.setProperties(select);
+    return select;
+  }
+
+  public option(): HTMLOptionElement {
+    const option: HTMLOptionElement = document.createElement('option');
+    option.className = `${this.base}`;
+    this.setProperties(option);
+    return option;
   }
 }
 
