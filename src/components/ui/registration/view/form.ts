@@ -19,19 +19,19 @@ export default class FormViewReg extends FormView {
     const inputLastName: HTMLInputElement = this.createInput(pageName, Mode.l_name);
     const formFieldDate: HTMLFieldSetElement = new Builder('', Base.field, pageName, 'field', Mode.date).field();
     const labelDate: HTMLLabelElement = this.createLabel(pageName, Mode.date);
-    const inputCheckBilling: HTMLInputElement = this.createInput(pageName, Mode.check_bill);
-    const fieldAddress: HTMLFieldSetElement = this.createAddress(Mode.street, Mode.city, Mode.postal, Mode.country);
-    const fieldAddressBilling: HTMLFieldSetElement = this.createAddress(
-      Mode.street_bill,
-      Mode.city_bill,
-      Mode.postal_bill,
-      Mode.country_bill
+    const fieldAddress: HTMLFieldSetElement = this.createAddress(
+      Mode.street,
+      Mode.city,
+      Mode.postal,
+      Mode.country,
+      Titles.BOTH_ADDRESS
     );
+    const formFieldCheck: HTMLElement = new Builder('div', Base.check, pageName, Elem.field, Mode.both).element();
+    const inputCheckBilling: HTMLInputElement = this.createInput(pageName, Mode.both);
+    inputCheckBilling.setAttribute('checked', 'checked');
+    const labelCheckBilling: HTMLElement = new Builder('p', '', pageName, Elem.text, Mode.both).element();
+    labelCheckBilling.textContent = Titles.CHECK_BOTH;
     const inputDate: HTMLInputElement = this.createInput(pageName, Mode.date);
-    const formTitleShip: HTMLElement = new Builder('h2', Base.form_title, Blocks.form, Elem.title, Mode.ship).element();
-    formTitleShip.textContent = `${Titles.SHIPPING} ${Titles.ADDRESS}`;
-    const formTitleBill: HTMLElement = new Builder('h2', Base.form_title, Blocks.form, Elem.title, Mode.bill).element();
-    formTitleBill.textContent = `${Titles.BILLING} ${Titles.ADDRESS}`;
     const buttonForm: HTMLButtonElement = new Builder('', Base.btns_colored, pageName, Elem.btn, Mode.create).button();
     buttonForm.classList.add('form__button');
     buttonForm.textContent = Buttons.CREATE;
@@ -39,11 +39,10 @@ export default class FormViewReg extends FormView {
     formFieldFirstName.append(labelFirstName, inputFirstName);
     formFieldLastName.append(labelLastName, inputLastName);
     formFieldDate.append(labelDate, inputDate);
-    fieldAddress.prepend(formTitleShip);
-    fieldAddressBilling.prepend(formTitleBill);
+    formFieldCheck.append(inputCheckBilling, labelCheckBilling);
     form.prepend(formTitle);
     form.append(formFieldFirstName, formFieldLastName, formFieldDate);
-    form.append(fieldAddress, inputCheckBilling, fieldAddressBilling, buttonForm);
+    form.append(fieldAddress, formFieldCheck, buttonForm);
     this.form = form;
   }
 

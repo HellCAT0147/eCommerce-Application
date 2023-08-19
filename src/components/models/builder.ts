@@ -26,6 +26,7 @@ export enum Elem {
   address = 'address',
   select = 'select',
   option = 'option',
+  text = 'text',
 }
 
 export enum Mode {
@@ -59,12 +60,14 @@ export enum Mode {
   bill = 'billing',
   check_bill = 'check-bill',
   default = 'default',
+  both = 'both-address',
 }
 
 export enum Base {
   form = 'form',
   subform = `${form} ${form}__subform`,
   field = `${form}__field`,
+  check = `${form}__check`,
   form_section = `${form}__section`,
   inputs = `${form}__input`,
   labels = `${form}__label`,
@@ -94,5 +97,7 @@ export enum Titles {
   FORM_CONTACT = 'Contact Information',
   SHIPPING = 'Shipping',
   BILLING = 'Billing',
+  BOTH_ADDRESS = `${SHIPPING} and ${BILLING}`,
   ADDRESS = 'Address',
+  CHECK_BOTH = `${BOTH_ADDRESS} are the same`,
 }

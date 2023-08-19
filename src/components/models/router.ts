@@ -1,4 +1,4 @@
-export type Callback = (login?: boolean) => void;
+export type Callback = (isloggedIn?: boolean) => void;
 
 export interface Routes {
   path: string;

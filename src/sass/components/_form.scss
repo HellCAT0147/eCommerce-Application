@@ -38,6 +38,17 @@
     }
   }
 
+  &__check {
+    display: flex;
+    column-gap: 10px;
+    > * {
+      padding: 0;
+      border: none;
+      flex-shrink: 0;
+      width: auto;
+    }
+  }
+
   &__button {
     &_eye-opened {
       @include eye-wrapper;

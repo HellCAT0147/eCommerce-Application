@@ -186,6 +186,10 @@ export default class RegistrationValidationModel extends ValidationModel {
     return false;
   }
 
+  public checkBothAddress(target: EventTarget): void {
+    // console.log(target);
+  }
+
   protected setErrors(inputType: InputType, errors: Errors[] | string[], select?: HTMLSelectElement): void {
     if (select) {
       this.formViewReg.showErrors(select.parentElement, errors, inputType);

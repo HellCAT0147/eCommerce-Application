@@ -5,10 +5,10 @@ import FormView from '../../builder/form';
 import FormViewReg from './form';
 import createHeader from '../../main/view/header';
 
-export default function createTemplateRegistration(login?: boolean): void {
+export default function createTemplateRegistration(isloggedIn?: boolean): void {
   const body: HTMLBodyElement | null = document.querySelector('body');
   const header: HTMLElement | null = document.querySelector('header');
-  const newHeader: HTMLElement = createHeader(login);
+  const newHeader: HTMLElement = createHeader(isloggedIn);
 
   if (body && header) {
     body.removeChild(header);

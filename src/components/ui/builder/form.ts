@@ -1,4 +1,4 @@
-import { Base, Blocks, Elem, Mode } from '../../models/builder';
+import { Base, Blocks, Elem, Mode, Titles } from '../../models/builder';
 import { Countries, Errors, InputType, PostalErrors } from '../../models/validation';
 import Builder from './html-builder';
 
@@ -52,7 +52,7 @@ export default class FormView {
       input.setAttribute('type', 'date');
       input.setAttribute('min', formattedMinDate);
       input.setAttribute('max', formattedMaxDate);
-    } else if (inputName === Mode.check_bill) input.setAttribute('type', 'checkbox');
+    } else if (inputName === Mode.both) input.setAttribute('type', 'checkbox');
 
     input.setAttribute('id', `${pageName}-${inputName}`);
 
@@ -115,10 +115,13 @@ export default class FormView {
     street: InputType,
     city: InputType,
     postal: InputType,
-    country: InputType
+    country: InputType,
+    title: string
   ): HTMLFieldSetElement {
     const page: string = this.pageName;
     const formFieldAddress: HTMLFieldSetElement = new Builder('', Base.subform, page, Elem.address, '').field();
+    const formTitleShip: HTMLElement = new Builder('h2', Base.form_title, Blocks.form, Elem.title, Mode.ship).element();
+    formTitleShip.textContent = `${title} ${Titles.ADDRESS}`;
     const formFieldCountry: HTMLFieldSetElement = new Builder('', Base.field, page, 'field', country).field();
     const labelCountry: HTMLLabelElement = this.createLabel(page, country, Mode.country);
     const inputCountry: HTMLSelectElement = this.createSelectMenu(page, country);
@@ -136,7 +139,7 @@ export default class FormView {
     formFieldCity.append(labelCity, inputCity);
     formFieldPostal.append(labelPostal, inputPostal);
     formFieldCountry.append(labelCountry, inputCountry);
-    formFieldAddress.append(formFieldCountry, formFieldPostal, formFieldCity, formFieldStreet);
+    formFieldAddress.append(formTitleShip, formFieldCountry, formFieldPostal, formFieldCity, formFieldStreet);
 
     return formFieldAddress;
   }

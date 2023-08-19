@@ -2,7 +2,7 @@ import { Base, Blocks, Buttons, Elem, Mode } from '../../../models/builder';
 import { Pages } from '../../../models/router';
 import Builder from '../../builder/html-builder';
 
-export default function createHeader(login?: boolean): HTMLElement {
+export default function createHeader(isloggedIn?: boolean): HTMLElement {
   const header: HTMLElement = new Builder('header', '', Blocks.header, '', '').element();
   const logo: HTMLElement = new Builder('div', '', Blocks.header, Elem.logo, '').element();
   logo.classList.add('redirect__buttons');
@@ -21,7 +21,7 @@ export default function createHeader(login?: boolean): HTMLElement {
   createButton.textContent = `${Buttons.CREATE}`;
   createButton.setAttribute('id', `${Pages.REGISTRATION}`);
   navigation.append(signButton, createButton);
-  if (login) {
+  if (isloggedIn) {
     navigation.append(signOutButton);
   }
   header.append(logo, navigation);

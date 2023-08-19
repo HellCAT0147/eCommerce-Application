@@ -13,7 +13,6 @@ class ControllerRegistration extends ControllerLogin {
   public checkField(e: Event): void {
     const { target } = e;
     if (!(target instanceof HTMLInputElement)) return;
-
     if (target.id.includes('email')) this.validationModel.checkMail(target.value);
     else if (target.id.includes('password')) this.validationModel.checkPassword(target.value);
     else if (target.id.includes('name') || target.id.includes('city'))
@@ -21,6 +20,7 @@ class ControllerRegistration extends ControllerLogin {
     else if (target.id.includes('date-of-birth')) this.validationModel.checkBirthDate(target.value);
     else if (target.id.includes('street')) this.validationModel.checkStreet(target.value);
     else if (target.id.includes('postal-code')) this.validationModel.checkPostal(target.value);
+    else if (target.id.includes('both-address')) this.validationModel.checkBothAddress(target);
   }
 
   public buttonEvent(e: Event): void {
