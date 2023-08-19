@@ -118,10 +118,11 @@ export default class FormView {
     postal: InputType,
     country: InputType,
     title: string,
+    mode: InputType,
     check?: HTMLElement
   ): HTMLFieldSetElement {
     const page: string = this.pageName;
-    const formFieldAddress: HTMLFieldSetElement = new Builder('', Base.subform, page, Elem.address, '').field();
+    const formFieldAddress: HTMLFieldSetElement = new Builder('', Base.subform, page, Elem.address, mode).field();
     const formTitleShip: HTMLElement = new Builder('h2', Base.form_title, Blocks.form, Elem.title, Mode.ship).element();
     formTitleShip.textContent = `${title} ${Titles.ADDRESS}`;
     const formFieldCountry: HTMLFieldSetElement = new Builder('', Base.field, page, 'field', country).field();

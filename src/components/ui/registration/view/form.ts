@@ -32,6 +32,7 @@ export default class FormViewReg extends FormView {
       Mode.postal,
       Mode.country,
       Titles.BOTH_ADDRESS,
+      Mode.ship,
       formFieldCheck
     );
     const fieldCheckDefault: HTMLFieldSetElement = this.createFieldCheck();
@@ -42,8 +43,7 @@ export default class FormViewReg extends FormView {
     formFieldLastName.append(labelLastName, inputLastName);
     formFieldDate.append(labelDate, inputDate);
     form.prepend(formTitle);
-    form.append(formFieldFirstName, formFieldLastName, formFieldDate);
-    form.append(fieldAddress, fieldCheckDefault, buttonForm);
+    form.append(formFieldFirstName, formFieldLastName, formFieldDate, fieldAddress, fieldCheckDefault, buttonForm);
     this.form = form;
   }
 
@@ -84,5 +84,30 @@ export default class FormViewReg extends FormView {
     fieldCheck.append(formFieldCheckShipping, formFieldCheckBilling);
 
     return fieldCheck;
+  }
+
+  public showBillingAddress(isChecked: boolean): void {
+    const titleShipping: HTMLElement | null = document.querySelector(`.form__title_${Mode.ship}`);
+    const addresses: HTMLElement | null = document.querySelector(`.registration__address_${Mode.ship}`);
+    const addressBilling: HTMLElement | null = document.querySelector(`.registration__address_${Mode.bill}`);
+    if (isChecked) {
+      if (titleShipping) {
+        titleShipping.textContent = `${Titles.BOTH_ADDRESS} ${Titles.ADDRESS}`;
+      }
+      if (addresses && addressBilling) addresses.removeChild(addressBilling);
+      return;
+    }
+    if (titleShipping) {
+      titleShipping.textContent = `${Titles.SHIPPING} ${Titles.ADDRESS}`;
+    }
+    const fieldAddressBilling: HTMLFieldSetElement = this.createAddress(
+      Mode.street_bill,
+      Mode.city_bill,
+      Mode.postal_bill,
+      Mode.country_bill,
+      Titles.BILLING,
+      Mode.bill
+    );
+    if (addresses) addresses.appendChild(fieldAddressBilling);
   }
 }

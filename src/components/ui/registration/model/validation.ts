@@ -200,6 +200,7 @@ export default class RegistrationValidationModel extends ValidationModel {
 
   public checkBothAddress(): boolean {
     this.shippingIsBilling = !this.shippingIsBilling;
+    this.formViewReg.showBillingAddress(this.shippingIsBilling);
     return this.shippingIsBilling;
   }
 
