@@ -218,11 +218,23 @@ export default class RegistrationValidationModel extends ValidationModel {
     return this.isValid;
   }
 
+  private getCountryCode(country: Countries | string): string {
+    const fullCountries: string[] = Object.values(Countries);
+    const countriesCodes: string[] = Object.keys(Countries);
+    let id: number = 0;
+
+    fullCountries.forEach((localCountry, i) => {
+      if (localCountry === country) id = i;
+    });
+
+    return countriesCodes[id];
+  }
+
   public async send(): Promise<void> {
     if (this.checkSendable()) {
       try {
         const address: Address = {
-          country: this.country,
+          country: this.getCountryCode(this.country),
           postalCode: this.postal,
           city: this.city,
           streetName: this.street,
