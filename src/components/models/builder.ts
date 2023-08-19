@@ -27,6 +27,7 @@ export enum Elem {
   select = 'select',
   option = 'option',
   text = 'text',
+  check = 'check',
 }
 
 export enum Mode {
@@ -59,6 +60,7 @@ export enum Mode {
   ship = 'shipping',
   bill = 'billing',
   check_bill = 'check-bill',
+  check = 'check',
   default = 'default',
   both = 'both-address',
 }

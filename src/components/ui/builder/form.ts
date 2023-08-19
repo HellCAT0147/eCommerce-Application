@@ -116,7 +116,8 @@ export default class FormView {
     city: InputType,
     postal: InputType,
     country: InputType,
-    title: string
+    title: string,
+    check?: HTMLElement
   ): HTMLFieldSetElement {
     const page: string = this.pageName;
     const formFieldAddress: HTMLFieldSetElement = new Builder('', Base.subform, page, Elem.address, '').field();
@@ -139,7 +140,9 @@ export default class FormView {
     formFieldCity.append(labelCity, inputCity);
     formFieldPostal.append(labelPostal, inputPostal);
     formFieldCountry.append(labelCountry, inputCountry);
-    formFieldAddress.append(formTitleShip, formFieldCountry, formFieldPostal, formFieldCity, formFieldStreet);
+    formFieldAddress.appendChild(formTitleShip);
+    if (check) formFieldAddress.appendChild(check);
+    formFieldAddress.append(formFieldCountry, formFieldPostal, formFieldCity, formFieldStreet);
 
     return formFieldAddress;
   }

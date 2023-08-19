@@ -19,19 +19,21 @@ export default class FormViewReg extends FormView {
     const inputLastName: HTMLInputElement = this.createInput(pageName, Mode.l_name);
     const formFieldDate: HTMLFieldSetElement = new Builder('', Base.field, pageName, 'field', Mode.date).field();
     const labelDate: HTMLLabelElement = this.createLabel(pageName, Mode.date);
-    const fieldAddress: HTMLFieldSetElement = this.createAddress(
-      Mode.street,
-      Mode.city,
-      Mode.postal,
-      Mode.country,
-      Titles.BOTH_ADDRESS
-    );
+    const inputDate: HTMLInputElement = this.createInput(pageName, Mode.date);
     const formFieldCheck: HTMLElement = new Builder('div', Base.check, pageName, Elem.field, Mode.both).element();
     const inputCheckBilling: HTMLInputElement = this.createInput(pageName, Mode.both);
     inputCheckBilling.setAttribute('checked', 'checked');
     const labelCheckBilling: HTMLElement = new Builder('p', '', pageName, Elem.text, Mode.both).element();
     labelCheckBilling.textContent = Titles.CHECK_BOTH;
-    const inputDate: HTMLInputElement = this.createInput(pageName, Mode.date);
+    formFieldCheck.append(inputCheckBilling, labelCheckBilling);
+    const fieldAddress: HTMLFieldSetElement = this.createAddress(
+      Mode.street,
+      Mode.city,
+      Mode.postal,
+      Mode.country,
+      Titles.BOTH_ADDRESS,
+      formFieldCheck
+    );
     const buttonForm: HTMLButtonElement = new Builder('', Base.btns_colored, pageName, Elem.btn, Mode.create).button();
     buttonForm.classList.add('form__button');
     buttonForm.textContent = Buttons.CREATE;
@@ -39,10 +41,9 @@ export default class FormViewReg extends FormView {
     formFieldFirstName.append(labelFirstName, inputFirstName);
     formFieldLastName.append(labelLastName, inputLastName);
     formFieldDate.append(labelDate, inputDate);
-    formFieldCheck.append(inputCheckBilling, labelCheckBilling);
     form.prepend(formTitle);
     form.append(formFieldFirstName, formFieldLastName, formFieldDate);
-    form.append(fieldAddress, formFieldCheck, buttonForm);
+    form.append(fieldAddress, buttonForm);
     this.form = form;
   }
 
