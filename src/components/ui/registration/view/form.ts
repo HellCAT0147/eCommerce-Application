@@ -21,11 +21,11 @@ export default class FormViewReg extends FormView {
     const labelDate: HTMLLabelElement = this.createLabel(pageName, Mode.date);
     const inputDate: HTMLInputElement = this.createInput(pageName, Mode.date);
     const formFieldCheck: HTMLElement = new Builder('div', Base.check, pageName, Elem.field, Mode.both).element();
-    const inputCheckBilling: HTMLInputElement = this.createInput(pageName, Mode.both);
-    inputCheckBilling.setAttribute('checked', 'checked');
-    const labelCheckBilling: HTMLElement = new Builder('p', '', pageName, Elem.text, Mode.both).element();
-    labelCheckBilling.textContent = Titles.CHECK_BOTH;
-    formFieldCheck.append(inputCheckBilling, labelCheckBilling);
+    const inputCheckBoth: HTMLInputElement = this.createInput(pageName, Mode.both);
+    inputCheckBoth.setAttribute('checked', 'checked');
+    const labelCheckBoth: HTMLElement = new Builder('p', '', pageName, Elem.text, Mode.both).element();
+    labelCheckBoth.textContent = Titles.CHECK_BOTH;
+    formFieldCheck.append(inputCheckBoth, labelCheckBoth);
     const fieldAddress: HTMLFieldSetElement = this.createAddress(
       Mode.street,
       Mode.city,
@@ -34,16 +34,16 @@ export default class FormViewReg extends FormView {
       Titles.BOTH_ADDRESS,
       formFieldCheck
     );
+    const fieldCheckDefault: HTMLFieldSetElement = this.createFieldCheck();
     const buttonForm: HTMLButtonElement = new Builder('', Base.btns_colored, pageName, Elem.btn, Mode.create).button();
     buttonForm.classList.add('form__button');
     buttonForm.textContent = Buttons.CREATE;
-
     formFieldFirstName.append(labelFirstName, inputFirstName);
     formFieldLastName.append(labelLastName, inputLastName);
     formFieldDate.append(labelDate, inputDate);
     form.prepend(formTitle);
     form.append(formFieldFirstName, formFieldLastName, formFieldDate);
-    form.append(fieldAddress, buttonForm);
+    form.append(fieldAddress, fieldCheckDefault, buttonForm);
     this.form = form;
   }
 
@@ -54,5 +54,35 @@ export default class FormViewReg extends FormView {
     const postal: HTMLElement | null = fieldset.querySelector('.form__input');
     if (!postal) return;
     if (postal instanceof HTMLInputElement) postal.value = '';
+  }
+
+  private createFieldCheck(): HTMLFieldSetElement {
+    const fieldCheck: HTMLFieldSetElement = new Builder('', Base.subform, this.pageName, Elem.check, '').field();
+    const formFieldCheckShipping: HTMLElement = new Builder(
+      'div',
+      Base.check,
+      this.pageName,
+      Elem.field,
+      Mode.ship
+    ).element();
+    const inputCheckShipping: HTMLInputElement = this.createInput(this.pageName, Mode.ship);
+    const labelCheckShipping: HTMLElement = new Builder('p', '', this.pageName, Elem.text, Mode.ship).element();
+    labelCheckShipping.textContent = Titles.DEFAULT_SHIP;
+    const formFieldCheckBilling: HTMLElement = new Builder(
+      'div',
+      Base.check,
+      this.pageName,
+      Elem.field,
+      Mode.ship
+    ).element();
+    const inputCheckBilling: HTMLInputElement = this.createInput(this.pageName, Mode.bill);
+    const labelCheckBilling: HTMLElement = new Builder('p', '', this.pageName, Elem.text, Mode.bill).element();
+    labelCheckBilling.textContent = Titles.DEFAULT_BILL;
+
+    formFieldCheckShipping.append(inputCheckShipping, labelCheckShipping);
+    formFieldCheckBilling.append(inputCheckBilling, labelCheckBilling);
+    fieldCheck.append(formFieldCheckShipping, formFieldCheckBilling);
+
+    return fieldCheck;
   }
 }

@@ -102,4 +102,6 @@ export enum Titles {
   BOTH_ADDRESS = `${SHIPPING} and ${BILLING}`,
   ADDRESS = 'Address',
   CHECK_BOTH = `${BOTH_ADDRESS} are the same`,
+  DEFAULT_SHIP = `set ${SHIPPING} address as default`,
+  DEFAULT_BILL = `set ${BILLING} address as default`,
 }
