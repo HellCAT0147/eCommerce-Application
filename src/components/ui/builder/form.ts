@@ -1,5 +1,5 @@
 import { Base, Blocks, Elem, Mode } from '../../models/builder';
-import { Countries, Errors, InputType } from '../../models/validation';
+import { Countries, Errors, InputType, PostalErrors } from '../../models/validation';
 import Builder from './html-builder';
 
 export default class FormView {
@@ -65,7 +65,7 @@ export default class FormView {
     if (inputName === Mode.country) {
       const defaultOption: HTMLOptionElement = document.createElement('option');
       defaultOption.value = '';
-      defaultOption.textContent = 'Select the country';
+      defaultOption.textContent = PostalErrors.notSelected;
       select.appendChild(defaultOption);
       Object.values(Countries).forEach((country) => {
         const option: HTMLOptionElement = document.createElement('option');

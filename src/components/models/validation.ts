@@ -48,6 +48,7 @@ export enum PostalErrors {
   RU = 'Russia: six-digit postal code',
   UZ = 'Uzbekistan: six-digit postal code',
   US = 'USA: five-digit postal code or with DDDDD-DDDD template where D = digit',
+  notSelected = 'Select the country',
 }
 
 export type LoginErrors = MailErrors | PasswordErrors;

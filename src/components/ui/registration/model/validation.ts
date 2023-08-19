@@ -1,7 +1,7 @@
 // TODO adapt setErrors
 // import { Errors, RegistrationInputType } from '../../../models/validation';
 import ECommerceApi from '../../../api/e-commerce-api';
-import { Countries, DateErrors, Errors, InputType, NameErrors } from '../../../models/validation';
+import { Countries, DateErrors, Errors, InputType, NameErrors, PostalErrors } from '../../../models/validation';
 import ValidationModel from '../../login/model/validation';
 import FormViewReg from '../view/form';
 
@@ -112,15 +112,52 @@ export default class RegistrationValidationModel extends ValidationModel {
     if (countries.includes(country)) {
       this.country = country;
       this.setErrors('country', [], select);
+      this.checkPostal('');
       return true;
     }
     this.country = '';
-    this.setErrors('country', ['Select the country'], select);
+    this.checkPostal('');
+    this.setErrors('country', [PostalErrors.notSelected], select);
     return false;
   }
 
   public checkPostal(postal: string): boolean {
-    return true;
+    let regexp: RegExp;
+    switch (this.country) {
+      case Countries.BY:
+      case Countries.RU:
+      case Countries.UZ:
+        regexp = /^\d{6}$/;
+        break;
+      case Countries.US:
+        regexp = /^\d{5}(-\d{4})?$/;
+        break;
+      default:
+        this.setErrors('postal-code', [PostalErrors.notSelected]);
+        return false;
+    }
+    if (postal.match(regexp)) {
+      this.postal = postal;
+      this.setErrors('postal-code', []);
+      return true;
+    }
+    switch (this.country) {
+      case Countries.BY:
+        this.setErrors('postal-code', [PostalErrors.BY]);
+        break;
+      case Countries.RU:
+        this.setErrors('postal-code', [PostalErrors.RU]);
+        break;
+      case Countries.US:
+        this.setErrors('postal-code', [PostalErrors.US]);
+        break;
+      case Countries.UZ:
+        this.setErrors('postal-code', [PostalErrors.UZ]);
+        break;
+      default:
+        break;
+    }
+    return false;
   }
 
   public checkStreet(street: string): boolean {
