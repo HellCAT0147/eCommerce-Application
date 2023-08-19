@@ -72,7 +72,7 @@ export enum Base {
   btns_colored = `${btns} ${btns}_colored`,
   btns_bordered = `${btns} ${btns}_bordered`,
   btns_empty = `${btns} ${btns}_empty`,
-  menu = `${form}__menu`,
+  select = `${form}__select`,
 }
 
 export enum Buttons {

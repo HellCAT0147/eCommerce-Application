@@ -104,11 +104,19 @@ export default class RegistrationValidationModel extends ValidationModel {
   }
 
   public checkCountry(select: HTMLSelectElement): boolean {
-    const country: string = select.value;
-    this.country = select.value;
     this.postal = '';
     this.formViewReg.resetPostal(select.parentElement);
-    return true;
+
+    const country: string = select.value;
+    const countries: string[] = Object.values(Countries);
+    if (countries.includes(country)) {
+      this.country = country;
+      this.setErrors('country', [], select);
+      return true;
+    }
+    this.country = '';
+    this.setErrors('country', ['Select the country'], select);
+    return false;
   }
 
   public checkPostal(postal: string): boolean {
@@ -119,7 +127,12 @@ export default class RegistrationValidationModel extends ValidationModel {
     return true;
   }
 
-  protected setErrors(inputType: InputType, errors: Errors[] | string[]): void {
+  protected setErrors(inputType: InputType, errors: Errors[] | string[], select?: HTMLSelectElement): void {
+    if (select) {
+      this.formViewReg.showErrors(select.parentElement, errors, inputType);
+      this.checkSendable();
+      return;
+    }
     const inputs: NodeListOf<HTMLInputElement> = document.querySelectorAll('.form__input');
     inputs.forEach((input) => {
       if (input.classList.contains(`registration__input_${inputType}`)) {

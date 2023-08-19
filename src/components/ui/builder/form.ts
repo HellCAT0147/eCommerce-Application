@@ -60,25 +60,25 @@ export default class FormView {
   }
 
   protected createSelectMenu(pageName: string, inputName: InputType): HTMLSelectElement {
-    const menu: HTMLSelectElement = new Builder('select', Base.menu, pageName, Elem.select, inputName).menu();
+    const select: HTMLSelectElement = new Builder('', Base.select, pageName, Elem.select, inputName).menu();
 
     if (inputName === Mode.country) {
       const defaultOption: HTMLOptionElement = document.createElement('option');
       defaultOption.value = '';
       defaultOption.textContent = 'Select the country';
-      menu.appendChild(defaultOption);
+      select.appendChild(defaultOption);
       Object.values(Countries).forEach((country) => {
         const option: HTMLOptionElement = document.createElement('option');
         option.value = country;
         option.textContent = country;
         option.className = 'select__option';
-        menu.appendChild(option);
+        select.appendChild(option);
       });
     }
 
-    menu.setAttribute('id', `${pageName}-${inputName}`);
+    select.setAttribute('id', `${pageName}-${inputName}`);
 
-    return menu;
+    return select;
   }
 
   protected createLabel(pageName: string, labelName: string, labelText?: string): HTMLLabelElement {
@@ -154,7 +154,8 @@ export default class FormView {
         p.textContent = error;
         errorsHolder.append(p);
       });
-      const input: HTMLInputElement | null = document.querySelector(`.${this.pageName}__input_${inputType}`);
+      let input: HTMLInputElement | null = document.querySelector(`.${this.pageName}__input_${inputType}`);
+      if (inputType === 'country') input = document.querySelector(`.${this.pageName}__select_${inputType}`);
 
       if (errors.length) {
         place.after(errorsHolder);
