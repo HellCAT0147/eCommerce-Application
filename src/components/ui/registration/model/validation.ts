@@ -6,25 +6,35 @@ import ValidationModel from '../../login/model/validation';
 import FormViewReg from '../view/form';
 
 export default class RegistrationValidationModel extends ValidationModel {
-  private firstName: string = '';
+  private firstName: string;
 
-  private lastName: string = '';
+  private lastName: string;
 
-  private city: string = '';
+  private city: string;
 
-  private cityBill: string = '';
+  private cityBill: string;
 
-  private date: string = '';
+  private date: string;
 
-  private country: Countries | string = '';
+  private country: Countries | string;
 
-  private postal: string = '';
+  private postal: string;
+
+  private street: string;
 
   protected formViewReg: FormViewReg;
 
   public constructor(eCommerceApi: ECommerceApi) {
     super(eCommerceApi);
     this.formViewReg = new FormViewReg();
+    this.firstName = '';
+    this.lastName = '';
+    this.city = '';
+    this.cityBill = '';
+    this.date = '';
+    this.country = '';
+    this.postal = '';
+    this.street = '';
   }
 
   public checkName(name: string, target: string): boolean {
@@ -161,7 +171,14 @@ export default class RegistrationValidationModel extends ValidationModel {
   }
 
   public checkStreet(street: string): boolean {
-    return true;
+    if (street.trim().length) {
+      this.street = street;
+      this.setErrors('street', []);
+      return true;
+    }
+    this.street = '';
+    this.setErrors('street', ['Must contain at least one character']);
+    return false;
   }
 
   protected setErrors(inputType: InputType, errors: Errors[] | string[], select?: HTMLSelectElement): void {
