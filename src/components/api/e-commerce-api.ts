@@ -27,6 +27,8 @@ export default class ECommerceApi {
 
   private readonly tokenCachesStore: TokenCachesStore;
 
+  private meLoggedInPromise: Promise<Customer | null> | null = null;
+
   constructor(
     projectKey: string,
     clientId: string,
@@ -82,7 +84,7 @@ export default class ECommerceApi {
     this.apiRoot = preApiRoot;
 
     if (creds !== this.tokenCachesStore.defaultTokenStore) {
-      preApiRoot
+      this.meLoggedInPromise = preApiRoot
         .me()
         .get()
         .execute()
@@ -90,11 +92,14 @@ export default class ECommerceApi {
           if (result.statusCode !== 200) {
             this.tokenCachesStore.unset();
             this.initClientAndApiRoot();
+            return null;
           }
+          return result.body;
         })
         .catch(() => {
           this.tokenCachesStore.unset();
           this.initClientAndApiRoot();
+          return null;
         });
     }
   }
@@ -181,5 +186,13 @@ export default class ECommerceApi {
   public logout(): void {
     this.tokenCachesStore.clear();
     this.initClientAndApiRoot();
+  }
+
+  public async isLoggedIn(): Promise<boolean> {
+    return (
+      this.tokenCachesStore.getDefault() !== this.tokenCachesStore.defaultTokenStore &&
+      this.meLoggedInPromise !== null &&
+      (await this.meLoggedInPromise) !== null
+    );
   }
 }
