@@ -23,7 +23,7 @@ export default function createMainForNotFound(main: HTMLElement): void {
   ).button();
   goToMainButton.classList.add('redirect__buttons');
   goToMainButton.setAttribute('id', `${Pages.GO_TO_MAIN_PAGE}`);
-  goToMainButton.textContent = Buttons.go_home;
+  goToMainButton.textContent = Buttons.GO_HOME;
 
   circleBig.append(circleSmall, eye);
   notFound.append(numberFirst, circleBig, numberLast);

@@ -7,32 +7,32 @@ import createTemplateRegistration from '../../registration/view/template';
 const basicRoutes = [
   {
     path: ``,
-    callback: (): void => {
-      createTemplate();
+    callback: (isloggedIn?: boolean): void => {
+      createTemplate(isloggedIn);
     },
   },
   {
     path: `${Pages.MAIN}`,
-    callback: (): void => {
-      createTemplate();
+    callback: (isloggedIn?: boolean): void => {
+      createTemplate(isloggedIn);
     },
   },
   {
     path: `${Pages.LOGIN}`,
-    callback: (): void => {
-      createTemplateLogin();
+    callback: (isloggedIn?: boolean): void => {
+      createTemplateLogin(isloggedIn);
     },
   },
   {
     path: `${Pages.REGISTRATION}`,
-    callback: (): void => {
-      createTemplateRegistration();
+    callback: (isloggedIn?: boolean): void => {
+      createTemplateRegistration(isloggedIn);
     },
   },
   {
     path: `${Pages.NOT_FOUND}`,
-    callback: (): void => {
-      createTemplateNotFound();
+    callback: (isloggedIn?: boolean): void => {
+      createTemplateNotFound(isloggedIn);
     },
   },
 ];

@@ -63,6 +63,20 @@ class Builder {
     this.setProperties(element);
     return element;
   }
+
+  public select(): HTMLSelectElement {
+    const select: HTMLSelectElement = document.createElement('select');
+    select.className = `${this.base}`;
+    this.setProperties(select);
+    return select;
+  }
+
+  public option(): HTMLOptionElement {
+    const option: HTMLOptionElement = document.createElement('option');
+    option.className = `${this.base}`;
+    this.setProperties(option);
+    return option;
+  }
 }
 
 export default Builder;

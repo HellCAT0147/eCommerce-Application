@@ -1,11 +1,12 @@
-import { Base, Buttons, Elem, Mode } from '../../../models/builder';
+import { Base, Blocks, Buttons, Elem, Mode } from '../../../models/builder';
+import { Pages } from '../../../models/router';
 import FormView from '../../builder/form';
 import Builder from '../../builder/html-builder';
 
 export default class FormViewLogin extends FormView {
-  public form: HTMLFormElement;
+  protected form: HTMLFormElement;
 
-  constructor(pageName: string) {
+  public constructor(pageName: string = Pages.LOGIN) {
     super(pageName);
     const form: HTMLFormElement = this.getForm();
     const buttonForm: HTMLButtonElement = new Builder('', Base.btns_colored, pageName, Elem.btn, Mode.sign).button();
@@ -15,5 +16,31 @@ export default class FormViewLogin extends FormView {
     form.append(buttonForm);
 
     this.form = form;
+  }
+
+  public reminder(customMsg: string | null = null, block: Blocks = Blocks.login): void {
+    const reminder: HTMLElement = new Builder('p', '', block, Elem.err, '').element();
+    const errorsHolder: HTMLElement = new Builder('div', '', block, Elem.errs, Mode.response).element();
+    const form: HTMLFormElement | null = document.querySelector('.form');
+
+    setTimeout(() => {
+      errorsHolder.outerHTML = '';
+    }, 5000);
+
+    if (customMsg === null) {
+      const inputs: NodeListOf<HTMLInputElement> = document.querySelectorAll(`.${Base.inputs}`);
+      const select: HTMLSelectElement | null = document.querySelector(`.${Base.select}`);
+
+      inputs.forEach((el) => {
+        if (el instanceof HTMLInputElement && !el.value.length) this.highlightInput(el, false);
+      });
+      if (select instanceof HTMLSelectElement && select.value === '') this.highlightInput(select, false);
+
+      reminder.textContent = 'Please fill in the required fields correctly';
+    } else reminder.textContent = customMsg;
+
+    if (!form) return;
+    errorsHolder.appendChild(reminder);
+    form.appendChild(errorsHolder);
   }
 }

@@ -5,6 +5,14 @@
   row-gap: $base-intend;
   @extend %font-second;
   @include font(400, 1.6rem, 100%, $color-dark);
+  &__titles {
+    margin-bottom: 28px;
+    @extend %font-main;
+    @include font(400, 2.4rem, 100%, $color-dark);
+  }
+  &__subform {
+    border: none;
+  }
   &__field {
     display: flex;
     position: relative;
@@ -13,7 +21,8 @@
     border: none;
   }
 
-  &__input {
+  &__input,
+  &__select {
     padding: 14px 16px;
     width: 100%;
     max-width: 443px;
@@ -23,6 +32,22 @@
 
     &:focus {
       box-shadow: 0 0 0 1px $color-input;
+    }
+
+    option {
+      background-color: $color-dark;
+      color: $color-main;
+    }
+  }
+
+  &__check {
+    display: flex;
+    column-gap: 10px;
+    > * {
+      padding: 0;
+      border: none;
+      flex-shrink: 0;
+      width: auto;
     }
   }
 

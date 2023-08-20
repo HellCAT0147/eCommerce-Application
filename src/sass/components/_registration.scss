@@ -3,6 +3,16 @@
     max-width: fit-content;
   }
 
+  &__field {
+    &_both-address {
+      margin-bottom: 10px;
+    }
+  }
+
+  &__check {
+    margin: 20px 0;
+  }
+
   &__input_password {
     padding-right: 30px;
   }

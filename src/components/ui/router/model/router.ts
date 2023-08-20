@@ -3,6 +3,7 @@ import selectCurrentPage from '../view/viewPage';
 import ControllerLogin from '../../login/controller/controller';
 import ControllerRegistration from '../../registration/controller/controller';
 import ControllerMain from '../../main/controller/controller';
+import TokenCachesStore from '../../../api/token-caches-store';
 
 class Router {
   public routes: Routes[];
@@ -15,12 +16,15 @@ class Router {
 
   public inputs: NodeListOf<HTMLInputElement>;
 
+  private readonly tokenCachesStore: TokenCachesStore;
+
   constructor(routes: Routes[]) {
     this.routes = routes;
     this.controllerMain = new ControllerMain();
     this.controllerLogin = new ControllerLogin();
     this.controllerRegistration = new ControllerRegistration();
     this.inputs = this.getInputsOnPage();
+    this.tokenCachesStore = new TokenCachesStore();
 
     document.addEventListener('DOMContentLoaded', () => {
       this.browserChangePath();
@@ -35,6 +39,10 @@ class Router {
   }
 
   private setInputsOnPage(): void {
+    const select: HTMLSelectElement | null = document.querySelector('.form__select');
+
+    select?.addEventListener('change', (e: Event) => this.controllerRegistration.selectMenu(e));
+
     this.inputs = this.getInputsOnPage();
     this.inputs.forEach((input) => {
       input.addEventListener('input', (e: Event) => this.controllerLogin.checkField(e));
@@ -61,7 +69,18 @@ class Router {
     if (!route) {
       this.navigate(Pages.NOT_FOUND);
     } else {
-      route.callback();
+      const token = this.tokenCachesStore.getDefault();
+      if (token.token) {
+        if (route.path === Pages.LOGIN) {
+          this.navigate(Pages.MAIN);
+          window.history.pushState(null, '', `/${Pages.MAIN}`);
+          selectCurrentPage(Pages.MAIN);
+          return;
+        }
+        route.callback(true);
+      } else {
+        route.callback();
+      }
       selectCurrentPage(url);
       this.setInputsOnPage();
     }
