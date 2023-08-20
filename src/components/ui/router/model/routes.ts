@@ -1,6 +1,6 @@
 import { Pages } from '../../../models/router';
 import createTemplateLogin from '../../login/view/template';
-import createTemplate from '../../main/view/template';
+import { createTemplateMain } from '../../main/view/template';
 import createTemplateNotFound from '../../not_found/view/template';
 import createTemplateRegistration from '../../registration/view/template';
 
@@ -8,13 +8,13 @@ const basicRoutes = [
   {
     path: ``,
     callback: (isloggedIn?: boolean): void => {
-      createTemplate(isloggedIn);
+      createTemplateMain(isloggedIn);
     },
   },
   {
     path: `${Pages.MAIN}`,
     callback: (isloggedIn?: boolean): void => {
-      createTemplate(isloggedIn);
+      createTemplateMain(isloggedIn);
     },
   },
   {
