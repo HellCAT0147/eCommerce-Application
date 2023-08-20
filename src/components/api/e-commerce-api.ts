@@ -144,8 +144,8 @@ export default class ECommerceApi {
     lastName: string,
     dateOfBirth: Date,
     addresses: Array<Address>,
-    defaultBillingAddress: number = 0,
-    defaultShippingAddress: number = 0
+    defaultBillingAddress: number | undefined,
+    defaultShippingAddress: number | undefined
   ): Promise<ErrorObject | true> {
     const authParams = this.baseAuthParams;
     authParams.credentials.user.username = email;

@@ -267,7 +267,9 @@ export default class RegistrationValidationModel extends ValidationModel {
           this.firstName,
           this.lastName,
           new Date(this.date),
-          [address]
+          [address],
+          0,
+          0
         );
         if (response === true) {
           const route: Routes | undefined = basicRoutes.find((routeExisting) => routeExisting.path === Pages.MAIN);
