@@ -20,9 +20,10 @@ export default function createHeader(isloggedIn?: boolean): HTMLElement {
   createButton.classList.add('redirect__buttons');
   createButton.textContent = `${Buttons.CREATE}`;
   createButton.setAttribute('id', `${Pages.REGISTRATION}`);
-  navigation.append(signButton, createButton);
   if (isloggedIn) {
-    navigation.append(signOutButton);
+    navigation.append(signOutButton, createButton);
+  } else {
+    navigation.append(signButton, createButton);
   }
   header.append(logo, navigation);
 

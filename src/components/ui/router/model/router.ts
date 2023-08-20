@@ -4,6 +4,8 @@ import ControllerLogin from '../../login/controller/controller';
 import ControllerRegistration from '../../registration/controller/controller';
 import ControllerMain from '../../main/controller/controller';
 import TokenCachesStore from '../../../api/token-caches-store';
+import eCommerceAPIConfig from '../../../api/e-commerce-api-config-realization';
+import ECommerceApi from '../../../api/e-commerce-api';
 
 class Router {
   public routes: Routes[];
@@ -18,6 +20,8 @@ class Router {
 
   private readonly tokenCachesStore: TokenCachesStore;
 
+  private eCommerceApi: ECommerceApi;
+
   constructor(routes: Routes[]) {
     this.routes = routes;
     this.controllerMain = new ControllerMain();
@@ -25,6 +29,12 @@ class Router {
     this.controllerRegistration = new ControllerRegistration();
     this.inputs = this.getInputsOnPage();
     this.tokenCachesStore = new TokenCachesStore();
+    this.eCommerceApi = new ECommerceApi(
+      eCommerceAPIConfig.projectKey,
+      eCommerceAPIConfig.clientId,
+      eCommerceAPIConfig.clientSecret,
+      eCommerceAPIConfig.region
+    );
 
     document.addEventListener('DOMContentLoaded', () => {
       this.browserChangePath();
@@ -61,7 +71,7 @@ class Router {
     return urlParsed;
   }
 
-  public navigate(url: string): void {
+  public async navigate(url: string): Promise<void> {
     const urlParsed: UrlParsed = this.parseUrl(url);
     const pathForFind: string = urlParsed.resource === '' ? urlParsed.path : `${urlParsed.path}/${urlParsed.resource}`;
     const route: Routes | undefined = this.routes.find((routeExisting) => routeExisting.path === pathForFind);
@@ -69,8 +79,8 @@ class Router {
     if (!route) {
       this.navigate(Pages.NOT_FOUND);
     } else {
-      const token = this.tokenCachesStore.getDefault();
-      if (token.token) {
+      const isLogged: boolean = await this.eCommerceApi.isLoggedIn();
+      if (isLogged) {
         if (route.path === Pages.LOGIN) {
           this.navigate(Pages.MAIN);
           window.history.pushState(null, '', `/${Pages.MAIN}`);
