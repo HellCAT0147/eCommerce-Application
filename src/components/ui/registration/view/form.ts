@@ -23,8 +23,7 @@ export default class FormViewReg extends FormView {
     const formFieldCheck: HTMLElement = new Builder('div', Base.check, pageName, Elem.field, Mode.both).element();
     const inputCheckBoth: HTMLInputElement = this.createInput(pageName, Mode.both);
     inputCheckBoth.setAttribute('checked', 'checked');
-    const labelCheckBoth: HTMLElement = new Builder('p', '', pageName, Elem.text, Mode.both).element();
-    labelCheckBoth.textContent = Titles.CHECK_BOTH;
+    const labelCheckBoth: HTMLLabelElement = this.createLabel(this.pageName, Mode.both, Titles.CHECK_BOTH);
     formFieldCheck.append(inputCheckBoth, labelCheckBoth);
     const fieldAddress: HTMLFieldSetElement = this.createAddress(
       Mode.street,
@@ -66,8 +65,8 @@ export default class FormViewReg extends FormView {
       Mode.ship
     ).element();
     const inputCheckShipping: HTMLInputElement = this.createInput(this.pageName, Mode.ship);
-    const labelCheckShipping: HTMLElement = new Builder('p', '', this.pageName, Elem.text, Mode.ship).element();
-    labelCheckShipping.textContent = Titles.DEFAULT_SHIP;
+    inputCheckShipping.setAttribute('checked', 'checked');
+    const labelCheckShipping: HTMLLabelElement = this.createLabel(this.pageName, Mode.ship, Titles.DEFAULT_SHIP);
     const formFieldCheckBilling: HTMLElement = new Builder(
       'div',
       Base.check,
@@ -76,8 +75,8 @@ export default class FormViewReg extends FormView {
       Mode.ship
     ).element();
     const inputCheckBilling: HTMLInputElement = this.createInput(this.pageName, Mode.bill);
-    const labelCheckBilling: HTMLElement = new Builder('p', '', this.pageName, Elem.text, Mode.bill).element();
-    labelCheckBilling.textContent = Titles.DEFAULT_BILL;
+    inputCheckBilling.setAttribute('checked', 'checked');
+    const labelCheckBilling: HTMLLabelElement = this.createLabel(this.pageName, Mode.bill, Titles.DEFAULT_BILL);
 
     formFieldCheckShipping.append(inputCheckShipping, labelCheckShipping);
     formFieldCheckBilling.append(inputCheckBilling, labelCheckBilling);

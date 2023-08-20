@@ -94,7 +94,13 @@ export default class FormView {
   }
 
   protected createLabel(pageName: string, labelName: string, labelText?: string): HTMLLabelElement {
-    const label: HTMLLabelElement = new Builder('', Base.labels, pageName, Elem.label, labelName).label();
+    const label: HTMLLabelElement = new Builder(
+      '',
+      Base.labels,
+      pageName,
+      labelText ? Elem.text : Elem.label,
+      labelName
+    ).label();
     label.setAttribute('for', `${pageName}-${labelName}`);
     const asterisk: HTMLElement = new Builder('span', '', 'required', '', '').element();
     asterisk.textContent = ' *';
@@ -107,7 +113,7 @@ export default class FormView {
       .map((word) => `${word[0].toUpperCase()}${word.slice(1)}`)
       .join(' ')}`;
     label.textContent = prettyLabelName;
-    label.appendChild(asterisk);
+    if (!labelText) label.appendChild(asterisk);
 
     return label;
   }
