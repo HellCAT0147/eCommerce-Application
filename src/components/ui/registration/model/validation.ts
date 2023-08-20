@@ -272,9 +272,15 @@ export default class RegistrationValidationModel extends ValidationModel {
           0
         );
         if (response === true) {
-          const route: Routes | undefined = basicRoutes.find((routeExisting) => routeExisting.path === Pages.MAIN);
-          if (route) route.callback(true);
-          window.history.pushState(null, '', `/${Pages.MAIN}`);
+          this.eCommerceApi.logout();
+          const responseLogin: ErrorObject | true = await this.eCommerceApi.login(this.mail, this.password);
+          if (responseLogin === true) {
+            const route: Routes | undefined = basicRoutes.find((routeExisting) => routeExisting.path === Pages.MAIN);
+            if (route) route.callback(true);
+            window.history.pushState(null, '', `/${Pages.MAIN}`);
+          } else {
+            this.formView.reminder(responseLogin.message);
+          }
         } else {
           this.formView.reminder(response.message);
         }

@@ -4,7 +4,8 @@ import Builder from '../../builder/html-builder';
 
 export default function createHeader(isloggedIn?: boolean): HTMLElement {
   const header: HTMLElement = new Builder('header', '', Blocks.header, '', '').element();
-  const logo: HTMLElement = new Builder('div', '', Blocks.header, Elem.logo, '').element();
+  const logo: HTMLElement = new Builder('a', '', Blocks.header, Elem.logo, '').element();
+  logo.setAttribute('href', '/main');
   logo.classList.add('redirect__buttons');
   logo.setAttribute('id', `${Pages.MAIN}`);
   const navigation: HTMLElement = new Builder('nav', '', Blocks.header, Elem.nav, '').element();
