@@ -81,7 +81,7 @@ class Router {
     } else {
       const isLogged: boolean = await this.eCommerceApi.isLoggedIn();
       if (isLogged) {
-        if (route.path === Pages.LOGIN) {
+        if (route.path === Pages.LOGIN || route.path === Pages.REGISTRATION) {
           this.navigate(Pages.MAIN);
           window.history.pushState(null, '', `/${Pages.MAIN}`);
           selectCurrentPage(Pages.MAIN);

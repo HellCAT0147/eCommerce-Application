@@ -21,7 +21,7 @@ export default function createHeader(isloggedIn?: boolean): HTMLElement {
   createButton.textContent = `${Buttons.CREATE}`;
   createButton.setAttribute('id', `${Pages.REGISTRATION}`);
   if (isloggedIn) {
-    navigation.append(signOutButton, createButton);
+    navigation.append(signOutButton);
   } else {
     navigation.append(signButton, createButton);
   }
