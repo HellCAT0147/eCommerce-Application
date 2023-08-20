@@ -3,6 +3,12 @@
     max-width: fit-content;
   }
 
+  &__address {
+    &_hidden {
+      display: none;
+    }
+  }
+
   &__field {
     &_both-address {
       margin-bottom: 10px;

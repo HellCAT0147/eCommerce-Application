@@ -52,8 +52,10 @@ export default class FormView {
       input.setAttribute('type', 'date');
       input.setAttribute('min', formattedMinDate);
       input.setAttribute('max', formattedMaxDate);
-    } else if (inputName === Mode.both || inputName === Mode.ship || inputName === Mode.bill)
+    } else if (inputName === Mode.both || inputName === Mode.ship || inputName === Mode.bill) {
       input.setAttribute('type', 'checkbox');
+      input.setAttribute('checked', 'checked');
+    }
 
     input.setAttribute('id', `${pageName}-${inputName}`);
 

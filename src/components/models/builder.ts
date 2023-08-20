@@ -63,6 +63,7 @@ export enum Mode {
   check = 'check',
   default = 'default',
   both = 'both-address',
+  hidden = 'hidden',
 }
 
 export enum Base {

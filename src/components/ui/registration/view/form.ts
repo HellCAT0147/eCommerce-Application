@@ -22,7 +22,6 @@ export default class FormViewReg extends FormView {
     const inputDate: HTMLInputElement = this.createInput(pageName, Mode.date);
     const formFieldCheck: HTMLElement = new Builder('div', Base.check, pageName, Elem.field, Mode.both).element();
     const inputCheckBoth: HTMLInputElement = this.createInput(pageName, Mode.both);
-    inputCheckBoth.setAttribute('checked', 'checked');
     const labelCheckBoth: HTMLLabelElement = this.createLabel(this.pageName, Mode.both, Titles.CHECK_BOTH);
     formFieldCheck.append(inputCheckBoth, labelCheckBoth);
     const fieldAddress: HTMLFieldSetElement = this.createAddress(
@@ -34,6 +33,7 @@ export default class FormViewReg extends FormView {
       Mode.ship,
       formFieldCheck
     );
+    const fieldAddressBilling: HTMLFieldSetElement = this.createFieldForBilling();
     const fieldCheckDefault: HTMLFieldSetElement = this.createFieldCheck();
     const buttonForm: HTMLButtonElement = new Builder('', Base.btns_colored, pageName, Elem.btn, Mode.create).button();
     buttonForm.classList.add('form__button');
@@ -42,6 +42,7 @@ export default class FormViewReg extends FormView {
     formFieldLastName.append(labelLastName, inputLastName);
     formFieldDate.append(labelDate, inputDate);
     form.prepend(formTitle);
+    fieldAddress.append(fieldAddressBilling);
     form.append(formFieldFirstName, formFieldLastName, formFieldDate, fieldAddress, fieldCheckDefault, buttonForm);
     this.form = form;
   }
@@ -65,7 +66,6 @@ export default class FormViewReg extends FormView {
       Mode.ship
     ).element();
     const inputCheckShipping: HTMLInputElement = this.createInput(this.pageName, Mode.ship);
-    inputCheckShipping.setAttribute('checked', 'checked');
     const labelCheckShipping: HTMLLabelElement = this.createLabel(this.pageName, Mode.ship, Titles.DEFAULT_SHIP);
     const formFieldCheckBilling: HTMLElement = new Builder(
       'div',
@@ -75,7 +75,6 @@ export default class FormViewReg extends FormView {
       Mode.ship
     ).element();
     const inputCheckBilling: HTMLInputElement = this.createInput(this.pageName, Mode.bill);
-    inputCheckBilling.setAttribute('checked', 'checked');
     const labelCheckBilling: HTMLLabelElement = this.createLabel(this.pageName, Mode.bill, Titles.DEFAULT_BILL);
 
     formFieldCheckShipping.append(inputCheckShipping, labelCheckShipping);
@@ -85,20 +84,7 @@ export default class FormViewReg extends FormView {
     return fieldCheck;
   }
 
-  public showBillingAddress(isChecked: boolean): void {
-    const titleShipping: HTMLElement | null = document.querySelector(`.form__title_${Mode.ship}`);
-    const addresses: HTMLElement | null = document.querySelector(`.registration__address_${Mode.ship}`);
-    const addressBilling: HTMLElement | null = document.querySelector(`.registration__address_${Mode.bill}`);
-    if (isChecked) {
-      if (titleShipping) {
-        titleShipping.textContent = `${Titles.BOTH_ADDRESS} ${Titles.ADDRESS}`;
-      }
-      if (addresses && addressBilling) addresses.removeChild(addressBilling);
-      return;
-    }
-    if (titleShipping) {
-      titleShipping.textContent = `${Titles.SHIPPING} ${Titles.ADDRESS}`;
-    }
+  private createFieldForBilling(): HTMLFieldSetElement {
     const fieldAddressBilling: HTMLFieldSetElement = this.createAddress(
       Mode.street_bill,
       Mode.city_bill,
@@ -107,6 +93,24 @@ export default class FormViewReg extends FormView {
       Titles.BILLING,
       Mode.bill
     );
-    if (addresses) addresses.appendChild(fieldAddressBilling);
+    fieldAddressBilling.classList.add(`registration__address_${Mode.hidden}`);
+
+    return fieldAddressBilling;
+  }
+
+  public showBillingAddress(isChecked: boolean): void {
+    const titleShipping: HTMLElement | null = document.querySelector(`.form__title_${Mode.ship}`);
+    const addressBilling: HTMLElement | null = document.querySelector(`.registration__address_${Mode.bill}`);
+    if (isChecked) {
+      if (titleShipping) {
+        titleShipping.textContent = `${Titles.BOTH_ADDRESS} ${Titles.ADDRESS}`;
+      }
+      if (addressBilling) addressBilling.classList.add(`registration__address_${Mode.hidden}`);
+      return;
+    }
+    if (titleShipping) {
+      titleShipping.textContent = `${Titles.SHIPPING} ${Titles.ADDRESS}`;
+    }
+    if (addressBilling) addressBilling.classList.remove(`registration__address_${Mode.hidden}`);
   }
 }
