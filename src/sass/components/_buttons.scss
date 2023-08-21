@@ -1,5 +1,6 @@
 .buttons {
   display: block;
+  @extend %transition;
   @include font(500, 1.4rem, 100%, $color-dark);
   cursor: pointer;
   &_colored {
@@ -8,6 +9,9 @@
     color: $color-light;
     background: $color-dark;
     letter-spacing: 0.05rem;
+    &:hover {
+      background: $color-main-second;
+    }
   }
   &_empty {
     border: none;
