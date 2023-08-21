@@ -97,7 +97,6 @@ export default class ValidationModel {
       this.formView.toggleSendButton(true);
       try {
         const response: ErrorObject | true = await this.eCommerceApi.login(this.mail, this.password);
-        if (response) this.formView.toggleSendButton(false);
         if (response === true) {
           const route: Routes | undefined = basicRoutes.find((routeExisting) => routeExisting.path === Pages.MAIN);
           window.history.pushState(null, '', `/${Pages.MAIN}`);
@@ -109,6 +108,7 @@ export default class ValidationModel {
       } catch (error) {
         if (error instanceof Error) this.formView.reminder(error.message);
       }
+      this.formView.toggleSendButton(false);
     } else {
       this.formView.reminder();
     }
