@@ -65,7 +65,7 @@ export default class FormView {
   protected createSelectMenu(pageName: string, inputName: InputType): HTMLSelectElement {
     const select: HTMLSelectElement = new Builder('', Base.select, pageName, Elem.select, inputName).select();
 
-    if (inputName === Mode.country) {
+    if (inputName === Mode.country || inputName === Mode.country_bill) {
       const defaultOption: HTMLOptionElement = new Builder(
         '',
         Base.options,
