@@ -94,8 +94,10 @@ export default class ValidationModel {
 
   public async send(): Promise<void> {
     if (this.checkSendable()) {
+      this.formView.toggleSendButton(true);
       try {
         const response: ErrorObject | true = await this.eCommerceApi.login(this.mail, this.password);
+        if (response) this.formView.toggleSendButton(false);
         if (response === true) {
           const route: Routes | undefined = basicRoutes.find((routeExisting) => routeExisting.path === Pages.MAIN);
           window.history.pushState(null, '', `/${Pages.MAIN}`);

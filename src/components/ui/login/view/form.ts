@@ -62,4 +62,11 @@ export default class FormViewLogin extends FormView {
       body?.removeChild(messageHolder);
     }, 1500);
   }
+
+  public toggleSendButton(toLock: boolean): void {
+    const sendButton: HTMLButtonElement | null = document.querySelector('.login__button');
+    if (!sendButton) return;
+    if (toLock) sendButton.disabled = true;
+    else sendButton.disabled = false;
+  }
 }
