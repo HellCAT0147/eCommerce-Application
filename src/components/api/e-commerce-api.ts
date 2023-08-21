@@ -16,6 +16,7 @@ import {
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import { ErrorObject } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/error';
 import TokenCachesStore from './token-caches-store';
+import compareObjects from '../utils/compare-objects';
 
 export default class ECommerceApi {
   private readonly baseAuthParams: PasswordAuthMiddlewareOptions;
@@ -126,13 +127,13 @@ export default class ECommerceApi {
     const originalAddress: Address = addresses[index];
 
     for (let i = 0; i < newCustomerAddresses.length; i += 1) {
-      const newCustomerAddress: Address = newCustomerAddresses[i];
+      const newCustomerAddress = newCustomerAddresses[i];
       const originalAddressWithNewId: Address = {
         ...originalAddress,
         id: newCustomerAddress.id,
       };
 
-      if (JSON.stringify(newCustomerAddress) === JSON.stringify(originalAddressWithNewId)) {
+      if (compareObjects(newCustomerAddress, originalAddressWithNewId)) {
         return newCustomerAddress;
       }
     }
@@ -194,7 +195,6 @@ export default class ECommerceApi {
     const authParams = this.baseAuthParams;
     authParams.credentials.user.username = email;
     authParams.credentials.user.password = password;
-
     try {
       const registrationResult: ClientResponse<CustomerSignInResult> = await this.apiRoot
         .me()
@@ -212,13 +212,19 @@ export default class ECommerceApi {
           },
         })
         .execute();
-      await this.updateNewUserAddresses(
-        addresses,
-        registrationResult.body.customer.addresses,
-        billingAddressesIds,
-        shippingAddressesIds,
-        registrationResult
-      );
+      this.logout();
+      const loginResult = await this.login(email, password);
+      if (loginResult === true) {
+        await this.updateNewUserAddresses(
+          addresses,
+          registrationResult.body.customer.addresses,
+          billingAddressesIds,
+          shippingAddressesIds,
+          registrationResult
+        );
+      } else {
+        return loginResult;
+      }
     } catch (e) {
       return this.errorObjectOrThrow(e);
     }
