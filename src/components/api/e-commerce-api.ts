@@ -67,7 +67,7 @@ export default class ECommerceApi {
     };
 
     // ClientBuilder
-    this.clientBuilder = new ClientBuilder().withHttpMiddleware(httpMiddlewareOptions).withLoggerMiddleware(); // Include middleware for logging;
+    this.clientBuilder = new ClientBuilder().withHttpMiddleware(httpMiddlewareOptions);
     this.initClientAndApiRoot();
   }
 
@@ -122,8 +122,27 @@ export default class ECommerceApi {
     throw e;
   }
 
+  private findAddress(addresses: Array<Address>, newCustomerAddresses: Array<Address>, index: number): Address | null {
+    const originalAddress: Address = addresses[index];
+
+    for (let i = 0; i < newCustomerAddresses.length; i += 1) {
+      const newCustomerAddress: Address = newCustomerAddresses[i];
+      const originalAddressWithNewId: Address = {
+        ...originalAddress,
+        id: newCustomerAddress.id,
+      };
+
+      if (JSON.stringify(newCustomerAddress) === JSON.stringify(originalAddressWithNewId)) {
+        return newCustomerAddress;
+      }
+    }
+
+    return null;
+  }
+
   private async updateNewUserAddresses(
     addresses: Array<Address>,
+    newCustomerAddresses: Array<Address>,
     billingAddressesIds: Array<number>,
     shippingAddressesIds: Array<number>,
     registrationResult: ClientResponse<CustomerSignInResult>
@@ -135,17 +154,17 @@ export default class ECommerceApi {
     ) {
       const actions: Array<MyCustomerUpdateAction> = [];
 
-      billingAddressesIds.forEach((id) => {
-        actions.push({
-          action: 'addBillingAddressId',
-          addressKey: addresses[id].key,
-        });
+      billingAddressesIds.forEach((i) => {
+        const address = this.findAddress(addresses, newCustomerAddresses, i);
+        if (address != null) {
+          actions.push({ action: 'addBillingAddressId', addressId: address.id });
+        }
       });
-      shippingAddressesIds.forEach((id) => {
-        actions.push({
-          action: 'addShippingAddressId',
-          addressKey: addresses[id].key,
-        });
+      shippingAddressesIds.forEach((i) => {
+        const address = this.findAddress(addresses, newCustomerAddresses, i);
+        if (address != null) {
+          actions.push({ action: 'addShippingAddressId', addressId: address.id });
+        }
       });
 
       await this.apiRoot
@@ -193,7 +212,13 @@ export default class ECommerceApi {
           },
         })
         .execute();
-      await this.updateNewUserAddresses(addresses, billingAddressesIds, shippingAddressesIds, registrationResult);
+      await this.updateNewUserAddresses(
+        addresses,
+        registrationResult.body.customer.addresses,
+        billingAddressesIds,
+        shippingAddressesIds,
+        registrationResult
+      );
     } catch (e) {
       return this.errorObjectOrThrow(e);
     }
