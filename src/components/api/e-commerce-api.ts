@@ -5,7 +5,14 @@ import {
   RefreshAuthMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
 import { PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2/dist/declarations/src/types/sdk';
-import { Address, ClientResponse, createApiBuilderFromCtpClient, Customer } from '@commercetools/platform-sdk';
+import {
+  Address,
+  ClientResponse,
+  createApiBuilderFromCtpClient,
+  Customer,
+  CustomerSignInResult,
+  MyCustomerUpdateAction,
+} from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import { ErrorObject } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/error';
 import TokenCachesStore from './token-caches-store';
@@ -104,7 +111,7 @@ export default class ECommerceApi {
     }
   }
 
-  private checkError(e: unknown): ErrorObject | null {
+  private errorObjectOrThrow(e: unknown): ErrorObject {
     if (e != null && typeof e === 'object') {
       const { message } = e as { message: string | undefined };
 
@@ -112,7 +119,85 @@ export default class ECommerceApi {
         return e as ErrorObject;
       }
     }
-    return null;
+    throw e;
+  }
+
+  private async updateNewUserAddresses(
+    addresses: Array<Address>,
+    billingAddressesIds: Array<number>,
+    shippingAddressesIds: Array<number>,
+    registrationResult: ClientResponse<CustomerSignInResult>
+  ): Promise<void> {
+    if (
+      registrationResult.statusCode != null &&
+      registrationResult.statusCode >= 200 &&
+      registrationResult.statusCode < 300
+    ) {
+      const actions: Array<MyCustomerUpdateAction> = [];
+
+      billingAddressesIds.forEach((id) => {
+        actions.push({
+          action: 'addBillingAddressId',
+          addressKey: addresses[id].key,
+        });
+      });
+      shippingAddressesIds.forEach((id) => {
+        actions.push({
+          action: 'addShippingAddressId',
+          addressKey: addresses[id].key,
+        });
+      });
+
+      await this.apiRoot
+        .me()
+        .post({
+          body: {
+            version: registrationResult.body.customer.version,
+            actions,
+          },
+        })
+        .execute();
+    }
+  }
+
+  public async register(
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string,
+    dateOfBirth: Date,
+    addresses: Array<Address>,
+    billingAddressesIds: Array<number>,
+    shippingAddressesIds: Array<number>,
+    defaultBillingAddress: number | undefined,
+    defaultShippingAddress: number | undefined
+  ): Promise<ErrorObject | boolean> {
+    const authParams = this.baseAuthParams;
+    authParams.credentials.user.username = email;
+    authParams.credentials.user.password = password;
+
+    try {
+      const registrationResult: ClientResponse<CustomerSignInResult> = await this.apiRoot
+        .me()
+        .signup()
+        .post({
+          body: {
+            email,
+            password,
+            firstName,
+            lastName,
+            dateOfBirth: `${dateOfBirth.getFullYear()}-${dateOfBirth.getMonth() + 1}-${dateOfBirth.getDate()}`,
+            addresses,
+            defaultBillingAddress,
+            defaultShippingAddress,
+          },
+        })
+        .execute();
+      await this.updateNewUserAddresses(addresses, billingAddressesIds, shippingAddressesIds, registrationResult);
+    } catch (e) {
+      return this.errorObjectOrThrow(e);
+    }
+    return true;
   }
 
   public async login(email: string, password: string): Promise<ErrorObject | true> {
@@ -133,52 +218,7 @@ export default class ECommerceApi {
         return true;
       }
     } catch (e) {
-      const castedE = this.checkError(e);
-      if (castedE != null) {
-        return castedE;
-      }
-      throw e;
-    }
-    return true;
-  }
-
-  public async register(
-    email: string,
-    password: string,
-    firstName: string,
-    lastName: string,
-    dateOfBirth: Date,
-    addresses: Array<Address>,
-    defaultBillingAddress: number | undefined,
-    defaultShippingAddress: number | undefined
-  ): Promise<ErrorObject | true> {
-    const authParams = this.baseAuthParams;
-    authParams.credentials.user.username = email;
-    authParams.credentials.user.password = password;
-
-    try {
-      await this.apiRoot
-        .me()
-        .signup()
-        .post({
-          body: {
-            email,
-            password,
-            firstName,
-            lastName,
-            dateOfBirth: `${dateOfBirth.getFullYear()}-${dateOfBirth.getMonth() + 1}-${dateOfBirth.getDate()}`,
-            addresses,
-            defaultBillingAddress,
-            defaultShippingAddress,
-          },
-        })
-        .execute();
-    } catch (e) {
-      const castedE = this.checkError(e);
-      if (castedE != null) {
-        return castedE;
-      }
-      throw e;
+      return this.errorObjectOrThrow(e);
     }
     return true;
   }

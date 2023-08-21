@@ -337,7 +337,7 @@ export default class RegistrationValidationModel extends ValidationModel {
   public async send(): Promise<void> {
     if (this.checkSendable()) {
       try {
-        const response: ErrorObject | true = await this.eCommerceApi.register(
+        const response: ErrorObject | boolean = await this.eCommerceApi.register(
           this.mail,
           this.password,
           this.firstName,
