@@ -34,9 +34,11 @@ export default class RegistrationValidationModel extends ValidationModel {
 
   private shippingIsBilling: boolean;
 
-  private shippingDefault: 1 | undefined;
+  private shippingDefault: 0 | undefined;
 
-  private billingDefault: 0 | undefined;
+  private billingDefault: 0 | 1 | undefined;
+
+  private billingIndexAddress: 0 | 1;
 
   protected formViewReg: FormViewReg;
 
@@ -56,8 +58,9 @@ export default class RegistrationValidationModel extends ValidationModel {
     this.street = '';
     this.streetBill = '';
     this.shippingIsBilling = true;
-    this.shippingDefault = 1;
+    this.shippingDefault = 0;
     this.billingDefault = 0;
+    this.billingIndexAddress = 0;
   }
 
   public checkName(name: string, target: string): boolean {
@@ -223,6 +226,7 @@ export default class RegistrationValidationModel extends ValidationModel {
 
   public checkStreet(target: HTMLInputElement): boolean {
     const street: string = target.value;
+    this.prepareAddress();
 
     if (street.trim().length) {
       if (target.id.includes('bill')) {
@@ -249,17 +253,19 @@ export default class RegistrationValidationModel extends ValidationModel {
 
   public checkBothAddress(): boolean {
     this.shippingIsBilling = !this.shippingIsBilling;
+    if (this.billingIndexAddress === 0) this.billingIndexAddress = 1;
+    else this.billingIndexAddress = 0;
     this.formViewReg.showBillingAddress(this.shippingIsBilling);
     return this.shippingIsBilling;
   }
 
-  public setBillingDefault(): 0 | undefined {
-    this.billingDefault = this.billingDefault === undefined ? 0 : undefined;
+  public setBillingDefault(): 0 | 1 | undefined {
+    this.billingDefault = this.billingDefault === undefined ? this.billingIndexAddress : undefined;
     return this.billingDefault;
   }
 
-  public setShippingDefault(): 1 | undefined {
-    this.shippingDefault = this.shippingDefault === undefined ? 1 : undefined;
+  public setShippingDefault(): 0 | undefined {
+    this.shippingDefault = this.shippingDefault === undefined ? 0 : undefined;
     return this.shippingDefault;
   }
 
@@ -313,16 +319,15 @@ export default class RegistrationValidationModel extends ValidationModel {
 
   private prepareAddress(): Address[] {
     const addresses: Address[] = [];
-    const billingAddress: Address = {
+    const shippingAddress: Address = {
       country: this.getCountryCode(this.country),
       postalCode: this.postal,
       city: this.city,
       streetName: this.street,
     };
-    addresses.push(billingAddress, billingAddress);
+    addresses.push(shippingAddress);
 
     if (!this.shippingIsBilling) {
-      addresses.pop();
       addresses.push({
         country: this.getCountryCode(this.countryBill),
         postalCode: this.postalBill,
@@ -344,6 +349,8 @@ export default class RegistrationValidationModel extends ValidationModel {
           this.lastName,
           new Date(this.date),
           this.prepareAddress(),
+          [this.billingIndexAddress],
+          [0],
           this.billingDefault,
           this.shippingDefault
         );
@@ -358,9 +365,7 @@ export default class RegistrationValidationModel extends ValidationModel {
           } else {
             this.formView.reminder(responseLogin.message);
           }
-        } else {
-          this.formView.reminder(response.message);
-        }
+        } else if (response !== false) this.formView.reminder(response.message);
       } catch (error) {
         if (error instanceof Error) this.formView.reminder(error.message);
       }
