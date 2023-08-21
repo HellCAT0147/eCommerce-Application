@@ -47,6 +47,8 @@ class Router {
     this.inputs.forEach((input) => {
       input.addEventListener('input', (e: Event) => this.controllerLogin.checkField(e));
       input.addEventListener('input', (e: Event) => this.controllerRegistration.checkField(e));
+      input.addEventListener('keydown', (e: Event) => this.controllerLogin.send(e));
+      input.addEventListener('keydown', (e: Event) => this.controllerRegistration.send(e));
     });
   }
 
