@@ -182,7 +182,8 @@ export default class FormView {
         errorsHolder.append(p);
       });
       let input: HTMLInputElement | null = document.querySelector(`.${this.pageName}__input_${inputType}`);
-      if (inputType === 'country') input = document.querySelector(`.${this.pageName}__select_${inputType}`);
+      if (inputType === 'country' || inputType === 'country-bill')
+        input = document.querySelector(`.${this.pageName}__select_${inputType}`);
 
       if (errors.length) {
         place.after(errorsHolder);
