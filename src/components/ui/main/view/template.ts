@@ -38,8 +38,8 @@ function createTemplateMain(isloggedIn?: boolean): void {
 
   const title: HTMLElement = new Builder('h1', Base.titles, Blocks.main, Elem.title, '').element();
   title.textContent = `eCommerce - ${Titles.MAIN} Page`;
-  const linkLogin: HTMLAnchorElement = new Builder('', '', Blocks.main, Elem.link, Mode.login).a();
-  const linkRegistration: HTMLElement = new Builder('', '', Blocks.main, Elem.link, Mode.reg).a();
+  const linkLogin: HTMLAnchorElement = new Builder('', Base.links, Blocks.main, Elem.link, Mode.login).a();
+  const linkRegistration: HTMLElement = new Builder('', Base.links, Blocks.main, Elem.link, Mode.reg).a();
 
   if (main) {
     main.append(title, linkLogin, linkRegistration);

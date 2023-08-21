@@ -3,10 +3,6 @@
     display: inline-block;
     width: fit-content;
     text-decoration: none;
-    @extend %transition;
     @include font(700, 2rem, 100%, $color-link);
-    &:hover {
-      opacity: 0.8;
-    }
   }
 }

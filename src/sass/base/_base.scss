@@ -23,4 +23,11 @@ h1 {
 .links {
   text-decoration: none;
   color: $color-link;
+  @extend %transition;
+  &:hover {
+    opacity: 0.8;
+  }
+  &:visited {
+    color: $color-link;
+  }
 }
