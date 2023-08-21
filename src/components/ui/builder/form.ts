@@ -197,4 +197,12 @@ export default class FormView {
     else input.type = 'password';
     input.focus();
   }
+
+  public addTabAndFocus(): void {
+    const firstInput: HTMLInputElement | null = document.querySelector(`.${Base.inputs}`);
+    const showPasswordButton: HTMLButtonElement | null = document.querySelector(`#show-password`);
+
+    if (firstInput) firstInput.focus();
+    if (showPasswordButton) showPasswordButton.setAttribute('tabindex', '-1');
+  }
 }

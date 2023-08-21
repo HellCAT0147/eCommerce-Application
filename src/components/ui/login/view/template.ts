@@ -30,4 +30,6 @@ export default function createTemplateLogin(isloggedIn?: boolean): void {
     main.append(title, form);
     main.append(form);
   }
+
+  formView.addTabAndFocus();
 }
