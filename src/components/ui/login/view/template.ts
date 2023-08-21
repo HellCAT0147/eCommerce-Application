@@ -28,7 +28,7 @@ export default function createTemplateLogin(isloggedIn?: boolean): void {
   const linkWrapper: HTMLElement = new Builder('span', '', Blocks.reg, Elem.wrapper, '').element();
   linkWrapper.textContent = `${Titles.NOT_HAVE_ACCOUNT} `;
   const linkLogin: HTMLAnchorElement = new Builder('', Base.links, Blocks.reg, Elem.link, Mode.reg).a();
-  linkLogin.textContent = `${Buttons.CREATE[0]}${Buttons.CREATE.toLocaleLowerCase().slice(1, -1)}!`;
+  linkLogin.textContent = `${Buttons.CREATE[0]}${Buttons.CREATE.toLocaleLowerCase().slice(1)}!`;
 
   if (main) {
     linkWrapper.appendChild(linkLogin);
