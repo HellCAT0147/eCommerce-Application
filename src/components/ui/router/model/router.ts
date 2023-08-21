@@ -18,8 +18,6 @@ class Router {
 
   public inputs: NodeListOf<HTMLInputElement>;
 
-  private readonly tokenCachesStore: TokenCachesStore;
-
   private eCommerceApi: ECommerceApi;
 
   constructor(routes: Routes[]) {
@@ -28,7 +26,6 @@ class Router {
     this.controllerLogin = new ControllerLogin();
     this.controllerRegistration = new ControllerRegistration();
     this.inputs = this.getInputsOnPage();
-    this.tokenCachesStore = new TokenCachesStore();
     this.eCommerceApi = new ECommerceApi(
       eCommerceAPIConfig.projectKey,
       eCommerceAPIConfig.clientId,

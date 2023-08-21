@@ -1,4 +1,4 @@
-import { Base, Blocks, Elem, Titles } from '../../../models/builder';
+import { Base, Blocks, Elem, Mode, Titles } from '../../../models/builder';
 import { Pages } from '../../../models/router';
 import Builder from '../../builder/html-builder';
 import createHeader from './header';
@@ -38,9 +38,11 @@ function createTemplateMain(isloggedIn?: boolean): void {
 
   const title: HTMLElement = new Builder('h1', Base.titles, Blocks.main, Elem.title, '').element();
   title.textContent = `eCommerce - ${Titles.MAIN} Page`;
+  const linkLogin: HTMLAnchorElement = new Builder('', '', Blocks.main, Elem.link, Mode.login).a();
+  const linkRegistration: HTMLElement = new Builder('', '', Blocks.main, Elem.link, Mode.reg).a();
 
   if (main) {
-    main.append(title);
+    main.append(title, linkLogin, linkRegistration);
   }
 }
 

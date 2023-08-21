@@ -11,10 +11,13 @@ export interface UrlParsed {
 }
 
 export enum Pages {
+  GO_TO = `go-to`,
   MAIN = 'main',
-  GO_TO_MAIN_PAGE = 'go-to-main-page',
   LOGIN = 'login',
   SIGN_OUT = 'sign-out',
   REGISTRATION = 'registration',
+  GO_TO_MAIN = `${GO_TO}-${MAIN}`,
+  GO_TO_LOGIN = `${GO_TO}-${LOGIN}`,
+  GO_TO_REG = `${GO_TO}-${REGISTRATION}`,
   NOT_FOUND = 'not-found',
 }

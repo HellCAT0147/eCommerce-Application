@@ -28,6 +28,7 @@ export enum Elem {
   option = 'option',
   text = 'text',
   check = 'check',
+  link = 'link',
 }
 
 export enum Mode {
@@ -64,6 +65,8 @@ export enum Mode {
   default = 'default',
   both = 'both-address',
   hidden = 'hidden',
+  login = 'login',
+  reg = 'registration',
 }
 
 export enum Base {
