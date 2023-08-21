@@ -206,4 +206,11 @@ export default class FormView {
     else input.type = 'password';
     input.focus();
   }
+
+  public toggleSendButton(toLock: boolean): void {
+    const sendButton: HTMLButtonElement | null = document.querySelector(`.${this.pageName}__button`);
+    if (!sendButton) return;
+    if (toLock) sendButton.disabled = true;
+    else sendButton.disabled = false;
+  }
 }
