@@ -22,7 +22,7 @@ export default class FormViewReg extends FormView {
     const inputDate: HTMLInputElement = this.createInput(pageName, Mode.date);
     const formFieldCheck: HTMLElement = new Builder('div', Base.check, pageName, Elem.field, Mode.both).element();
     const inputCheckBoth: HTMLInputElement = this.createInput(pageName, Mode.both);
-    const labelCheckBoth: HTMLLabelElement = this.createLabel(this.pageName, Mode.both, Titles.CHECK_BOTH);
+    const labelCheckBoth: HTMLLabelElement = this.createLabel(this.pageName, Mode.both, Titles.CHECK_BOTH, true);
     formFieldCheck.append(inputCheckBoth, labelCheckBoth);
     const fieldAddress: HTMLFieldSetElement = this.createAddress(
       Mode.street,
@@ -66,7 +66,7 @@ export default class FormViewReg extends FormView {
       Mode.ship
     ).element();
     const inputCheckShipping: HTMLInputElement = this.createInput(this.pageName, Mode.ship);
-    const labelCheckShipping: HTMLLabelElement = this.createLabel(this.pageName, Mode.ship, Titles.DEFAULT_SHIP);
+    const labelCheckShipping: HTMLLabelElement = this.createLabel(this.pageName, Mode.ship, Titles.DEFAULT_SHIP, true);
     const formFieldCheckBilling: HTMLElement = new Builder(
       'div',
       Base.check,
@@ -75,7 +75,7 @@ export default class FormViewReg extends FormView {
       Mode.ship
     ).element();
     const inputCheckBilling: HTMLInputElement = this.createInput(this.pageName, Mode.bill);
-    const labelCheckBilling: HTMLLabelElement = this.createLabel(this.pageName, Mode.bill, Titles.DEFAULT_BILL);
+    const labelCheckBilling: HTMLLabelElement = this.createLabel(this.pageName, Mode.bill, Titles.DEFAULT_BILL, true);
 
     formFieldCheckShipping.append(inputCheckShipping, labelCheckShipping);
     formFieldCheckBilling.append(inputCheckBilling, labelCheckBilling);

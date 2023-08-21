@@ -95,7 +95,7 @@ export default class FormView {
     return select;
   }
 
-  protected createLabel(pageName: string, labelName: string, labelText?: string): HTMLLabelElement {
+  protected createLabel(pageName: string, labelName: string, labelText?: string, isCheck?: boolean): HTMLLabelElement {
     const label: HTMLLabelElement = new Builder(
       '',
       Base.labels,
@@ -115,7 +115,7 @@ export default class FormView {
       .map((word) => `${word[0].toUpperCase()}${word.slice(1)}`)
       .join(' ')}`;
     label.textContent = prettyLabelName;
-    if (!labelText) label.appendChild(asterisk);
+    if (!isCheck) label.appendChild(asterisk);
 
     return label;
   }
