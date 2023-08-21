@@ -197,11 +197,12 @@ export default class RegistrationValidationModel extends ValidationModel {
         return false;
     }
     if (postal.match(regexp)) {
-      this.postal = postal;
+      if (target.includes('bill')) this.postalBill = postal;
+      else this.postal = postal;
       this.setErrors(`postal-code${target.includes('bill') ? '-bill' : ''}`, []);
       return true;
     }
-    switch (this.country) {
+    switch (country) {
       case Countries.BY:
         this.setErrors(`postal-code${target.includes('bill') ? '-bill' : ''}`, [PostalErrors.BY]);
         break;
@@ -310,22 +311,39 @@ export default class RegistrationValidationModel extends ValidationModel {
     return countriesCodes[id];
   }
 
+  private prepareAddress(): Address[] {
+    const addresses: Address[] = [];
+    const billingAddress: Address = {
+      country: this.getCountryCode(this.country),
+      postalCode: this.postal,
+      city: this.city,
+      streetName: this.street,
+    };
+    addresses.push(billingAddress, billingAddress);
+
+    if (!this.shippingIsBilling) {
+      addresses.pop();
+      addresses.push({
+        country: this.getCountryCode(this.countryBill),
+        postalCode: this.postalBill,
+        city: this.cityBill,
+        streetName: this.streetBill,
+      });
+    }
+
+    return addresses;
+  }
+
   public async send(): Promise<void> {
     if (this.checkSendable()) {
       try {
-        const address: Address = {
-          country: this.getCountryCode(this.country),
-          postalCode: this.postal,
-          city: this.city,
-          streetName: this.street,
-        };
         const response: ErrorObject | true = await this.eCommerceApi.register(
           this.mail,
           this.password,
           this.firstName,
           this.lastName,
           new Date(this.date),
-          [address, address],
+          this.prepareAddress(),
           this.billingDefault,
           this.shippingDefault
         );
