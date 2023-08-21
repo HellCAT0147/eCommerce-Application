@@ -353,6 +353,7 @@ export default class RegistrationValidationModel extends ValidationModel {
           if (responseLogin === true) {
             const route: Routes | undefined = basicRoutes.find((routeExisting) => routeExisting.path === Pages.MAIN);
             if (route) route.callback(true);
+            this.formView.showSuccessLoginMessage();
             window.history.pushState(null, '', `/${Pages.MAIN}`);
           } else {
             this.formView.reminder(responseLogin.message);

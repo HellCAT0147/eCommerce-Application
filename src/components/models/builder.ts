@@ -30,6 +30,8 @@ export enum Elem {
   check = 'check',
   link = 'link',
   wrapper = 'wrapper',
+  mess = 'message',
+  image = 'image',
 }
 
 export enum Mode {
@@ -114,4 +116,5 @@ export enum Titles {
   LOGIN_ACCOUNT = `Login Your Account`,
   HAVE_ACCOUNT = `Already have an account?`,
   NOT_HAVE_ACCOUNT = `Don't have an account yet?`,
+  SUCCESS_LOGIN = `You've successfully logged`,
 }

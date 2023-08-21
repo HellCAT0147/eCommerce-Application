@@ -99,6 +99,7 @@ export default class ValidationModel {
         if (response === true) {
           const route: Routes | undefined = basicRoutes.find((routeExisting) => routeExisting.path === Pages.MAIN);
           window.history.pushState(null, '', `/${Pages.MAIN}`);
+          this.formView.showSuccessLoginMessage();
           if (route) route.callback(true);
         } else {
           this.formView.reminder(response.message);
