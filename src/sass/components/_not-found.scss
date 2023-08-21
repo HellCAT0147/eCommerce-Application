@@ -1,0 +1,53 @@
+.not-found {
+  display: flex;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  column-gap: 15px;
+  @extend %font-second;
+  @include font(700, 26rem, 100%, $color-dark);
+  &__eye {
+    position: absolute;
+    background: $color-light;
+  }
+  &__circle {
+    border-radius: 50%;
+    &_big {
+      position: relative;
+      width: 26rem;
+      height: 26rem;
+      background: $color-dark;
+      &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        width: 26rem;
+        height: 0rem;
+        display: block;
+        background: $color-light;
+        @extend %eye;
+      }
+      &:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        width: 26rem;
+        height: 0rem;
+        display: block;
+        background: $color-light;
+        @extend %eye;
+      }
+    }
+    &_small {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 10rem;
+      height: 10rem;
+      background: $color-light;
+      @extend %eyeball;
+    }
+  }
+}

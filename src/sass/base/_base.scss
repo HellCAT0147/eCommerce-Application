@@ -14,8 +14,21 @@ html {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  position: relative;
 }
 
 h1 {
   @include font(400, 3rem, 100%, $color-dark);
+}
+
+.links {
+  text-decoration: none;
+  color: $color-link;
+  @extend %transition;
+  &:hover {
+    opacity: 0.8;
+  }
+  &:visited {
+    color: $color-link;
+  }
 }

@@ -5,8 +5,27 @@
   color: $color;
 }
 
-@mixin media-laptop {
-  @media (max-width: $laptop-width) {
+@mixin media-tablet {
+  @media (max-width: $tablet-width) {
     @content;
   }
+}
+
+@mixin media-mobile-large {
+  @media (max-width: $mobile-large-width) {
+    @content;
+  }
+}
+
+@mixin eye-wrapper {
+  position: absolute;
+  height: 35px;
+  width: 35px;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-size: contain;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
 }
