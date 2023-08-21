@@ -93,7 +93,6 @@ export default class ValidationModel {
   }
 
   public async send(): Promise<void> {
-    // console.log('login send');
     if (this.checkSendable()) {
       try {
         const response: ErrorObject | true = await this.eCommerceApi.login(this.mail, this.password);

@@ -253,7 +253,6 @@ export default class RegistrationValidationModel extends ValidationModel {
   }
 
   public async send(): Promise<void> {
-    // console.log('registration send');
     if (this.checkSendable()) {
       try {
         const address: Address = {

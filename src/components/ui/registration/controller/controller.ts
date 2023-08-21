@@ -46,6 +46,17 @@ class ControllerRegistration extends ControllerLogin {
     e.preventDefault();
     this.validationModel.checkCountry(target);
   }
+
+  public sendReg(e: Event): void {
+    if (!(e instanceof KeyboardEvent && e.key === 'Enter')) return;
+    e.preventDefault();
+
+    const { target } = e;
+    if (!(target instanceof HTMLInputElement)) return;
+    if (target && target.closest('.main__registration')) {
+      this.validationModel.send();
+    }
+  }
 }
 
 export default ControllerRegistration;
