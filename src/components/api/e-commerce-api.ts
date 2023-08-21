@@ -138,13 +138,13 @@ export default class ECommerceApi {
       billingAddressesIds.forEach((id) => {
         actions.push({
           action: 'addBillingAddressId',
-          addressId: addresses[id].id,
+          addressKey: addresses[id].key,
         });
       });
       shippingAddressesIds.forEach((id) => {
         actions.push({
           action: 'addShippingAddressId',
-          addressId: addresses[id].id,
+          addressKey: addresses[id].key,
         });
       });
 
