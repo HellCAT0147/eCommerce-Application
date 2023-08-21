@@ -50,4 +50,55 @@
       @extend %eyeball;
     }
   }
+
+  @include media-tablet {
+    @include font(700, 14rem, 100%, $color-dark);
+
+    &__title {
+      @include font(400, 1.8rem, 100%, $color-dark);
+    }
+
+    &__circle {
+      &_big {
+        position: relative;
+        width: 13rem;
+        height: 13rem;
+        background: $color-dark;
+        &:before {
+          content: '';
+          position: absolute;
+          top: 0;
+          width: 13rem;
+          height: 0rem;
+          display: block;
+          background: $color-light;
+          @extend %eye;
+        }
+        &:after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          width: 13rem;
+          height: 0rem;
+          display: block;
+          background: $color-light;
+          @extend %eye;
+        }
+      }
+      &_small {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 5rem;
+        height: 5rem;
+        background: $color-light;
+        @extend %eyeball;
+      }
+    }
+  }
+
+  @include media-mobile-medium {
+    @include font(700, 12rem, 100%, $color-dark);
+  }
 }
