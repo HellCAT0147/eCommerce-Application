@@ -4,7 +4,7 @@ import Builder from '../../builder/html-builder';
 import createHeader from '../../main/view/header';
 import FormViewLogin from './form';
 
-export default function createTemplateLogin(isloggedIn?: boolean): void {
+export default function createTemplateLogin(isloggedIn?: boolean): HTMLElement {
   const body: HTMLBodyElement | null = document.querySelector('body');
   const header: HTMLElement | null = document.querySelector('header');
   const newHeader: HTMLElement = createHeader(isloggedIn);
@@ -30,4 +30,6 @@ export default function createTemplateLogin(isloggedIn?: boolean): void {
     main.append(title, form);
     main.append(form);
   }
+
+  return newHeader;
 }
