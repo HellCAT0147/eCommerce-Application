@@ -49,6 +49,10 @@
     .message__text {
       color: $color-success-intensive;
     }
+
+    &_hidden {
+      display: none;
+    }
   }
 }
 
