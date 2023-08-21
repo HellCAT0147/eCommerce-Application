@@ -255,6 +255,8 @@ export default class RegistrationValidationModel extends ValidationModel {
     this.shippingIsBilling = !this.shippingIsBilling;
     if (this.billingIndexAddress === 0) this.billingIndexAddress = 1;
     else this.billingIndexAddress = 0;
+    this.setBillingDefault();
+    this.setBillingDefault();
     this.formViewReg.showBillingAddress(this.shippingIsBilling);
     return this.shippingIsBilling;
   }
