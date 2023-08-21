@@ -98,8 +98,8 @@ export default class ValidationModel {
         const response: ErrorObject | true = await this.eCommerceApi.login(this.mail, this.password);
         if (response === true) {
           const route: Routes | undefined = basicRoutes.find((routeExisting) => routeExisting.path === Pages.MAIN);
-          if (route) route.callback(true);
           window.history.pushState(null, '', `/${Pages.MAIN}`);
+          if (route) route.callback(true);
         } else {
           this.formView.reminder(response.message);
         }

@@ -4,8 +4,6 @@ import ControllerLogin from '../../login/controller/controller';
 import ControllerRegistration from '../../registration/controller/controller';
 import ControllerMain from '../../main/controller/controller';
 import TokenCachesStore from '../../../api/token-caches-store';
-import eCommerceAPIConfig from '../../../api/e-commerce-api-config-realization';
-import ECommerceApi from '../../../api/e-commerce-api';
 
 class Router {
   public routes: Routes[];
@@ -18,7 +16,7 @@ class Router {
 
   public inputs: NodeListOf<HTMLInputElement>;
 
-  private eCommerceApi: ECommerceApi;
+  private readonly tokenCachesStore: TokenCachesStore;
 
   constructor(routes: Routes[]) {
     this.routes = routes;
@@ -26,12 +24,7 @@ class Router {
     this.controllerLogin = new ControllerLogin();
     this.controllerRegistration = new ControllerRegistration();
     this.inputs = this.getInputsOnPage();
-    this.eCommerceApi = new ECommerceApi(
-      eCommerceAPIConfig.projectKey,
-      eCommerceAPIConfig.clientId,
-      eCommerceAPIConfig.clientSecret,
-      eCommerceAPIConfig.region
-    );
+    this.tokenCachesStore = new TokenCachesStore();
 
     document.addEventListener('DOMContentLoaded', () => {
       this.browserChangePath();
@@ -78,11 +71,12 @@ class Router {
     if (!route) {
       this.navigate(Pages.NOT_FOUND);
     } else {
-      const isLogged: boolean = await this.eCommerceApi.isLoggedIn();
-      if (isLogged) {
+      const token = this.tokenCachesStore.getDefault();
+      const tokenDefault = this.tokenCachesStore.defaultTokenStore;
+      if (token !== tokenDefault) {
         if (route.path === Pages.LOGIN || route.path === Pages.REGISTRATION) {
-          this.navigate(Pages.MAIN);
           window.history.pushState(null, '', `/${Pages.MAIN}`);
+          this.navigate(Pages.MAIN);
           selectCurrentPage(Pages.MAIN);
           return;
         }
