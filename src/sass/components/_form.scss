@@ -1,30 +1,42 @@
 .form {
   display: flex;
+  align-self: center;
   flex-direction: column;
-  margin: 20px auto;
+  width: 100%;
+  max-width: 606px;
+  margin: 20px 0;
   row-gap: $base-intend;
+  flex-grow: 1;
   @extend %font-second;
   @include font(400, 1.6rem, 100%, $color-dark);
+
   &__titles {
     margin-bottom: 28px;
     @extend %font-main;
     @include font(400, 2.4rem, 100%, $color-dark);
   }
+
   &__subform {
     border: none;
   }
+
   &__field {
     display: flex;
     position: relative;
-    min-width: 606px;
     justify-content: space-between;
     border: none;
+  }
+
+  &__label {
+    width: 100%;
+    max-width: 110px;
   }
 
   &__input,
   &__select {
     padding: 14px 16px;
-    width: 100%;
+    width: 0;
+    flex-grow: 1;
     max-width: 443px;
     border: $input-border solid $color-input;
     border-collapse: collapse;
@@ -42,12 +54,14 @@
 
   &__check {
     display: flex;
+    align-self: flex-start;
     column-gap: 10px;
     > * {
       padding: 0;
       border: none;
       flex-shrink: 0;
       width: auto;
+      max-width: 100%;
     }
   }
 
