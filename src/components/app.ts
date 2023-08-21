@@ -1,5 +1,5 @@
 import { Routes } from './models/router';
-import createTemplate from './ui/main/view/template';
+import { createTemplate } from './ui/main/view/template';
 import MainController from './ui/router/controller/main-controller';
 import Router from './ui/router/model/router';
 import basicRoutes from './ui/router/model/routes';

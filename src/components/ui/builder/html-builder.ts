@@ -1,3 +1,5 @@
+import { Pages } from '../../models/router';
+
 class Builder {
   constructor(
     private tag: string,
@@ -76,6 +78,17 @@ class Builder {
     option.className = `${this.base}`;
     this.setProperties(option);
     return option;
+  }
+
+  public a(): HTMLAnchorElement {
+    const link: HTMLAnchorElement = document.createElement('a');
+    link.className = `${this.base}`;
+    this.setProperties(link);
+    link.textContent = `Go to ${this.mode} page`;
+    link.href = `/${this.mode}`;
+    link.setAttribute('id', `${Pages.GO_TO}-${this.mode}`);
+    link.classList.add('redirect__buttons');
+    return link;
   }
 }
 

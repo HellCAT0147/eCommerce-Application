@@ -52,8 +52,10 @@ export default class FormView {
       input.setAttribute('type', 'date');
       input.setAttribute('min', formattedMinDate);
       input.setAttribute('max', formattedMaxDate);
-    } else if (inputName === Mode.both || inputName === Mode.ship || inputName === Mode.bill)
+    } else if (inputName === Mode.both || inputName === Mode.ship || inputName === Mode.bill) {
       input.setAttribute('type', 'checkbox');
+      input.setAttribute('checked', 'checked');
+    }
 
     input.setAttribute('id', `${pageName}-${inputName}`);
 
@@ -63,7 +65,7 @@ export default class FormView {
   protected createSelectMenu(pageName: string, inputName: InputType): HTMLSelectElement {
     const select: HTMLSelectElement = new Builder('', Base.select, pageName, Elem.select, inputName).select();
 
-    if (inputName === Mode.country) {
+    if (inputName === Mode.country || inputName === Mode.country_bill) {
       const defaultOption: HTMLOptionElement = new Builder(
         '',
         Base.options,
@@ -93,8 +95,14 @@ export default class FormView {
     return select;
   }
 
-  protected createLabel(pageName: string, labelName: string, labelText?: string): HTMLLabelElement {
-    const label: HTMLLabelElement = new Builder('', Base.labels, pageName, Elem.label, labelName).label();
+  protected createLabel(pageName: string, labelName: string, labelText?: string, isCheck?: boolean): HTMLLabelElement {
+    const label: HTMLLabelElement = new Builder(
+      '',
+      Base.labels,
+      pageName,
+      labelText ? Elem.text : Elem.label,
+      labelName
+    ).label();
     label.setAttribute('for', `${pageName}-${labelName}`);
     const asterisk: HTMLElement = new Builder('span', '', 'required', '', '').element();
     asterisk.textContent = ' *';
@@ -107,7 +115,7 @@ export default class FormView {
       .map((word) => `${word[0].toUpperCase()}${word.slice(1)}`)
       .join(' ')}`;
     label.textContent = prettyLabelName;
-    label.appendChild(asterisk);
+    if (!isCheck) label.appendChild(asterisk);
 
     return label;
   }
@@ -174,7 +182,8 @@ export default class FormView {
         errorsHolder.append(p);
       });
       let input: HTMLInputElement | null = document.querySelector(`.${this.pageName}__input_${inputType}`);
-      if (inputType === 'country') input = document.querySelector(`.${this.pageName}__select_${inputType}`);
+      if (inputType === 'country' || inputType === 'country-bill')
+        input = document.querySelector(`.${this.pageName}__select_${inputType}`);
 
       if (errors.length) {
         place.after(errorsHolder);

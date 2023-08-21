@@ -7,7 +7,7 @@ import ValidationModel from '../../login/model/validation';
 import FormViewReg from '../view/form';
 import { Pages, Routes } from '../../../models/router';
 import basicRoutes from '../../router/model/routes';
-import { Blocks } from '../../../models/builder';
+import { Blocks, Elem, Mode } from '../../../models/builder';
 
 export default class RegistrationValidationModel extends ValidationModel {
   private firstName: string;
@@ -34,6 +34,12 @@ export default class RegistrationValidationModel extends ValidationModel {
 
   private shippingIsBilling: boolean;
 
+  private shippingDefault: 0 | undefined;
+
+  private billingDefault: 0 | 1 | undefined;
+
+  private billingIndexAddress: 0 | 1;
+
   protected formViewReg: FormViewReg;
 
   public constructor(eCommerceApi: ECommerceApi) {
@@ -52,6 +58,9 @@ export default class RegistrationValidationModel extends ValidationModel {
     this.street = '';
     this.streetBill = '';
     this.shippingIsBilling = true;
+    this.shippingDefault = 0;
+    this.billingDefault = 0;
+    this.billingIndexAddress = 0;
   }
 
   public checkName(name: string, target: string): boolean {
@@ -87,7 +96,11 @@ export default class RegistrationValidationModel extends ValidationModel {
       else errors.push(`${textName} ${NameErrors.noChar}`);
     }
 
-    if (target.includes('city')) {
+    if (target.includes('city-bill')) {
+      this.cityBill = '';
+      errorsHandling('City');
+      this.setErrors('city-bill', errors);
+    } else if (target.includes('city')) {
       this.city = '';
       errorsHandling('City');
       this.setErrors('city', errors);
@@ -131,26 +144,49 @@ export default class RegistrationValidationModel extends ValidationModel {
   }
 
   public checkCountry(select: HTMLSelectElement): boolean {
-    this.postal = '';
+    let postalCodeInput: HTMLInputElement | null;
+
+    if (select.id.includes('bill')) {
+      this.postalBill = '';
+      postalCodeInput = document.querySelector(`.${Blocks.reg}__${Elem.input}_${Mode.postal_bill}`);
+    } else {
+      this.postal = '';
+      postalCodeInput = document.querySelector(`.${Blocks.reg}__${Elem.input}_${Mode.postal}`);
+    }
     this.formViewReg.resetPostal(select.parentElement);
 
     const country: string = select.value;
     const countries: string[] = Object.values(Countries);
     if (countries.includes(country)) {
-      this.country = country;
-      this.setErrors('country', [], select);
-      this.checkPostal('');
+      if (select.id.includes('bill')) {
+        this.countryBill = country;
+        this.setErrors('country-bill', [], select);
+        if (postalCodeInput) this.checkPostal('', postalCodeInput.id);
+      } else {
+        this.country = country;
+        this.setErrors('country', [], select);
+        if (postalCodeInput) this.checkPostal('', postalCodeInput.id);
+      }
       return true;
     }
-    this.country = '';
-    this.checkPostal('');
-    this.setErrors('country', [PostalErrors.notSelected], select);
+
+    if (select.id.includes('bill')) {
+      this.countryBill = '';
+      this.setErrors('country-bill', [PostalErrors.notSelected], select);
+    } else {
+      this.country = '';
+      this.setErrors('country', [PostalErrors.notSelected], select);
+    }
+
+    if (postalCodeInput) this.checkPostal('', postalCodeInput.id);
+
     return false;
   }
 
-  public checkPostal(postal: string): boolean {
+  public checkPostal(postal: string, target: string): boolean {
     let regexp: RegExp;
-    switch (this.country) {
+    const country: Countries | string = target.includes('bill') ? this.countryBill : this.country;
+    switch (country) {
       case Countries.BY:
       case Countries.RU:
       case Countries.UZ:
@@ -160,26 +196,27 @@ export default class RegistrationValidationModel extends ValidationModel {
         regexp = /^\d{5}(-\d{4})?$/;
         break;
       default:
-        this.setErrors('postal-code', [PostalErrors.notSelected]);
+        this.setErrors(`postal-code${target.includes('bill') ? '-bill' : ''}`, [PostalErrors.notSelected]);
         return false;
     }
     if (postal.match(regexp)) {
-      this.postal = postal;
-      this.setErrors('postal-code', []);
+      if (target.includes('bill')) this.postalBill = postal;
+      else this.postal = postal;
+      this.setErrors(`postal-code${target.includes('bill') ? '-bill' : ''}`, []);
       return true;
     }
-    switch (this.country) {
+    switch (country) {
       case Countries.BY:
-        this.setErrors('postal-code', [PostalErrors.BY]);
+        this.setErrors(`postal-code${target.includes('bill') ? '-bill' : ''}`, [PostalErrors.BY]);
         break;
       case Countries.RU:
-        this.setErrors('postal-code', [PostalErrors.RU]);
+        this.setErrors(`postal-code${target.includes('bill') ? '-bill' : ''}`, [PostalErrors.RU]);
         break;
       case Countries.US:
-        this.setErrors('postal-code', [PostalErrors.US]);
+        this.setErrors(`postal-code${target.includes('bill') ? '-bill' : ''}`, [PostalErrors.US]);
         break;
       case Countries.UZ:
-        this.setErrors('postal-code', [PostalErrors.UZ]);
+        this.setErrors(`postal-code${target.includes('bill') ? '-bill' : ''}`, [PostalErrors.UZ]);
         break;
       default:
         break;
@@ -187,21 +224,51 @@ export default class RegistrationValidationModel extends ValidationModel {
     return false;
   }
 
-  public checkStreet(street: string): boolean {
+  public checkStreet(target: HTMLInputElement): boolean {
+    const street: string = target.value;
+    this.prepareAddress();
+
     if (street.trim().length) {
-      this.street = street;
-      this.setErrors('street', []);
+      if (target.id.includes('bill')) {
+        this.streetBill = street;
+        this.setErrors('street-bill', []);
+      } else {
+        this.street = street;
+        this.setErrors('street', []);
+      }
       return true;
     }
-    this.street = '';
-    this.setErrors('street', ['Must contain at least one character']);
+
+    const msg: string = 'Must contain at least one character';
+    if (target.id.includes('bill')) {
+      this.streetBill = '';
+      this.setErrors('street-bill', [msg]);
+    } else {
+      this.street = '';
+      this.setErrors('street', [msg]);
+    }
+
     return false;
   }
 
   public checkBothAddress(): boolean {
     this.shippingIsBilling = !this.shippingIsBilling;
+    if (this.billingIndexAddress === 0) this.billingIndexAddress = 1;
+    else this.billingIndexAddress = 0;
+    this.setBillingDefault();
+    this.setBillingDefault();
     this.formViewReg.showBillingAddress(this.shippingIsBilling);
     return this.shippingIsBilling;
+  }
+
+  public setBillingDefault(): 0 | 1 | undefined {
+    this.billingDefault = this.billingDefault === undefined ? this.billingIndexAddress : undefined;
+    return this.billingDefault;
+  }
+
+  public setShippingDefault(): 0 | undefined {
+    this.shippingDefault = this.shippingDefault === undefined ? 0 : undefined;
+    return this.shippingDefault;
   }
 
   protected setErrors(inputType: InputType, errors: Errors[] | string[], select?: HTMLSelectElement): void {
@@ -252,32 +319,55 @@ export default class RegistrationValidationModel extends ValidationModel {
     return countriesCodes[id];
   }
 
+  private prepareAddress(): Address[] {
+    const addresses: Address[] = [];
+    const shippingAddress: Address = {
+      country: this.getCountryCode(this.country),
+      postalCode: this.postal,
+      city: this.city,
+      streetName: this.street,
+    };
+    addresses.push(shippingAddress);
+
+    if (!this.shippingIsBilling) {
+      addresses.push({
+        country: this.getCountryCode(this.countryBill),
+        postalCode: this.postalBill,
+        city: this.cityBill,
+        streetName: this.streetBill,
+      });
+    }
+
+    return addresses;
+  }
+
   public async send(): Promise<void> {
     if (this.checkSendable()) {
       try {
-        const address: Address = {
-          country: this.getCountryCode(this.country),
-          postalCode: this.postal,
-          city: this.city,
-          streetName: this.street,
-        };
-        const response: ErrorObject | true = await this.eCommerceApi.register(
+        const response: ErrorObject | boolean = await this.eCommerceApi.register(
           this.mail,
           this.password,
           this.firstName,
           this.lastName,
           new Date(this.date),
-          [address],
-          0,
-          0
+          this.prepareAddress(),
+          [this.billingIndexAddress],
+          [0],
+          this.billingDefault,
+          this.shippingDefault
         );
         if (response === true) {
-          const route: Routes | undefined = basicRoutes.find((routeExisting) => routeExisting.path === Pages.MAIN);
-          if (route) route.callback(true);
-          window.history.pushState(null, '', `/${Pages.MAIN}`);
-        } else {
-          this.formView.reminder(response.message);
-        }
+          this.eCommerceApi.logout();
+          const responseLogin: ErrorObject | true = await this.eCommerceApi.login(this.mail, this.password);
+          if (responseLogin === true) {
+            const route: Routes | undefined = basicRoutes.find((routeExisting) => routeExisting.path === Pages.MAIN);
+            if (route) route.callback(true);
+            this.formView.showSuccessLoginMessage();
+            window.history.pushState(null, '', `/${Pages.MAIN}`);
+          } else {
+            this.formView.reminder(responseLogin.message);
+          }
+        } else if (response !== false) this.formView.reminder(response.message);
       } catch (error) {
         if (error instanceof Error) this.formView.reminder(error.message);
       }
