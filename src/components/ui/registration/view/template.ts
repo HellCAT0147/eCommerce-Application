@@ -1,4 +1,4 @@
-import { Base, Blocks, Elem, Titles } from '../../../models/builder';
+import { Base, Blocks, Elem, Mode, Titles } from '../../../models/builder';
 import { Pages } from '../../../models/router';
 import Builder from '../../builder/html-builder';
 import FormView from '../../builder/form';
@@ -23,12 +23,17 @@ export default function createTemplateRegistration(isloggedIn?: boolean): void {
   }
 
   const title: HTMLElement = new Builder('h1', Base.titles, Blocks.main, Elem.title, '').element();
-  title.textContent = `eCommerce - ${Titles.REGISTRATION} Page`;
+  title.textContent = `${Titles.CREATE_ACCOUNT}`;
   const formView: FormView = new FormViewReg(Blocks.reg);
   const form: HTMLFormElement = formView.getForm();
+  const linkWrapper: HTMLElement = new Builder('span', '', Blocks.reg, Elem.wrapper, '').element();
+  linkWrapper.textContent = `${Titles.HAVE_ACCOUNT} `;
+  const linkLogin: HTMLAnchorElement = new Builder('', Base.links, Blocks.reg, Elem.link, Mode.login).a();
+  linkLogin.textContent = `${Titles.LOGIN}!`;
 
   if (main) {
+    linkWrapper.appendChild(linkLogin);
+    form.appendChild(linkWrapper);
     main.append(title, form);
-    main.append(form);
   }
 }

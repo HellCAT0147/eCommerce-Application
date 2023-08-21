@@ -19,3 +19,8 @@ html {
 h1 {
   @include font(400, 3rem, 100%, $color-dark);
 }
+
+.links {
+  text-decoration: none;
+  color: $color-link;
+}

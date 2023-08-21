@@ -23,6 +23,11 @@
     padding-right: 30px;
   }
 
+  &__wrapper {
+    align-self: flex-end;
+    margin-bottom: 10px;
+  }
+
   &__errors {
     max-width: fit-content;
     width: 100%;
