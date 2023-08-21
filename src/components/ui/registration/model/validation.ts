@@ -126,6 +126,7 @@ export default class RegistrationValidationModel extends ValidationModel {
     if (date.match(regexp)) {
       minDate.setFullYear(minDate.getFullYear() - 150);
       maxDate.setFullYear(maxDate.getFullYear() - 13);
+      maxDate.setDate(maxDate.getDate() + 1);
       if (inputDate >= minDate && inputDate <= maxDate) {
         this.date = date;
         this.setErrors('date-of-birth', []);
