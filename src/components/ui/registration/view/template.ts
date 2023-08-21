@@ -5,7 +5,7 @@ import FormView from '../../builder/form';
 import FormViewReg from './form';
 import createHeader from '../../main/view/header';
 
-export default function createTemplateRegistration(isloggedIn?: boolean): void {
+export default function createTemplateRegistration(isloggedIn?: boolean): HTMLElement {
   const body: HTMLBodyElement | null = document.querySelector('body');
   const header: HTMLElement | null = document.querySelector('header');
   const newHeader: HTMLElement = createHeader(isloggedIn);
@@ -31,4 +31,6 @@ export default function createTemplateRegistration(isloggedIn?: boolean): void {
     main.append(title, form);
     main.append(form);
   }
+
+  return newHeader;
 }
