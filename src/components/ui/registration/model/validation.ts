@@ -369,7 +369,10 @@ export default class RegistrationValidationModel extends ValidationModel {
           } else {
             this.formView.reminder(responseLogin.message);
           }
-        } else if (response !== false) this.formView.reminder(response.message);
+        } else if (response !== false) {
+          this.eCommerceApi.logout();
+          this.formView.reminder(response.message);
+        }
       } catch (error) {
         if (error instanceof Error) this.formView.reminder(error.message);
       }
