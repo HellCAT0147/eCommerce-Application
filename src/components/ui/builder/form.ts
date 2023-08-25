@@ -203,6 +203,7 @@ export default class FormView {
     const showPasswordButton: HTMLButtonElement | null = document.querySelector(`#show-password`);
 
     if (firstInput) firstInput.focus();
-    if (showPasswordButton) showPasswordButton.setAttribute('tabindex', '-1');
+    const excludeTabIndex: number = -1;
+    if (showPasswordButton) showPasswordButton.setAttribute('tabindex', `${excludeTabIndex}`);
   }
 }
