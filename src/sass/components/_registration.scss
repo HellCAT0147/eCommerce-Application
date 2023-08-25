@@ -3,6 +3,12 @@
     max-width: fit-content;
   }
 
+  &__address {
+    &_hidden {
+      display: none;
+    }
+  }
+
   &__field {
     &_both-address {
       margin-bottom: 10px;
@@ -15,6 +21,11 @@
 
   &__input_password {
     padding-right: 30px;
+  }
+
+  &__wrapper {
+    align-self: flex-end;
+    margin-bottom: 10px;
   }
 
   &__errors {

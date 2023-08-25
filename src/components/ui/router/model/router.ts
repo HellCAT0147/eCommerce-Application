@@ -39,9 +39,11 @@ class Router {
   }
 
   private setInputsOnPage(): void {
-    const select: HTMLSelectElement | null = document.querySelector('.form__select');
+    const selects: NodeListOf<HTMLSelectElement> = document.querySelectorAll('.form__select');
 
-    select?.addEventListener('change', (e: Event) => this.controllerRegistration.selectMenu(e));
+    selects.forEach((select: HTMLSelectElement) =>
+      select.addEventListener('change', (e: Event) => this.controllerRegistration.selectMenu(e))
+    );
 
     this.inputs = this.getInputsOnPage();
     this.inputs.forEach((input) => {
@@ -63,7 +65,7 @@ class Router {
     return urlParsed;
   }
 
-  public navigate(url: string): void {
+  public async navigate(url: string): Promise<void> {
     const urlParsed: UrlParsed = this.parseUrl(url);
     const pathForFind: string = urlParsed.resource === '' ? urlParsed.path : `${urlParsed.path}/${urlParsed.resource}`;
     const route: Routes | undefined = this.routes.find((routeExisting) => routeExisting.path === pathForFind);
@@ -72,10 +74,11 @@ class Router {
       this.navigate(Pages.NOT_FOUND);
     } else {
       const token = this.tokenCachesStore.getDefault();
-      if (token.token) {
-        if (route.path === Pages.LOGIN) {
-          this.navigate(Pages.MAIN);
+      const tokenDefault = this.tokenCachesStore.defaultTokenStore;
+      if (token !== tokenDefault) {
+        if (route.path === Pages.LOGIN || route.path === Pages.REGISTRATION) {
           window.history.pushState(null, '', `/${Pages.MAIN}`);
+          this.navigate(Pages.MAIN);
           selectCurrentPage(Pages.MAIN);
           return;
         }

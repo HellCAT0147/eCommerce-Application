@@ -2,7 +2,7 @@ import { Pages } from '../../../models/router';
 import createHeader from '../../main/view/header';
 import createMainForNotFound from './main';
 
-export default function createTemplateNotFound(isLoggedIn?: boolean): void {
+export default function createTemplateNotFound(isLoggedIn?: boolean): HTMLElement {
   const body: HTMLBodyElement | null = document.querySelector('body');
   const header: HTMLElement | null = document.querySelector('header');
   const newHeader: HTMLElement = createHeader(isLoggedIn);
@@ -19,4 +19,6 @@ export default function createTemplateNotFound(isLoggedIn?: boolean): void {
     main.innerHTML = '';
     createMainForNotFound(main);
   }
+
+  return newHeader;
 }

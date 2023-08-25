@@ -31,8 +31,12 @@ class MainController {
 
     if (idElement) {
       url = `${idElement}`;
-      if (url === Pages.GO_TO_MAIN_PAGE || url === Pages.SIGN_OUT) {
+      if (url === Pages.GO_TO_MAIN || url === Pages.SIGN_OUT) {
         url = Pages.MAIN;
+      } else if (url === Pages.GO_TO_LOGIN) {
+        url = Pages.LOGIN;
+      } else if (url === Pages.GO_TO_REG) {
+        url = Pages.REGISTRATION;
       }
     }
 
@@ -48,6 +52,7 @@ class MainController {
       const signOutButton: HTMLElement | null = document.querySelector(`#${Pages.SIGN_OUT}`);
 
       if (navButton) {
+        e.preventDefault();
         if (navButton === signOutButton) {
           this.tokenCachesStore.unset();
         }

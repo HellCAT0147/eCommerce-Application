@@ -28,6 +28,10 @@ export enum Elem {
   option = 'option',
   text = 'text',
   check = 'check',
+  link = 'link',
+  wrapper = 'wrapper',
+  mess = 'message',
+  image = 'image',
 }
 
 export enum Mode {
@@ -63,6 +67,9 @@ export enum Mode {
   check = 'check',
   default = 'default',
   both = 'both-address',
+  hidden = 'hidden',
+  login = 'login',
+  reg = 'registration',
 }
 
 export enum Base {
@@ -82,6 +89,7 @@ export enum Base {
   btns_empty = `${btns} ${btns}_empty`,
   select = `${form}__select`,
   options = `${form}__options`,
+  links = `links`,
 }
 
 export enum Buttons {
@@ -104,4 +112,9 @@ export enum Titles {
   CHECK_BOTH = `${BOTH_ADDRESS} are the same`,
   DEFAULT_SHIP = `set ${SHIPPING} address as default`,
   DEFAULT_BILL = `set ${BILLING} address as default`,
+  CREATE_ACCOUNT = `Create New Customer Account`,
+  LOGIN_ACCOUNT = `Login Your Account`,
+  HAVE_ACCOUNT = `Already have an account?`,
+  NOT_HAVE_ACCOUNT = `Don't have an account yet?`,
+  SUCCESS_LOGIN = `You've successfully logged`,
 }

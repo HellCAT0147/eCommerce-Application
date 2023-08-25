@@ -18,9 +18,11 @@ class ControllerRegistration extends ControllerLogin {
     else if (target.id.includes('name') || target.id.includes('city'))
       this.validationModel.checkName(target.value, target.id);
     else if (target.id.includes('date-of-birth')) this.validationModel.checkBirthDate(target.value);
-    else if (target.id.includes('street')) this.validationModel.checkStreet(target.value);
-    else if (target.id.includes('postal-code')) this.validationModel.checkPostal(target.value);
+    else if (target.id.includes('street')) this.validationModel.checkStreet(target);
+    else if (target.id.includes('postal-code')) this.validationModel.checkPostal(target.value, target.id);
     else if (target.id.includes('both-address')) this.validationModel.checkBothAddress();
+    else if (target.id.includes('shipping')) this.validationModel.setShippingDefault();
+    else if (target.id.includes('billing')) this.validationModel.setBillingDefault();
   }
 
   public buttonEvent(e: Event): void {

@@ -12,6 +12,7 @@
     "format": "npx prettier . --write",
     "format:staged": "npx pretty-quick --staged",
     "test": "jest",
+    "test:all": "npx jest --coverage --collectCoverageFrom='src/**/*.{ts,jxs}'",
     "prepare": "husky install"
   },
   "repository": {
