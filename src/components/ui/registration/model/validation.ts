@@ -344,7 +344,7 @@ export default class RegistrationValidationModel extends ValidationModel {
 
   public async send(): Promise<void> {
     if (this.checkSendable()) {
-      this.formViewReg.toggleSendButton(true);
+      this.formViewReg.setSendButtonDisableState(true);
       try {
         const response: ErrorObject | boolean = await this.eCommerceApi.register(
           this.mail,
@@ -376,7 +376,7 @@ export default class RegistrationValidationModel extends ValidationModel {
       } catch (error) {
         if (error instanceof Error) this.formView.reminder(error.message);
       }
-      this.formViewReg.toggleSendButton(false);
+      this.formViewReg.setSendButtonDisableState(false);
     } else {
       this.formView.reminder(null, Blocks.reg);
     }

@@ -94,7 +94,7 @@ export default class ValidationModel {
 
   public async send(): Promise<void> {
     if (this.checkSendable()) {
-      this.formView.toggleSendButton(true);
+      this.formView.setSendButtonDisableState(true);
       try {
         const response: ErrorObject | true = await this.eCommerceApi.login(this.mail, this.password);
         if (response === true) {
@@ -108,7 +108,7 @@ export default class ValidationModel {
       } catch (error) {
         if (error instanceof Error) this.formView.reminder(error.message);
       }
-      this.formView.toggleSendButton(false);
+      this.formView.setSendButtonDisableState(false);
     } else {
       this.formView.reminder();
     }

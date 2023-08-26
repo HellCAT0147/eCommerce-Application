@@ -207,10 +207,9 @@ export default class FormView {
     input.focus();
   }
 
-  public toggleSendButton(toLock: boolean): void {
+  public setSendButtonDisableState(disable: boolean): void {
     const sendButton: HTMLButtonElement | null = document.querySelector(`.${this.pageName}__button`);
     if (!sendButton) return;
-    if (toLock) sendButton.disabled = true;
-    else sendButton.disabled = false;
+    sendButton.disabled = disable;
   }
 }
