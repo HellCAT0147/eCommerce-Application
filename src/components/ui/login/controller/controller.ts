@@ -36,6 +36,17 @@ class ControllerLogin {
     if (signIn) this.validationModel.send();
   }
 
+  public sendLogin(e: Event): void {
+    if (!(e instanceof KeyboardEvent && e.key === 'Enter')) return;
+    e.preventDefault();
+
+    const { target } = e;
+    if (!(target instanceof HTMLInputElement)) return;
+    if (target && target.closest('.main__login')) {
+      this.validationModel.send();
+    }
+  }
+
   protected getAPI(): ECommerceApi {
     return this.eCommerceApi;
   }

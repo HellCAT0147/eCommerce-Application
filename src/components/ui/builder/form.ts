@@ -206,4 +206,19 @@ export default class FormView {
     else input.type = 'password';
     input.focus();
   }
+
+  public setSendButtonDisableState(disable: boolean): void {
+    const sendButton: HTMLButtonElement | null = document.querySelector(`.${this.pageName}__button`);
+    if (!sendButton) return;
+    sendButton.disabled = disable;
+  }
+  
+  public addTabAndFocus(): void {
+    const firstInput: HTMLInputElement | null = document.querySelector(`.${Base.inputs}`);
+    const showPasswordButton: HTMLButtonElement | null = document.querySelector(`#show-password`);
+
+    if (firstInput) firstInput.focus();
+    const excludeTabIndex: number = -1;
+    if (showPasswordButton) showPasswordButton.setAttribute('tabindex', `${excludeTabIndex}`);
+  }
 }
