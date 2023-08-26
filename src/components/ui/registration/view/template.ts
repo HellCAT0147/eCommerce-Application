@@ -5,10 +5,10 @@ import FormView from '../../builder/form';
 import FormViewReg from './form';
 import createHeader from '../../main/view/header';
 
-export default function createTemplateRegistration(isloggedIn?: boolean): HTMLElement {
+export default function createTemplateRegistration(isLoggedIn?: boolean): HTMLElement {
   const body: HTMLBodyElement | null = document.querySelector('body');
   const header: HTMLElement | null = document.querySelector('header');
-  const newHeader: HTMLElement = createHeader(isloggedIn);
+  const newHeader: HTMLElement = createHeader(isLoggedIn);
 
   if (body && header) {
     body.removeChild(header);
@@ -36,6 +36,8 @@ export default function createTemplateRegistration(isloggedIn?: boolean): HTMLEl
     form.appendChild(linkWrapper);
     main.append(title, form);
   }
+
+  formView.addTabAndFocus();
 
   return newHeader;
 }

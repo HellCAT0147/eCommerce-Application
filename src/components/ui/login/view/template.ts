@@ -35,6 +35,8 @@ export default function createTemplateLogin(isloggedIn?: boolean): HTMLElement {
     form.appendChild(linkWrapper);
     main.append(title, form);
   }
+  
+  formView.addTabAndFocus();
 
   return newHeader;
 }

@@ -2,10 +2,10 @@ import { Pages } from '../../../models/router';
 import createHeader from '../../main/view/header';
 import createMainForNotFound from './main';
 
-export default function createTemplateNotFound(isloggedIn?: boolean): HTMLElement {
+export default function createTemplateNotFound(isLoggedIn?: boolean): HTMLElement {
   const body: HTMLBodyElement | null = document.querySelector('body');
   const header: HTMLElement | null = document.querySelector('header');
-  const newHeader: HTMLElement = createHeader(isloggedIn);
+  const newHeader: HTMLElement = createHeader(isLoggedIn);
 
   if (body && header) {
     body.removeChild(header);
