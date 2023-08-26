@@ -48,18 +48,26 @@ export default class FormViewLogin extends FormView {
     const body: HTMLElement | null = document.querySelector(`.body`);
     const oldMessageHolder: HTMLElement | null = document.querySelector(`.login__message`);
     if (oldMessageHolder) {
-      body?.removeChild(oldMessageHolder);
-    }
-    const messageHolder: HTMLElement = new Builder('div', '', Blocks.login, Elem.mess, '').element();
-    const messageIcon: HTMLElement = new Builder('div', '', Elem.mess, Elem.image, '').element();
-    const messageText: HTMLElement = new Builder('div', '', Elem.mess, Elem.text, '').element();
-    messageText.textContent = `${Titles.SUCCESS_LOGIN}`;
+      oldMessageHolder.classList.remove('login__message_hidden');
+    } else {
+      const messageHolder: HTMLElement = new Builder('div', '', Blocks.login, Elem.mess, '').element();
+      const messageIcon: HTMLElement = new Builder('div', '', Elem.mess, Elem.image, '').element();
+      const messageText: HTMLElement = new Builder('div', '', Elem.mess, Elem.text, '').element();
+      messageText.textContent = `${Titles.SUCCESS_LOGIN}`;
 
-    messageHolder.append(messageIcon, messageText);
-    if (body) body.append(messageHolder);
+      messageHolder.append(messageIcon, messageText);
+      if (body) body.appendChild(messageHolder);
+      if (messageHolder) {
+        setTimeout(() => {
+          messageHolder.classList.add('login__message_hidden');
+        }, 1500);
+      }
+    }
 
     setTimeout(() => {
-      body?.removeChild(messageHolder);
+      if (oldMessageHolder) {
+        oldMessageHolder.classList.add('login__message_hidden');
+      }
     }, 1500);
   }
 }

@@ -17,6 +17,12 @@
   }
 }
 
+@mixin media-mobile-medium {
+  @media (max-width: $mobile-medium-width) {
+    @content;
+  }
+}
+
 @mixin eye-wrapper {
   position: absolute;
   height: 35px;

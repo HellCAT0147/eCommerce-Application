@@ -126,6 +126,7 @@ export default class RegistrationValidationModel extends ValidationModel {
     if (date.match(regexp)) {
       minDate.setFullYear(minDate.getFullYear() - 150);
       maxDate.setFullYear(maxDate.getFullYear() - 13);
+      maxDate.setDate(maxDate.getDate() + 1);
       if (inputDate >= minDate && inputDate <= maxDate) {
         this.date = date;
         this.setErrors('date-of-birth', []);
@@ -343,6 +344,7 @@ export default class RegistrationValidationModel extends ValidationModel {
 
   public async send(): Promise<void> {
     if (this.checkSendable()) {
+      this.formViewReg.setSendButtonDisableState(true);
       try {
         const response: ErrorObject | boolean = await this.eCommerceApi.register(
           this.mail,
@@ -367,10 +369,14 @@ export default class RegistrationValidationModel extends ValidationModel {
           } else {
             this.formView.reminder(responseLogin.message);
           }
-        } else if (response !== false) this.formView.reminder(response.message);
+        } else if (response !== false) {
+          this.eCommerceApi.logout();
+          this.formView.reminder(response.message);
+        }
       } catch (error) {
         if (error instanceof Error) this.formView.reminder(error.message);
       }
+      this.formViewReg.setSendButtonDisableState(false);
     } else {
       this.formView.reminder(null, Blocks.reg);
     }
