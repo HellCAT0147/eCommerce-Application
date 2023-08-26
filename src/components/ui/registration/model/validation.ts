@@ -124,9 +124,13 @@ export default class RegistrationValidationModel extends ValidationModel {
     const inputDate = new Date(date);
 
     if (date.match(regexp)) {
-      minDate.setFullYear(minDate.getFullYear() - 150);
-      maxDate.setFullYear(maxDate.getFullYear() - 13);
-      maxDate.setDate(maxDate.getDate() + 1);
+      const maxRealAge: number = 150;
+      const minLimitAge: number = 13;
+      const increaseInfelicityDays: number = 1;
+
+      minDate.setFullYear(minDate.getFullYear() - maxRealAge);
+      maxDate.setFullYear(maxDate.getFullYear() - minLimitAge);
+      maxDate.setDate(maxDate.getDate() + increaseInfelicityDays);
       if (inputDate >= minDate && inputDate <= maxDate) {
         this.date = date;
         this.setErrors('date-of-birth', []);
