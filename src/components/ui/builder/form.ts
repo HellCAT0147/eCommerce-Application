@@ -212,7 +212,7 @@ export default class FormView {
     if (!sendButton) return;
     sendButton.disabled = disable;
   }
-  
+
   public addTabAndFocus(): void {
     const firstInput: HTMLInputElement | null = document.querySelector(`.${Base.inputs}`);
     const showPasswordButton: HTMLButtonElement | null = document.querySelector(`#show-password`);
