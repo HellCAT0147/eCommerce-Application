@@ -21,5 +21,6 @@ export enum Pages {
   GO_TO_MAIN = `${GO_TO}-${MAIN}`,
   GO_TO_LOGIN = `${GO_TO}-${LOGIN}`,
   GO_TO_REG = `${GO_TO}-${REGISTRATION}`,
+  GO_TO_PROF = `${GO_TO}-${PROFILE}`,
   NOT_FOUND = 'not-found',
 }

@@ -40,9 +40,10 @@ function createTemplateMain(isloggedIn?: boolean): void {
   title.textContent = `eCommerce - ${Titles.MAIN} Page`;
   const linkLogin: HTMLAnchorElement = new Builder('', Base.links, Blocks.main, Elem.link, Mode.login).a();
   const linkRegistration: HTMLElement = new Builder('', Base.links, Blocks.main, Elem.link, Mode.reg).a();
+  const linkProfile: HTMLElement = new Builder('', Base.links, Blocks.main, Elem.link, Mode.prof).a();
 
   if (main) {
-    main.append(title, linkLogin, linkRegistration);
+    main.append(title, linkLogin, linkRegistration, linkProfile);
   }
 }
 
