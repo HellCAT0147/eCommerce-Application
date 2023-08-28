@@ -5,6 +5,7 @@ export default function createNavigation(isloggedIn?: boolean): HTMLElement {
   const navigation: HTMLElement = new Builder('nav', '', Blocks.header, Elem.nav, '').element();
   const catalogButton: HTMLElement = new Builder('', Base.btns_empty, Blocks.header, Elem.btn, Mode.catalog).redirect();
   const signButton: HTMLElement = new Builder('', Base.btns_empty, Blocks.header, Elem.btn, Mode.sign).redirect();
+  const profileButton: HTMLElement = new Builder('', Base.btns_empty, Blocks.header, Elem.btn, Mode.prof).redirect();
   const signOutButton: HTMLElement = new Builder(
     '',
     Base.btns_empty,
@@ -16,7 +17,7 @@ export default function createNavigation(isloggedIn?: boolean): HTMLElement {
 
   navigation.appendChild(catalogButton);
   if (isloggedIn) {
-    navigation.append(signOutButton);
+    navigation.append(signOutButton, profileButton);
   } else {
     navigation.append(signButton, createButton);
   }

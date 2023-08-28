@@ -72,6 +72,7 @@ export enum Mode {
   hidden = 'hidden',
   login = 'login',
   reg = 'registration',
+  prof = 'profile',
   catalog = 'catalog',
   cross = 'cross',
   opened = 'opened',
@@ -104,6 +105,7 @@ export enum Buttons {
   CREATE = 'CREATE AN ACCOUNT',
   GO_HOME = 'GO TO MAIN PAGE',
   CATALOG = 'CATALOG',
+  PROFILE = 'MY PROFILE',
   BURGER = 'burger',
 }
 
@@ -126,4 +128,5 @@ export enum Titles {
   NOT_HAVE_ACCOUNT = `Don't have an account yet?`,
   SUCCESS_LOGIN = `You've successfully logged`,
   CATALOG = `Shopping Without Limits`,
+  PROFILE = `My Profile`,
 }

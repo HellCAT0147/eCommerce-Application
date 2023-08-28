@@ -77,6 +77,9 @@ class Builder {
     } else if (this.mode === Mode.create) {
       button.textContent = `${Buttons.CREATE}`;
       button.setAttribute('id', `${Pages.REGISTRATION}`);
+    } else if (this.mode === Mode.prof) {
+      button.textContent = `${Buttons.PROFILE}`;
+      button.setAttribute('id', `${Pages.PROFILE}`);
     }
     this.setProperties(button);
 
