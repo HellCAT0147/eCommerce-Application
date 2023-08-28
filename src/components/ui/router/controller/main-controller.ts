@@ -60,6 +60,9 @@ class MainController {
         window.history.pushState(null, '', `/${urlButton}`);
         this.router.navigate(urlButton);
       }
+
+      this.router.controllerMain.mouseEvent(e);
+
       if (targetHtmlElement.closest(`.main__${Pages.MAIN}`)) {
         this.router.controllerMain.buttonEvent(e);
       } else if (targetHtmlElement.closest(`.main__${Pages.LOGIN}`)) {

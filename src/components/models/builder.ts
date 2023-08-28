@@ -73,7 +73,8 @@ export enum Mode {
   login = 'login',
   reg = 'registration',
   catalog = 'catalog',
-  cross = 'corss',
+  cross = 'cross',
+  opened = 'opened',
 }
 
 export enum Base {
@@ -103,6 +104,7 @@ export enum Buttons {
   CREATE = 'CREATE AN ACCOUNT',
   GO_HOME = 'GO TO MAIN PAGE',
   CATALOG = 'CATALOG',
+  BURGER = 'burger',
 }
 
 export enum Titles {
