@@ -9,6 +9,10 @@ export default function createHeader(isloggedIn?: boolean): HTMLElement {
   logo.classList.add('redirect__buttons');
   logo.setAttribute('id', `${Pages.MAIN}`);
   const navigation: HTMLElement = new Builder('nav', '', Blocks.header, Elem.nav, '').element();
+  const catalogButton: HTMLElement = new Builder('', Base.btns_empty, Blocks.header, Elem.btn, Mode.catalog).button();
+  catalogButton.classList.add('redirect__buttons');
+  catalogButton.textContent = `${Buttons.CATALOG}`;
+  catalogButton.setAttribute('id', `${Pages.CATALOG}`);
   const signButton: HTMLElement = new Builder('', Base.btns_empty, Blocks.header, Elem.btn, Mode.sign).button();
   signButton.classList.add('redirect__buttons');
   signButton.textContent = `${Buttons.SIGN}`;
@@ -21,6 +25,7 @@ export default function createHeader(isloggedIn?: boolean): HTMLElement {
   createButton.classList.add('redirect__buttons');
   createButton.textContent = `${Buttons.CREATE}`;
   createButton.setAttribute('id', `${Pages.REGISTRATION}`);
+  navigation.appendChild(catalogButton);
   if (isloggedIn) {
     navigation.append(signOutButton);
   } else {

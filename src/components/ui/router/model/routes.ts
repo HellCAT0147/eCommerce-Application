@@ -1,4 +1,5 @@
 import { Pages } from '../../../models/router';
+import createTemplateCatalog from '../../catalog/view/template';
 import createTemplateLogin from '../../login/view/template';
 import { createTemplateMain } from '../../main/view/template';
 import createTemplateNotFound from '../../not_found/view/template';
@@ -27,6 +28,12 @@ const basicRoutes = [
     path: `${Pages.REGISTRATION}`,
     callback: (isloggedIn?: boolean): void => {
       createTemplateRegistration(isloggedIn);
+    },
+  },
+  {
+    path: `${Pages.CATALOG}`,
+    callback: (isloggedIn?: boolean): void => {
+      createTemplateCatalog(isloggedIn);
     },
   },
   {

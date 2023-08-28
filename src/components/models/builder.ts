@@ -70,6 +70,7 @@ export enum Mode {
   hidden = 'hidden',
   login = 'login',
   reg = 'registration',
+  catalog = 'catalog',
 }
 
 export enum Base {
@@ -97,6 +98,7 @@ export enum Buttons {
   SIGN_OUT = 'SIGN OUT',
   CREATE = 'CREATE AN ACCOUNT',
   GO_HOME = 'GO TO MAIN PAGE',
+  CATALOG = 'CATALOG',
 }
 
 export enum Titles {
@@ -117,4 +119,5 @@ export enum Titles {
   HAVE_ACCOUNT = `Already have an account?`,
   NOT_HAVE_ACCOUNT = `Don't have an account yet?`,
   SUCCESS_LOGIN = `You've successfully logged`,
+  CATALOG = `Shopping Without Limits`,
 }
