@@ -32,6 +32,8 @@ export enum Elem {
   wrapper = 'wrapper',
   mess = 'message',
   image = 'image',
+  burger = `hamburger`,
+  line = `line`,
 }
 
 export enum Mode {
@@ -71,6 +73,7 @@ export enum Mode {
   login = 'login',
   reg = 'registration',
   catalog = 'catalog',
+  cross = 'corss',
 }
 
 export enum Base {
@@ -91,6 +94,7 @@ export enum Base {
   select = `${form}__select`,
   options = `${form}__options`,
   links = `links`,
+  burger = `hamburger`,
 }
 
 export enum Buttons {

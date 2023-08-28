@@ -1,3 +1,4 @@
+import { Buttons, Mode } from '../../models/builder';
 import { Pages } from '../../models/router';
 
 class Builder {
@@ -55,6 +56,27 @@ class Builder {
   public button(): HTMLButtonElement {
     const button: HTMLButtonElement = document.createElement('button');
     button.className = `${this.base}`;
+    if (
+      this.mode === Mode.catalog ||
+      this.mode === Mode.sign ||
+      this.mode === Mode.sign_out ||
+      this.mode === Mode.create
+    ) {
+      button.classList.add('redirect__buttons');
+      if (this.mode === Mode.catalog) {
+        button.textContent = `${Buttons.CATALOG}`;
+        button.setAttribute('id', `${Pages.CATALOG}`);
+      } else if (this.mode === Mode.sign) {
+        button.textContent = `${Buttons.SIGN}`;
+        button.setAttribute('id', `${Pages.LOGIN}`);
+      } else if (this.mode === Mode.sign_out) {
+        button.textContent = `${Buttons.SIGN_OUT}`;
+        button.setAttribute('id', `${Pages.SIGN_OUT}`);
+      } else if (this.mode === Mode.create) {
+        button.textContent = `${Buttons.CREATE}`;
+        button.setAttribute('id', `${Pages.REGISTRATION}`);
+      }
+    }
     this.setProperties(button);
     return button;
   }
