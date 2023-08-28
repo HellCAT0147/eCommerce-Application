@@ -16,6 +16,7 @@ export enum Pages {
   LOGIN = 'login',
   SIGN_OUT = 'sign-out',
   REGISTRATION = 'registration',
+  CATALOG = 'catalog',
   GO_TO_MAIN = `${GO_TO}-${MAIN}`,
   GO_TO_LOGIN = `${GO_TO}-${LOGIN}`,
   GO_TO_REG = `${GO_TO}-${REGISTRATION}`,

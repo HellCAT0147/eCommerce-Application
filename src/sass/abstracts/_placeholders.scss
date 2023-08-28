@@ -68,3 +68,11 @@
     }
   }
 }
+
+%hamburger-line {
+  position: absolute;
+  display: inline-block;
+  background-color: $color-light;
+  height: 3px;
+  width: 100%;
+}
