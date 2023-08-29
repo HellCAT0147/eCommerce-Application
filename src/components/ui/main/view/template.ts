@@ -19,10 +19,10 @@ function createTemplate(): HTMLBodyElement | null {
   return body || null;
 }
 
-function createTemplateMain(isloggedIn?: boolean): void {
+function createTemplateMain(isLoggedIn?: boolean): void {
   const body: HTMLBodyElement | null = document.querySelector('body');
   const header: HTMLElement | null = document.querySelector('header');
-  const newHeader: HTMLElement = createHeader(isloggedIn);
+  const newHeader: HTMLElement = createHeader(isLoggedIn);
 
   if (body && header) {
     body.removeChild(header);

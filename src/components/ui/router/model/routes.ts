@@ -9,50 +9,50 @@ import createTemplateRegistration from '../../registration/view/template';
 const basicRoutes = [
   {
     path: ``,
-    callback: (isloggedIn?: boolean, id?: string): void => {
-      createTemplateMain(isloggedIn);
+    callback: (isLoggedIn?: boolean): void => {
+      createTemplateMain(isLoggedIn);
     },
   },
   {
     path: `${Pages.MAIN}`,
-    callback: (isloggedIn?: boolean, id?: string): void => {
-      createTemplateMain(isloggedIn);
+    callback: (isLoggedIn?: boolean): void => {
+      createTemplateMain(isLoggedIn);
     },
   },
   {
     path: `${Pages.LOGIN}`,
-    callback: (isloggedIn?: boolean, id?: string): void => {
-      createTemplateLogin(isloggedIn);
+    callback: (isLoggedIn?: boolean): void => {
+      createTemplateLogin(isLoggedIn);
     },
   },
   {
     path: `${Pages.REGISTRATION}`,
-    callback: (isloggedIn?: boolean, id?: string): void => {
-      createTemplateRegistration(isloggedIn);
+    callback: (isLoggedIn?: boolean): void => {
+      createTemplateRegistration(isLoggedIn);
     },
   },
   {
     path: `${Pages.CATALOG}`,
-    callback: (isloggedIn?: boolean, id?: string): void => {
-      createTemplateCatalog(isloggedIn);
+    callback: (isLoggedIn?: boolean): void => {
+      createTemplateCatalog(isLoggedIn);
     },
   },
   {
     path: `${Pages.CATALOG}/${Pages.ID}`,
-    callback: (isloggedIn?: boolean, id?: string): void => {
-      createTemplateCatalog(isloggedIn, id);
+    callback: (isLoggedIn?: boolean, id?: string): void => {
+      createTemplateCatalog(isLoggedIn, id);
     },
   },
   {
     path: `${Pages.PROFILE}`,
-    callback: (isloggedIn?: boolean, id?: string): void => {
-      createTemplateProfile(isloggedIn);
+    callback: (isLoggedIn?: boolean): void => {
+      createTemplateProfile(isLoggedIn);
     },
   },
   {
     path: `${Pages.NOT_FOUND}`,
-    callback: (isloggedIn?: boolean, id?: string): void => {
-      createTemplateNotFound(isloggedIn);
+    callback: (isLoggedIn?: boolean): void => {
+      createTemplateNotFound(isLoggedIn);
     },
   },
 ];
