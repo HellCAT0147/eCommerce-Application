@@ -12,6 +12,7 @@ import {
   Customer,
   CustomerSignInResult,
   MyCustomerUpdateAction,
+  Product,
 } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import { ErrorObject } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/error';
@@ -42,7 +43,8 @@ export default class ECommerceApi {
     clientId: string,
     clientSecret: string,
     region: string,
-    tokenCachesStore: TokenCachesStore = new TokenCachesStore()
+    tokenCachesStore: TokenCachesStore = new TokenCachesStore() // ,
+    // scopes: Array<string> | undefined = undefined
   ) {
     this.tokenCachesStore = tokenCachesStore;
     this.baseAuthParams = {
@@ -265,5 +267,19 @@ export default class ECommerceApi {
       this.meLoggedInPromise !== null &&
       (await this.meLoggedInPromise) !== null
     );
+  }
+
+  public async getProduct(productKey: number): Promise<Product | ErrorObject> {
+    try {
+      return (
+        await this.apiRoot
+          .products()
+          .withKey({ key: `product-${productKey}` })
+          .get()
+          .execute()
+      ).body;
+    } catch (e) {
+      return this.errorObjectOrThrow(e);
+    }
   }
 }

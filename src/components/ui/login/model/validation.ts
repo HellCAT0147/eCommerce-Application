@@ -1,4 +1,4 @@
-import { ErrorObject } from '@commercetools/platform-sdk';
+import { ErrorObject, Image, Product } from '@commercetools/platform-sdk';
 import ECommerceApi from '../../../api/e-commerce-api';
 import { LoginErrors, InputTypeLogin, MailErrors, PasswordErrors } from '../../../models/validation';
 import FormViewLogin from '../view/form';
@@ -76,7 +76,36 @@ export default class ValidationModel {
     this.checkSendable();
   }
 
-  public switchPasswordView(button: HTMLButtonElement | null, pageName?: string): void {
+  public async switchPasswordView(button: HTMLButtonElement | null, pageName?: string): Promise<void> {
+    try {
+      const response: ErrorObject | Product = await this.eCommerceApi.getProduct(1);
+      if ('message' in response && 'code' in response) this.formView.reminder(response.message);
+      else {
+        const form: HTMLFormElement | null = document.querySelector('.main');
+        if (form) {
+          const product: HTMLDivElement = document.createElement('div');
+          const name: HTMLHeadingElement = document.createElement('h1');
+          const description: HTMLHeadingElement = document.createElement('p');
+          const descriptionFromHost: string = response.masterData.current.description?.['en-US'].toString() ?? '';
+
+          name.textContent = response.masterData.current.name['en-US'].toString();
+          description.textContent = descriptionFromHost;
+          product.append(name, description);
+
+          const { images } = response.masterData.current.masterVariant;
+          images?.forEach((image) => {
+            const img: HTMLImageElement = document.createElement('img');
+            img.src = image.url;
+            img.alt = image.label ?? 'Preview of clothes';
+            product.appendChild(img);
+          });
+
+          form.after(product);
+        }
+      }
+    } catch (error) {
+      if (error instanceof Error) this.formView.reminder(error.message);
+    }
     if (button) {
       if (pageName) {
         this.formView.switchPasswordView(button, pageName);
