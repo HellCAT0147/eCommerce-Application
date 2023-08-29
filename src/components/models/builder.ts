@@ -32,6 +32,8 @@ export enum Elem {
   wrapper = 'wrapper',
   mess = 'message',
   image = 'image',
+  burger = `hamburger`,
+  line = `line`,
 }
 
 export enum Mode {
@@ -70,6 +72,10 @@ export enum Mode {
   hidden = 'hidden',
   login = 'login',
   reg = 'registration',
+  prof = 'profile',
+  catalog = 'catalog',
+  cross = 'cross',
+  opened = 'opened',
 }
 
 export enum Base {
@@ -90,6 +96,7 @@ export enum Base {
   select = `${form}__select`,
   options = `${form}__options`,
   links = `links`,
+  burger = `hamburger`,
 }
 
 export enum Buttons {
@@ -97,6 +104,9 @@ export enum Buttons {
   SIGN_OUT = 'SIGN OUT',
   CREATE = 'CREATE AN ACCOUNT',
   GO_HOME = 'GO TO MAIN PAGE',
+  CATALOG = 'CATALOG',
+  PROFILE = 'MY PROFILE',
+  BURGER = 'burger',
 }
 
 export enum Titles {
@@ -117,4 +127,6 @@ export enum Titles {
   HAVE_ACCOUNT = `Already have an account?`,
   NOT_HAVE_ACCOUNT = `Don't have an account yet?`,
   SUCCESS_LOGIN = `You've successfully logged`,
+  CATALOG = `Shopping Without Limits`,
+  PROFILE = `My Profile`,
 }
