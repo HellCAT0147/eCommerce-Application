@@ -7,6 +7,7 @@ export enum Blocks {
   form = `form`,
   not_found = `not-found`,
   select = 'select',
+  product = 'product',
 }
 
 export enum Elem {
@@ -34,6 +35,7 @@ export enum Elem {
   image = 'image',
   burger = `hamburger`,
   line = `line`,
+  desc = 'description',
 }
 
 export enum Mode {
@@ -97,6 +99,7 @@ export enum Base {
   options = `${form}__options`,
   links = `links`,
   burger = `hamburger`,
+  img = 'image',
 }
 
 export enum Buttons {

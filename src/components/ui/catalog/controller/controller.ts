@@ -21,12 +21,8 @@ class ControllerCatalog {
 
   public mouseEvent(e: MouseEvent): void {
     // TODO connect specific card mouseClick
-    this.showProduct();
-  }
-
-  private showProduct(key?: number): void {
-    if (key === undefined) this.model.showProduct(1);
-    else this.model.showProduct(key);
+    const key: string = '1';
+    this.model.fetchProduct(key);
   }
 }
 

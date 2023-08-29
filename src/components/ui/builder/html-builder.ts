@@ -117,6 +117,15 @@ class Builder {
     link.classList.add('redirect__buttons');
     return link;
   }
+
+  public img(src: string, alt: string): HTMLImageElement {
+    const img: HTMLImageElement = document.createElement('img');
+    img.className = `${this.base}`;
+    this.setProperties(img);
+    img.src = src;
+    img.alt = alt;
+    return img;
+  }
 }
 
 export default Builder;

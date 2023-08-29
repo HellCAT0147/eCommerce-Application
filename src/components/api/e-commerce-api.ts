@@ -18,6 +18,7 @@ import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/dec
 import { ErrorObject } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/error';
 import TokenCachesStore from './token-caches-store';
 import compareObjects from '../utils/compare-objects';
+import DataBase from '../models/API';
 
 export default class ECommerceApi {
   private readonly baseAuthParams: PasswordAuthMiddlewareOptions;
@@ -269,13 +270,12 @@ export default class ECommerceApi {
     );
   }
 
-  public async getProduct(key: number): Promise<Product | ErrorObject> {
-    const keyPrefix: string = 'product';
+  public async getProduct(key: string): Promise<Product | ErrorObject> {
     try {
       return (
         await this.apiRoot
           .products()
-          .withKey({ key: `${keyPrefix}-${key}` })
+          .withKey({ key: `${DataBase.key_prefix}-${key}` })
           .get()
           .execute()
       ).body;
