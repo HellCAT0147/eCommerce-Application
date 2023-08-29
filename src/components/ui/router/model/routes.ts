@@ -3,6 +3,7 @@ import createTemplateCatalog from '../../catalog/view/template';
 import createTemplateLogin from '../../login/view/template';
 import { createTemplateMain } from '../../main/view/template';
 import createTemplateNotFound from '../../not_found/view/template';
+import createTemplateProfile from '../../profile/view/template';
 import createTemplateRegistration from '../../registration/view/template';
 
 const basicRoutes = [
@@ -34,6 +35,12 @@ const basicRoutes = [
     path: `${Pages.CATALOG}`,
     callback: (isloggedIn?: boolean): void => {
       createTemplateCatalog(isloggedIn);
+    },
+  },
+  {
+    path: `${Pages.PROFILE}`,
+    callback: (isloggedIn?: boolean): void => {
+      createTemplateProfile(isloggedIn);
     },
   },
   {

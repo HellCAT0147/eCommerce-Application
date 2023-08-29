@@ -37,6 +37,8 @@ class MainController {
         url = Pages.LOGIN;
       } else if (url === Pages.GO_TO_REG) {
         url = Pages.REGISTRATION;
+      } else if (url === Pages.GO_TO_PROF) {
+        url = Pages.PROFILE;
       }
     }
 

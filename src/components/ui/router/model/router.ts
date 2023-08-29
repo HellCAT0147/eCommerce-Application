@@ -84,6 +84,12 @@ class Router {
         }
         route.callback(true);
       } else {
+        if (route.path === Pages.PROFILE) {
+          window.history.pushState(null, '', `/${Pages.MAIN}`);
+          this.navigate(Pages.MAIN);
+          selectCurrentPage(Pages.MAIN);
+          return;
+        }
         route.callback();
       }
       selectCurrentPage(url);
