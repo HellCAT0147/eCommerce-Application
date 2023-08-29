@@ -20,8 +20,10 @@ export default function createTemplateCatalog(isLoggedIn?: boolean, id?: string)
     main.innerHTML = '';
   }
 
+  // TODO when you create product cards, assign them an id (key). For example: product2.setAttribute('id', '2');
+
   const title: HTMLElement = new Builder('h1', Base.titles, Blocks.main, Elem.title, '').element();
-  title.textContent = `${Titles.CATALOG} ${id}`; // TODO remove the id from the title and use it in getProduct via the API
+  title.textContent = `${Titles.CATALOG} ${id || ''}`; // TODO remove the id from the title and use it in getProduct via the API
 
   if (main) {
     main.append(title);

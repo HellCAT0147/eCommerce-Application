@@ -1,4 +1,5 @@
 import TokenCachesStore from '../../../api/token-caches-store';
+import { Blocks } from '../../../models/builder';
 import { Pages } from '../../../models/router';
 import Router from '../model/router';
 
@@ -65,12 +66,16 @@ class MainController {
 
       this.router.controllerMain.mouseEvent(e);
 
-      if (targetHtmlElement.closest(`.main__${Pages.MAIN}`)) {
+      if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.MAIN}`)) {
         this.router.controllerMain.mouseEvent(e);
-      } else if (targetHtmlElement.closest(`.main__${Pages.LOGIN}`)) {
+      } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.LOGIN}`)) {
         this.router.controllerLogin.buttonEvent(e);
-      } else if (targetHtmlElement.closest(`.main__${Pages.REGISTRATION}`)) {
+      } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.REGISTRATION}`)) {
         this.router.controllerRegistration.buttonEvent(e);
+      } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.CATALOG}`)) {
+        const id: string = this.getUrlElement(targetHtmlElement);
+        window.history.pushState(null, '', `/${Pages.CATALOG}/${id}`);
+        this.router.navigate(`${Pages.CATALOG}/${id}`);
       }
     }
   }

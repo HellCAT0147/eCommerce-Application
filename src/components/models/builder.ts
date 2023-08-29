@@ -7,6 +7,7 @@ export enum Blocks {
   form = `form`,
   not_found = `not-found`,
   select = 'select',
+  catalog = 'catalog',
 }
 
 export enum Elem {
