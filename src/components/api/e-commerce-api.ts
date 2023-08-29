@@ -43,8 +43,8 @@ export default class ECommerceApi {
     clientId: string,
     clientSecret: string,
     region: string,
-    tokenCachesStore: TokenCachesStore = new TokenCachesStore() // ,
-    // scopes: Array<string> | undefined = undefined
+    tokenCachesStore: TokenCachesStore = new TokenCachesStore(),
+    scopes: Array<string> | undefined = undefined
   ) {
     this.tokenCachesStore = tokenCachesStore;
     this.baseAuthParams = {
@@ -58,7 +58,7 @@ export default class ECommerceApi {
           password: '',
         },
       },
-      scopes: undefined,
+      scopes,
       tokenCache: this.tokenCachesStore,
       fetch,
     };
@@ -269,12 +269,13 @@ export default class ECommerceApi {
     );
   }
 
-  public async getProduct(productKey: number): Promise<Product | ErrorObject> {
+  public async getProduct(key: number): Promise<Product | ErrorObject> {
+    const keyPrefix: string = 'product';
     try {
       return (
         await this.apiRoot
           .products()
-          .withKey({ key: `product-${productKey}` })
+          .withKey({ key: `${keyPrefix}-${key}` })
           .get()
           .execute()
       ).body;

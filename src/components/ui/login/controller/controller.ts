@@ -12,9 +12,9 @@ class ControllerLogin {
       eCommerceAPIConfig.projectKey,
       eCommerceAPIConfig.clientId,
       eCommerceAPIConfig.clientSecret,
-      eCommerceAPIConfig.region // ,
-      // undefined,
-      // eCommerceAPIConfig.scopes.split(' ')
+      eCommerceAPIConfig.region,
+      undefined,
+      eCommerceAPIConfig.scopes.split(' ')
     );
     this.validationModel = new ValidationModel(this.eCommerceApi);
   }
