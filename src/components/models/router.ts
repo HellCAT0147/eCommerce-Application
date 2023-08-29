@@ -1,4 +1,4 @@
-export type Callback = (isloggedIn?: boolean) => void;
+export type Callback = (isloggedIn?: boolean, id?: string) => void;
 
 export interface Routes {
   path: string;
@@ -8,6 +8,7 @@ export interface Routes {
 export interface UrlParsed {
   path: string;
   resource: string;
+  details: string;
 }
 
 export enum Pages {
@@ -18,9 +19,11 @@ export enum Pages {
   REGISTRATION = 'registration',
   CATALOG = 'catalog',
   PROFILE = 'profile',
+  PRODUCT = 'product',
   GO_TO_MAIN = `${GO_TO}-${MAIN}`,
   GO_TO_LOGIN = `${GO_TO}-${LOGIN}`,
   GO_TO_REG = `${GO_TO}-${REGISTRATION}`,
   GO_TO_PROF = `${GO_TO}-${PROFILE}`,
   NOT_FOUND = 'not-found',
+  ID = 'id',
 }

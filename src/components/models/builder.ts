@@ -129,4 +129,5 @@ export enum Titles {
   SUCCESS_LOGIN = `You've successfully logged`,
   CATALOG = `Shopping Without Limits`,
   PROFILE = `My Profile`,
+  PRODUCT = `Product`,
 }

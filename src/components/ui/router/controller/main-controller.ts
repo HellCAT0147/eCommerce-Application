@@ -66,7 +66,7 @@ class MainController {
       this.router.controllerMain.mouseEvent(e);
 
       if (targetHtmlElement.closest(`.main__${Pages.MAIN}`)) {
-        this.router.controllerMain.buttonEvent(e);
+        this.router.controllerMain.mouseEvent(e);
       } else if (targetHtmlElement.closest(`.main__${Pages.LOGIN}`)) {
         this.router.controllerLogin.buttonEvent(e);
       } else if (targetHtmlElement.closest(`.main__${Pages.REGISTRATION}`)) {

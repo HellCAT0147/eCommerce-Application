@@ -3,7 +3,7 @@ import { Pages } from '../../../models/router';
 import Builder from '../../builder/html-builder';
 import createHeader from '../../main/view/header';
 
-export default function createTemplateCatalog(isLoggedIn?: boolean): HTMLElement {
+export default function createTemplateCatalog(isLoggedIn?: boolean, id?: string): HTMLElement {
   const body: HTMLBodyElement | null = document.querySelector('body');
   const header: HTMLElement | null = document.querySelector('header');
   const newHeader: HTMLElement = createHeader(isLoggedIn);
@@ -21,7 +21,7 @@ export default function createTemplateCatalog(isLoggedIn?: boolean): HTMLElement
   }
 
   const title: HTMLElement = new Builder('h1', Base.titles, Blocks.main, Elem.title, '').element();
-  title.textContent = `${Titles.CATALOG}`;
+  title.textContent = `${Titles.CATALOG} ${id}`; // TODO remove the id from the title and use it in getProduct via the API
 
   if (main) {
     main.append(title);

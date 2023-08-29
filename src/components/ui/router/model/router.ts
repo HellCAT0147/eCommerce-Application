@@ -58,24 +58,41 @@ class Router {
     const urlParsed: UrlParsed = {
       path: '',
       resource: '',
+      details: '',
     };
     const path: string[] = url.split('/');
-    [urlParsed.path = '', urlParsed.resource = ''] = path;
+    [urlParsed.path = '', urlParsed.resource = '', urlParsed.details = ''] = path;
 
     return urlParsed;
   }
 
+  private redirectToProduct(isLoggedIn: boolean, id: string, route: Routes): void {
+    const key: string = '2'; // TODO Will be replaced by the getProduct() from API method
+    if (id === key) {
+      route.callback(isLoggedIn, id);
+      selectCurrentPage(Pages.CATALOG);
+    } else {
+      this.navigate(Pages.NOT_FOUND);
+    }
+  }
+
   public async navigate(url: string): Promise<void> {
     const urlParsed: UrlParsed = this.parseUrl(url);
-    const pathForFind: string = urlParsed.resource === '' ? urlParsed.path : `${urlParsed.path}/${urlParsed.resource}`;
+    let pathForFind: string = urlParsed.resource === '' ? urlParsed.path : `${urlParsed.path}/${Pages.ID}`;
+    if (urlParsed.details) {
+      pathForFind += `/${urlParsed.details}`;
+    }
     const route: Routes | undefined = this.routes.find((routeExisting) => routeExisting.path === pathForFind);
-
     if (!route) {
       this.navigate(Pages.NOT_FOUND);
     } else {
       const token = this.tokenCachesStore.getDefault();
       const tokenDefault = this.tokenCachesStore.defaultTokenStore;
       if (token !== tokenDefault) {
+        if (urlParsed.resource && !urlParsed.details) {
+          this.redirectToProduct(true, urlParsed.resource, route);
+          return;
+        }
         if (route.path === Pages.LOGIN || route.path === Pages.REGISTRATION) {
           window.history.pushState(null, '', `/${Pages.MAIN}`);
           this.navigate(Pages.MAIN);
@@ -84,6 +101,10 @@ class Router {
         }
         route.callback(true);
       } else {
+        if (urlParsed.resource && !urlParsed.details) {
+          this.redirectToProduct(false, urlParsed.resource, route);
+          return;
+        }
         if (route.path === Pages.PROFILE) {
           window.history.pushState(null, '', `/${Pages.MAIN}`);
           this.navigate(Pages.MAIN);
