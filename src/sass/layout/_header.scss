@@ -23,7 +23,6 @@
     @extend %transition;
     @include media-mobile-medium {
       position: fixed;
-      // visibility: hidden;
       flex-direction: column;
       justify-content: center;
       align-items: center;

@@ -60,7 +60,6 @@ class MainController {
           this.tokenCachesStore.unset();
         }
         const urlButton: string = this.getUrlElement(navButton);
-        window.history.pushState(null, '', `/${urlButton}`);
         this.router.navigate(urlButton);
       }
 
