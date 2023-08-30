@@ -1,7 +1,7 @@
 import { ProductData } from '@commercetools/platform-sdk';
 import { Base, Blocks, Elem, Mode } from '../../../models/builder';
 import Builder from '../../builder/html-builder';
-import DataBase from '../../../models/API';
+import DataBase from '../../../models/commerce';
 
 export default class ViewCatalog {
   public showError(msg: string): string {
