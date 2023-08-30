@@ -1,4 +1,4 @@
-import { Buttons, Mode } from '../../models/builder';
+import { Buttons, HLevels, Mode } from '../../models/builder';
 import { Pages } from '../../models/router';
 
 class Builder {
@@ -116,6 +116,29 @@ class Builder {
     link.setAttribute('id', `${Pages.GO_TO}-${this.mode}`);
     link.classList.add('redirect__buttons');
     return link;
+  }
+
+  public img(src: string, alt: string): HTMLImageElement {
+    const img: HTMLImageElement = document.createElement('img');
+    img.className = `${this.base}`;
+    this.setProperties(img);
+    img.src = src;
+    img.alt = alt;
+    return img;
+  }
+
+  public h(level: HLevels): HTMLHeadingElement {
+    const heading: HTMLHeadingElement = document.createElement(`h${level}`);
+    heading.className = `${this.base}`;
+    this.setProperties(heading);
+    return heading;
+  }
+
+  public p(): HTMLParagraphElement {
+    const p: HTMLParagraphElement = document.createElement('p');
+    p.className = `${this.base}`;
+    this.setProperties(p);
+    return p;
   }
 }
 

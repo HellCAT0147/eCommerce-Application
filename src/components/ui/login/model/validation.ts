@@ -76,7 +76,7 @@ export default class ValidationModel {
     this.checkSendable();
   }
 
-  public switchPasswordView(button: HTMLButtonElement | null, pageName?: string): void {
+  public async switchPasswordView(button: HTMLButtonElement | null, pageName?: string): Promise<void> {
     if (button) {
       if (pageName) {
         this.formView.switchPasswordView(button, pageName);

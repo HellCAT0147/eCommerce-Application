@@ -39,8 +39,8 @@ const basicRoutes = [
   },
   {
     path: `${Pages.CATALOG}/${Pages.ID}`,
-    callback: (isLoggedIn?: boolean, id?: string): void => {
-      createTemplateCatalog(isLoggedIn, id);
+    callback: (isLoggedIn?: boolean, isProduct?: boolean): void => {
+      createTemplateCatalog(isLoggedIn, isProduct);
     },
   },
   {

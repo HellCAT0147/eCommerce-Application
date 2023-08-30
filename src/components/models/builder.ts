@@ -7,6 +7,7 @@ export enum Blocks {
   form = `form`,
   not_found = `not-found`,
   select = 'select',
+  product = 'product',
   catalog = 'catalog',
 }
 
@@ -35,6 +36,7 @@ export enum Elem {
   image = 'image',
   burger = `hamburger`,
   line = `line`,
+  desc = 'description',
 }
 
 export enum Mode {
@@ -98,6 +100,7 @@ export enum Base {
   options = `${form}__options`,
   links = `links`,
   burger = `hamburger`,
+  img = 'image',
 }
 
 export enum Buttons {
@@ -132,3 +135,5 @@ export enum Titles {
   PROFILE = `My Profile`,
   PRODUCT = `Product`,
 }
+
+export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;

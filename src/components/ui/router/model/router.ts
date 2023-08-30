@@ -4,6 +4,10 @@ import ControllerLogin from '../../login/controller/controller';
 import ControllerRegistration from '../../registration/controller/controller';
 import ControllerMain from '../../main/controller/controller';
 import TokenCachesStore from '../../../api/token-caches-store';
+import ControllerCatalog from '../../catalog/controller/controller';
+import ECommerceApi from '../../../api/e-commerce-api';
+import eCommerceAPIConfig from '../../../api/e-commerce-api-config-realization';
+import DataBase from '../../../models/commerce';
 
 class Router {
   public routes: Routes[];
@@ -14,7 +18,11 @@ class Router {
 
   public controllerRegistration: ControllerRegistration;
 
+  public controllerCatalog: ControllerCatalog;
+
   public inputs: NodeListOf<HTMLInputElement>;
+
+  private eCommerceApi: ECommerceApi;
 
   private readonly tokenCachesStore: TokenCachesStore;
 
@@ -23,7 +31,16 @@ class Router {
     this.controllerMain = new ControllerMain();
     this.controllerLogin = new ControllerLogin();
     this.controllerRegistration = new ControllerRegistration();
+    this.controllerCatalog = new ControllerCatalog();
     this.inputs = this.getInputsOnPage();
+    this.eCommerceApi = new ECommerceApi(
+      eCommerceAPIConfig.projectKey,
+      eCommerceAPIConfig.clientId,
+      eCommerceAPIConfig.clientSecret,
+      eCommerceAPIConfig.region,
+      undefined,
+      eCommerceAPIConfig.scopes.split(' ')
+    );
     this.tokenCachesStore = new TokenCachesStore();
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -66,10 +83,12 @@ class Router {
     return urlParsed;
   }
 
-  private redirectToProduct(isLoggedIn: boolean, id: string, route: Routes): void {
-    const key: string = '2'; // TODO Will be replaced by the getProduct() from API method
-    if (id === key) {
-      route.callback(isLoggedIn, id);
+  private async redirectToProduct(isLoggedIn: boolean, id: string, route: Routes): Promise<void> {
+    const response = await this.eCommerceApi.getProduct(id);
+    const key: string = `${DataBase.key_prefix}-${id}`;
+    if (key === response.key) {
+      route.callback(isLoggedIn, true);
+      this.controllerCatalog.loadProduct(id);
       selectCurrentPage(Pages.CATALOG);
     } else {
       this.navigate(Pages.NOT_FOUND);
@@ -90,7 +109,7 @@ class Router {
       const tokenDefault = this.tokenCachesStore.defaultTokenStore;
       if (token !== tokenDefault) {
         if (urlParsed.resource && !urlParsed.details) {
-          this.redirectToProduct(true, urlParsed.resource, route);
+          await this.redirectToProduct(true, urlParsed.resource, route);
           return;
         }
         if (route.path === Pages.LOGIN || route.path === Pages.REGISTRATION) {
@@ -102,7 +121,7 @@ class Router {
         route.callback(true);
       } else {
         if (urlParsed.resource && !urlParsed.details) {
-          this.redirectToProduct(false, urlParsed.resource, route);
+          await this.redirectToProduct(false, urlParsed.resource, route);
           return;
         }
         if (route.path === Pages.PROFILE) {

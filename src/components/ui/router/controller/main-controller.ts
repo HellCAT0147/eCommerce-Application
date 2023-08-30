@@ -76,6 +76,7 @@ class MainController {
         const id: string = this.getUrlElement(targetHtmlElement);
         window.history.pushState(null, '', `/${Pages.CATALOG}/${id}`);
         this.router.navigate(`${Pages.CATALOG}/${id}`);
+        this.router.controllerCatalog.loadProduct(id);
       }
     }
   }
