@@ -73,10 +73,14 @@ class MainController {
       } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.REGISTRATION}`)) {
         this.router.controllerRegistration.buttonEvent(e);
       } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.CATALOG}`)) {
-        const id: string = this.getUrlElement(targetHtmlElement);
-        window.history.pushState(null, '', `/${Pages.CATALOG}/${id}`);
-        this.router.navigate(`${Pages.CATALOG}/${id}`);
-        this.router.controllerCatalog.loadProduct(id);
+        if (targetHtmlElement.closest(`.catalog__link`)) {
+          const id: string = this.getUrlElement(targetHtmlElement);
+          window.history.pushState(null, '', `/${Pages.CATALOG}/${id}`);
+          this.router.navigate(`${Pages.CATALOG}/${id}`);
+          this.router.controllerCatalog.loadProduct(id);
+        } else {
+          this.router.controllerCatalog.mouseEvent(e);
+        }
       }
     }
   }

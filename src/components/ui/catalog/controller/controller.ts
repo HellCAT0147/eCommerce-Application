@@ -19,10 +19,8 @@ class ControllerCatalog {
     this.model = new ModelCatalog(this.eCommerceApi);
   }
 
-  public mouseEvent(e: MouseEvent, key?: string): void {
-    // TODO connect specific card mouseClick.
-    // TODO Determine whether event.target is a product card, if so, execute the fetchProduct(key) method.
-    if (key) this.model.fetchProduct(key);
+  public mouseEvent(e: MouseEvent): void {
+    // TODO any mouse events other than clicking on the product card
   }
 
   public loadProduct(key: string): void {
