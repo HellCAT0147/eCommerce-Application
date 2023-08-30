@@ -12,7 +12,9 @@ class ControllerLogin {
       eCommerceAPIConfig.projectKey,
       eCommerceAPIConfig.clientId,
       eCommerceAPIConfig.clientSecret,
-      eCommerceAPIConfig.region
+      eCommerceAPIConfig.region,
+      undefined,
+      eCommerceAPIConfig.scopes.split(' ')
     );
     this.validationModel = new ValidationModel(this.eCommerceApi);
   }
@@ -28,9 +30,8 @@ class ControllerLogin {
     e.preventDefault();
     const { target } = e;
     if (!(target instanceof HTMLElement)) return;
-
     const showPassword: HTMLButtonElement | null = target.closest('#show-password');
-    this.validationModel.switchPasswordView(showPassword);
+    if (showPassword) this.validationModel.switchPasswordView(showPassword);
 
     const signIn: HTMLButtonElement | null = target.closest('.login__button_sign');
     if (signIn) this.validationModel.send();

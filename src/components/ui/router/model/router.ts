@@ -4,6 +4,7 @@ import ControllerLogin from '../../login/controller/controller';
 import ControllerRegistration from '../../registration/controller/controller';
 import ControllerMain from '../../main/controller/controller';
 import TokenCachesStore from '../../../api/token-caches-store';
+import ControllerCatalog from '../../catalog/controller/controller';
 
 class Router {
   public routes: Routes[];
@@ -14,6 +15,8 @@ class Router {
 
   public controllerRegistration: ControllerRegistration;
 
+  public controllerCatalog: ControllerCatalog;
+
   public inputs: NodeListOf<HTMLInputElement>;
 
   private readonly tokenCachesStore: TokenCachesStore;
@@ -23,6 +26,7 @@ class Router {
     this.controllerMain = new ControllerMain();
     this.controllerLogin = new ControllerLogin();
     this.controllerRegistration = new ControllerRegistration();
+    this.controllerCatalog = new ControllerCatalog();
     this.inputs = this.getInputsOnPage();
     this.tokenCachesStore = new TokenCachesStore();
 

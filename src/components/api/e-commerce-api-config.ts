@@ -6,4 +6,6 @@ export interface ECommerceAPIConfig {
   clientSecret: string;
 
   region: string;
+
+  scopes: string;
 }

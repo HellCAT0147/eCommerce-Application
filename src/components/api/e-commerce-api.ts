@@ -12,11 +12,13 @@ import {
   Customer,
   CustomerSignInResult,
   MyCustomerUpdateAction,
+  Product,
 } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import { ErrorObject } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/error';
 import TokenCachesStore from './token-caches-store';
 import compareObjects from '../utils/compare-objects';
+import DataBase from '../models/commerce';
 
 export default class ECommerceApi {
   private readonly baseAuthParams: PasswordAuthMiddlewareOptions;
@@ -42,7 +44,8 @@ export default class ECommerceApi {
     clientId: string,
     clientSecret: string,
     region: string,
-    tokenCachesStore: TokenCachesStore = new TokenCachesStore()
+    tokenCachesStore: TokenCachesStore = new TokenCachesStore(),
+    scopes: Array<string> | undefined = undefined
   ) {
     this.tokenCachesStore = tokenCachesStore;
     this.baseAuthParams = {
@@ -56,7 +59,7 @@ export default class ECommerceApi {
           password: '',
         },
       },
-      scopes: undefined,
+      scopes,
       tokenCache: this.tokenCachesStore,
       fetch,
     };
@@ -265,5 +268,19 @@ export default class ECommerceApi {
       this.meLoggedInPromise !== null &&
       (await this.meLoggedInPromise) !== null
     );
+  }
+
+  public async getProduct(key: string): Promise<Product | ErrorObject> {
+    try {
+      return (
+        await this.apiRoot
+          .products()
+          .withKey({ key: `${DataBase.key_prefix}-${key}` })
+          .get()
+          .execute()
+      ).body;
+    } catch (e) {
+      return this.errorObjectOrThrow(e);
+    }
   }
 }
