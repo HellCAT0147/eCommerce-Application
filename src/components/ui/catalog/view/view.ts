@@ -13,8 +13,8 @@ export default class ViewCatalog {
     const main: HTMLFormElement | null = document.querySelector(`.${Blocks.main}__${Mode.catalog}`);
     if (main) {
       const product: HTMLElement = new Builder('article', '', Blocks.product, Elem.wrapper, '').element();
-      const name: HTMLElement = new Builder('h2', Base.titles, Blocks.product, Elem.title, Mode.big).element();
-      const description: HTMLElement = new Builder('p', '', Blocks.product, Elem.desc, '').element();
+      const name: HTMLHeadingElement = new Builder('h2', Base.titles, Blocks.product, Elem.title, Mode.big).h(2);
+      const description: HTMLParagraphElement = new Builder('p', '', Blocks.product, Elem.desc, '').p();
       const descriptionFromHost: string = data.description?.['en-US'].toString() ?? '';
 
       name.textContent = data.name['en-US'].toString();

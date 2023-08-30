@@ -133,3 +133,5 @@ export enum Titles {
   CATALOG = `Shopping Without Limits`,
   PROFILE = `My Profile`,
 }
+
+export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;

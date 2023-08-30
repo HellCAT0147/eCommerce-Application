@@ -1,4 +1,4 @@
-import { Buttons, Mode } from '../../models/builder';
+import { Buttons, HLevels, Mode } from '../../models/builder';
 import { Pages } from '../../models/router';
 
 class Builder {
@@ -125,6 +125,20 @@ class Builder {
     img.src = src;
     img.alt = alt;
     return img;
+  }
+
+  public h(level: HLevels): HTMLHeadingElement {
+    const heading: HTMLHeadingElement = document.createElement(`h${level}`);
+    heading.className = `${this.base}`;
+    this.setProperties(heading);
+    return heading;
+  }
+
+  public p(): HTMLParagraphElement {
+    const p: HTMLParagraphElement = document.createElement('p');
+    p.className = `${this.base}`;
+    this.setProperties(p);
+    return p;
   }
 }
 
