@@ -9,44 +9,50 @@ import createTemplateRegistration from '../../registration/view/template';
 const basicRoutes = [
   {
     path: ``,
-    callback: (isloggedIn?: boolean): void => {
-      createTemplateMain(isloggedIn);
+    callback: (isLoggedIn?: boolean): void => {
+      createTemplateMain(isLoggedIn);
     },
   },
   {
     path: `${Pages.MAIN}`,
-    callback: (isloggedIn?: boolean): void => {
-      createTemplateMain(isloggedIn);
+    callback: (isLoggedIn?: boolean): void => {
+      createTemplateMain(isLoggedIn);
     },
   },
   {
     path: `${Pages.LOGIN}`,
-    callback: (isloggedIn?: boolean): void => {
-      createTemplateLogin(isloggedIn);
+    callback: (isLoggedIn?: boolean): void => {
+      createTemplateLogin(isLoggedIn);
     },
   },
   {
     path: `${Pages.REGISTRATION}`,
-    callback: (isloggedIn?: boolean): void => {
-      createTemplateRegistration(isloggedIn);
+    callback: (isLoggedIn?: boolean): void => {
+      createTemplateRegistration(isLoggedIn);
     },
   },
   {
     path: `${Pages.CATALOG}`,
-    callback: (isloggedIn?: boolean): void => {
-      createTemplateCatalog(isloggedIn);
+    callback: (isLoggedIn?: boolean): void => {
+      createTemplateCatalog(isLoggedIn);
+    },
+  },
+  {
+    path: `${Pages.CATALOG}/${Pages.ID}`,
+    callback: (isLoggedIn?: boolean, isProduct?: boolean): void => {
+      createTemplateCatalog(isLoggedIn, isProduct);
     },
   },
   {
     path: `${Pages.PROFILE}`,
-    callback: (isloggedIn?: boolean): void => {
-      createTemplateProfile(isloggedIn);
+    callback: (isLoggedIn?: boolean): void => {
+      createTemplateProfile(isLoggedIn);
     },
   },
   {
     path: `${Pages.NOT_FOUND}`,
-    callback: (isloggedIn?: boolean): void => {
-      createTemplateNotFound(isloggedIn);
+    callback: (isLoggedIn?: boolean): void => {
+      createTemplateNotFound(isLoggedIn);
     },
   },
 ];

@@ -8,6 +8,7 @@ export enum Blocks {
   not_found = `not-found`,
   select = 'select',
   product = 'product',
+  catalog = 'catalog',
 }
 
 export enum Elem {
@@ -132,6 +133,7 @@ export enum Titles {
   SUCCESS_LOGIN = `You've successfully logged`,
   CATALOG = `Shopping Without Limits`,
   PROFILE = `My Profile`,
+  PRODUCT = `Product`,
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;

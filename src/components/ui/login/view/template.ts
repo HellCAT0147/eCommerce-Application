@@ -4,10 +4,10 @@ import Builder from '../../builder/html-builder';
 import createHeader from '../../main/view/header';
 import FormViewLogin from './form';
 
-export default function createTemplateLogin(isloggedIn?: boolean): HTMLElement {
+export default function createTemplateLogin(isLoggedIn?: boolean): HTMLElement {
   const body: HTMLBodyElement | null = document.querySelector('body');
   const header: HTMLElement | null = document.querySelector('header');
-  const newHeader: HTMLElement = createHeader(isloggedIn);
+  const newHeader: HTMLElement = createHeader(isLoggedIn);
 
   if (body && header) {
     body.removeChild(header);

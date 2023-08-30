@@ -67,13 +67,16 @@ class MainController {
       this.router.controllerMain.mouseEvent(e);
 
       if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.MAIN}`)) {
-        this.router.controllerMain.buttonEvent(e);
+        this.router.controllerMain.mouseEvent(e);
       } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.LOGIN}`)) {
         this.router.controllerLogin.buttonEvent(e);
       } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.REGISTRATION}`)) {
         this.router.controllerRegistration.buttonEvent(e);
       } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.CATALOG}`)) {
-        this.router.controllerCatalog.mouseEvent(e);
+        const id: string = this.getUrlElement(targetHtmlElement);
+        window.history.pushState(null, '', `/${Pages.CATALOG}/${id}`);
+        this.router.navigate(`${Pages.CATALOG}/${id}`);
+        this.router.controllerCatalog.loadProduct(id);
       }
     }
   }

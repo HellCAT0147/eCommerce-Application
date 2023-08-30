@@ -7,11 +7,6 @@ class ControllerMain {
     // TODO create controller for Main page;
   }
 
-  public buttonEvent(e: Event): void {
-    e.preventDefault();
-    // TODO create controller for Main page;
-  }
-
   public mouseEvent(e: MouseEvent): void {
     const { target } = e;
     const burgerButtom: HTMLElement | null = document.querySelector(`#${Buttons.BURGER}`);

@@ -4,13 +4,13 @@ import Builder from '../../builder/html-builder';
 import { createHamburger } from './hamburger';
 import createNavigation from './navigation';
 
-export default function createHeader(isloggedIn?: boolean): HTMLElement {
+export default function createHeader(isLoggedIn?: boolean): HTMLElement {
   const header: HTMLElement = new Builder('header', '', Blocks.header, '', '').element();
   const logo: HTMLElement = new Builder('a', '', Blocks.header, Elem.logo, '').element();
   logo.setAttribute('href', '/main');
   logo.classList.add('redirect__buttons');
   logo.setAttribute('id', `${Pages.MAIN}`);
-  const navigation: HTMLElement = createNavigation(isloggedIn);
+  const navigation: HTMLElement = createNavigation(isLoggedIn);
   const hamburger: HTMLElement = createHamburger();
 
   header.append(logo, navigation, hamburger);

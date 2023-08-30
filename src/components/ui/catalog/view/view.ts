@@ -12,6 +12,8 @@ export default class ViewCatalog {
   public showProduct(data: ProductData): void {
     const main: HTMLFormElement | null = document.querySelector(`.${Blocks.main}__${Mode.catalog}`);
     if (main) {
+      main.innerHTML = '';
+
       const product: HTMLElement = new Builder('article', '', Blocks.product, Elem.wrapper, '').element();
       const name: HTMLHeadingElement = new Builder('h2', Base.titles, Blocks.product, Elem.title, Mode.big).h(2);
       const description: HTMLParagraphElement = new Builder('p', '', Blocks.product, Elem.desc, '').p();

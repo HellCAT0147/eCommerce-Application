@@ -5,6 +5,9 @@ import ControllerRegistration from '../../registration/controller/controller';
 import ControllerMain from '../../main/controller/controller';
 import TokenCachesStore from '../../../api/token-caches-store';
 import ControllerCatalog from '../../catalog/controller/controller';
+import ECommerceApi from '../../../api/e-commerce-api';
+import eCommerceAPIConfig from '../../../api/e-commerce-api-config-realization';
+import DataBase from '../../../models/commerce';
 
 class Router {
   public routes: Routes[];
@@ -19,6 +22,8 @@ class Router {
 
   public inputs: NodeListOf<HTMLInputElement>;
 
+  private eCommerceApi: ECommerceApi;
+
   private readonly tokenCachesStore: TokenCachesStore;
 
   constructor(routes: Routes[]) {
@@ -28,6 +33,14 @@ class Router {
     this.controllerRegistration = new ControllerRegistration();
     this.controllerCatalog = new ControllerCatalog();
     this.inputs = this.getInputsOnPage();
+    this.eCommerceApi = new ECommerceApi(
+      eCommerceAPIConfig.projectKey,
+      eCommerceAPIConfig.clientId,
+      eCommerceAPIConfig.clientSecret,
+      eCommerceAPIConfig.region,
+      undefined,
+      eCommerceAPIConfig.scopes.split(' ')
+    );
     this.tokenCachesStore = new TokenCachesStore();
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -62,24 +75,43 @@ class Router {
     const urlParsed: UrlParsed = {
       path: '',
       resource: '',
+      details: '',
     };
     const path: string[] = url.split('/');
-    [urlParsed.path = '', urlParsed.resource = ''] = path;
+    [urlParsed.path = '', urlParsed.resource = '', urlParsed.details = ''] = path;
 
     return urlParsed;
   }
 
+  private async redirectToProduct(isLoggedIn: boolean, id: string, route: Routes): Promise<void> {
+    const response = await this.eCommerceApi.getProduct(id);
+    const key: string = `${DataBase.key_prefix}-${id}`;
+    if (key === response.key) {
+      route.callback(isLoggedIn, true);
+      this.controllerCatalog.loadProduct(id);
+      selectCurrentPage(Pages.CATALOG);
+    } else {
+      this.navigate(Pages.NOT_FOUND);
+    }
+  }
+
   public async navigate(url: string): Promise<void> {
     const urlParsed: UrlParsed = this.parseUrl(url);
-    const pathForFind: string = urlParsed.resource === '' ? urlParsed.path : `${urlParsed.path}/${urlParsed.resource}`;
+    let pathForFind: string = urlParsed.resource === '' ? urlParsed.path : `${urlParsed.path}/${Pages.ID}`;
+    if (urlParsed.details) {
+      pathForFind += `/${urlParsed.details}`;
+    }
     const route: Routes | undefined = this.routes.find((routeExisting) => routeExisting.path === pathForFind);
-
     if (!route) {
       this.navigate(Pages.NOT_FOUND);
     } else {
       const token = this.tokenCachesStore.getDefault();
       const tokenDefault = this.tokenCachesStore.defaultTokenStore;
       if (token !== tokenDefault) {
+        if (urlParsed.resource && !urlParsed.details) {
+          await this.redirectToProduct(true, urlParsed.resource, route);
+          return;
+        }
         if (route.path === Pages.LOGIN || route.path === Pages.REGISTRATION) {
           window.history.pushState(null, '', `/${Pages.MAIN}`);
           this.navigate(Pages.MAIN);
@@ -88,6 +120,10 @@ class Router {
         }
         route.callback(true);
       } else {
+        if (urlParsed.resource && !urlParsed.details) {
+          await this.redirectToProduct(false, urlParsed.resource, route);
+          return;
+        }
         if (route.path === Pages.PROFILE) {
           window.history.pushState(null, '', `/${Pages.MAIN}`);
           this.navigate(Pages.MAIN);
