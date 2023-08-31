@@ -4,6 +4,7 @@ export enum Blocks {
   footer = 'footer',
   login = 'login',
   reg = 'registration',
+  prof = 'profile',
   form = `form`,
   not_found = `not-found`,
   select = 'select',
@@ -37,6 +38,8 @@ export enum Elem {
   burger = `hamburger`,
   line = `line`,
   desc = 'description',
+  article = 'article',
+  person = 'person',
 }
 
 export enum Mode {

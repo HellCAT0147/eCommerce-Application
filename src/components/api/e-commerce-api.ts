@@ -283,4 +283,13 @@ export default class ECommerceApi {
       return this.errorObjectOrThrow(e);
     }
   }
+
+  public async getCustomer(): Promise<Customer | ErrorObject> {
+    try {
+      const response: ClientResponse<Customer> = await this.apiRoot.me().get().execute();
+      return response.body;
+    } catch (e) {
+      return this.errorObjectOrThrow(e);
+    }
+  }
 }

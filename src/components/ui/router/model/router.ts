@@ -8,6 +8,7 @@ import TokenCachesStore from '../../../api/token-caches-store';
 import ControllerCatalog from '../../catalog/controller/controller';
 import ECommerceApi from '../../../api/e-commerce-api';
 import DataBase from '../../../models/commerce';
+import ControllerProfile from '../../profile/controller/controller';
 
 class Router {
   public routes: Routes[];
@@ -19,6 +20,8 @@ class Router {
   public controllerRegistration: ControllerRegistration;
 
   public controllerCatalog: ControllerCatalog;
+
+  public controllerProfile: ControllerProfile;
 
   public inputs: NodeListOf<HTMLInputElement>;
 
@@ -33,6 +36,7 @@ class Router {
     this.controllerLogin = new ControllerLogin(this.eCommerceApi);
     this.controllerRegistration = new ControllerRegistration(this.eCommerceApi);
     this.controllerCatalog = new ControllerCatalog(this.eCommerceApi);
+    this.controllerProfile = new ControllerProfile(this.eCommerceApi);
     this.inputs = this.getInputsOnPage();
     this.tokenCachesStore = new TokenCachesStore();
 
