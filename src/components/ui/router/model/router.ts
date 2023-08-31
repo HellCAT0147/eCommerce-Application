@@ -1,3 +1,4 @@
+import { ErrorObject, Product } from '@commercetools/platform-sdk';
 import { Pages, Routes, UrlParsed } from '../../../models/router';
 import selectCurrentPage from '../view/viewPage';
 import ControllerLogin from '../../login/controller/controller';
@@ -6,7 +7,6 @@ import ControllerMain from '../../main/controller/controller';
 import TokenCachesStore from '../../../api/token-caches-store';
 import ControllerCatalog from '../../catalog/controller/controller';
 import ECommerceApi from '../../../api/e-commerce-api';
-import eCommerceAPIConfig from '../../../api/e-commerce-api-config-realization';
 import DataBase from '../../../models/commerce';
 
 class Router {
@@ -26,21 +26,14 @@ class Router {
 
   private readonly tokenCachesStore: TokenCachesStore;
 
-  constructor(routes: Routes[]) {
+  constructor(routes: Routes[], eCommerceApi: ECommerceApi) {
     this.routes = routes;
+    this.eCommerceApi = eCommerceApi;
     this.controllerMain = new ControllerMain();
-    this.controllerLogin = new ControllerLogin();
-    this.controllerRegistration = new ControllerRegistration();
-    this.controllerCatalog = new ControllerCatalog();
+    this.controllerLogin = new ControllerLogin(this.eCommerceApi);
+    this.controllerRegistration = new ControllerRegistration(this.eCommerceApi);
+    this.controllerCatalog = new ControllerCatalog(this.eCommerceApi);
     this.inputs = this.getInputsOnPage();
-    this.eCommerceApi = new ECommerceApi(
-      eCommerceAPIConfig.projectKey,
-      eCommerceAPIConfig.clientId,
-      eCommerceAPIConfig.clientSecret,
-      eCommerceAPIConfig.region,
-      undefined,
-      eCommerceAPIConfig.scopes.split(' ')
-    );
     this.tokenCachesStore = new TokenCachesStore();
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -83,12 +76,13 @@ class Router {
     return urlParsed;
   }
 
-  private async redirectToProduct(isLoggedIn: boolean, id: string, route: Routes): Promise<void> {
-    const response = await this.eCommerceApi.getProduct(id);
+  private async redirectToProduct(isLoggedIn: boolean, id: string, route: Routes, isPopState?: boolean): Promise<void> {
+    const response: Product | ErrorObject = await this.eCommerceApi.getProduct(id);
     const key: string = `${DataBase.key_prefix}-${id}`;
     if (key === response.key) {
+      if (!isPopState) window.history.pushState(null, '', `/${Pages.CATALOG}/${id}`);
       route.callback(isLoggedIn, true);
-      this.controllerCatalog.loadProduct(id);
+      this.controllerCatalog.loadProduct(id, response);
       selectCurrentPage(Pages.CATALOG);
     } else {
       this.navigate(Pages.NOT_FOUND);
@@ -110,7 +104,7 @@ class Router {
       const tokenDefault = this.tokenCachesStore.defaultTokenStore;
       if (token !== tokenDefault) {
         if (urlParsed.resource && !urlParsed.details) {
-          await this.redirectToProduct(true, urlParsed.resource, route);
+          await this.redirectToProduct(true, urlParsed.resource, route, isPopState);
           return;
         }
         if (route.path === Pages.LOGIN || route.path === Pages.REGISTRATION) {
@@ -121,7 +115,7 @@ class Router {
         route.callback(true);
       } else {
         if (urlParsed.resource && !urlParsed.details) {
-          await this.redirectToProduct(false, urlParsed.resource, route);
+          await this.redirectToProduct(false, urlParsed.resource, route, isPopState);
           return;
         }
         if (route.path === Pages.PROFILE) {

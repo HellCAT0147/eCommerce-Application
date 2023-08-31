@@ -1,3 +1,4 @@
+import ECommerceApi from '../../../api/e-commerce-api';
 import { Pages } from '../../../models/router';
 import ControllerLogin from '../../login/controller/controller';
 import RegistrationValidationModel from '../model/validation';
@@ -5,8 +6,8 @@ import RegistrationValidationModel from '../model/validation';
 class ControllerRegistration extends ControllerLogin {
   protected validationModel: RegistrationValidationModel;
 
-  public constructor() {
-    super();
+  public constructor(eCommerceApi: ECommerceApi) {
+    super(eCommerceApi);
     this.validationModel = new RegistrationValidationModel(this.getAPI());
   }
 

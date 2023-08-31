@@ -73,9 +73,11 @@ class MainController {
         this.router.controllerRegistration.buttonEvent(e);
       } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.CATALOG}`)) {
         const id: string = this.getUrlElement(targetHtmlElement);
-        window.history.pushState(null, '', `/${Pages.CATALOG}/${id}`);
-        this.router.navigate(`${Pages.CATALOG}/${id}`);
-        this.router.controllerCatalog.loadProduct(id);
+        if (targetHtmlElement.closest(`.catalog__link`)) {
+          // window.history.pushState(null, '', `/${Pages.CATALOG}/${id}`);
+          this.router.navigate(`${Pages.CATALOG}/${id}`);
+          // this.router.controllerCatalog.loadProduct(id);
+        }
       }
     }
   }

@@ -12,7 +12,11 @@ export default class ModelCatalog {
     this.view = new ViewCatalog();
   }
 
-  public async fetchProduct(key: string): Promise<void> {
+  public async fetchProduct(key: string, preResponse: Product | ErrorObject): Promise<void> {
+    if (preResponse) {
+      this.view.showProduct(preResponse.masterData.current);
+      return;
+    }
     try {
       const response: Product | ErrorObject = await this.eCommerceApi.getProduct(key);
       if ('message' in response && 'code' in response) this.view.showError(response.message);
