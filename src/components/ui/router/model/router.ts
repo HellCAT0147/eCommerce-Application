@@ -95,7 +95,7 @@ class Router {
     }
   }
 
-  public async navigate(url: string): Promise<void> {
+  public async navigate(url: string, isPopState?: boolean): Promise<void> {
     const urlParsed: UrlParsed = this.parseUrl(url);
     let pathForFind: string = urlParsed.resource === '' ? urlParsed.path : `${urlParsed.path}/${Pages.ID}`;
     if (urlParsed.details) {
@@ -103,6 +103,7 @@ class Router {
     }
     const route: Routes | undefined = this.routes.find((routeExisting) => routeExisting.path === pathForFind);
     if (!route) {
+      window.history.replaceState(null, '', `/${url}`);
       this.navigate(Pages.NOT_FOUND);
     } else {
       const token = this.tokenCachesStore.getDefault();
@@ -113,8 +114,7 @@ class Router {
           return;
         }
         if (route.path === Pages.LOGIN || route.path === Pages.REGISTRATION) {
-          window.history.pushState(null, '', `/${Pages.MAIN}`);
-          this.navigate(Pages.MAIN);
+          this.navigate(Pages.MAIN, isPopState);
           selectCurrentPage(Pages.MAIN);
           return;
         }
@@ -125,12 +125,16 @@ class Router {
           return;
         }
         if (route.path === Pages.PROFILE) {
-          window.history.pushState(null, '', `/${Pages.MAIN}`);
-          this.navigate(Pages.MAIN);
-          selectCurrentPage(Pages.MAIN);
+          this.navigate(Pages.LOGIN, isPopState);
+          selectCurrentPage(Pages.LOGIN);
           return;
         }
         route.callback();
+      }
+      if (!isPopState && Pages.NOT_FOUND !== pathForFind) {
+        window.history.pushState(null, '', `/${pathForFind}`);
+      } else if (Pages.NOT_FOUND !== pathForFind) {
+        window.history.replaceState(null, '', `/${pathForFind}`);
       }
       selectCurrentPage(url);
       this.setInputsOnPage();
@@ -144,7 +148,7 @@ class Router {
 
   public browserChangePath(): void {
     const path: string = this.getBrowserPath();
-    this.navigate(path);
+    this.navigate(path, true);
   }
 }
 
