@@ -41,18 +41,37 @@
     text-align: center;
     padding: 3px 10px;
     font-size: 1.5rem;
-    line-height: 1.5;
+    line-height: 1.2;
     font-weight: bold;
-    min-height: 75px;
+    min-height: 60px;
   }
 
   &__card_description-tag {
-    height: 60px;
+    height: 30px;
     overflow: hidden;
     line-height: 1.45;
   }
 
-  &__card_read-more {
+  &__read-more {
     text-align: center;
+    color: #3f3f3f;
+    font-size: 1.2rem;
+    margin: 0 auto;
+    font-weight: bold;
+  }
+
+  &__card_price-tag {
+    line-height: 1;
+  }
+
+  &__card_base-price {
+    text-decoration-line: line-through;
+    font-size: 1.4rem;
+  }
+
+  &__card_disc-price {
+    color: #880000;
+    margin-left: 5px;
+    font-size: 1.8rem;
   }
 }

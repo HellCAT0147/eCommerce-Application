@@ -143,11 +143,14 @@ export default class ViewCatalog {
     basePrice.innerText = `${product.masterData.current.masterVariant.prices?.[0].value.centAmount
       .toString()
       .slice(0, -2)} RUB`;
-    const discountedPrice: HTMLElement = new Builder('span', '', Blocks.catalog, 'card', 'disc-price').element();
-    discountedPrice.innerText = `${product.masterData.current.masterVariant.prices?.[1].value.centAmount
-      .toString()
-      .slice(0, -2)} RUB`;
-    priceTag.append(basePrice, discountedPrice);
+    priceTag.append(basePrice);
+    if (product.masterData.current.masterVariant.prices?.[0].discounted) {
+      const discountedPrice: HTMLElement = new Builder('span', '', Blocks.catalog, 'card', 'disc-price').element();
+      discountedPrice.innerText = `${product.masterData.current.masterVariant.prices?.[0].discounted.value.centAmount
+        .toString()
+        .slice(0, -2)} RUB`;
+      priceTag.append(discountedPrice);
+    }
     card.append(cardPic, nameTag, descriptionTag, readMore, priceTag);
     card.setAttribute('id', (product.key || '0').split('-')[1]);
     return card;
