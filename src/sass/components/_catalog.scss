@@ -11,11 +11,15 @@
     align-self: flex-start;
     display: inline;
   }
+  &__filter_header {
+    font-size: 2rem;
+  }
 
   &__filter_wrapper {
     width: 15vw;
     height: 70vh;
     border: 2px solid gray;
+    padding: 20px;
   }
 
   &__filter_brand {
@@ -27,6 +31,20 @@
   &__filter-box_variant {
     display: flex;
     flex-direction: row;
+    margin: revert;
+  }
+
+  &__filter-box_range {
+    width: 100%;
+  }
+  &__filter-box_range-label {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  &__filter_button {
+    width: 100%;
+    text-align: center;
   }
 
   &__sorting-dropdown {

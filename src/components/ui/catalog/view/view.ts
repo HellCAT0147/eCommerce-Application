@@ -4,6 +4,7 @@ import Builder from '../../builder/html-builder';
 import { DataBase } from '../../../models/commerce';
 import ResultPagination from '../../../models/result-pagination';
 import SortParameter from '../../../models/sort-parameter';
+import CatalogViewControlPanelsState from '../../../models/catalog-view-control-panels-state';
 
 export default class ViewCatalog {
   public showError(msg: string): string {
@@ -94,7 +95,7 @@ export default class ViewCatalog {
         Base.check,
         Blocks.catalog,
         'filter-box',
-        'variant'
+        'brand-variant'
       ).element();
       brandCheck.setAttribute('id', `brand-${index + 1}`);
       brandCheck.setAttribute('type', 'checkbox');
@@ -118,7 +119,7 @@ export default class ViewCatalog {
         Base.check,
         Blocks.catalog,
         'filter-box',
-        'variant'
+        'size-variant'
       ).element();
       sizeCheck.setAttribute('id', `size-${index + 1}`);
       sizeCheck.setAttribute('type', 'checkbox');
@@ -142,7 +143,7 @@ export default class ViewCatalog {
         Base.check,
         Blocks.catalog,
         'filter-box',
-        'variant'
+        'color-variant'
       ).element();
       colorCheck.setAttribute('id', `color-${index + 1}`);
       colorCheck.setAttribute('type', 'checkbox');
@@ -165,7 +166,7 @@ export default class ViewCatalog {
     range.setAttribute('value', '30000');
     range.setAttribute('id', 'price-limit_range');
     const label: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter-box', 'range-label').element();
-    const min = document.createElement('span');
+    const min: HTMLSpanElement = document.createElement('span');
     min.innerText = '0';
     const curr: HTMLSpanElement = document.createElement('span');
     curr.setAttribute('id', 'price-limit_label');
@@ -179,11 +180,16 @@ export default class ViewCatalog {
 
   private createFilters(): HTMLElement {
     const filters: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter', 'wrapper').element();
+    const filtersHeader: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter', 'header').element();
+    filtersHeader.innerText = 'FILTERS';
     const brandFilter: HTMLElement = this.createBrandFilterBox();
     const sizeFilter: HTMLElement = this.createSizeFilterBox();
     const colorFilter: HTMLElement = this.createColorFilterBox();
     const priceFilter: HTMLElement = this.createPriceFilter();
-    filters.append(brandFilter, sizeFilter, colorFilter, priceFilter);
+    const resetFiltersBtn = new Builder('button', Base.btns_bordered, Blocks.catalog, 'filter', 'button').element();
+    resetFiltersBtn.innerText = 'RESET FILTERS';
+    resetFiltersBtn.setAttribute('id', 'reset-filters_btn');
+    filters.append(filtersHeader, brandFilter, sizeFilter, colorFilter, priceFilter, resetFiltersBtn);
     return filters;
   }
 
@@ -271,5 +277,27 @@ export default class ViewCatalog {
       main.append(this.createBreadCrumbs(), this.createPageSettings(sortParam), pageAndFilters);
       // console.log(resultPagination);
     }
+  }
+
+  public collectData(): CatalogViewControlPanelsState {
+    const brands: string[] = [];
+    const brandsChecks = Array.from(document.getElementsByClassName('catalog__filter-box_brand-variant'));
+    brandsChecks.forEach((box) => {
+      if (box.hasAttribute('checked')) {
+        brands.push((box.parentElement?.innerText || '').split('>')[1]);
+      }
+      // console.log(brands);
+    });
+    const result: CatalogViewControlPanelsState = {
+      brands: [],
+      colors: [],
+      sizes: [],
+      maxPrice: 0,
+      sortParameters: {
+        descending: false,
+        field: 'key',
+      },
+    };
+    return result;
   }
 }

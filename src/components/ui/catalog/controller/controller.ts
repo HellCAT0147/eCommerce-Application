@@ -16,7 +16,10 @@ class ControllerCatalog {
   }
 
   public mouseEvent(e: MouseEvent): void {
-    e.preventDefault();
+    const target: HTMLElement = e.target as HTMLElement;
+    if (target.tagName !== 'INPUT' && target.tagName !== 'BUTTON') {
+      e.preventDefault();
+    }
     // TODO any mouse events other than clicking on the product card
   }
 
