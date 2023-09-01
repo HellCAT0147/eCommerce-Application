@@ -22,7 +22,7 @@ export default class ViewCatalog {
       const descriptionFromHost: string = data.description?.['en-US'].toString() ?? '';
       const productBody: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.body).element();
 
-      name.textContent = data.name['en-US'].toString();
+      name.textContent = data.name['en-US'].toString().toUpperCase();
       description.textContent = descriptionFromHost;
 
       this.addSlider(productBody, data.masterVariant.images);
