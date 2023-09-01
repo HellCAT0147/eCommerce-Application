@@ -41,6 +41,7 @@ export enum Elem {
   desc = 'description',
   article = 'article',
   person = 'person',
+  account = 'account',
 }
 
 export enum Mode {
@@ -136,7 +137,8 @@ export enum Titles {
   NOT_HAVE_ACCOUNT = `Don't have an account yet?`,
   SUCCESS_LOGIN = `You've successfully logged`,
   CATALOG = `Shopping Without Limits`,
-  PROFILE = `Account Information`,
+  ACCOUNT_INFO = `Account Information`,
+  CONTACT_INFO = `Contact Information`,
   PRODUCT = `Product`,
 }
 

@@ -11,7 +11,7 @@ class ControllerProfile extends ControllerRegistration {
   }
 
   public mouseEvent(e: MouseEvent): void {
-    e.preventDefault();
+    // e.preventDefault();
   }
 
   public loadProfile(): void {

@@ -6,10 +6,10 @@ import { DataAddresses } from '../../../models/commerce';
 import FormViewProfile from './form';
 
 export default class ViewProfile {
-  protected form: FormViewProfile;
+  protected formView: FormViewProfile;
 
   public constructor(pageName: string = Pages.PROFILE) {
-    this.form = new FormViewProfile(pageName);
+    this.formView = new FormViewProfile(pageName);
   }
 
   public showError(msg: string): string {
@@ -71,29 +71,36 @@ export default class ViewProfile {
     return addresses;
   }
 
+  private updateAddresses(): HTMLFieldSetElement {
+    const address: HTMLFieldSetElement = this.formView.createAddressUpdateForm(
+      Mode.street,
+      Mode.city,
+      Mode.postal,
+      Mode.country,
+      Titles.SHIPPING,
+      Mode.ship
+    );
+
+    return address;
+  }
+
+  private updateAccountInfo(customer: Customer): HTMLFieldSetElement {
+    const accountInfo: HTMLFieldSetElement = this.formView.createAccountInfoUpdateForm(customer);
+
+    return accountInfo;
+  }
+
   public showProfile(customer: Customer): void {
     const main: HTMLFormElement | null = document.querySelector(`.${Blocks.main}__${Pages.PROFILE}`);
     if (main) {
       main.innerHTML = '';
-      const title: HTMLElement = new Builder('h1', Base.titles, Blocks.prof, Elem.title, '').element();
-      title.textContent = `${Titles.PROFILE}`;
-      const account: HTMLElement = new Builder('article', '', Blocks.prof, Elem.article, '').element();
-      const person: HTMLElement = new Builder('div', '', Blocks.prof, Elem.person, '').element();
-      const firstName: HTMLHeadingElement = new Builder('', Base.titles, Blocks.prof, Elem.text, Mode.f_name).h(2);
-      const lastName: HTMLHeadingElement = new Builder('', Base.titles, Blocks.prof, Elem.text, Mode.l_name).h(2);
-      const date: HTMLHeadingElement = new Builder('', Base.titles, Blocks.prof, Elem.text, Mode.date).h(3);
-      firstName.textContent = customer.firstName || '';
-      lastName.textContent = customer.lastName || '';
-      date.textContent = customer.dateOfBirth || '';
-      const fieldAddress: HTMLFieldSetElement = this.form.generateAddress();
 
-      const addresses: HTMLElement = this.createAddresses(customer);
-
-      person.append(firstName, lastName, date);
-
-      account.append(person);
-
-      main.append(title, account, fieldAddress, addresses);
+      const form = this.formView.getForm();
+      const title: HTMLHeadingElement = new Builder('', Base.form_title, Blocks.form, Elem.title, Mode.ship).h(2);
+      title.textContent = `${Titles.ACCOUNT_INFO}`.toUpperCase();
+      const accountInfo: HTMLFieldSetElement = this.formView.createAccountInfo(customer);
+      form.append(accountInfo);
+      main.append(title, form);
     }
   }
 }
