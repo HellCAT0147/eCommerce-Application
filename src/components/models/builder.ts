@@ -102,6 +102,12 @@ export enum Base {
   links = `links`,
   burger = `hamburger`,
   img = 'image',
+  swiper = 'swiper',
+  sw_wrap = 'swiper-wrapper',
+  sw_slide = 'swiper-slide',
+  sw_next = 'swiper-button-next',
+  sw_prev = 'swiper-button-prev',
+  sw_page = 'swiper-pagination',
 }
 
 export enum Buttons {

@@ -34,11 +34,11 @@ export default class ViewCatalog {
   }
 
   private async addSlider(parent: HTMLElement, images?: Image[]): Promise<void> {
-    const slider: HTMLElement = new Builder('div', 'swiper', '', '', '').element();
-    const sliderWrapper: HTMLElement = new Builder('div', 'swiper-wrapper', '', '', '').element();
+    const slider: HTMLElement = new Builder('div', Base.swiper, '', '', '').element();
+    const sliderWrapper: HTMLElement = new Builder('div', Base.sw_wrap, '', '', '').element();
 
     images?.forEach((image) => {
-      const slide: HTMLElement = new Builder('div', 'swiper-slide', '', '', '').element();
+      const slide: HTMLElement = new Builder('div', Base.sw_slide, '', '', '').element();
       const img: HTMLElement = new Builder('', Base.img, Blocks.product, Elem.image, '').img(
         image.url,
         image.label || DataBase.img_alt
@@ -47,22 +47,22 @@ export default class ViewCatalog {
       sliderWrapper.appendChild(slide);
     });
 
-    const nextEl: HTMLElement = new Builder('div', 'swiper-button-next', '', '', '').element();
-    const prevEl: HTMLElement = new Builder('div', 'swiper-button-prev', '', '', '').element();
-    const pagination: HTMLElement = new Builder('div', 'swiper-pagination', '', '', '').element();
+    const nextEl: HTMLElement = new Builder('div', Base.sw_next, '', '', '').element();
+    const prevEl: HTMLElement = new Builder('div', Base.sw_prev, '', '', '').element();
+    const pagination: HTMLElement = new Builder('div', Base.sw_page, '', '', '').element();
 
     slider.append(sliderWrapper, pagination, prevEl, nextEl);
     parent.appendChild(slider);
 
     const Swiper = await import('swiper/bundle');
-    const swiper = new Swiper.Swiper('.swiper', {
+    const swiper = new Swiper.Swiper(`.${Base.swiper}`, {
       loop: true,
       pagination: {
-        el: '.swiper-pagination',
+        el: `.${Base.sw_page}`,
       },
       navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
+        nextEl: `.${Base.sw_next}`,
+        prevEl: `.${Base.sw_prev}`,
       },
       autoplay: {
         delay: 3000,
