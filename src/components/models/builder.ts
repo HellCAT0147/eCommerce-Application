@@ -1,4 +1,5 @@
 export enum Blocks {
+  body = 'body',
   main = 'main',
   header = 'header',
   footer = 'footer',
@@ -135,7 +136,7 @@ export enum Titles {
   NOT_HAVE_ACCOUNT = `Don't have an account yet?`,
   SUCCESS_LOGIN = `You've successfully logged`,
   CATALOG = `Shopping Without Limits`,
-  PROFILE = `My Profile`,
+  PROFILE = `Account Information`,
   PRODUCT = `Product`,
 }
 

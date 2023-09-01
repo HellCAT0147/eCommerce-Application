@@ -7,7 +7,7 @@ import ControllerMain from '../../main/controller/controller';
 import TokenCachesStore from '../../../api/token-caches-store';
 import ControllerCatalog from '../../catalog/controller/controller';
 import ECommerceApi from '../../../api/e-commerce-api';
-import DataBase from '../../../models/commerce';
+import { DataBase } from '../../../models/commerce';
 import ControllerProfile from '../../profile/controller/controller';
 
 class Router {
@@ -93,6 +93,13 @@ class Router {
     }
   }
 
+  private redirectToProfile(isLoggedIn: boolean, route: Routes, isPopState?: boolean): void {
+    if (!isPopState) window.history.pushState(null, '', `/${Pages.PROFILE}`);
+    route.callback(isLoggedIn);
+    this.controllerProfile.loadProfile();
+    selectCurrentPage(Pages.PROFILE);
+  }
+
   public async navigate(url: string, isPopState?: boolean): Promise<void> {
     const urlParsed: UrlParsed = this.parseUrl(url);
     let pathForFind: string = urlParsed.resource === '' ? urlParsed.path : `${urlParsed.path}/${Pages.ID}`;
@@ -109,6 +116,10 @@ class Router {
       if (token !== tokenDefault) {
         if (urlParsed.resource && !urlParsed.details) {
           await this.redirectToProduct(true, urlParsed.resource, route, isPopState);
+          return;
+        }
+        if (route.path === Pages.PROFILE) {
+          this.redirectToProfile(true, route, isPopState);
           return;
         }
         if (route.path === Pages.LOGIN || route.path === Pages.REGISTRATION) {

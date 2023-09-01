@@ -18,7 +18,7 @@ import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/dec
 import { ErrorObject } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/error';
 import TokenCachesStore from './token-caches-store';
 import compareObjects from '../utils/compare-objects';
-import DataBase from '../models/commerce';
+import { DataBase } from '../models/commerce';
 
 export default class ECommerceApi {
   private readonly baseAuthParams: PasswordAuthMiddlewareOptions;

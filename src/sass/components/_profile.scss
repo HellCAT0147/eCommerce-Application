@@ -1,0 +1,15 @@
+.profile {
+  &__title {
+    @include font(400, 2.4rem, 100%, $color-dark);
+  }
+
+  &__article {
+    display: flex;
+  }
+
+  &__person {
+    display: flex;
+    align-items: center;
+    column-gap: 5px;
+  }
+}
