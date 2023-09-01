@@ -1,4 +1,4 @@
-import { LocalizedString, Price, Product, ProductData, ProductVariant } from '@commercetools/platform-sdk';
+import { Product, ProductData, ProductVariant } from '@commercetools/platform-sdk';
 import { Base, Blocks, Elem, Mode } from '../../../models/builder';
 import Builder from '../../builder/html-builder';
 import DataBase from '../../../models/commerce';
@@ -38,7 +38,7 @@ export default class ViewCatalog {
     }
   }
 
-  private createBreadCrumbs(resultPagination: ResultPagination<Product>): HTMLElement {
+  private createBreadCrumbs(): HTMLElement {
     const breadcrumbs: HTMLElement = new Builder('div', Base.links, Blocks.catalog, 'breadcrumbs', '').element();
     breadcrumbs.setAttribute('id', 'breadcrumbs');
     breadcrumbs.innerText = 'Shop/Female/Dresses';
