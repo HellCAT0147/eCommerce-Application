@@ -1,0 +1,20 @@
+.product__wrapper {
+}
+
+.product__title_big {
+  @include font(500, 4.8rem, 56px, $color-dark);
+}
+
+.product__wrapper_body {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-column-gap: 10px;
+
+  @include media-tablet-landscape {
+    grid-template-columns: 1fr 2fr;
+  }
+}
+
+.product__description {
+  @include font(normal, 1.9rem, 140%, $color-dark);
+}

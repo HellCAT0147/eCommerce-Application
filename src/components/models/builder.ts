@@ -79,6 +79,7 @@ export enum Mode {
   catalog = 'catalog',
   cross = 'cross',
   opened = 'opened',
+  body = 'body',
 }
 
 export enum Base {

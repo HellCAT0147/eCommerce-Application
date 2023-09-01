@@ -31,8 +31,20 @@
   margin-right: auto;
   z-index: 1;
 }
+
+@import '../abstracts/mixins';
+
 .swiper {
-  width: 500px;
+  width: calc($tablet-landscape-width / 2);
+
+  @include media-tablet-landscape {
+    width: calc($tablet-width / 2);
+  }
+
+  @include media-mobile-large {
+    width: calc($mobile-large-width / 2);
+  }
+
   height: fit-content;
   margin-left: auto;
   margin-right: auto;
