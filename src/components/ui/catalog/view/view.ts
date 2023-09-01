@@ -1,7 +1,7 @@
 import { Product, Image, ProductData, ProductVariant } from '@commercetools/platform-sdk';
 import { Base, Blocks, Elem, Mode } from '../../../models/builder';
 import Builder from '../../builder/html-builder';
-import DataBase from '../../../models/commerce';
+import { DataBase } from '../../../models/commerce';
 import ResultPagination from '../../../models/result-pagination';
 import SortParameter from '../../../models/sort-parameter';
 
@@ -126,7 +126,7 @@ export default class ViewCatalog {
   }
 
   private createCatalogCard(product: Product): HTMLElement {
-    const card: HTMLElement = new Builder('div', '', Blocks.catalog, 'card', '').element();
+    const card: HTMLElement = new Builder('div', Base.cards, Blocks.catalog, 'card', '').element();
     const cardPic: HTMLElement = new Builder('img', '', Blocks.catalog, 'card', 'pic').element();
     const { images }: ProductVariant = product.masterData.current.masterVariant;
     if (images && images.length > 0) {

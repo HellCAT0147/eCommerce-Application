@@ -1,5 +1,5 @@
 import TokenCachesStore from '../../../api/token-caches-store';
-import { Blocks } from '../../../models/builder';
+import { Base, Blocks } from '../../../models/builder';
 import { Pages } from '../../../models/router';
 import Router from '../model/router';
 
@@ -72,14 +72,15 @@ class MainController {
       } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.REGISTRATION}`)) {
         this.router.controllerRegistration.buttonEvent(e);
       } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.CATALOG}`)) {
-        if (targetHtmlElement.closest(`.catalog__link`)) {
-          const id: string = this.getUrlElement(targetHtmlElement);
-          window.history.pushState(null, '', `/${Pages.CATALOG}/${id}`);
+        const card: HTMLElement | null = targetHtmlElement.closest(`.${Base.cards}`);
+        if (card) {
+          const id: string = this.getUrlElement(card);
           this.router.navigate(`${Pages.CATALOG}/${id}`);
-          this.router.controllerCatalog.loadProduct(id);
         } else {
           this.router.controllerCatalog.mouseEvent(e);
         }
+      } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.PROFILE}`)) {
+        this.router.controllerProfile.mouseEvent(e);
       }
     }
   }

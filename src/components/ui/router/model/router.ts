@@ -1,3 +1,4 @@
+import { ErrorObject, Product } from '@commercetools/platform-sdk';
 import { Pages, Routes, UrlParsed } from '../../../models/router';
 import selectCurrentPage from '../view/viewPage';
 import ControllerLogin from '../../login/controller/controller';
@@ -6,8 +7,8 @@ import ControllerMain from '../../main/controller/controller';
 import TokenCachesStore from '../../../api/token-caches-store';
 import ControllerCatalog from '../../catalog/controller/controller';
 import ECommerceApi from '../../../api/e-commerce-api';
-import eCommerceAPIConfig from '../../../api/e-commerce-api-config-realization';
-import DataBase from '../../../models/commerce';
+import { DataBase } from '../../../models/commerce';
+import ControllerProfile from '../../profile/controller/controller';
 
 class Router {
   public routes: Routes[];
@@ -20,27 +21,23 @@ class Router {
 
   public controllerCatalog: ControllerCatalog;
 
+  public controllerProfile: ControllerProfile;
+
   public inputs: NodeListOf<HTMLInputElement>;
 
   private eCommerceApi: ECommerceApi;
 
   private readonly tokenCachesStore: TokenCachesStore;
 
-  constructor(routes: Routes[]) {
+  constructor(routes: Routes[], eCommerceApi: ECommerceApi) {
     this.routes = routes;
+    this.eCommerceApi = eCommerceApi;
     this.controllerMain = new ControllerMain();
-    this.controllerLogin = new ControllerLogin();
-    this.controllerRegistration = new ControllerRegistration();
-    this.controllerCatalog = new ControllerCatalog();
+    this.controllerLogin = new ControllerLogin(this.eCommerceApi);
+    this.controllerRegistration = new ControllerRegistration(this.eCommerceApi);
+    this.controllerCatalog = new ControllerCatalog(this.eCommerceApi);
+    this.controllerProfile = new ControllerProfile(this.eCommerceApi);
     this.inputs = this.getInputsOnPage();
-    this.eCommerceApi = new ECommerceApi(
-      eCommerceAPIConfig.projectKey,
-      eCommerceAPIConfig.clientId,
-      eCommerceAPIConfig.clientSecret,
-      eCommerceAPIConfig.region,
-      undefined,
-      eCommerceAPIConfig.scopes.split(' ')
-    );
     this.tokenCachesStore = new TokenCachesStore();
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -83,16 +80,31 @@ class Router {
     return urlParsed;
   }
 
-  private async redirectToProduct(isLoggedIn: boolean, id: string, route: Routes): Promise<void> {
-    const response = await this.eCommerceApi.getProduct(id);
+  private async redirectToProduct(isLoggedIn: boolean, id: string, route: Routes, isPopState?: boolean): Promise<void> {
+    const response: Product | ErrorObject = await this.eCommerceApi.getProduct(id);
     const key: string = `${DataBase.key_prefix}-${id}`;
     if (key === response.key) {
-      route.callback(isLoggedIn, true);
-      this.controllerCatalog.loadProduct(id);
+      if (!isPopState) window.history.pushState(null, '', `/${Pages.CATALOG}/${id}`);
+      route.callback(isLoggedIn);
+      this.controllerCatalog.loadProduct(id, response);
       selectCurrentPage(Pages.CATALOG);
     } else {
       this.navigate(Pages.NOT_FOUND);
     }
+  }
+
+  private redirectToProducts(isLoggedIn: boolean, route: Routes, isPopState?: boolean): void {
+    if (!isPopState) window.history.pushState(null, '', `/${Pages.CATALOG}`);
+    route.callback(isLoggedIn);
+    this.controllerCatalog.loadProducts();
+    selectCurrentPage(Pages.CATALOG);
+  }
+
+  private redirectToProfile(isLoggedIn: boolean, route: Routes, isPopState?: boolean): void {
+    if (!isPopState) window.history.pushState(null, '', `/${Pages.PROFILE}`);
+    route.callback(isLoggedIn);
+    this.controllerProfile.loadProfile();
+    selectCurrentPage(Pages.PROFILE);
   }
 
   public async navigate(url: string, isPopState?: boolean): Promise<void> {
@@ -110,32 +122,33 @@ class Router {
       const tokenDefault = this.tokenCachesStore.defaultTokenStore;
       if (token !== tokenDefault) {
         if (urlParsed.resource && !urlParsed.details) {
-          await this.redirectToProduct(true, urlParsed.resource, route);
+          await this.redirectToProduct(true, urlParsed.resource, route, isPopState);
+          return;
+        }
+        if (route.path === Pages.CATALOG || route.path === Pages.PROFILE) {
+          if (route.path === Pages.CATALOG) this.redirectToProducts(true, route, isPopState);
+          else if (route.path === Pages.PROFILE) this.redirectToProfile(true, route, isPopState);
           return;
         }
         if (route.path === Pages.LOGIN || route.path === Pages.REGISTRATION) {
           this.navigate(Pages.MAIN, isPopState);
-          selectCurrentPage(Pages.MAIN);
           return;
         }
         route.callback(true);
       } else {
         if (urlParsed.resource && !urlParsed.details) {
-          await this.redirectToProduct(false, urlParsed.resource, route);
+          await this.redirectToProduct(false, urlParsed.resource, route, isPopState);
           return;
         }
-        if (route.path === Pages.PROFILE) {
-          this.navigate(Pages.LOGIN, isPopState);
-          selectCurrentPage(Pages.LOGIN);
+        if (route.path === Pages.CATALOG || route.path === Pages.PROFILE) {
+          if (route.path === Pages.CATALOG) this.redirectToProducts(false, route, isPopState);
+          else if (route.path === Pages.PROFILE) this.navigate(Pages.LOGIN, isPopState);
           return;
         }
         route.callback();
       }
-      if (!isPopState && Pages.NOT_FOUND !== pathForFind) {
-        window.history.pushState(null, '', `/${pathForFind}`);
-      } else if (Pages.NOT_FOUND !== pathForFind) {
-        window.history.replaceState(null, '', `/${pathForFind}`);
-      }
+      if (!isPopState && Pages.NOT_FOUND !== pathForFind) window.history.pushState(null, '', `/${pathForFind}`);
+      else if (Pages.NOT_FOUND !== pathForFind) window.history.replaceState(null, '', `/${pathForFind}`);
       selectCurrentPage(url);
       this.setInputsOnPage();
     }

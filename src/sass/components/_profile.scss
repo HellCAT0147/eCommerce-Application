@@ -1,0 +1,30 @@
+.profile {
+  &__address {
+    row-gap: 30px;
+    .form__title {
+      margin-bottom: 10px;
+    }
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    &_default {
+      order: -1;
+    }
+  }
+
+  &__title {
+    @include font(400, 2.4rem, 100%, $color-dark);
+  }
+
+  &__article {
+    display: flex;
+  }
+
+  &__person {
+    display: flex;
+    align-items: center;
+    column-gap: 5px;
+  }
+}

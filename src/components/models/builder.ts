@@ -1,9 +1,11 @@
 export enum Blocks {
+  body = 'body',
   main = 'main',
   header = 'header',
   footer = 'footer',
   login = 'login',
   reg = 'registration',
+  prof = 'profile',
   form = `form`,
   not_found = `not-found`,
   select = 'select',
@@ -37,6 +39,9 @@ export enum Elem {
   burger = `hamburger`,
   line = `line`,
   desc = 'description',
+  article = 'article',
+  person = 'person',
+  account = 'account',
 }
 
 export enum Mode {
@@ -79,6 +84,7 @@ export enum Mode {
   catalog = 'catalog',
   cross = 'cross',
   opened = 'opened',
+  not = 'not',
   body = 'body',
 }
 
@@ -108,6 +114,7 @@ export enum Base {
   sw_next = 'swiper-button-next',
   sw_prev = 'swiper-button-prev',
   sw_page = 'swiper-pagination',
+  cards = 'cards',
 }
 
 export enum Buttons {
@@ -139,8 +146,11 @@ export enum Titles {
   NOT_HAVE_ACCOUNT = `Don't have an account yet?`,
   SUCCESS_LOGIN = `You've successfully logged`,
   CATALOG = `Shopping Without Limits`,
-  PROFILE = `My Profile`,
+  ACCOUNT_INFO = `Account Information`,
+  CONTACT_INFO = `Contact Information`,
+  ADDRESS_BOOK = `Address Book`,
   PRODUCT = `Product`,
+  HAVE_NOT = `You have not set a`,
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;

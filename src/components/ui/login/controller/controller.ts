@@ -1,21 +1,13 @@
 import ValidationModel from '../model/validation';
 import ECommerceApi from '../../../api/e-commerce-api';
-import eCommerceAPIConfig from '../../../api/e-commerce-api-config-realization';
 
 class ControllerLogin {
-  private eCommerceApi: ECommerceApi;
-
   protected validationModel: ValidationModel;
 
-  public constructor() {
-    this.eCommerceApi = new ECommerceApi(
-      eCommerceAPIConfig.projectKey,
-      eCommerceAPIConfig.clientId,
-      eCommerceAPIConfig.clientSecret,
-      eCommerceAPIConfig.region,
-      undefined,
-      eCommerceAPIConfig.scopes.split(' ')
-    );
+  protected eCommerceApi: ECommerceApi;
+
+  public constructor(eCommerceApi: ECommerceApi) {
+    this.eCommerceApi = eCommerceApi;
     this.validationModel = new ValidationModel(this.eCommerceApi);
   }
 

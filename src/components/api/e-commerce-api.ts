@@ -18,7 +18,7 @@ import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/dec
 import { ErrorObject } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/error';
 import TokenCachesStore from './token-caches-store';
 import compareObjects from '../utils/compare-objects';
-import DataBase from '../models/commerce';
+import { DataBase } from '../models/commerce';
 import SortParameter, { buildSortParameterString } from '../models/sort-parameter';
 import ResultPagination from '../models/result-pagination';
 import Pagination, { calculatePageNum } from '../models/pagination';
@@ -308,6 +308,15 @@ export default class ECommerceApi {
       const pageNum: number = calculatePageNum(response.offset, response.limit);
       const total: number | undefined = response.results.length + pagination.offset;
       return new ResultPagination(response.results, total, pageNum, response.limit);
+    } catch (e) {
+      return this.errorObjectOrThrow(e);
+    }
+  }
+
+  public async getCustomer(): Promise<Customer | ErrorObject> {
+    try {
+      const response: ClientResponse<Customer> = await this.apiRoot.me().get().execute();
+      return response.body;
     } catch (e) {
       return this.errorObjectOrThrow(e);
     }
