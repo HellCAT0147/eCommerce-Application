@@ -68,14 +68,21 @@ export default class FormViewProfile extends FormViewReg {
     return accountInfoField;
   }
 
-  public createAddressField(address: Address, type: string, defAddress: string): HTMLFieldSetElement {
+  public createAddressField(
+    address: Address,
+    type: string,
+    defAddress: string,
+    haveNotDefault?: boolean
+  ): HTMLFieldSetElement {
     const page: string = this.pageName;
-    const addressField: HTMLFieldSetElement = new Builder('', Base.field, page, Elem.field, '').field();
+    const addressField: HTMLFieldSetElement = new Builder('', Base.field, page, Elem.field, defAddress).field();
     const formTitle: HTMLElement = new Builder('', Base.form_title, Blocks.form, Elem.title, '').h(3);
-    formTitle.textContent = `${defAddress} ${type} ${Titles.ADDRESS}`.toUpperCase();
+    formTitle.textContent = `${defAddress} ${type} ${Titles.ADDRESS}`.toUpperCase().trim();
     const addressText: HTMLElement = new Builder('', '', this.pageName, Elem.text, Mode.f_name).h(4);
     addressText.textContent = `${address.streetName}, ${address.postalCode}, ${address.city}, ${address.country}, ${address.firstName} ${address.lastName}`;
-
+    if (haveNotDefault) {
+      addressText.textContent = `${Titles.HAVE_NOT} ${defAddress} ${type} ${Titles.ADDRESS}`;
+    }
     addressField.append(formTitle, addressText);
 
     return addressField;

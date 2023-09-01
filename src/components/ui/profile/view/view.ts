@@ -89,8 +89,8 @@ export default class ViewProfile {
     const main: HTMLFormElement | null = document.querySelector(`.${Blocks.main}__${Pages.PROFILE}`);
     if (main) {
       main.innerHTML = '';
-
       const form = this.formView.getForm();
+      form.innerHTML = '';
       const title: HTMLHeadingElement = new Builder('', '', Blocks.prof, Elem.title, '').h(1);
       title.textContent = `${Titles.ACCOUNT_INFO}`;
       const accountInfo: HTMLFieldSetElement = this.formView.createAccountInfo(customer);

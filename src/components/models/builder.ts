@@ -84,6 +84,7 @@ export enum Mode {
   catalog = 'catalog',
   cross = 'cross',
   opened = 'opened',
+  not = 'not',
 }
 
 export enum Base {
@@ -141,6 +142,7 @@ export enum Titles {
   CONTACT_INFO = `Contact Information`,
   ADDRESS_BOOK = `Address Book`,
   PRODUCT = `Product`,
+  HAVE_NOT = `You have not set a`,
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;
