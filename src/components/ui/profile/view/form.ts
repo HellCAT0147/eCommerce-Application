@@ -1,4 +1,4 @@
-import { Customer } from '@commercetools/platform-sdk';
+import { Address, Customer } from '@commercetools/platform-sdk';
 import { Base, Blocks, Elem, Mode, Titles } from '../../../models/builder';
 import { Pages } from '../../../models/router';
 import Builder from '../../builder/html-builder';
@@ -52,10 +52,10 @@ export default class FormViewProfile extends FormViewReg {
     return accountInfoField;
   }
 
-  public createAccountInfo(): HTMLFieldSetElement {
+  public createAccountInfo(customer: Customer): HTMLFieldSetElement {
     const page: string = this.pageName;
     const accountInfoField: HTMLFieldSetElement = new Builder('', Base.subform, page, Elem.account, '').field();
-    const formTitle: HTMLElement = new Builder('', Base.form_title, Blocks.form, Elem.title, Mode.ship).h(2);
+    const formTitle: HTMLElement = new Builder('', Base.form_title, Blocks.form, Elem.title, '').h(2);
     formTitle.textContent = `${Titles.CONTACT_INFO}`.toUpperCase();
     const name: HTMLElement = new Builder('', '', this.pageName, Elem.text, Mode.f_name).h(3);
     const date: HTMLElement = new Builder('', '', this.pageName, Elem.text, Mode.date).h(4);
@@ -66,6 +66,19 @@ export default class FormViewProfile extends FormViewReg {
     accountInfoField.append(formTitle, name, date);
 
     return accountInfoField;
+  }
+
+  public createAddressField(address: Address, type: string, defAddress: string): HTMLFieldSetElement {
+    const page: string = this.pageName;
+    const addressField: HTMLFieldSetElement = new Builder('', Base.field, page, Elem.field, '').field();
+    const formTitle: HTMLElement = new Builder('', Base.form_title, Blocks.form, Elem.title, '').h(3);
+    formTitle.textContent = `${defAddress} ${type} ${Titles.ADDRESS}`.toUpperCase();
+    const addressText: HTMLElement = new Builder('', '', this.pageName, Elem.text, Mode.f_name).h(4);
+    addressText.textContent = `${address.streetName}, ${address.postalCode}, ${address.city}, ${address.country}, ${address.firstName} ${address.lastName}`;
+
+    addressField.append(formTitle, addressText);
+
+    return addressField;
   }
 
   public createAddressUpdateForm(

@@ -139,6 +139,7 @@ export enum Titles {
   CATALOG = `Shopping Without Limits`,
   ACCOUNT_INFO = `Account Information`,
   CONTACT_INFO = `Contact Information`,
+  ADDRESS_BOOK = `Address Book`,
   PRODUCT = `Product`,
 }
 

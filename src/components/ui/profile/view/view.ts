@@ -32,30 +32,26 @@ export default class ViewProfile {
     return dataAddresses;
   }
 
-  private parseAddress(address: Address, dataAddresses: DataAddresses): HTMLElement {
-    const addresses: HTMLElement = new Builder('div', Base.form_section, Blocks.prof, Elem.address, '').element();
-    const mapAddress = new Map(Object.entries(address));
-    mapAddress.forEach((value, key) => {
-      const field: HTMLElement = new Builder('div', Base.field, Blocks.prof, Elem.field, '').element();
-      if (key === 'id') {
-        const title: HTMLElement = new Builder('span', Base.form_title, Blocks.prof, Elem.title, '').element();
-        if (dataAddresses.all_bill && dataAddresses.all_bill.includes(value)) {
-          title.textContent = 'This is billing address';
-        } else if (dataAddresses.all_ship && dataAddresses.all_ship.includes(value)) {
-          title.textContent = 'This is shipping address';
-        }
-        field.appendChild(title);
-      } else {
-        const label: HTMLElement = new Builder('span', Base.form_title, Blocks.prof, Elem.title, key).element();
-        label.textContent = key;
-        const info: HTMLElement = new Builder('span', Base.form_title, Blocks.prof, Elem.text, key).element();
-        info.textContent = value;
-        field.append(label, info);
+  private parseAddress(address: Address, dataAddresses: DataAddresses, field: HTMLElement): HTMLElement {
+    let type: string = '';
+    let defAddress: string = '';
+    if (dataAddresses.all_bill && dataAddresses.all_bill.includes(address.id)) {
+      type = Mode.bill;
+      if (address.id === dataAddresses.billing) {
+        defAddress = Mode.default;
       }
-      addresses.appendChild(field);
-    });
+      const addresses: HTMLElement = this.formView.createAddressField(address, type, defAddress);
+      field.append(addresses);
+    } else if (dataAddresses.all_ship && dataAddresses.all_ship.includes(address.id)) {
+      type = Mode.ship;
+      if (address.id === dataAddresses.shipping) {
+        defAddress = Mode.default;
+      }
+      const addresses: HTMLElement = this.formView.createAddressField(address, type, defAddress);
+      field.append(addresses);
+    }
 
-    return addresses;
+    return field;
   }
 
   private createAddresses(customer: Customer): HTMLElement {
@@ -64,8 +60,7 @@ export default class ViewProfile {
     const dataAddress: DataAddresses = this.getDataAddresses(customer);
 
     listAddresses.forEach((address: Address) => {
-      const addressForm: HTMLElement = this.parseAddress(address, dataAddress);
-      addresses.append(addressForm);
+      this.parseAddress(address, dataAddress, addresses);
     });
 
     return addresses;
@@ -96,11 +91,14 @@ export default class ViewProfile {
       main.innerHTML = '';
 
       const form = this.formView.getForm();
-      const title: HTMLHeadingElement = new Builder('', Base.form_title, Blocks.form, Elem.title, Mode.ship).h(2);
-      title.textContent = `${Titles.ACCOUNT_INFO}`.toUpperCase();
+      const title: HTMLHeadingElement = new Builder('', '', Blocks.prof, Elem.title, '').h(1);
+      title.textContent = `${Titles.ACCOUNT_INFO}`;
       const accountInfo: HTMLFieldSetElement = this.formView.createAccountInfo(customer);
-      form.append(accountInfo);
-      main.append(title, form);
+      const addressBook: HTMLHeadingElement = new Builder('', '', Blocks.prof, Elem.title, '').h(2);
+      addressBook.textContent = `${Titles.ADDRESS_BOOK}`;
+      const addresses = this.createAddresses(customer);
+      form.append(title, accountInfo, addressBook, addresses);
+      main.append(form);
     }
   }
 }

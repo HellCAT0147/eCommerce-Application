@@ -1,4 +1,16 @@
 .profile {
+  &__address {
+    row-gap: 30px;
+    .form__title {
+      margin-bottom: 10px;
+    }
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+  }
+
   &__title {
     @include font(400, 2.4rem, 100%, $color-dark);
   }
