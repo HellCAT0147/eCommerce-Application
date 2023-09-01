@@ -126,7 +126,7 @@ export default class ViewCatalog {
   }
 
   private createCatalogCard(product: Product): HTMLElement {
-    const card: HTMLElement = new Builder('div', '', Blocks.catalog, 'card', '').element();
+    const card: HTMLElement = new Builder('div', Base.cards, Blocks.catalog, 'card', '').element();
     const cardPic: HTMLElement = new Builder('img', '', Blocks.catalog, 'card', 'pic').element();
     const { images }: ProductVariant = product.masterData.current.masterVariant;
     if (images && images.length > 0) {

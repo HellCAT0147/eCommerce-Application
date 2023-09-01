@@ -114,6 +114,7 @@ export enum Base {
   sw_next = 'swiper-button-next',
   sw_prev = 'swiper-button-prev',
   sw_page = 'swiper-pagination',
+  cards = 'cards',
 }
 
 export enum Buttons {

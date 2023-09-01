@@ -16,6 +16,7 @@ class ControllerCatalog {
   }
 
   public mouseEvent(e: MouseEvent): void {
+    e.preventDefault();
     // TODO any mouse events other than clicking on the product card
   }
 

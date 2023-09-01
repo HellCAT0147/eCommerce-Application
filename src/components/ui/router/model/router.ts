@@ -85,12 +85,19 @@ class Router {
     const key: string = `${DataBase.key_prefix}-${id}`;
     if (key === response.key) {
       if (!isPopState) window.history.pushState(null, '', `/${Pages.CATALOG}/${id}`);
-      route.callback(isLoggedIn, true);
+      route.callback(isLoggedIn);
       this.controllerCatalog.loadProduct(id, response);
       selectCurrentPage(Pages.CATALOG);
     } else {
       this.navigate(Pages.NOT_FOUND);
     }
+  }
+
+  private redirectToProducts(isLoggedIn: boolean, route: Routes, isPopState?: boolean): void {
+    if (!isPopState) window.history.pushState(null, '', `/${Pages.CATALOG}`);
+    route.callback(isLoggedIn);
+    this.controllerCatalog.loadProducts();
+    selectCurrentPage(Pages.CATALOG);
   }
 
   private redirectToProfile(isLoggedIn: boolean, route: Routes, isPopState?: boolean): void {
@@ -118,13 +125,13 @@ class Router {
           await this.redirectToProduct(true, urlParsed.resource, route, isPopState);
           return;
         }
-        if (route.path === Pages.PROFILE) {
-          this.redirectToProfile(true, route, isPopState);
+        if (route.path === Pages.CATALOG || route.path === Pages.PROFILE) {
+          if (route.path === Pages.CATALOG) this.redirectToProducts(true, route, isPopState);
+          else if (route.path === Pages.PROFILE) this.redirectToProfile(true, route, isPopState);
           return;
         }
         if (route.path === Pages.LOGIN || route.path === Pages.REGISTRATION) {
           this.navigate(Pages.MAIN, isPopState);
-          selectCurrentPage(Pages.MAIN);
           return;
         }
         route.callback(true);
@@ -133,18 +140,15 @@ class Router {
           await this.redirectToProduct(false, urlParsed.resource, route, isPopState);
           return;
         }
-        if (route.path === Pages.PROFILE) {
-          this.navigate(Pages.LOGIN, isPopState);
-          selectCurrentPage(Pages.LOGIN);
+        if (route.path === Pages.CATALOG || route.path === Pages.PROFILE) {
+          if (route.path === Pages.CATALOG) this.redirectToProducts(false, route, isPopState);
+          else if (route.path === Pages.PROFILE) this.navigate(Pages.LOGIN, isPopState);
           return;
         }
         route.callback();
       }
-      if (!isPopState && Pages.NOT_FOUND !== pathForFind) {
-        window.history.pushState(null, '', `/${pathForFind}`);
-      } else if (Pages.NOT_FOUND !== pathForFind) {
-        window.history.replaceState(null, '', `/${pathForFind}`);
-      }
+      if (!isPopState && Pages.NOT_FOUND !== pathForFind) window.history.pushState(null, '', `/${pathForFind}`);
+      else if (Pages.NOT_FOUND !== pathForFind) window.history.replaceState(null, '', `/${pathForFind}`);
       selectCurrentPage(url);
       this.setInputsOnPage();
     }
