@@ -80,26 +80,123 @@ export default class ViewCatalog {
     return breadcrumbs;
   }
 
+  private createBrandFilterBox(): HTMLElement {
+    const brandFilter: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter', 'brand').element();
+    const brandFilterHeader: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter-box', 'header').element();
+    brandFilterHeader.innerText = 'BRAND';
+    brandFilter.append(brandFilterHeader);
+    const brands = ['HAQ-inc', 'RS-fashion', 'Bold Italics'];
+    brands.forEach((brand: string, index: number) => {
+      const label: HTMLLabelElement = document.createElement('label');
+      label.className = 'catalog__filter-box_variant';
+      const brandCheck: HTMLElement = new Builder(
+        'input',
+        Base.check,
+        Blocks.catalog,
+        'filter-box',
+        'variant'
+      ).element();
+      brandCheck.setAttribute('id', `brand-${index + 1}`);
+      brandCheck.setAttribute('type', 'checkbox');
+      label.append(brandCheck, brand);
+      brandFilter.append(label);
+    });
+    return brandFilter;
+  }
+
+  private createSizeFilterBox(): HTMLElement {
+    const sizeFilter: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter', 'size').element();
+    const sizeFilterHeader: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter-box', 'header').element();
+    sizeFilterHeader.innerText = 'SIZE';
+    sizeFilter.append(sizeFilterHeader);
+    const sizes = ['small', 'medium', 'large'];
+    sizes.forEach((size: string, index: number) => {
+      const label: HTMLLabelElement = document.createElement('label');
+      label.className = 'catalog__filter-box_variant';
+      const sizeCheck: HTMLElement = new Builder(
+        'input',
+        Base.check,
+        Blocks.catalog,
+        'filter-box',
+        'variant'
+      ).element();
+      sizeCheck.setAttribute('id', `size-${index + 1}`);
+      sizeCheck.setAttribute('type', 'checkbox');
+      label.append(sizeCheck, size);
+      sizeFilter.append(label);
+    });
+    return sizeFilter;
+  }
+
+  private createColorFilterBox(): HTMLElement {
+    const colorFilter: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter', 'color').element();
+    const colorFilterHeader: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter-box', 'header').element();
+    colorFilterHeader.innerText = 'COLOR';
+    colorFilter.append(colorFilterHeader);
+    const colors = ['#000000', '#0000ff', '#ffffff', '#ffff00', '#00ff00', '#ff99cc', '#99ffff'];
+    colors.forEach((color: string, index: number) => {
+      const label: HTMLLabelElement = document.createElement('label');
+      label.className = 'catalog__filter-box_variant';
+      const colorCheck: HTMLElement = new Builder(
+        'input',
+        Base.check,
+        Blocks.catalog,
+        'filter-box',
+        'variant'
+      ).element();
+      colorCheck.setAttribute('id', `color-${index + 1}`);
+      colorCheck.setAttribute('type', 'checkbox');
+      label.append(colorCheck);
+      label.setAttribute('style', `background-color: ${color}`);
+      colorFilter.append(label);
+    });
+    return colorFilter;
+  }
+
+  private createPriceFilter(): HTMLElement {
+    const priceFilter: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter', 'price').element();
+    const priceFilterHeader: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter-box', 'header').element();
+    priceFilterHeader.innerText = 'MAX PRICE';
+    priceFilter.append(priceFilterHeader);
+    const range: HTMLElement = new Builder('input', '', Blocks.catalog, 'filter-box', 'range').element();
+    range.setAttribute('type', 'range');
+    range.setAttribute('min', '0');
+    range.setAttribute('max', '30000');
+    range.setAttribute('value', '30000');
+    range.setAttribute('id', 'price-limit_range');
+    const label: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter-box', 'range-label').element();
+    const min = document.createElement('span');
+    min.innerText = '0';
+    const curr: HTMLSpanElement = document.createElement('span');
+    curr.setAttribute('id', 'price-limit_label');
+    curr.innerText = '30000';
+    const max: HTMLSpanElement = document.createElement('span');
+    max.innerText = '30000';
+    label.append(min, curr, max);
+    priceFilter.append(range, label);
+    return priceFilter;
+  }
+
   private createFilters(): HTMLElement {
     const filters: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter', 'wrapper').element();
-    const priceFilter: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter', 'price').element();
-    const brandFilter: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter', 'brand').element();
-    const sizeFilter: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter', 'size').element();
-    const colorFilter: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter', 'color').element();
-    filters.append(priceFilter, brandFilter, sizeFilter, colorFilter);
+    const brandFilter: HTMLElement = this.createBrandFilterBox();
+    const sizeFilter: HTMLElement = this.createSizeFilterBox();
+    const colorFilter: HTMLElement = this.createColorFilterBox();
+    const priceFilter: HTMLElement = this.createPriceFilter();
+    filters.append(brandFilter, sizeFilter, colorFilter, priceFilter);
     return filters;
   }
 
   private createPageSettings(sortParams: SortParameter): HTMLElement {
     const sortingDropdown: HTMLElement = new Builder('div', '', Blocks.catalog, 'sorting-dropdown', '').element();
 
-    const nameAsc = new Builder('div', '', Blocks.catalog, 'sorting-name-asc', '').element();
+    const nameAsc: HTMLElement = new Builder('div', '', Blocks.catalog, 'sorting-name-asc', '').element();
     nameAsc.innerText = 'NAME (A-Z)';
-    const nameDesc = new Builder('div', '', Blocks.catalog, 'sorting-name-desc', '').element();
+    const nameDesc: HTMLElement = new Builder('div', '', Blocks.catalog, 'sorting-name-desc', '').element();
     nameDesc.innerText = 'NAME (Z-A)';
-    const priceAsc = new Builder('div', '', Blocks.catalog, 'sorting-price-asc', '').element();
+    const priceAsc: HTMLElement = new Builder('div', '', Blocks.catalog, 'sorting-price-asc', '').element();
     priceAsc.innerText = 'PRICE (LOW-HIGH)';
-    const priceDesc = new Builder('div', '', Blocks.catalog, 'sorting-price-desc', '').element();
+    const priceDesc: HTMLElement = new Builder('div', '', Blocks.catalog, 'sorting-price-desc', '').element();
     priceDesc.innerText = 'PRICE (HIGH-LOW)';
 
     switch (true) {
@@ -172,6 +269,7 @@ export default class ViewCatalog {
       const pageAndFilters: HTMLElement = new Builder('div', '', Blocks.catalog, 'page-and-filters', '').element();
       pageAndFilters.append(this.createFilters(), this.createCatalogPage(resultPagination));
       main.append(this.createBreadCrumbs(), this.createPageSettings(sortParam), pageAndFilters);
+      // console.log(resultPagination);
     }
   }
 }

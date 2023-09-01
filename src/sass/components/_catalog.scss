@@ -3,6 +3,10 @@
     width: 90vw;
     padding-left: 20px;
   }
+  &__page-and-filters {
+    display: flex;
+    flex-direction: row;
+  }
   &__filter {
     align-self: flex-start;
     display: inline;
@@ -11,6 +15,18 @@
   &__filter_wrapper {
     width: 15vw;
     height: 70vh;
+    border: 2px solid gray;
+  }
+
+  &__filter_brand {
+  }
+
+  &__filter-box_header {
+    font-size: 1.5rem;
+  }
+  &__filter-box_variant {
+    display: flex;
+    flex-direction: row;
   }
 
   &__sorting-dropdown {
