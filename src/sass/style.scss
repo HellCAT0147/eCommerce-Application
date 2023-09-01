@@ -5,6 +5,7 @@
 @import 'abstracts/placeholders';
 
 @import 'base/base';
+@import 'base/swiper';
 
 @import 'components/buttons';
 @import 'components/hamburger';
@@ -14,6 +15,8 @@
 @import 'components/login';
 @import 'components/profile';
 @import 'components/registration';
+@import 'components/catalog';
+@import 'components/product-page';
 
 @import 'layout/header';
 @import 'layout/main';

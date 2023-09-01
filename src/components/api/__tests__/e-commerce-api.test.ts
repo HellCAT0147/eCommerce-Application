@@ -35,7 +35,7 @@ const mockedLocalStorage: Storage = ((): Storage => {
   };
 })();
 
-const fetch = async function (input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
+const fetch = async function testCheck(): Promise<Response> {
   throw new Error('Fetch function should not be called at any time');
 };
 global.fetch = fetch;

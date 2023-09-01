@@ -19,6 +19,9 @@ import { ErrorObject } from '@commercetools/platform-sdk/dist/declarations/src/g
 import TokenCachesStore from './token-caches-store';
 import compareObjects from '../utils/compare-objects';
 import { DataBase } from '../models/commerce';
+import SortParameter, { buildSortParameterString } from '../models/sort-parameter';
+import ResultPagination from '../models/result-pagination';
+import Pagination, { calculatePageNum } from '../models/pagination';
 
 export default class ECommerceApi {
   private readonly baseAuthParams: PasswordAuthMiddlewareOptions;
@@ -279,6 +282,32 @@ export default class ECommerceApi {
           .get()
           .execute()
       ).body;
+    } catch (e) {
+      return this.errorObjectOrThrow(e);
+    }
+  }
+
+  public async getProducts(
+    pagination: Pagination = new Pagination(),
+    sortParameter: SortParameter = { field: 'key', descending: false }
+  ): Promise<ResultPagination<Product> | ErrorObject> {
+    try {
+      const response = (
+        await this.apiRoot
+          .products()
+          .get({
+            queryArgs: {
+              sort: buildSortParameterString(sortParameter),
+              limit: pagination.pageSize,
+              offset: pagination.offset,
+              withTotal: true,
+            },
+          })
+          .execute()
+      ).body;
+      const pageNum: number = calculatePageNum(response.offset, response.limit);
+      const total: number | undefined = response.results.length + pagination.offset;
+      return new ResultPagination(response.results, total, pageNum, response.limit);
     } catch (e) {
       return this.errorObjectOrThrow(e);
     }

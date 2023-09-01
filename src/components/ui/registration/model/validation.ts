@@ -1,5 +1,3 @@
-// TODO adapt setErrors
-// import { Errors, RegistrationInputType } from '../../../models/validation';
 import { Address, ErrorObject } from '@commercetools/platform-sdk';
 import ECommerceApi from '../../../api/e-commerce-api';
 import { Countries, DateErrors, Errors, InputType, NameErrors, PostalErrors } from '../../../models/validation';

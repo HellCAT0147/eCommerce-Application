@@ -75,6 +75,8 @@ class MainController {
         const id: string = this.getUrlElement(targetHtmlElement);
         if (targetHtmlElement.closest(`.${Blocks.catalog}__${Elem.link}`)) {
           this.router.navigate(`${Pages.CATALOG}/${id}`);
+        } else {
+          this.router.controllerCatalog.mouseEvent(e);
         }
       } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.PROFILE}`)) {
         this.router.controllerProfile.mouseEvent(e);
