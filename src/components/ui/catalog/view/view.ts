@@ -139,10 +139,15 @@ export default class ViewCatalog {
     const readMore: HTMLElement = new Builder('div', '', Blocks.catalog, 'read-more', '').element();
     readMore.innerText = 'READ MORE';
     const priceTag: HTMLElement = new Builder('div', '', Blocks.catalog, 'card', 'price-tag').element();
-    priceTag.innerText = `${product.masterData.current.masterVariant.prices?.[0].value.centAmount
+    const basePrice: HTMLElement = new Builder('span', '', Blocks.catalog, 'card', 'base-price').element();
+    basePrice.innerText = `${product.masterData.current.masterVariant.prices?.[0].value.centAmount
       .toString()
       .slice(0, -2)} RUB`;
-    // TODO work on discounted price
+    const discountedPrice: HTMLElement = new Builder('span', '', Blocks.catalog, 'card', 'disc-price').element();
+    discountedPrice.innerText = `${product.masterData.current.masterVariant.prices?.[1].value.centAmount
+      .toString()
+      .slice(0, -2)} RUB`;
+    priceTag.append(basePrice, discountedPrice);
     card.append(cardPic, nameTag, descriptionTag, readMore, priceTag);
     card.setAttribute('id', (product.key || '0').split('-')[1]);
     return card;
