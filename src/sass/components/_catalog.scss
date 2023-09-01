@@ -1,0 +1,58 @@
+.catalog {
+  &__breadcrumbs {
+    width: 90vw;
+    padding-left: 20px;
+  }
+  &__filter {
+    align-self: flex-start;
+    display: inline;
+  }
+
+  &__filter_wrapper {
+    width: 15vw;
+    height: 70vh;
+  }
+
+  &__sorting-dropdown {
+    width: 90vw;
+    padding-right: 20px;
+    text-align: right;
+  }
+
+  &__page {
+    width: 80vw;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 4vw;
+    justify-content: center;
+  }
+  &__card {
+    width: 15vw;
+    min-width: 180px;
+  }
+
+  &__card img {
+    max-width: inherit;
+    min-height: fit-content;
+  }
+
+  &__card_name-tag {
+    text-align: center;
+    padding: 3px 10px;
+    font-size: 1.5rem;
+    line-height: 1.5;
+    font-weight: bold;
+    min-height: 75px;
+  }
+
+  &__card_description-tag {
+    height: 60px;
+    overflow: hidden;
+    line-height: 1.45;
+  }
+
+  &__card_read-more {
+    text-align: center;
+  }
+}
