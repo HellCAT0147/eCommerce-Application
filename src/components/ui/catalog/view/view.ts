@@ -129,7 +129,7 @@ export default class ViewCatalog {
       main.innerHTML = '';
       const pageAndFilters: HTMLElement = new Builder('div', '', Blocks.catalog, 'page-and-filters', '').element();
       pageAndFilters.append(this.createFilters(), this.createCatalogPage(resultPagination));
-      main.append(this.createBreadCrumbs(resultPagination), this.createPageSettings(sortParam), pageAndFilters);
+      main.append(this.createBreadCrumbs(), this.createPageSettings(sortParam), pageAndFilters);
     }
   }
 }
