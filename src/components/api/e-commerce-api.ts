@@ -289,7 +289,8 @@ export default class ECommerceApi {
 
   public async getProducts(
     pagination: Pagination = new Pagination(),
-    sortParameter: SortParameter = { field: 'key', descending: false }
+    sortParameter: SortParameter = { field: 'key', descending: false },
+    whereClause?: string
   ): Promise<ResultPagination<Product> | ErrorObject> {
     try {
       const response = (
@@ -297,6 +298,7 @@ export default class ECommerceApi {
           .products()
           .get({
             queryArgs: {
+              where: whereClause,
               sort: buildSortParameterString(sortParameter),
               limit: pagination.pageSize,
               offset: pagination.offset,
