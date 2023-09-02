@@ -11,6 +11,7 @@ export enum Blocks {
   select = 'select',
   product = 'product',
   catalog = 'catalog',
+  modal = 'modal',
 }
 
 export enum Elem {
@@ -42,6 +43,9 @@ export enum Elem {
   article = 'article',
   person = 'person',
   account = 'account',
+  modal = 'modal',
+  content = 'content',
+  close = 'close',
 }
 
 export enum Mode {
@@ -86,6 +90,7 @@ export enum Mode {
   opened = 'opened',
   not = 'not',
   body = 'body',
+  click = 'clickable',
 }
 
 export enum Base {
@@ -115,6 +120,7 @@ export enum Base {
   sw_prev = 'swiper-button-prev',
   sw_page = 'swiper-pagination',
   cards = 'cards',
+  modal = 'modal',
 }
 
 export enum Buttons {

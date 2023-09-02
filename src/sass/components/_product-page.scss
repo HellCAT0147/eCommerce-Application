@@ -2,6 +2,10 @@
   &__image {
     width: 100%;
     height: 100%;
+
+    &_clickable {
+      cursor: pointer;
+    }
   }
 
   &__title_big {
@@ -36,5 +40,34 @@
 
   &__description {
     @include font(normal, 1.9rem, 140%, $color-dark);
+  }
+
+  &__modal {
+    // display: none;
+    position: fixed;
+    z-index: 101;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba($color-dark, 0.4);
+  }
+}
+
+.modal {
+  &__content {
+    position: relative;
+    padding: 10px;
+  }
+
+  &__close {
+    width: 20px;
+    height: 20px;
+    background-color: green;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    cursor: pointer;
   }
 }
