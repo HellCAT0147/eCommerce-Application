@@ -7,6 +7,37 @@ import SortParameter from '../../../models/sort-parameter';
 import CatalogViewControlPanelsState from '../../../models/catalog-view-control-panels-state';
 
 export default class ViewCatalog {
+  private static colorsHexes: Array<string> = [
+    '#000000',
+    '#0000ff',
+    '#ffffff',
+    '#ffff00',
+    '#00ff00',
+    '#ff99cc',
+    '#99ffff',
+  ];
+
+  public static resetButtonId = 'reset-filters_btn';
+
+  private static zeroState: CatalogViewControlPanelsState = {
+    brands: [],
+    colors: [],
+    sizes: [],
+    maxPrice: 0,
+    sortParameters: {
+      field: 'key',
+      descending: false,
+    },
+  };
+
+  public static OnViewChangedEvent = new CustomEvent('CatalogViewFilterStateChanged');
+
+  private static filtersWrapperBuilder = new Builder('div', '', Blocks.catalog, 'filter', 'wrapper');
+
+  private static catalogContainerId = `${Blocks.catalog}__main_container`;
+
+  private state: CatalogViewControlPanelsState = structuredClone(ViewCatalog.zeroState);
+
   public showError(msg: string): string {
     // TODO implement popup with error
     return msg;
@@ -90,15 +121,24 @@ export default class ViewCatalog {
     brands.forEach((brand: string, index: number) => {
       const label: HTMLLabelElement = document.createElement('label');
       label.className = 'catalog__filter-box_variant';
-      const brandCheck: HTMLElement = new Builder(
+      const brandCheck: HTMLInputElement = new Builder(
         'input',
         Base.check,
         Blocks.catalog,
         'filter-box',
         'brand-variant'
-      ).element();
+      ).input();
       brandCheck.setAttribute('id', `brand-${index + 1}`);
       brandCheck.setAttribute('type', 'checkbox');
+      brandCheck.addEventListener('change', () => {
+        if (brandCheck.checked) {
+          this.state.brands.push(brand);
+        } else {
+          this.state.brands.splice(this.state.brands.indexOf(brand), 1);
+        }
+        document.dispatchEvent(ViewCatalog.OnViewChangedEvent);
+      });
+      brandCheck.checked = this.state.brands.includes(brand);
       label.append(brandCheck, brand);
       brandFilter.append(label);
     });
@@ -114,15 +154,24 @@ export default class ViewCatalog {
     sizes.forEach((size: string, index: number) => {
       const label: HTMLLabelElement = document.createElement('label');
       label.className = 'catalog__filter-box_variant';
-      const sizeCheck: HTMLElement = new Builder(
+      const sizeCheck: HTMLInputElement = new Builder(
         'input',
         Base.check,
         Blocks.catalog,
         'filter-box',
         'size-variant'
-      ).element();
+      ).input();
       sizeCheck.setAttribute('id', `size-${index + 1}`);
       sizeCheck.setAttribute('type', 'checkbox');
+      sizeCheck.addEventListener('change', () => {
+        if (sizeCheck.checked) {
+          this.state.sizes.push(size);
+        } else {
+          this.state.sizes.splice(this.state.sizes.indexOf(size), 1);
+        }
+        document.dispatchEvent(ViewCatalog.OnViewChangedEvent);
+      });
+      sizeCheck.checked = this.state.sizes.includes(size);
       label.append(sizeCheck, size);
       sizeFilter.append(label);
     });
@@ -134,19 +183,28 @@ export default class ViewCatalog {
     const colorFilterHeader: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter-box', 'header').element();
     colorFilterHeader.innerText = 'COLOR';
     colorFilter.append(colorFilterHeader);
-    const colors = ['#000000', '#0000ff', '#ffffff', '#ffff00', '#00ff00', '#ff99cc', '#99ffff'];
-    colors.forEach((color: string, index: number) => {
+    ViewCatalog.colorsHexes.forEach((color: string, index: number) => {
       const label: HTMLLabelElement = document.createElement('label');
       label.className = 'catalog__filter-box_variant';
-      const colorCheck: HTMLElement = new Builder(
+      const colorCheck: HTMLInputElement = new Builder(
         'input',
         Base.check,
         Blocks.catalog,
         'filter-box',
         'color-variant'
-      ).element();
+      ).input();
       colorCheck.setAttribute('id', `color-${index + 1}`);
       colorCheck.setAttribute('type', 'checkbox');
+      colorCheck.addEventListener('change', () => {
+        if (colorCheck.checked) {
+          this.state.colors.push(color);
+        } else {
+          this.state.colors.splice(this.state.colors.indexOf(color), 1);
+        }
+        document.dispatchEvent(ViewCatalog.OnViewChangedEvent);
+      });
+      colorCheck.checked = this.state.colors.includes(color);
+
       label.append(colorCheck);
       label.setAttribute('style', `background-color: ${color}`);
       colorFilter.append(label);
@@ -159,12 +217,21 @@ export default class ViewCatalog {
     const priceFilterHeader: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter-box', 'header').element();
     priceFilterHeader.innerText = 'MAX PRICE';
     priceFilter.append(priceFilterHeader);
-    const range: HTMLElement = new Builder('input', '', Blocks.catalog, 'filter-box', 'range').element();
+    const range: HTMLInputElement = new Builder('input', '', Blocks.catalog, 'filter-box', 'range').input();
     range.setAttribute('type', 'range');
     range.setAttribute('min', '0');
     range.setAttribute('max', '30000');
     range.setAttribute('value', '30000');
     range.setAttribute('id', 'price-limit_range');
+    range.addEventListener('change', () => {
+      const parsed: number = parseInt(range.value, 10);
+      if (Number.isNaN(parsed) || parsed === Infinity || parsed === -Infinity) {
+        return;
+      }
+      this.state.maxPrice = parsed;
+      document.dispatchEvent(ViewCatalog.OnViewChangedEvent);
+    });
+    range.value = this.state.maxPrice.toString();
     const label: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter-box', 'range-label').element();
     const min: HTMLSpanElement = document.createElement('span');
     min.innerText = '0';
@@ -179,7 +246,7 @@ export default class ViewCatalog {
   }
 
   private createFilters(): HTMLElement {
-    const filters: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter', 'wrapper').element();
+    const filters: HTMLElement = ViewCatalog.filtersWrapperBuilder.element();
     const filtersHeader: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter', 'header').element();
     filtersHeader.innerText = 'FILTERS';
     const brandFilter: HTMLElement = this.createBrandFilterBox();
@@ -188,12 +255,12 @@ export default class ViewCatalog {
     const priceFilter: HTMLElement = this.createPriceFilter();
     const resetFiltersBtn = new Builder('button', Base.btns_bordered, Blocks.catalog, 'filter', 'button').element();
     resetFiltersBtn.innerText = 'RESET FILTERS';
-    resetFiltersBtn.setAttribute('id', 'reset-filters_btn');
+    resetFiltersBtn.setAttribute('id', ViewCatalog.resetButtonId);
     filters.append(filtersHeader, brandFilter, sizeFilter, colorFilter, priceFilter, resetFiltersBtn);
     return filters;
   }
 
-  private createPageSettings(sortParams: SortParameter): HTMLElement {
+  private createPageSettings(sortParams: SortParameter = this.state.sortParameters): HTMLElement {
     const sortingDropdown: HTMLElement = new Builder('div', '', Blocks.catalog, 'sorting-dropdown', '').element();
 
     const nameAsc: HTMLElement = new Builder('div', '', Blocks.catalog, 'sorting-name-asc', '').element();
@@ -259,8 +326,12 @@ export default class ViewCatalog {
     return card;
   }
 
-  private createCatalogPage(resultPagination: ResultPagination<Product>): HTMLElement {
-    const page: HTMLElement = new Builder('div', '', Blocks.catalog, 'page', '').element();
+  public fillCatalogPage(resultPagination: ResultPagination<Product>): HTMLElement {
+    const page: HTMLElement =
+      document.getElementById(ViewCatalog.catalogContainerId) ||
+      new Builder('div', '', Blocks.catalog, 'page', '').element();
+    page.innerHTML = '';
+    page.id = ViewCatalog.catalogContainerId;
     const products: Product[] = Array.from(resultPagination.paginationResult);
     products.forEach((product: Product) => {
       page.append(this.createCatalogCard(product));
@@ -268,36 +339,40 @@ export default class ViewCatalog {
     return page;
   }
 
-  public constructCatalogPage(resultPagination: ResultPagination<Product>, sortParam: SortParameter): void {
+  public constructCatalogPage(resultPagination: ResultPagination<Product>): void {
     const main: HTMLFormElement | null = document.querySelector(`.${Blocks.main}__${Mode.catalog}`);
     if (main) {
       main.innerHTML = '';
       const pageAndFilters: HTMLElement = new Builder('div', '', Blocks.catalog, 'page-and-filters', '').element();
-      pageAndFilters.append(this.createFilters(), this.createCatalogPage(resultPagination));
-      main.append(this.createBreadCrumbs(), this.createPageSettings(sortParam), pageAndFilters);
+      pageAndFilters.append(this.createFilters(), this.fillCatalogPage(resultPagination));
+      main.append(this.createBreadCrumbs(), this.createPageSettings(), pageAndFilters);
       // console.log(resultPagination);
     }
   }
 
+  public resetState(): void {
+    const colorsClassname = ViewCatalog.filtersWrapperBuilder.getBiggestClassName();
+    if (colorsClassname != null) {
+      const wrapper = Array.from(document.getElementsByClassName(colorsClassname));
+      wrapper.forEach((element) => {
+        Array.from(element.getElementsByTagName('input')).forEach((input) => {
+          const wrappedInput = input;
+          switch (input.type) {
+            case 'checkbox':
+              wrappedInput.checked = false;
+              break;
+            case 'range':
+              wrappedInput.value = input.max;
+              break;
+            default:
+              break;
+          }
+        });
+      });
+    }
+  }
+
   public collectData(): CatalogViewControlPanelsState {
-    const brands: string[] = [];
-    const brandsChecks = Array.from(document.getElementsByClassName('catalog__filter-box_brand-variant'));
-    brandsChecks.forEach((box) => {
-      if (box.hasAttribute('checked')) {
-        brands.push((box.parentElement?.innerText || '').split('>')[1]);
-      }
-      // console.log(brands);
-    });
-    const result: CatalogViewControlPanelsState = {
-      brands: [],
-      colors: [],
-      sizes: [],
-      maxPrice: 0,
-      sortParameters: {
-        descending: false,
-        field: 'key',
-      },
-    };
-    return result;
+    return structuredClone(this.state);
   }
 }

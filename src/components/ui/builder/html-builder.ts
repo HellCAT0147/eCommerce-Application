@@ -16,13 +16,32 @@ class Builder {
     this.mode = mode;
   }
 
-  private setProperties(element: HTMLElement | HTMLInputElement): void {
+  public buildClassNames(): Array<string> {
+    const resultClassList: Array<string> = [];
+
     if (this.block && this.elem) {
-      element.classList.add(`${this.block}__${this.elem}`);
+      resultClassList.push(`${this.block}__${this.elem}`);
     } else if (this.block) {
-      element.classList.add(`${this.block}`);
+      resultClassList.push(`${this.block}`);
     }
-    if (this.mode) element.classList.add(`${this.block}__${this.elem}_${this.mode}`);
+    if (this.mode) resultClassList.push(`${this.block}__${this.elem}_${this.mode}`);
+
+    return resultClassList;
+  }
+
+  public getBiggestClassName(): string | null {
+    let biggest: string | null = null;
+    this.buildClassNames().forEach((classname) => {
+      if (biggest == null || biggest.length < classname.length) {
+        biggest = classname;
+      }
+    });
+
+    return biggest;
+  }
+
+  private setProperties(element: HTMLElement | HTMLInputElement): void {
+    element.classList.add(...this.buildClassNames());
   }
 
   public form(): HTMLFormElement {
