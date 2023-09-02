@@ -3,6 +3,7 @@ import ECommerceApi from '../../../api/e-commerce-api';
 import ViewCatalog from '../view/view';
 import ResultPagination from '../../../models/result-pagination';
 import Pagination from '../../../models/pagination';
+import createQueryStringFromCatalogViewState from '../../../api/products-search-attribute';
 
 export default class ModelCatalog {
   protected eCommerceApi: ECommerceApi;
@@ -33,7 +34,8 @@ export default class ModelCatalog {
       const viewState = this.view.collectData();
       const response: ResultPagination<Product> | ErrorObject = await this.eCommerceApi.getProducts(
         pagination,
-        viewState.sortParameters
+        viewState.sortParameters,
+        createQueryStringFromCatalogViewState(viewState)
       );
       if ('message' in response && 'code' in response) {
         this.view.showError(response.message);

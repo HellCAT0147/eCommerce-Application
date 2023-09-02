@@ -17,13 +17,15 @@ export default class ViewCatalog {
     '#99ffff',
   ];
 
+  private static colorsKeys: Array<string> = ['black', 'blue', 'white', 'yellow', 'green', 'pink', 'tiffany'];
+
   public static resetButtonId = 'reset-filters_btn';
 
   private static zeroState: CatalogViewControlPanelsState = {
     brands: [],
     colors: [],
     sizes: [],
-    maxPrice: 0,
+    maxPrice: 15000,
     sortParameters: {
       field: 'key',
       descending: false,
@@ -184,6 +186,7 @@ export default class ViewCatalog {
     colorFilterHeader.innerText = 'COLOR';
     colorFilter.append(colorFilterHeader);
     ViewCatalog.colorsHexes.forEach((color: string, index: number) => {
+      const colorName = ViewCatalog.colorsKeys[index];
       const label: HTMLLabelElement = document.createElement('label');
       label.className = 'catalog__filter-box_variant';
       const colorCheck: HTMLInputElement = new Builder(
@@ -197,9 +200,9 @@ export default class ViewCatalog {
       colorCheck.setAttribute('type', 'checkbox');
       colorCheck.addEventListener('change', () => {
         if (colorCheck.checked) {
-          this.state.colors.push(color);
+          this.state.colors.push(colorName);
         } else {
-          this.state.colors.splice(this.state.colors.indexOf(color), 1);
+          this.state.colors.splice(this.state.colors.indexOf(colorName), 1);
         }
         document.dispatchEvent(ViewCatalog.OnViewChangedEvent);
       });
@@ -217,11 +220,11 @@ export default class ViewCatalog {
     const priceFilterHeader: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter-box', 'header').element();
     priceFilterHeader.innerText = 'MAX PRICE';
     priceFilter.append(priceFilterHeader);
+    const curr: HTMLSpanElement = document.createElement('span');
     const range: HTMLInputElement = new Builder('input', '', Blocks.catalog, 'filter-box', 'range').input();
     range.setAttribute('type', 'range');
     range.setAttribute('min', '0');
-    range.setAttribute('max', '30000');
-    range.setAttribute('value', '30000');
+    range.setAttribute('max', ViewCatalog.zeroState.maxPrice.toString());
     range.setAttribute('id', 'price-limit_range');
     range.addEventListener('change', () => {
       const parsed: number = parseInt(range.value, 10);
@@ -230,17 +233,14 @@ export default class ViewCatalog {
       }
       this.state.maxPrice = parsed;
       document.dispatchEvent(ViewCatalog.OnViewChangedEvent);
+      curr.innerText = `0 - ${this.state.maxPrice}`;
     });
     range.value = this.state.maxPrice.toString();
     const label: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter-box', 'range-label').element();
-    const min: HTMLSpanElement = document.createElement('span');
-    min.innerText = '0';
-    const curr: HTMLSpanElement = document.createElement('span');
+
     curr.setAttribute('id', 'price-limit_label');
-    curr.innerText = '30000';
-    const max: HTMLSpanElement = document.createElement('span');
-    max.innerText = '30000';
-    label.append(min, curr, max);
+    curr.innerText = `0 - ${range.value}`;
+    label.append(curr);
     priceFilter.append(range, label);
     return priceFilter;
   }
@@ -353,6 +353,7 @@ export default class ViewCatalog {
   public resetState(): void {
     const colorsClassname = ViewCatalog.filtersWrapperBuilder.getBiggestClassName();
     if (colorsClassname != null) {
+      this.state = structuredClone(ViewCatalog.zeroState);
       const wrapper = Array.from(document.getElementsByClassName(colorsClassname));
       wrapper.forEach((element) => {
         Array.from(element.getElementsByTagName('input')).forEach((input) => {
@@ -362,13 +363,18 @@ export default class ViewCatalog {
               wrappedInput.checked = false;
               break;
             case 'range':
-              wrappedInput.value = input.max;
+              wrappedInput.value = this.state.maxPrice.toString();
               break;
             default:
               break;
           }
         });
       });
+      const priceLabel = document.getElementById('price-limit_label');
+      if (priceLabel) {
+        priceLabel.innerText = `0 - ${this.state.maxPrice.toString()}`;
+      }
+      document.dispatchEvent(ViewCatalog.OnViewChangedEvent);
     }
   }
 
