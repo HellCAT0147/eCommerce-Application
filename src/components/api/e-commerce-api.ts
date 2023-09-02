@@ -13,6 +13,7 @@ import {
   CustomerSignInResult,
   MyCustomerUpdateAction,
   Product,
+  ProductProjection,
 } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import { ErrorObject } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/error';
@@ -288,18 +289,19 @@ export default class ECommerceApi {
   }
 
   public async getProducts(
+    sortParameters: Array<SortParameter>,
     pagination: Pagination = new Pagination(),
-    sortParameter: SortParameter = { field: 'key', descending: false },
-    whereClause?: string
-  ): Promise<ResultPagination<Product> | ErrorObject> {
+    whereClause?: Array<string>
+  ): Promise<ResultPagination<ProductProjection> | ErrorObject> {
     try {
       const response = (
         await this.apiRoot
-          .products()
+          .productProjections()
+          .search()
           .get({
             queryArgs: {
-              where: whereClause,
-              sort: buildSortParameterString(sortParameter),
+              filter: whereClause,
+              sort: sortParameters.map((sortParameter) => buildSortParameterString(sortParameter)),
               limit: pagination.pageSize,
               offset: pagination.offset,
               withTotal: true,

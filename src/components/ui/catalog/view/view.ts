@@ -1,4 +1,4 @@
-import { Product, Image, ProductData, ProductVariant } from '@commercetools/platform-sdk';
+import { Image, ProductData, ProductVariant, ProductProjection } from '@commercetools/platform-sdk';
 import { Base, Blocks, Elem, Mode } from '../../../models/builder';
 import Builder from '../../builder/html-builder';
 import { DataBase } from '../../../models/commerce';
@@ -21,15 +21,40 @@ export default class ViewCatalog {
 
   public static resetButtonId = 'reset-filters_btn';
 
+  public static nameAscSortingParameters: Array<SortParameter> = [
+    {
+      field: 'name.en-US',
+      descending: false,
+    },
+  ];
+
+  public static nameDescSortingParameters: Array<SortParameter> = [
+    {
+      field: 'name.en-US',
+      descending: true,
+    },
+  ];
+
+  public static priceAscSortingParameters: Array<SortParameter> = [
+    {
+      field: 'price',
+      descending: false,
+    },
+  ];
+
+  public static priceDescSortingParameters: Array<SortParameter> = [
+    {
+      field: 'price',
+      descending: true,
+    },
+  ];
+
   private static zeroState: CatalogViewControlPanelsState = {
     brands: [],
     colors: [],
     sizes: [],
     maxPrice: 15000,
-    sortParameters: {
-      field: 'key',
-      descending: false,
-    },
+    sortParameters: ViewCatalog.nameAscSortingParameters,
   };
 
   public static OnViewChangedEvent = new CustomEvent('CatalogViewFilterStateChanged');
@@ -112,6 +137,39 @@ export default class ViewCatalog {
     } else {
       filters.classList.remove('dropped-down');
     }
+  }
+
+  private changeSorting(sortingMenu: HTMLElement, event: Event): void {
+    const variants = Array.from(sortingMenu.children);
+    variants.forEach((variant) => {
+      variant.classList.remove('sorted');
+    });
+    const chosen = event.target as HTMLElement;
+
+    switch (true) {
+      case chosen.classList.contains('catalog__sorting-price-desc'):
+        this.state.sortParameters = ViewCatalog.priceDescSortingParameters;
+        break;
+      case chosen.classList.contains('catalog__sorting-price-asc'):
+        this.state.sortParameters = ViewCatalog.priceAscSortingParameters;
+        break;
+      case chosen.classList.contains('catalog__sorting-name-desc'):
+        this.state.sortParameters = ViewCatalog.nameDescSortingParameters;
+        break;
+      default:
+        this.state.sortParameters = ViewCatalog.nameAscSortingParameters;
+        break;
+    }
+    if (
+      chosen.className === 'catalog__sorting-name-asc' ||
+      chosen.className === 'catalog__sorting-name-desc' ||
+      chosen.className === 'catalog__sorting-price-asc' ||
+      chosen.className === 'catalog__sorting-price-desc'
+    ) {
+      chosen.classList.add('sorted');
+      document.dispatchEvent(ViewCatalog.OnViewChangedEvent);
+    }
+    sortingMenu.classList.remove('dropped-down');
   }
 
   private createBreadCrumbs(): HTMLElement {
@@ -292,7 +350,7 @@ export default class ViewCatalog {
     return filters;
   }
 
-  private createPageSettings(sortParams: SortParameter = this.state.sortParameters): HTMLElement {
+  private createPageSettings(): HTMLElement {
     const sortingDropdown: HTMLElement = new Builder('div', '', Blocks.catalog, 'sorting-dropdown', '').element();
 
     const nameAsc: HTMLElement = new Builder('div', '', Blocks.catalog, 'sorting-name-asc', '').element();
@@ -304,51 +362,54 @@ export default class ViewCatalog {
     const priceDesc: HTMLElement = new Builder('div', '', Blocks.catalog, 'sorting-price-desc', '').element();
     priceDesc.innerText = 'PRICE (HIGH-LOW)';
 
-    switch (true) {
-      case sortParams.field === 'name' && sortParams.descending === true:
-        sortingDropdown.innerText = 'NAME (Z-A)';
-        nameDesc.className += '_sorted';
+    switch (this.state.sortParameters) {
+      case ViewCatalog.nameDescSortingParameters:
+        nameDesc.classList.add('sorted');
         break;
-      case sortParams.field === 'price' && sortParams.descending === false:
-        sortingDropdown.innerText = 'PRICE (LOW-HIGH)';
-        priceAsc.className += '_sorted';
+      case ViewCatalog.priceAscSortingParameters:
+        priceAsc.classList.add('sorted');
         break;
-      case sortParams.field === 'price' && sortParams.descending === true:
-        sortingDropdown.innerText = 'PRICE (HIGH-LOW)';
-        priceDesc.className += '_sorted';
+      case ViewCatalog.priceDescSortingParameters:
+        priceDesc.classList.add('sorted');
         break;
       default:
-        sortingDropdown.innerText = 'NAME (A-Z)';
-        nameAsc.className += '_sorted';
+        nameAsc.classList.add('sorted');
+        break;
     }
     sortingDropdown.append(nameAsc, nameDesc, priceAsc, priceDesc);
+    sortingDropdown.addEventListener('click', (event) => {
+      if (!sortingDropdown.classList.contains('dropped-down')) {
+        sortingDropdown.classList.add('dropped-down');
+      } else {
+        this.changeSorting(sortingDropdown, event);
+      }
+    });
+
     return sortingDropdown;
 
     // TODO add products per page section if necessary
   }
 
-  private createCatalogCard(product: Product): HTMLElement {
+  private createCatalogCard(product: ProductProjection): HTMLElement {
     const card: HTMLElement = new Builder('div', Base.cards, Blocks.catalog, 'card', '').element();
     const cardPic: HTMLElement = new Builder('img', '', Blocks.catalog, 'card', 'pic').element();
-    const { images }: ProductVariant = product.masterData.current.masterVariant;
+    const { images }: ProductVariant = product.masterVariant;
     if (images && images.length > 0) {
       cardPic.setAttribute('src', images[0].url);
     }
     const nameTag: HTMLElement = new Builder('div', '', Blocks.catalog, 'card', 'name-tag').element();
-    nameTag.innerText = product.masterData.current.name['en-US'].toString().toUpperCase();
+    nameTag.innerText = product.name['en-US'].toString().toUpperCase();
     const descriptionTag: HTMLElement = new Builder('div', '', Blocks.catalog, 'card', 'description-tag').element();
-    descriptionTag.innerText = product.masterData.current.description?.['en-US'].toString() || '';
+    descriptionTag.innerText = product.description?.['en-US'].toString() || '';
     const readMore: HTMLElement = new Builder('div', '', Blocks.catalog, 'read-more', '').element();
     readMore.innerText = 'READ MORE';
     const priceTag: HTMLElement = new Builder('div', '', Blocks.catalog, 'card', 'price-tag').element();
     const basePrice: HTMLElement = new Builder('span', '', Blocks.catalog, 'card', 'base-price').element();
-    basePrice.innerText = `${product.masterData.current.masterVariant.prices?.[0].value.centAmount
-      .toString()
-      .slice(0, -2)} RUB`;
+    basePrice.innerText = `${product.masterVariant.prices?.[0].value.centAmount.toString().slice(0, -2)} RUB`;
     priceTag.append(basePrice);
-    if (product.masterData.current.masterVariant.prices?.[0].discounted) {
+    if (product.masterVariant.prices?.[0].discounted) {
       const discountedPrice: HTMLElement = new Builder('span', '', Blocks.catalog, 'card', 'disc-price').element();
-      discountedPrice.innerText = `${product.masterData.current.masterVariant.prices?.[0].discounted.value.centAmount
+      discountedPrice.innerText = `${product.masterVariant.prices?.[0].discounted.value.centAmount
         .toString()
         .slice(0, -2)} RUB`;
       priceTag.append(discountedPrice);
@@ -358,20 +419,20 @@ export default class ViewCatalog {
     return card;
   }
 
-  public fillCatalogPage(resultPagination: ResultPagination<Product>): HTMLElement {
+  public fillCatalogPage(resultPagination: ResultPagination<ProductProjection>): HTMLElement {
     const page: HTMLElement =
       document.getElementById(ViewCatalog.catalogContainerId) ||
       new Builder('div', '', Blocks.catalog, 'page', '').element();
     page.innerHTML = '';
     page.id = ViewCatalog.catalogContainerId;
-    const products: Product[] = Array.from(resultPagination.paginationResult);
-    products.forEach((product: Product) => {
+    const products: ProductProjection[] = Array.from(resultPagination.paginationResult);
+    products.forEach((product: ProductProjection) => {
       page.append(this.createCatalogCard(product));
     });
     return page;
   }
 
-  public constructCatalogPage(resultPagination: ResultPagination<Product>): void {
+  public constructCatalogPage(resultPagination: ResultPagination<ProductProjection>): void {
     const main: HTMLFormElement | null = document.querySelector(`.${Blocks.main}__${Mode.catalog}`);
     if (main) {
       main.innerHTML = '';

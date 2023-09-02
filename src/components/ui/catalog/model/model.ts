@@ -1,4 +1,4 @@
-import { ErrorObject, Product } from '@commercetools/platform-sdk';
+import { ErrorObject, Product, ProductProjection } from '@commercetools/platform-sdk';
 import ECommerceApi from '../../../api/e-commerce-api';
 import ViewCatalog from '../view/view';
 import ResultPagination from '../../../models/result-pagination';
@@ -32,9 +32,9 @@ export default class ModelCatalog {
   public async fetchProducts(pagination: Pagination = new Pagination(), justFill: boolean = false): Promise<void> {
     try {
       const viewState = this.view.collectData();
-      const response: ResultPagination<Product> | ErrorObject = await this.eCommerceApi.getProducts(
-        pagination,
+      const response: ResultPagination<ProductProjection> | ErrorObject = await this.eCommerceApi.getProducts(
         viewState.sortParameters,
+        pagination,
         createQueryStringFromCatalogViewState(viewState)
       );
       if ('message' in response && 'code' in response) {
