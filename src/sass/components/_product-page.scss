@@ -69,5 +69,10 @@
     right: 20px;
     top: 20px;
     cursor: pointer;
+    background: url('../assets/ico/x-marks-the-spot.svg') no-repeat 100% / cover;
+
+    &:hover {
+      filter: brightness(0.9);
+    }
   }
 }
