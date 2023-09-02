@@ -106,6 +106,14 @@ export default class ViewCatalog {
     swiper.enable();
   }
 
+  private toggleFiltersVisibility(filters: HTMLElement): void {
+    if (window.innerWidth < 740 && !filters.classList.contains('dropped-down')) {
+      filters.classList.add('dropped-down');
+    } else {
+      filters.classList.remove('dropped-down');
+    }
+  }
+
   private createBreadCrumbs(): HTMLElement {
     const breadcrumbs: HTMLElement = new Builder('div', Base.links, Blocks.catalog, 'breadcrumbs', '').element();
     breadcrumbs.setAttribute('id', 'breadcrumbs');
@@ -141,6 +149,12 @@ export default class ViewCatalog {
         document.dispatchEvent(ViewCatalog.OnViewChangedEvent);
       });
       brandCheck.checked = this.state.brands.includes(brand);
+      label.onclick = (e): void => {
+        const target = e.target as HTMLElement;
+        if (target.tagName !== 'INPUT') {
+          brandCheck.click();
+        }
+      };
       label.append(brandCheck, brand);
       brandFilter.append(label);
     });
@@ -174,6 +188,12 @@ export default class ViewCatalog {
         document.dispatchEvent(ViewCatalog.OnViewChangedEvent);
       });
       sizeCheck.checked = this.state.sizes.includes(size);
+      label.onclick = (e): void => {
+        const target = e.target as HTMLElement;
+        if (target.tagName !== 'INPUT') {
+          sizeCheck.click();
+        }
+      };
       label.append(sizeCheck, size);
       sizeFilter.append(label);
     });
@@ -207,7 +227,12 @@ export default class ViewCatalog {
         document.dispatchEvent(ViewCatalog.OnViewChangedEvent);
       });
       colorCheck.checked = this.state.colors.includes(color);
-
+      label.onclick = (e): void => {
+        const target = e.target as HTMLElement;
+        if (target.tagName !== 'INPUT') {
+          colorCheck.click();
+        }
+      };
       label.append(colorCheck);
       label.setAttribute('style', `background-color: ${color}`);
       colorFilter.append(label);
@@ -250,6 +275,7 @@ export default class ViewCatalog {
     const filtersHeader: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter', 'header').element();
     filtersHeader.innerText = 'FILTERS';
     const brandFilter: HTMLElement = this.createBrandFilterBox();
+    brandFilter.classList.add('shown');
     const sizeFilter: HTMLElement = this.createSizeFilterBox();
     const colorFilter: HTMLElement = this.createColorFilterBox();
     const priceFilter: HTMLElement = this.createPriceFilter();
@@ -257,6 +283,12 @@ export default class ViewCatalog {
     resetFiltersBtn.innerText = 'RESET FILTERS';
     resetFiltersBtn.setAttribute('id', ViewCatalog.resetButtonId);
     filters.append(filtersHeader, brandFilter, sizeFilter, colorFilter, priceFilter, resetFiltersBtn);
+    filters.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (target && target.tagName !== 'INPUT' && target.tagName !== 'LABEL') {
+        this.toggleFiltersVisibility(filters);
+      }
+    });
     return filters;
   }
 
