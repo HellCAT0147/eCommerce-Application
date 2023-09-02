@@ -63,15 +63,16 @@
   &__close {
     width: 20px;
     height: 20px;
-    background-color: green;
     position: absolute;
     right: 20px;
     top: 20px;
     cursor: pointer;
-    background: url('../assets/ico/x-marks-the-spot.svg') no-repeat 100% / cover;
+    background: url('../assets/ico/close-btn.svg') no-repeat 100% / cover;
 
-    &:hover {
-      filter: brightness(0.9);
+    @include media-hover-desktop {
+      &:hover {
+        background: url('../assets/ico/close-btn-hovered.svg') no-repeat 100% / cover;
+      }
     }
   }
 }
