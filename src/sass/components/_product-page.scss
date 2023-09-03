@@ -35,6 +35,8 @@
   }
 
   &__wrapper {
+    max-width: $tablet-landscape-width;
+
     &_body {
       display: grid;
       grid-template-columns: repeat(2, 1fr);

@@ -131,7 +131,7 @@ export default class ViewCatalog {
           image.url,
           image.label || DataBase.img_alt
         );
-      } else img = new Builder('', Base.img, Blocks.product, Elem.image, Mode.click).img(image.src, image.alt);
+      } else img = new Builder('', Base.img, Blocks.product, Elem.image, '').img(image.src, image.alt);
       slide.appendChild(img);
       sliderWrapper.appendChild(slide);
     });
@@ -139,8 +139,8 @@ export default class ViewCatalog {
     const nextEl: HTMLElement = new Builder(
       'div',
       Base.sw_next,
-      '',
-      '',
+      Blocks.ctrl,
+      Elem.btn,
       initImgID === undefined ? Mode.click : ''
     ).element();
     const prevEl: HTMLElement = new Builder(
