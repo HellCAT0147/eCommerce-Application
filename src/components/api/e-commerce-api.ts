@@ -7,6 +7,7 @@ import {
 import { PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2/dist/declarations/src/types/sdk';
 import {
   Address,
+  CategoryPagedQueryResponse,
   ClientResponse,
   createApiBuilderFromCtpClient,
   Customer,
@@ -17,6 +18,7 @@ import {
 } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import { ErrorObject } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/error';
+import { Category } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/category';
 import TokenCachesStore from './token-caches-store';
 import compareObjects from '../utils/compare-objects';
 import { DataBase } from '../models/commerce';
@@ -42,6 +44,8 @@ export default class ECommerceApi {
   private readonly tokenCachesStore: TokenCachesStore;
 
   private meLoggedInPromise: Promise<Customer | null> | null = null;
+
+  private categoriesCache?: Map<string | undefined, Array<Category>>;
 
   constructor(
     projectKey: string,
@@ -315,6 +319,60 @@ export default class ECommerceApi {
       const pageNum: number = calculatePageNum(response.offset, response.limit);
       const total: number | undefined = response.results.length + pagination.offset;
       return new ResultPagination(response.results, total, pageNum, response.limit);
+    } catch (e) {
+      return this.errorObjectOrThrow(e);
+    }
+  }
+
+  private async categoriesHandler(
+    requestResponse: ClientResponse<CategoryPagedQueryResponse>
+  ): Promise<Array<Category>> {
+    if (requestResponse.body.results.length > 0 && requestResponse.body.limit === requestResponse.body.results.length) {
+      const newOffset = requestResponse.body.offset + requestResponse.body.limit;
+      const resultCategories = await this.apiRoot
+        .categories()
+        .get({
+          queryArgs: {
+            limit: requestResponse.body.limit,
+            offset: newOffset,
+          },
+        })
+        .execute()
+        .then((response) => this.categoriesHandler(response))
+        .catch(() => [...requestResponse.body.results])
+        .then((categories) => [...requestResponse.body.results, ...categories]);
+      return resultCategories;
+    }
+    return requestResponse.body.results;
+  }
+
+  public async getCategoriesTree(): Promise<Map<string | undefined, Array<Category>> | ErrorObject> {
+    const capturedCategories: Map<string | undefined, Array<Category>> | undefined = this.categoriesCache;
+    if (capturedCategories) {
+      return capturedCategories;
+    }
+    try {
+      const newCategories = new Map<string | undefined, Array<Category>>();
+      const categories: Array<Category> = await this.apiRoot
+        .categories()
+        .get({
+          queryArgs: {
+            limit: 100,
+            offset: 0,
+          },
+        })
+        .execute()
+        .then((response) => this.categoriesHandler(response));
+      categories.forEach((category) => {
+        const array = newCategories.get(category.parent?.id);
+        if (array) {
+          array.push(category);
+        } else {
+          newCategories.set(category.parent?.id, [category]);
+        }
+      });
+      this.categoriesCache = newCategories;
+      return newCategories;
     } catch (e) {
       return this.errorObjectOrThrow(e);
     }

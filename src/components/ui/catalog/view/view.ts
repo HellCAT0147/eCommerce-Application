@@ -1,4 +1,5 @@
-import { Image, ProductData, ProductVariant, ProductProjection } from '@commercetools/platform-sdk';
+import { Image, ProductData, ProductVariant, ProductProjection, Price } from '@commercetools/platform-sdk';
+import { Category } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/category';
 import { Base, Blocks, Elem, Mode } from '../../../models/builder';
 import Builder from '../../builder/html-builder';
 import { DataBase } from '../../../models/commerce';
@@ -55,6 +56,7 @@ export default class ViewCatalog {
     colors: [],
     sizes: [],
     maxPrice: 15000,
+    categories: [],
     sortParameters: ViewCatalog.nameAscSortingParameters,
   };
 
@@ -62,9 +64,15 @@ export default class ViewCatalog {
 
   private static filtersWrapperBuilder = new Builder('div', '', Blocks.catalog, 'filter', 'wrapper');
 
+  private static breadcrumbsWrapperBuilder = new Builder('div', '', Blocks.catalog, 'breadcrumbs', 'wrapper');
+
   private static catalogContainerId = `${Blocks.catalog}__main_container`;
 
+  private static breadcrumbsWrapperId = 'breadcrumbs';
+
   private state: CatalogViewControlPanelsState = structuredClone(ViewCatalog.zeroState);
+
+  private categories?: Map<string | undefined, Array<Category>>;
 
   public showError(msg: string): string {
     // TODO implement popup with error
@@ -263,11 +271,59 @@ export default class ViewCatalog {
     sortingMenu.classList.remove('dropped-down');
   }
 
+  private fillBreadcrumbs(
+    breadcrumbsWrapper: HTMLElement | null = document.getElementById(ViewCatalog.breadcrumbsWrapperId)
+  ): void {
+    const noParamBreadcrumbsWrapper = breadcrumbsWrapper;
+    if (noParamBreadcrumbsWrapper == null) return;
+    noParamBreadcrumbsWrapper.innerHTML = '';
+    const onRefresh: () => void = () => {
+      this.fillBreadcrumbs();
+      document.dispatchEvent(ViewCatalog.OnViewChangedEvent);
+    };
+    const root = new Builder('button', '', Blocks.catalog, 'breadcrumbs', 'button').button();
+    root.innerText = 'HAQ';
+    root.setAttribute('id', 'cat-root-btn');
+    root.addEventListener('click', () => {
+      this.state.categories = [];
+      onRefresh();
+    });
+    noParamBreadcrumbsWrapper.append(root);
+    this.state.categories.forEach((category) => {
+      const subtreeButton = new Builder('button', '', Blocks.catalog, 'breadcrumbs', 'button').button();
+      subtreeButton.innerText = category.name['en-US'];
+      noParamBreadcrumbsWrapper.append(subtreeButton);
+      subtreeButton.addEventListener('click', () => {
+        this.state.categories.splice(this.state.categories.indexOf(category) + 1);
+        onRefresh();
+      });
+    });
+    const latestCategory =
+      this.state.categories.length > 0 ? this.state.categories[this.state.categories.length - 1] : undefined;
+    const subcategories = this.categories?.get(latestCategory?.id);
+    if (subcategories) {
+      // TODO:: draw dropdown with subcategories
+      const addCategoryButton = new Builder('button', '', Blocks.catalog, 'breadcrumbs', 'button').button();
+      addCategoryButton.innerText = '+';
+      noParamBreadcrumbsWrapper.append(addCategoryButton);
+      addCategoryButton.addEventListener('click', () => {
+        subcategories.forEach((subcategory) => {
+          const subVar = new Builder('button', '', Blocks.catalog, 'breadcrumbs', 'button-variant').button();
+          subVar.innerText = subcategory.name['en-US'];
+          addCategoryButton.append(subVar);
+          subVar.addEventListener('click', () => {
+            this.state.categories.push(subcategory);
+            onRefresh();
+          });
+        });
+      });
+    }
+  }
+
   private createBreadCrumbs(): HTMLElement {
-    const breadcrumbs: HTMLElement = new Builder('div', Base.links, Blocks.catalog, 'breadcrumbs', '').element();
-    breadcrumbs.setAttribute('id', 'breadcrumbs');
-    breadcrumbs.innerText = 'Shop/Female/Dresses';
-    // TODO fill with links in 3_08
+    const breadcrumbs: HTMLElement = ViewCatalog.breadcrumbsWrapperBuilder.element();
+    breadcrumbs.id = ViewCatalog.breadcrumbsWrapperId;
+    this.fillBreadcrumbs(breadcrumbs);
     return breadcrumbs;
   }
 
@@ -541,6 +597,11 @@ export default class ViewCatalog {
       page.append(this.createCatalogCard(product));
     });
     return page;
+  }
+
+  public fillCategories(categories: Map<string | undefined, Array<Category>>): void {
+    this.categories = categories;
+    this.fillBreadcrumbs();
   }
 
   public constructCatalogPage(resultPagination: ResultPagination<ProductProjection>): void {

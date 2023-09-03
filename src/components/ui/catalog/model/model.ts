@@ -70,6 +70,11 @@ export default class ModelCatalog {
         createQueryStringFromCatalogViewState(viewState),
         viewState.query
       );
+      this.eCommerceApi.getCategoriesTree().then((categoriesMap) => {
+        if (categoriesMap instanceof Map) {
+          this.view.fillCategories(categoriesMap);
+        }
+      });
       if ('message' in response && 'code' in response) {
         this.view.showError(response.message);
       } else {
