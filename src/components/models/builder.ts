@@ -12,6 +12,7 @@ export enum Blocks {
   product = 'product',
   catalog = 'catalog',
   modal = 'modal',
+  ctrl = 'controls',
 }
 
 export enum Elem {

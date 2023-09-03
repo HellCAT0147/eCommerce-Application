@@ -35,6 +35,8 @@
   }
 
   &__wrapper {
+    max-width: $tablet-landscape-width;
+
     &_body {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -82,6 +84,10 @@
     height: 100%;
     overflow: auto;
     background-color: rgba($color-dark, 0.6);
+
+    & .swiper {
+      width: unset;
+    }
   }
 }
 
@@ -99,6 +105,7 @@
     top: 20px;
     cursor: pointer;
     background: url('../assets/ico/close-btn.svg') no-repeat 100% / cover;
+    z-index: 2;
 
     @include media-hover-desktop {
       &:hover {
