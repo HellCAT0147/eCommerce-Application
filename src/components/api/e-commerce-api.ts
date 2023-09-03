@@ -328,4 +328,34 @@ export default class ECommerceApi {
       return this.errorObjectOrThrow(e);
     }
   }
+
+  public async updatePersonalData(
+    firstName: string,
+    lastName: string,
+    dateOfBirth: Date,
+    email: string
+  ): Promise<ErrorObject | true> {
+    try {
+      const currentUser = await this.getCustomer();
+      const actions: MyCustomerUpdateAction[] = [];
+      const year = dateOfBirth.getFullYear();
+      const month = (dateOfBirth.getMonth() + 1).toString().padStart(2, '0');
+      const day = dateOfBirth.getDate().toString().padStart(2, '0');
+      const formattedDate = `${year}-${month}-${day}`;
+
+      if (firstName !== currentUser.firstName) actions.push({ action: 'setFirstName', firstName });
+      if (lastName !== currentUser.lastName) actions.push({ action: 'setLastName', lastName });
+      if (formattedDate !== currentUser.dateOfBirth)
+        actions.push({ action: 'setDateOfBirth', dateOfBirth: formattedDate });
+      if (email !== currentUser.email) actions.push({ action: 'changeEmail', email });
+
+      await this.apiRoot
+        .me()
+        .post({ body: { version: currentUser.version, actions } })
+        .execute();
+      return true;
+    } catch (e) {
+      return this.errorObjectOrThrow(e);
+    }
+  }
 }
