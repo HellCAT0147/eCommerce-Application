@@ -62,6 +62,34 @@
     }
   }
 
+  &__message {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    column-gap: 5px;
+    padding: 20px 30px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: $color-success;
+
+    .message__image {
+      background-image: url('../assets/ico/on.svg');
+      flex-shrink: 0;
+      width: 11px;
+      height: 10px;
+    }
+
+    .message__text {
+      text-align: center;
+      @include font(400, 1.6rem, 100%, $color-success-intensive);
+    }
+
+    &_hidden {
+      display: none;
+    }
+  }
+
   &__button {
     @extend %font-main;
     &_back {

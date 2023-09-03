@@ -33,6 +33,13 @@ class ModelProfile extends RegistrationValidationModel {
       if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.address}`))
         this.view.toggleDisplayModal(`${Mode.address}`, false);
     }
+    if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.save}`)) {
+      this.view.showMessage(true);
+      if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.account}`))
+        this.view.toggleDisplayModal(`${Mode.account}`, false);
+      if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.address}`))
+        this.view.toggleDisplayModal(`${Mode.address}`, false);
+    }
   }
 
   public async getProfile(): Promise<void> {

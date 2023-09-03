@@ -172,6 +172,8 @@ export enum Titles {
   HAVE_ACCOUNT = `Already have an account?`,
   NOT_HAVE_ACCOUNT = `Don't have an account yet?`,
   SUCCESS_LOGIN = `You've successfully logged`,
+  SUCCESS_UPDATE = `You've successfully update the information`,
+  FAILED_UPDATE = `You failed to update the information.`,
   CATALOG = `Shopping Without Limits`,
   ACCOUNT_INFO = `Account Information`,
   CONTACT_INFO = `Contact Information`,
