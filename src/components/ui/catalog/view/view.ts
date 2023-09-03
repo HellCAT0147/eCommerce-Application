@@ -196,12 +196,15 @@ export default class ViewCatalog {
   }
 
   private changeSorting(sortingMenu: HTMLElement, event: Event): void {
-    const variants = Array.from(sortingMenu.children);
-    variants.forEach((variant) => {
+    const chosen: HTMLElement = event.target as HTMLElement;
+    if (chosen === sortingMenu) {
+      sortingMenu.classList.remove('dropped-down');
+      return;
+    }
+    const variants: Element[] = Array.from(sortingMenu.children);
+    variants.forEach((variant: Element) => {
       variant.classList.remove('sorted');
     });
-    const chosen = event.target as HTMLElement;
-
     switch (true) {
       case chosen.classList.contains('catalog__sorting-price-desc'):
         this.state.sortParameters = ViewCatalog.priceDescSortingParameters;
@@ -234,6 +237,26 @@ export default class ViewCatalog {
     breadcrumbs.innerText = 'Shop/Female/Dresses';
     // TODO fill with links in 3_08
     return breadcrumbs;
+  }
+
+  private createSearchWrapper(): HTMLElement {
+    const searchWrapper = new Builder('div', '', Blocks.catalog, 'search-wrapper', '').element();
+    searchWrapper.setAttribute('id', 'search-wrapper');
+    const searchInput: HTMLInputElement = new Builder('input', '', Blocks.catalog, 'search-wrapper', 'input').input();
+    searchInput.setAttribute('id', 'search-input');
+    searchInput.setAttribute('placeholder', 'WHAT ARE YOU LOOKING FOR?');
+    searchInput.addEventListener('change', (): void => {
+      this.state.query = searchInput.value;
+    });
+    const searchButton = new Builder('button', Base.btns_empty, Blocks.catalog, 'search-wrapper', 'button').button();
+    searchButton.setAttribute('id', 'search-button');
+    searchButton.textContent = `🔍`;
+    searchButton.addEventListener('click', () => {
+      searchInput.setAttribute(':focus', 'false');
+      document.dispatchEvent(ViewCatalog.OnViewChangedEvent);
+    });
+    searchWrapper.append(searchInput, searchButton);
+    return searchWrapper;
   }
 
   private createBrandFilterBox(): HTMLElement {
@@ -394,7 +417,7 @@ export default class ViewCatalog {
     const colorFilter: HTMLElement = this.createColorFilterBox();
     const priceFilter: HTMLElement = this.createPriceFilter();
     const resetFiltersBtn = new Builder('button', Base.btns_bordered, Blocks.catalog, 'filter', 'button').element();
-    resetFiltersBtn.innerText = 'RESET FILTERS';
+    resetFiltersBtn.innerText = 'RESET';
     resetFiltersBtn.setAttribute('id', ViewCatalog.resetButtonId);
     filters.append(filtersHeader, brandFilter, sizeFilter, colorFilter, priceFilter, resetFiltersBtn);
     filters.addEventListener('click', (e) => {
@@ -494,7 +517,9 @@ export default class ViewCatalog {
       main.innerHTML = '';
       const pageAndFilters: HTMLElement = new Builder('div', '', Blocks.catalog, 'page-and-filters', '').element();
       pageAndFilters.append(this.createFilters(), this.fillCatalogPage(resultPagination));
-      main.append(this.createBreadCrumbs(), this.createPageSettings(), pageAndFilters);
+      const searchAndSorting = new Builder('div', '', Blocks.catalog, 'search-and-sorting', '').element();
+      searchAndSorting.append(this.createPageSettings(), this.createSearchWrapper());
+      main.append(this.createBreadCrumbs(), searchAndSorting, pageAndFilters);
       // console.log(resultPagination);
     }
   }
@@ -503,10 +528,10 @@ export default class ViewCatalog {
     const colorsClassname = ViewCatalog.filtersWrapperBuilder.getBiggestClassName();
     if (colorsClassname != null) {
       this.state = structuredClone(ViewCatalog.zeroState);
-      const wrapper = Array.from(document.getElementsByClassName(colorsClassname));
-      wrapper.forEach((element) => {
+      const wrapper: Element[] = Array.from(document.getElementsByClassName(colorsClassname));
+      wrapper.forEach((element: Element) => {
         Array.from(element.getElementsByTagName('input')).forEach((input) => {
-          const wrappedInput = input;
+          const wrappedInput: HTMLInputElement = input;
           switch (input.type) {
             case 'checkbox':
               wrappedInput.checked = false;
@@ -519,9 +544,23 @@ export default class ViewCatalog {
           }
         });
       });
-      const priceLabel = document.getElementById('price-limit_label');
+      const priceLabel: HTMLElement | null = document.getElementById('price-limit_label');
       if (priceLabel) {
         priceLabel.innerText = `0 - ${this.state.maxPrice.toString()}`;
+      }
+      const sortingDropdown: Element = document.getElementsByClassName('catalog__sorting-dropdown')[0];
+      if (sortingDropdown) {
+        Array.from(sortingDropdown.children).forEach((child) => {
+          child.classList.remove('sorted');
+        });
+        const nameAsc: Element = sortingDropdown.getElementsByClassName('catalog__sorting-name-asc')[0];
+        if (nameAsc) {
+          nameAsc.classList.add('sorted');
+        }
+      }
+      const searchInput = document.getElementById('search-input');
+      if (searchInput && searchInput instanceof HTMLInputElement) {
+        searchInput.value = '';
       }
       document.dispatchEvent(ViewCatalog.OnViewChangedEvent);
     }
