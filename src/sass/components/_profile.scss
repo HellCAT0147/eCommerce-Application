@@ -1,5 +1,5 @@
 .profile {
-  &__field {
+  &__forms {
     display: flex;
     flex-direction: column;
     border: none;
@@ -45,13 +45,27 @@
     @include font(600, 1.8rem, 100%, $color-dark-gray);
   }
 
-  &__article {
-    display: flex;
+  &__modal {
+    display: none;
+    width: 70%;
+    &.opened {
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px 30px;
+      background: $color-light;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 300;
+    }
   }
 
-  &__person {
-    display: flex;
-    align-items: center;
-    column-gap: 5px;
+  &__button {
+    @extend %font-main;
+    &_back {
+      @include font(600, 1.4rem, 100%, $color-Light-gray);
+    }
   }
 }

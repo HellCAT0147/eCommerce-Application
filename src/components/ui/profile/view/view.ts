@@ -98,6 +98,8 @@ export default class ViewProfile {
     const main: HTMLFormElement | null = document.querySelector(`.${Blocks.main}__${Pages.PROFILE}`);
     if (main) {
       main.innerHTML = '';
+      const modalAccount = new Builder('div', '', Blocks.prof, Elem.modal, Mode.account).element();
+      const updateAccount: HTMLFieldSetElement = this.formView.createAccountInfoUpdateForm(customer);
       const form = this.formView.getForm();
       form.innerHTML = '';
       const title: HTMLHeadingElement = new Builder('', '', Blocks.prof, Elem.title, '').h(1);
@@ -106,8 +108,23 @@ export default class ViewProfile {
       const addressBook: HTMLHeadingElement = new Builder('', '', Blocks.prof, Elem.title, '').h(2);
       addressBook.textContent = `${Titles.ADDRESS_BOOK}`;
       const addresses = this.createAddresses(customer);
+      modalAccount.appendChild(updateAccount);
       form.append(title, accountInfo, addressBook, addresses);
-      main.append(form);
+      main.append(modalAccount, form);
+    }
+  }
+
+  public toggleDisplayModal(mode: string, display: boolean): void {
+    const body: HTMLElement | null = document.querySelector(`.${Blocks.body}`);
+    const modal: HTMLElement | null = document.querySelector(`.${Blocks.prof}__${Elem.modal}_${mode}`);
+    if (modal && body) {
+      if (display) {
+        body.classList.add(`${Mode.over}`);
+        modal.classList.add(`${Mode.opened}`);
+      } else {
+        body.classList.remove(`${Mode.over}`);
+        modal.classList.remove(`${Mode.opened}`);
+      }
     }
   }
 }

@@ -28,26 +28,40 @@ export default class FormViewProfile extends FormViewReg {
   public createAccountInfoUpdateForm(customer: Customer): HTMLFieldSetElement {
     const page: string = this.pageName;
     const accountInfoField: HTMLFieldSetElement = new Builder('', Base.subform, page, Elem.account, '').field();
+    accountInfoField.setAttribute('id', `${Elem.modal}-${Mode.account}`);
     const formTitle: HTMLElement = new Builder('', Base.form_title, Blocks.form, Elem.title, Mode.ship).h(2);
-    formTitle.textContent = `${Titles.ACCOUNT_INFO}`;
-    const firstName: HTMLFieldSetElement = new Builder('', Base.field, this.pageName, 'field', Mode.f_name).field();
-    const labelFirstName: HTMLLabelElement = this.createLabel(this.pageName, Mode.f_name);
-    const inputFirstName: HTMLInputElement = this.createInput(this.pageName, Mode.f_name);
-    const lastName: HTMLFieldSetElement = new Builder('', Base.field, this.pageName, 'field', Mode.l_name).field();
-    const labelLastName: HTMLLabelElement = this.createLabel(this.pageName, Mode.l_name);
-    const inputLastName: HTMLInputElement = this.createInput(this.pageName, Mode.l_name);
-    const formFieldDate: HTMLFieldSetElement = new Builder('', Base.field, this.pageName, 'field', Mode.date).field();
-    const labelDate: HTMLLabelElement = this.createLabel(this.pageName, Mode.date);
-    const inputDate: HTMLInputElement = this.createInput(this.pageName, Mode.date);
+    formTitle.textContent = `${Titles.UPDATE} ${Titles.CONTACT_INFO} `;
+    const firstName: HTMLFieldSetElement = new Builder('', Base.field, page, 'field', Mode.f_name).field();
+    const labelFirstName: HTMLLabelElement = this.createLabel(page, Mode.f_name);
+    const inputFirstName: HTMLInputElement = this.createInput(page, Mode.f_name);
+    const lastName: HTMLFieldSetElement = new Builder('', Base.field, page, 'field', Mode.l_name).field();
+    const labelLastName: HTMLLabelElement = this.createLabel(page, Mode.l_name);
+    const inputLastName: HTMLInputElement = this.createInput(page, Mode.l_name);
+    const formFieldDate: HTMLFieldSetElement = new Builder('', Base.field, page, 'field', Mode.date).field();
+    const labelDate: HTMLLabelElement = this.createLabel(page, Mode.date);
+    const inputDate: HTMLInputElement = this.createInput(page, Mode.date);
+    const formFieldEmail: HTMLFieldSetElement = new Builder('', Base.field, page, Elem.field, Mode.email).field();
+    const labelEmail: HTMLLabelElement = this.createLabel(page, Mode.email);
+    const inputEmail: HTMLInputElement = this.createInput(page, Mode.email);
+    const formFieldControl: HTMLFieldSetElement = new Builder('', Base.field, page, Elem.field, Mode.control).field();
+    const buttonSave: HTMLButtonElement = new Builder('', Base.btns_colored, page, Elem.btn, Mode.save).button();
+    buttonSave.classList.add(`${Base.btns_modal}`);
+    buttonSave.textContent = Buttons.SAVE;
+    const buttonBack: HTMLButtonElement = new Builder('', Base.btns_empty, page, Elem.btn, Mode.back).button();
+    buttonBack.classList.add(`${Base.btns_modal}`);
+    buttonBack.textContent = Buttons.BACK;
 
     inputFirstName.value = customer.firstName || '';
     inputLastName.value = customer.lastName || '';
     inputDate.value = customer.dateOfBirth || '';
+    inputEmail.value = customer.email || '';
 
     firstName.append(labelFirstName, inputFirstName);
     lastName.append(labelLastName, inputLastName);
     formFieldDate.append(labelDate, inputDate);
-    accountInfoField.append(formTitle, firstName, lastName, formFieldDate);
+    formFieldEmail.append(labelEmail, inputEmail);
+    formFieldControl.append(buttonSave, buttonBack);
+    accountInfoField.append(formTitle, firstName, lastName, formFieldDate, formFieldEmail, formFieldControl);
 
     return accountInfoField;
   }
