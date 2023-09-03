@@ -89,23 +89,25 @@ export default class ViewCatalog {
       const basePrice: HTMLElement = new Builder('span', '', Blocks.product, Elem.price, '').element();
       const discountPrice: HTMLElement = new Builder('span', '', Blocks.product, Elem.price, Mode.disc).element();
 
+      let basePriceValue: number;
+      let discountPriceValue: number;
+
       name.textContent = data.name['en-US'].toString().toUpperCase();
       priceHeading.textContent = 'price total'.toUpperCase();
       if (prices !== undefined) {
-        basePrice.textContent = `${prices.value.centAmount
-          .toString()
-          .slice(0, -prices.value.fractionDigits)},${prices.value.centAmount
-          .toString()
-          .slice(-prices.value.fractionDigits)} RUB`;
-        description.textContent = descriptionFromHost;
+        basePriceValue = prices.value.centAmount / 10 ** prices.value.fractionDigits;
+        basePrice.textContent = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(
+          basePriceValue
+        );
 
-        if (prices.discounted !== undefined)
-          discountPrice.textContent = `${prices.discounted.value.centAmount
-            .toString()
-            .slice(0, -prices.discounted.value.fractionDigits)},${prices.discounted.value.centAmount
-            .toString()
-            .slice(-prices.discounted.value.fractionDigits)} RUB`;
+        if (prices.discounted !== undefined) {
+          discountPriceValue = prices.discounted.value.centAmount / 10 ** prices.discounted.value.fractionDigits;
+          discountPrice.textContent = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(
+            discountPriceValue
+          );
+        }
       }
+      description.textContent = descriptionFromHost;
 
       this.addSlider(productBody, data.masterVariant.images);
 
