@@ -140,12 +140,15 @@ export default class ViewCatalog {
   }
 
   private changeSorting(sortingMenu: HTMLElement, event: Event): void {
-    const variants = Array.from(sortingMenu.children);
-    variants.forEach((variant) => {
+    const chosen: HTMLElement = event.target as HTMLElement;
+    if (chosen === sortingMenu) {
+      sortingMenu.classList.remove('dropped-down');
+      return;
+    }
+    const variants: Element[] = Array.from(sortingMenu.children);
+    variants.forEach((variant: Element) => {
       variant.classList.remove('sorted');
     });
-    const chosen = event.target as HTMLElement;
-
     switch (true) {
       case chosen.classList.contains('catalog__sorting-price-desc'):
         this.state.sortParameters = ViewCatalog.priceDescSortingParameters;
@@ -178,6 +181,19 @@ export default class ViewCatalog {
     breadcrumbs.innerText = 'Shop/Female/Dresses';
     // TODO fill with links in 3_08
     return breadcrumbs;
+  }
+
+  private createSearchWrapper(): HTMLElement {
+    const searchWrapper = new Builder('div', '', Blocks.catalog, 'search-wrapper', '').element();
+    searchWrapper.setAttribute('id', 'search-wrapper');
+    const searchInput: HTMLInputElement = new Builder('input', '', Blocks.catalog, 'search-wrapper', 'input').input();
+    searchInput.setAttribute('id', 'search-input');
+    searchInput.setAttribute('placeholder', 'WHAT ARE YOU LOOKING FOR?');
+    const searchButton = new Builder('button', Base.btns_empty, Blocks.catalog, 'search-wrapper', 'button').button();
+    searchButton.setAttribute('id', 'search-button');
+    searchButton.textContent = `🔍`;
+    searchWrapper.append(searchInput, searchButton);
+    return searchWrapper;
   }
 
   private createBrandFilterBox(): HTMLElement {
@@ -438,7 +454,9 @@ export default class ViewCatalog {
       main.innerHTML = '';
       const pageAndFilters: HTMLElement = new Builder('div', '', Blocks.catalog, 'page-and-filters', '').element();
       pageAndFilters.append(this.createFilters(), this.fillCatalogPage(resultPagination));
-      main.append(this.createBreadCrumbs(), this.createPageSettings(), pageAndFilters);
+      const searchAndSorting = new Builder('div', '', Blocks.catalog, 'search-and-sorting', '').element();
+      searchAndSorting.append(this.createSearchWrapper(), this.createPageSettings());
+      main.append(this.createBreadCrumbs(), searchAndSorting, pageAndFilters);
       // console.log(resultPagination);
     }
   }
