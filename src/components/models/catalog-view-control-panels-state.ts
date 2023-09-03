@@ -5,7 +5,7 @@ type CatalogViewControlPanelsState = {
   sizes: Array<string>;
   colors: Array<string>;
   maxPrice: number;
-  sortParameters: SortParameter;
+  sortParameters: Array<SortParameter>;
   query?: string;
 };
 
