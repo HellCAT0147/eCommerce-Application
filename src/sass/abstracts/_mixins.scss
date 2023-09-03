@@ -35,6 +35,18 @@
   }
 }
 
+@mixin media-hover-mobile {
+  @media (hover: none) and (pointer: coarse) {
+    @content;
+  }
+}
+
+@mixin media-hover-desktop {
+  @media (hover: hover) and (pointer: fine) {
+    @content;
+  }
+}
+
 @mixin eye-wrapper {
   position: absolute;
   height: 35px;

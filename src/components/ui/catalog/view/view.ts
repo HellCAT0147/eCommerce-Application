@@ -98,7 +98,7 @@ export default class ViewCatalog {
 
     images?.forEach((image) => {
       const slide: HTMLElement = new Builder('div', Base.sw_slide, '', '', '').element();
-      const img: HTMLElement = new Builder('', Base.img, Blocks.product, Elem.image, '').img(
+      const img: HTMLElement = new Builder('', Base.img, Blocks.product, Elem.image, Mode.click).img(
         image.url,
         image.label || DataBase.img_alt
       );
@@ -129,6 +129,35 @@ export default class ViewCatalog {
       speed: 700,
     });
     swiper.enable();
+  }
+
+  public showModal(img: HTMLImageElement): void {
+    const place: HTMLElement | null = document.querySelector(`.${Blocks.main}`);
+    if (place) {
+      const prevModal: HTMLDivElement | null = document.querySelector(`.${Blocks.product}__${Elem.modal}`);
+      if (prevModal) prevModal.outerHTML = '';
+
+      const modal: HTMLElement = new Builder('div', Base.modal, Blocks.product, Elem.modal, '').element();
+      const modalContent: HTMLElement = new Builder('div', '', Blocks.modal, Elem.content, '').element();
+      const closeBtn: HTMLElement = new Builder('div', '', Blocks.modal, Elem.close, '').element();
+      const bigImg: Node = img.cloneNode();
+
+      if (bigImg instanceof HTMLElement) bigImg.classList.remove(`${Blocks.product}__${Elem.image}_${Mode.click}`);
+
+      modalContent.append(closeBtn, bigImg);
+      modal.appendChild(modalContent);
+      place.appendChild(modal);
+    }
+  }
+
+  public switchScroll(visibility: boolean): void {
+    if (visibility) document.body.style.overflow = '';
+    else document.body.style.overflow = 'hidden';
+  }
+
+  public hideModal(modal: HTMLElement): void {
+    const localModal: HTMLElement = modal;
+    localModal.outerHTML = '';
   }
 
   private toggleFiltersVisibility(filters: HTMLElement): void {

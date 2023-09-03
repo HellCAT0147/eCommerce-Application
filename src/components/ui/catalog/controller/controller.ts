@@ -2,6 +2,7 @@ import { ErrorObject, Product } from '@commercetools/platform-sdk';
 import ECommerceApi from '../../../api/e-commerce-api';
 import ModelCatalog from '../model/model';
 import Pagination from '../../../models/pagination';
+import { Base, Blocks, Elem } from '../../../models/builder';
 import ViewCatalog from '../view/view';
 
 class ControllerCatalog {
@@ -19,7 +20,9 @@ class ControllerCatalog {
   }
 
   public mouseEvent(e: MouseEvent): void {
-    const target: HTMLElement = e.target as HTMLElement;
+    const { target } = e;
+    if (!(target instanceof HTMLElement)) return;
+
     switch (target.tagName) {
       case 'BUTTON':
         if (target.id === ViewCatalog.resetButtonId) {
@@ -32,7 +35,12 @@ class ControllerCatalog {
         e.preventDefault();
         break;
     }
-    // TODO any mouse events other than clicking on the product card
+
+    const img: HTMLImageElement | null = target.closest(`.${Blocks.product}__${Base.img}`);
+    if (img) this.model.createModal(target);
+
+    const closeBtn: HTMLDivElement | null = target.closest(`.${Blocks.modal}__${Elem.close}`);
+    if (closeBtn) this.model.destroyModal(closeBtn);
   }
 
   public loadProduct(key: string, response: Product | ErrorObject): void {

@@ -54,4 +54,19 @@ export default class ModelCatalog {
   public async resetProducts(): Promise<void> {
     this.view.resetState();
   }
+
+  public createModal(img: EventTarget): void {
+    if (img instanceof HTMLImageElement) {
+      this.view.showModal(img);
+      this.view.switchScroll(false);
+    }
+  }
+
+  public destroyModal(closeBtn: HTMLElement | null): void {
+    if (closeBtn) {
+      const modal: HTMLElement | null | undefined = closeBtn.parentElement?.parentElement;
+      if (modal) this.view.hideModal(modal);
+      this.view.switchScroll(true);
+    }
+  }
 }
