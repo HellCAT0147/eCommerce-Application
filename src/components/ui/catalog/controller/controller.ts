@@ -2,7 +2,7 @@ import { ErrorObject, Product } from '@commercetools/platform-sdk';
 import ECommerceApi from '../../../api/e-commerce-api';
 import ModelCatalog from '../model/model';
 import Pagination from '../../../models/pagination';
-import { Base, Blocks, Elem } from '../../../models/builder';
+import { Base, Blocks, Elem, Mode } from '../../../models/builder';
 import ViewCatalog from '../view/view';
 
 class ControllerCatalog {
@@ -36,7 +36,7 @@ class ControllerCatalog {
         break;
     }
 
-    const img: HTMLImageElement | null = target.closest(`.${Blocks.product}__${Base.img}`);
+    const img: HTMLImageElement | null = target.closest(`.${Blocks.product}__${Base.img}_${Mode.click}`);
     if (img) this.model.createModal(target);
 
     const closeBtn: HTMLDivElement | null = target.closest(`.${Blocks.modal}__${Elem.close}`);

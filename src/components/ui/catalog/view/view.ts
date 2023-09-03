@@ -1,10 +1,11 @@
-import { Image, ProductData, ProductVariant, ProductProjection, Price } from '@commercetools/platform-sdk';
+import { Image, ProductData, ProductVariant, ProductProjection } from '@commercetools/platform-sdk';
 import { Base, Blocks, Elem, Mode } from '../../../models/builder';
 import Builder from '../../builder/html-builder';
 import { DataBase } from '../../../models/commerce';
 import ResultPagination from '../../../models/result-pagination';
 import SortParameter from '../../../models/sort-parameter';
 import CatalogViewControlPanelsState from '../../../models/catalog-view-control-panels-state';
+import Controls from '../../../models/swiper';
 
 export default class ViewCatalog {
   private static colorsHexes: Array<string> = [
@@ -70,7 +71,14 @@ export default class ViewCatalog {
     return msg;
   }
 
-  public showProduct(data: ProductData): void {
+  public showProduct(
+    data: ProductData,
+    name: string,
+    basePrice: string,
+    discountPrice: string,
+    description: string,
+    images?: Image[]
+  ): void {
     const main: HTMLElement | null = document.querySelector(`.${Blocks.main}__${Mode.catalog}`);
     if (main) {
       main.innerHTML = '';
@@ -78,87 +86,110 @@ export default class ViewCatalog {
       const product: HTMLElement = new Builder('article', '', Blocks.product, Elem.wrapper, '').element();
       const productBody: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.body).element();
       const productInfo: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.info).element();
-      const name: HTMLHeadingElement = new Builder('h2', Base.titles, Blocks.product, Elem.title, Mode.big).h(2);
-      const descriptionFromHost: string = data.description?.['en-US'].toString() ?? '';
-      const description: HTMLParagraphElement = new Builder('p', '', Blocks.product, Elem.desc, '').p();
-      const price: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.price).element();
-      const priceHeading: HTMLHeadingElement = new Builder('h4', Base.titles, Blocks.product, Elem.title, Mode.price).h(
-        4
-      );
-      const prices: Price | undefined = data.masterVariant.prices?.[0];
-      const basePrice: HTMLElement = new Builder('span', '', Blocks.product, Elem.price, '').element();
-      const discountPrice: HTMLElement = new Builder('span', '', Blocks.product, Elem.price, Mode.disc).element();
+      const nameHTML: HTMLHeadingElement = new Builder('h2', Base.titles, Blocks.product, Elem.title, Mode.big).h(2);
+      const descriptionHTML: HTMLParagraphElement = new Builder('p', '', Blocks.product, Elem.desc, '').p();
+      const priceHTML: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.price).element();
+      const priceHeadingHTML: HTMLHeadingElement = new Builder(
+        'h4',
+        Base.titles,
+        Blocks.product,
+        Elem.title,
+        Mode.price
+      ).h(4);
+      const basePriceHTML: HTMLElement = new Builder('span', '', Blocks.product, Elem.price, '').element();
+      const discountPriceHTML: HTMLElement = new Builder('span', '', Blocks.product, Elem.price, Mode.disc).element();
 
-      let basePriceValue: number;
-      let discountPriceValue: number;
+      nameHTML.textContent = name;
+      priceHeadingHTML.textContent = 'price total'.toUpperCase();
+      basePriceHTML.textContent = basePrice;
+      discountPriceHTML.textContent = discountPrice;
+      descriptionHTML.textContent = description;
 
-      name.textContent = data.name['en-US'].toString().toUpperCase();
-      priceHeading.textContent = 'price total'.toUpperCase();
-      if (prices !== undefined) {
-        basePriceValue = prices.value.centAmount / 10 ** prices.value.fractionDigits;
-        basePrice.textContent = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(
-          basePriceValue
-        );
+      this.addSlider(productBody, images);
 
-        if (prices.discounted !== undefined) {
-          discountPriceValue = prices.discounted.value.centAmount / 10 ** prices.discounted.value.fractionDigits;
-          discountPrice.textContent = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(
-            discountPriceValue
-          );
-        }
-      }
-      description.textContent = descriptionFromHost;
-
-      this.addSlider(productBody, data.masterVariant.images);
-
-      price.append(priceHeading, basePrice, discountPrice);
-      productInfo.append(name, price);
+      priceHTML.append(priceHeadingHTML, basePriceHTML, discountPriceHTML);
+      productInfo.append(nameHTML, priceHTML);
       productBody.appendChild(productInfo);
-      product.append(productBody, description);
+      product.append(productBody, descriptionHTML);
       main.appendChild(product);
     }
   }
 
-  private async addSlider(parent: HTMLElement, images?: Image[]): Promise<void> {
+  private async addSlider(
+    parent: HTMLElement,
+    images?: Image[] | HTMLImageElement[],
+    initImgID?: number
+  ): Promise<void> {
     const slider: HTMLElement = new Builder('div', Base.swiper, '', '', '').element();
     const sliderWrapper: HTMLElement = new Builder('div', Base.sw_wrap, '', '', '').element();
 
     images?.forEach((image) => {
       const slide: HTMLElement = new Builder('div', Base.sw_slide, '', '', '').element();
-      const img: HTMLElement = new Builder('', Base.img, Blocks.product, Elem.image, Mode.click).img(
-        image.url,
-        image.label || DataBase.img_alt
-      );
+      let img: HTMLElement;
+      if (!(image instanceof HTMLImageElement)) {
+        img = new Builder('', Base.img, Blocks.product, Elem.image, Mode.click).img(
+          image.url,
+          image.label || DataBase.img_alt
+        );
+      } else img = new Builder('', Base.img, Blocks.product, Elem.image, Mode.click).img(image.src, image.alt);
       slide.appendChild(img);
       sliderWrapper.appendChild(slide);
     });
 
-    const nextEl: HTMLElement = new Builder('div', Base.sw_next, '', '', '').element();
-    const prevEl: HTMLElement = new Builder('div', Base.sw_prev, '', '', '').element();
-    const pagination: HTMLElement = new Builder('div', Base.sw_page, '', '', '').element();
+    const nextEl: HTMLElement = new Builder(
+      'div',
+      Base.sw_next,
+      '',
+      '',
+      initImgID === undefined ? Mode.click : ''
+    ).element();
+    const prevEl: HTMLElement = new Builder(
+      'div',
+      Base.sw_prev,
+      '',
+      '',
+      initImgID === undefined ? Mode.click : ''
+    ).element();
+    const pagination: HTMLElement = new Builder(
+      'div',
+      Base.sw_page,
+      '',
+      '',
+      initImgID === undefined ? Mode.click : ''
+    ).element();
 
     slider.append(sliderWrapper, pagination, prevEl, nextEl);
     parent.appendChild(slider);
 
+    this.runSwiper(slider, pagination, { nextEl, prevEl }, initImgID);
+  }
+
+  private async runSwiper(
+    slider: HTMLElement,
+    pagination: HTMLElement,
+    controls: Controls,
+    initImgID: number | undefined
+  ): Promise<void> {
     const Swiper = await import('swiper/bundle');
-    const swiper = new Swiper.Swiper(`.${Base.swiper}`, {
+    const swiper = new Swiper.Swiper(slider, {
       loop: true,
       pagination: {
-        el: `.${Base.sw_page}`,
+        el: pagination,
       },
       navigation: {
-        nextEl: `.${Base.sw_next}`,
-        prevEl: `.${Base.sw_prev}`,
+        nextEl: controls.nextEl,
+        prevEl: controls.prevEl,
       },
       autoplay: {
         delay: 3000,
       },
       speed: 700,
+      initialSlide: initImgID,
     });
     swiper.enable();
   }
 
-  public showModal(img: HTMLImageElement): void {
+  public showModal(currentImgID: number, images: HTMLImageElement[]): void {
     const place: HTMLElement | null = document.querySelector(`.${Blocks.main}`);
     if (place) {
       const prevModal: HTMLDivElement | null = document.querySelector(`.${Blocks.product}__${Elem.modal}`);
@@ -167,11 +198,9 @@ export default class ViewCatalog {
       const modal: HTMLElement = new Builder('div', Base.modal, Blocks.product, Elem.modal, '').element();
       const modalContent: HTMLElement = new Builder('div', '', Blocks.modal, Elem.content, '').element();
       const closeBtn: HTMLElement = new Builder('div', '', Blocks.modal, Elem.close, '').element();
-      const bigImg: Node = img.cloneNode();
 
-      if (bigImg instanceof HTMLElement) bigImg.classList.remove(`${Blocks.product}__${Elem.image}_${Mode.click}`);
-
-      modalContent.append(closeBtn, bigImg);
+      modalContent.append(closeBtn);
+      this.addSlider(modalContent, images, currentImgID);
       modal.appendChild(modalContent);
       place.appendChild(modal);
     }
