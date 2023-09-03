@@ -35,7 +35,8 @@ export default class ModelCatalog {
       const response: ResultPagination<ProductProjection> | ErrorObject = await this.eCommerceApi.getProducts(
         viewState.sortParameters,
         pagination,
-        createQueryStringFromCatalogViewState(viewState)
+        createQueryStringFromCatalogViewState(viewState),
+        viewState.query
       );
       if ('message' in response && 'code' in response) {
         this.view.showError(response.message);
