@@ -46,6 +46,7 @@ export enum Elem {
   modal = 'modal',
   content = 'content',
   close = 'close',
+  price = 'price',
 }
 
 export enum Mode {
@@ -91,6 +92,9 @@ export enum Mode {
   not = 'not',
   body = 'body',
   click = 'clickable',
+  info = 'info',
+  price = 'price',
+  disc = 'discounted',
 }
 
 export enum Base {

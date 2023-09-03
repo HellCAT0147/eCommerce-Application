@@ -1,4 +1,4 @@
-import { Image, ProductData, ProductVariant, ProductProjection } from '@commercetools/platform-sdk';
+import { Image, ProductData, ProductVariant, ProductProjection, Price } from '@commercetools/platform-sdk';
 import { Base, Blocks, Elem, Mode } from '../../../models/builder';
 import Builder from '../../builder/html-builder';
 import { DataBase } from '../../../models/commerce';
@@ -76,17 +76,42 @@ export default class ViewCatalog {
       main.innerHTML = '';
 
       const product: HTMLElement = new Builder('article', '', Blocks.product, Elem.wrapper, '').element();
-      const name: HTMLHeadingElement = new Builder('h2', Base.titles, Blocks.product, Elem.title, Mode.big).h(2);
-      const description: HTMLParagraphElement = new Builder('p', '', Blocks.product, Elem.desc, '').p();
-      const descriptionFromHost: string = data.description?.['en-US'].toString() ?? '';
       const productBody: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.body).element();
+      const productInfo: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.info).element();
+      const name: HTMLHeadingElement = new Builder('h2', Base.titles, Blocks.product, Elem.title, Mode.big).h(2);
+      const descriptionFromHost: string = data.description?.['en-US'].toString() ?? '';
+      const description: HTMLParagraphElement = new Builder('p', '', Blocks.product, Elem.desc, '').p();
+      const price: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.price).element();
+      const priceHeading: HTMLHeadingElement = new Builder('h4', Base.titles, Blocks.product, Elem.title, Mode.price).h(
+        4
+      );
+      const prices: Price | undefined = data.masterVariant.prices?.[0];
+      const basePrice: HTMLElement = new Builder('span', '', Blocks.product, Elem.price, '').element();
+      const discountPrice: HTMLElement = new Builder('span', '', Blocks.product, Elem.price, Mode.disc).element();
 
       name.textContent = data.name['en-US'].toString().toUpperCase();
-      description.textContent = descriptionFromHost;
+      priceHeading.textContent = 'price total'.toUpperCase();
+      if (prices !== undefined) {
+        basePrice.textContent = `${prices.value.centAmount
+          .toString()
+          .slice(0, -prices.value.fractionDigits)}.${prices.value.centAmount
+          .toString()
+          .slice(-prices.value.fractionDigits)} RUB`;
+        description.textContent = descriptionFromHost;
+
+        if (prices.discounted !== undefined)
+          discountPrice.textContent = `${prices.discounted.value.centAmount
+            .toString()
+            .slice(0, -prices.discounted.value.fractionDigits)}.${prices.discounted.value.centAmount
+            .toString()
+            .slice(-prices.discounted.value.fractionDigits)} RUB`;
+      }
 
       this.addSlider(productBody, data.masterVariant.images);
 
-      productBody.appendChild(name);
+      price.append(priceHeading, basePrice, discountPrice);
+      productInfo.append(name, price);
+      productBody.appendChild(productInfo);
       product.append(productBody, description);
       main.appendChild(product);
     }
