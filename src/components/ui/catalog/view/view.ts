@@ -180,9 +180,12 @@ export default class ViewCatalog {
         nextEl: controls.nextEl,
         prevEl: controls.prevEl,
       },
-      autoplay: {
-        delay: 3000,
-      },
+      autoplay:
+        initImgID === undefined
+          ? {
+              delay: 3000,
+            }
+          : false,
       speed: 700,
       initialSlide: initImgID,
     });
