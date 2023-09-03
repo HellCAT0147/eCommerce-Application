@@ -86,11 +86,11 @@ export default class ViewCatalog {
       const product: HTMLElement = new Builder('article', '', Blocks.product, Elem.wrapper, '').element();
       const productBody: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.body).element();
       const productInfo: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.info).element();
-      const nameHTML: HTMLHeadingElement = new Builder('h2', Base.titles, Blocks.product, Elem.title, Mode.big).h(2);
-      const descriptionHTML: HTMLParagraphElement = new Builder('p', '', Blocks.product, Elem.desc, '').p();
+      const nameHTML: HTMLHeadingElement = new Builder('', Base.titles, Blocks.product, Elem.title, Mode.big).h(2);
+      const descriptionHTML: HTMLParagraphElement = new Builder('', '', Blocks.product, Elem.desc, '').p();
       const priceHTML: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.price).element();
       const priceHeadingHTML: HTMLHeadingElement = new Builder(
-        'h4',
+        '',
         Base.titles,
         Blocks.product,
         Elem.title,
