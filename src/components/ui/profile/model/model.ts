@@ -17,7 +17,12 @@ class ModelProfile extends RegistrationValidationModel {
 
   public openEditMode(target: HTMLElement): void {
     if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.account}`)) {
+      this.view.fillAccountModal(target);
       this.view.toggleDisplayModal(`${Mode.account}`, true);
+    }
+    if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.address}`)) {
+      this.view.fillAddressModal(target);
+      this.view.toggleDisplayModal(`${Mode.address}`, true);
     }
   }
 
@@ -25,6 +30,8 @@ class ModelProfile extends RegistrationValidationModel {
     if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.back}`)) {
       if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.account}`))
         this.view.toggleDisplayModal(`${Mode.account}`, false);
+      if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.address}`))
+        this.view.toggleDisplayModal(`${Mode.address}`, false);
     }
   }
 

@@ -25,7 +25,7 @@ export default class FormViewProfile extends FormViewReg {
     return addresses;
   }
 
-  public createAccountInfoUpdateForm(customer: Customer): HTMLFieldSetElement {
+  public createAccountInfoUpdateForm(): HTMLFieldSetElement {
     const page: string = this.pageName;
     const accountInfoField: HTMLFieldSetElement = new Builder('', Base.subform, page, Elem.account, '').field();
     accountInfoField.setAttribute('id', `${Elem.modal}-${Mode.account}`);
@@ -50,11 +50,6 @@ export default class FormViewProfile extends FormViewReg {
     const buttonBack: HTMLButtonElement = new Builder('', Base.btns_empty, page, Elem.btn, Mode.back).button();
     buttonBack.classList.add(`${Base.btns_modal}`);
     buttonBack.textContent = Buttons.BACK;
-
-    inputFirstName.value = customer.firstName || '';
-    inputLastName.value = customer.lastName || '';
-    inputDate.value = customer.dateOfBirth || '';
-    inputEmail.value = customer.email || '';
 
     firstName.append(labelFirstName, inputFirstName);
     lastName.append(labelLastName, inputLastName);
@@ -129,12 +124,18 @@ export default class FormViewProfile extends FormViewReg {
     postal: InputType,
     country: InputType,
     title: string,
-    mode: InputType,
+    mode: string,
     check?: HTMLElement
   ): HTMLFieldSetElement {
     const page: string = this.pageName;
-    const formFieldAddress: HTMLFieldSetElement = new Builder('', Base.subform, page, Elem.address, mode).field();
-    const formTitleShip: HTMLElement = new Builder('h2', Base.form_title, Blocks.form, Elem.title, Mode.ship).element();
+    const formFieldAddress: HTMLFieldSetElement = new Builder(
+      '',
+      Base.subform,
+      Blocks.modal,
+      Elem.address,
+      mode
+    ).field();
+    const formTitleShip: HTMLElement = new Builder('h2', Base.form_title, Blocks.form, Elem.title, '').element();
     formTitleShip.textContent = `${title} ${Titles.ADDRESS}`;
     const formFieldCountry: HTMLFieldSetElement = new Builder('', Base.field, page, 'field', country).field();
     const labelCountry: HTMLLabelElement = this.createLabel(page, country, Mode.country);
@@ -148,6 +149,13 @@ export default class FormViewProfile extends FormViewReg {
     const formFieldStreet: HTMLFieldSetElement = new Builder('', Base.field, page, 'field', street).field();
     const labelStreet: HTMLLabelElement = this.createLabel(page, street, Mode.street);
     const inputStreet: HTMLInputElement = this.createInput(page, street);
+    const formFieldControl: HTMLFieldSetElement = new Builder('', Base.field, page, Elem.field, Mode.control).field();
+    const buttonSave: HTMLButtonElement = new Builder('', Base.btns_colored, page, Elem.btn, Mode.save).button();
+    buttonSave.classList.add(`${Base.btns_modal}`);
+    buttonSave.textContent = Buttons.SAVE;
+    const buttonBack: HTMLButtonElement = new Builder('', Base.btns_empty, page, Elem.btn, Mode.back).button();
+    buttonBack.classList.add(`${Base.btns_modal}`);
+    buttonBack.textContent = Buttons.BACK;
 
     formFieldStreet.append(labelStreet, inputStreet);
     formFieldCity.append(labelCity, inputCity);
@@ -155,7 +163,8 @@ export default class FormViewProfile extends FormViewReg {
     formFieldCountry.append(labelCountry, inputCountry);
     formFieldAddress.appendChild(formTitleShip);
     if (check) formFieldAddress.appendChild(check);
-    formFieldAddress.append(formFieldCountry, formFieldPostal, formFieldCity, formFieldStreet);
+    formFieldControl.append(buttonSave, buttonBack);
+    formFieldAddress.append(formFieldCountry, formFieldPostal, formFieldCity, formFieldStreet, formFieldControl);
 
     return formFieldAddress;
   }

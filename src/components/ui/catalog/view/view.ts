@@ -520,7 +520,6 @@ export default class ViewCatalog {
       const searchAndSorting = new Builder('div', '', Blocks.catalog, 'search-and-sorting', '').element();
       searchAndSorting.append(this.createPageSettings(), this.createSearchWrapper());
       main.append(this.createBreadCrumbs(), searchAndSorting, pageAndFilters);
-      // console.log(resultPagination);
     }
   }
 
