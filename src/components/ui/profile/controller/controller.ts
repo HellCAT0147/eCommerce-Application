@@ -11,7 +11,11 @@ class ControllerProfile extends ControllerRegistration {
   }
 
   public mouseEvent(e: MouseEvent): void {
-    e.preventDefault();
+    const { target } = e;
+    if (!(target instanceof HTMLElement)) return;
+    if (target.classList.contains('buttons_edit')) {
+      e.preventDefault();
+    }
   }
 
   public loadProfile(): void {

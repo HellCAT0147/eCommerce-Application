@@ -40,14 +40,14 @@ export default class ViewProfile {
       if (address.id === dataAddresses.billing) {
         defAddress = Mode.default;
       }
-      const addresses: HTMLElement = this.formView.createAddressField(address, type, defAddress);
+      const addresses: HTMLElement = this.formView.createAddressField(type, defAddress, address);
       field.append(addresses);
     } else if (dataAddresses.all_ship && dataAddresses.all_ship.includes(address.id)) {
       type = Mode.ship;
       if (address.id === dataAddresses.shipping) {
         defAddress = Mode.default;
       }
-      const addresses: HTMLElement = this.formView.createAddressField(address, type, defAddress);
+      const addresses: HTMLElement = this.formView.createAddressField(type, defAddress, address);
       field.append(addresses);
     }
 
@@ -62,6 +62,15 @@ export default class ViewProfile {
     listAddresses.forEach((address: Address) => {
       this.parseAddress(address, dataAddress, addresses);
     });
+
+    if (!dataAddress.billing) {
+      const emptyDefBilling: HTMLFieldSetElement = this.formView.createAddressField(Mode.bill, Mode.default);
+      addresses.appendChild(emptyDefBilling);
+    }
+    if (!dataAddress.shipping) {
+      const emptyDefShipping: HTMLFieldSetElement = this.formView.createAddressField(Mode.ship, Mode.default);
+      addresses.appendChild(emptyDefShipping);
+    }
 
     return addresses;
   }

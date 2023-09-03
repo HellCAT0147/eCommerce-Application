@@ -61,20 +61,22 @@ export default class FormViewProfile extends FormViewReg {
     const firstName: HTMLParagraphElement = new Builder('', '', page, Elem.text, Mode.f_name).p();
     const lastName: HTMLParagraphElement = new Builder('', '', page, Elem.text, Mode.l_name).p();
     const date: HTMLParagraphElement = new Builder('', '', page, Elem.text, Mode.date).p();
+    const email: HTMLParagraphElement = new Builder('', '', page, Elem.text, Mode.email).p();
     const buttonEdit: HTMLButtonElement = new Builder('', Base.btns_edit, page, Elem.btn, Mode.account).button();
     buttonEdit.textContent = Buttons.EDIT;
 
     firstName.textContent = `${customer.firstName || ''}`;
     lastName.textContent = `${customer.lastName || ''}`;
     date.textContent = customer.dateOfBirth || '';
+    email.textContent = customer.email || '';
 
     content.append(firstName, lastName);
-    accountInfoField.append(formTitle, content, date, buttonEdit);
+    accountInfoField.append(formTitle, content, date, email, buttonEdit);
 
     return accountInfoField;
   }
 
-  public createAddressField(address: Address, type: string, defAddress: string): HTMLFieldSetElement {
+  public createAddressField(type: string, defAddress: string, address?: Address): HTMLFieldSetElement {
     const page: string = this.pageName;
     let mode: string = type;
     if (defAddress) {
@@ -84,6 +86,7 @@ export default class FormViewProfile extends FormViewReg {
     const formTitle: HTMLElement = new Builder('', '', page, Elem.subtitle, '').h(2);
     formTitle.textContent = `${defAddress} ${type} ${Titles.ADDRESS}`.toUpperCase().trim();
     const content: HTMLElement = new Builder('div', '', page, Elem.content, '').element();
+    const info: HTMLElement = new Builder('', '', page, Elem.text, Mode.info).p();
     const street: HTMLElement = new Builder('', '', page, Elem.text, Mode.street).p();
     const postal: HTMLElement = new Builder('', '', page, Elem.text, Mode.postal).p();
     const city: HTMLElement = new Builder('', '', page, Elem.text, Mode.city).p();
@@ -91,13 +94,17 @@ export default class FormViewProfile extends FormViewReg {
     const buttonEdit: HTMLButtonElement = new Builder('', Base.btns_edit, page, Elem.btn, Mode.address).button();
     buttonEdit.textContent = Buttons.ADDRESS;
 
-    street.textContent = `${address.streetName}`;
-    postal.textContent = `${address.postalCode}`;
-    city.textContent = `${address.city}`;
-    country.textContent = `${address.country}`;
+    if (address) {
+      street.textContent = `${address.streetName},`;
+      postal.textContent = `${address.postalCode},`;
+      city.textContent = `${address.city},`;
+      country.textContent = `${address.country}.`;
+    } else {
+      info.textContent = `${Titles.HAVE_NOT} ${defAddress} ${type} ${Elem.address}`;
+    }
 
     content.append(street, postal, city, country);
-    addressField.append(formTitle, content, buttonEdit);
+    addressField.append(formTitle, info, content, buttonEdit);
 
     return addressField;
   }
