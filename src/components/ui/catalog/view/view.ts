@@ -94,7 +94,7 @@ export default class ViewCatalog {
       if (prices !== undefined) {
         basePrice.textContent = `${prices.value.centAmount
           .toString()
-          .slice(0, -prices.value.fractionDigits)}.${prices.value.centAmount
+          .slice(0, -prices.value.fractionDigits)},${prices.value.centAmount
           .toString()
           .slice(-prices.value.fractionDigits)} RUB`;
         description.textContent = descriptionFromHost;
@@ -102,7 +102,7 @@ export default class ViewCatalog {
         if (prices.discounted !== undefined)
           discountPrice.textContent = `${prices.discounted.value.centAmount
             .toString()
-            .slice(0, -prices.discounted.value.fractionDigits)}.${prices.discounted.value.centAmount
+            .slice(0, -prices.discounted.value.fractionDigits)},${prices.discounted.value.centAmount
             .toString()
             .slice(-prices.discounted.value.fractionDigits)} RUB`;
       }

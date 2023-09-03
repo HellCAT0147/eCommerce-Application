@@ -39,6 +39,7 @@
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 20px;
+      margin-bottom: 20px;
 
       @include media-tablet-landscape {
         grid-template-columns: 1fr 2fr;
@@ -54,6 +55,17 @@
       flex-direction: column;
       justify-content: flex-start;
       gap: 20px;
+    }
+  }
+
+  &__price {
+    @include font(500, 2rem, 20px, $color-dark);
+    text-decoration: line-through;
+
+    &_discounted {
+      @include font(500, 2.6rem, 20px, $color-price);
+      margin-left: 7px;
+      text-decoration: none;
     }
   }
 
