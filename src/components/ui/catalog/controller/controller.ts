@@ -3,6 +3,7 @@ import ECommerceApi from '../../../api/e-commerce-api';
 import ModelCatalog from '../model/model';
 import Pagination from '../../../models/pagination';
 import { Base, Blocks, Elem } from '../../../models/builder';
+import ViewCatalog from '../view/view';
 
 class ControllerCatalog {
   protected eCommerceApi: ECommerceApi;
@@ -14,21 +15,32 @@ class ControllerCatalog {
   public constructor(eCommerceApi: ECommerceApi) {
     this.eCommerceApi = eCommerceApi;
     this.model = new ModelCatalog(this.eCommerceApi);
+
+    document.addEventListener(ViewCatalog.OnViewChangedEvent.type, () => this.reloadProducts());
   }
 
   public mouseEvent(e: MouseEvent): void {
-    e.preventDefault();
-
     const { target } = e;
     if (!(target instanceof HTMLElement)) return;
+
+    switch (target.tagName) {
+      case 'BUTTON':
+        if (target.id === ViewCatalog.resetButtonId) {
+          this.model.resetProducts();
+        }
+        return;
+      case 'INPUT':
+        return;
+      default:
+        e.preventDefault();
+        break;
+    }
 
     const img: HTMLImageElement | null = target.closest(`.${Blocks.product}__${Base.img}`);
     if (img) this.model.createModal(target);
 
     const closeBtn: HTMLDivElement | null = target.closest(`.${Blocks.modal}__${Elem.close}`);
     if (closeBtn) this.model.destroyModal(closeBtn);
-
-    // TODO any mouse events other than clicking on the product card
   }
 
   public loadProduct(key: string, response: Product | ErrorObject): void {
@@ -38,6 +50,10 @@ class ControllerCatalog {
 
   public loadProducts(): void {
     this.model.fetchProducts(this.currentPagination);
+  }
+
+  public reloadProducts(): void {
+    this.model.fetchProducts(this.currentPagination, true);
   }
 }
 
