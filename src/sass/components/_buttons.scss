@@ -17,6 +17,13 @@
     border: none;
     background: inherit;
   }
+  &_edit {
+    border: none;
+    background: $color-main;
+    padding: 7px 10px;
+    max-width: fit-content;
+    @include font(600, 1.4rem, 100%, $color-dark);
+  }
   &:active {
     scale: 0.9;
   }

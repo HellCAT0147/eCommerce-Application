@@ -1,5 +1,5 @@
 import { Address, Customer } from '@commercetools/platform-sdk';
-import { Base, Blocks, Elem, Mode, Titles } from '../../../models/builder';
+import { Base, Blocks, Buttons, Elem, Mode, Titles } from '../../../models/builder';
 import { Pages } from '../../../models/router';
 import Builder from '../../builder/html-builder';
 import FormViewReg from '../../registration/view/form';
@@ -54,16 +54,22 @@ export default class FormViewProfile extends FormViewReg {
 
   public createAccountInfo(customer: Customer): HTMLFieldSetElement {
     const page: string = this.pageName;
-    const accountInfoField: HTMLFieldSetElement = new Builder('', Base.subform, page, Elem.account, '').field();
-    const formTitle: HTMLElement = new Builder('', Base.form_title, Blocks.form, Elem.title, '').h(2);
+    const accountInfoField: HTMLFieldSetElement = new Builder('', Base.prof_f, page, Elem.account, '').field();
+    const formTitle: HTMLElement = new Builder('', '', page, Elem.subtitle, '').h(2);
     formTitle.textContent = `${Titles.CONTACT_INFO}`.toUpperCase();
-    const name: HTMLElement = new Builder('', '', this.pageName, Elem.text, Mode.f_name).h(3);
-    const date: HTMLElement = new Builder('', '', this.pageName, Elem.text, Mode.date).h(4);
+    const name: HTMLElement = new Builder('div', '', page, Elem.content, '').element();
+    const firstName: HTMLParagraphElement = new Builder('', '', page, Elem.text, Mode.f_name).p();
+    const lastName: HTMLParagraphElement = new Builder('', '', page, Elem.text, Mode.l_name).p();
+    const date: HTMLParagraphElement = new Builder('', '', page, Elem.text, Mode.date).p();
+    const buttonEdit: HTMLButtonElement = new Builder('', Base.btns_edit, page, Elem.btn, Mode.account).button();
+    buttonEdit.textContent = Buttons.EDIT;
 
-    name.textContent = `${customer.firstName || ''} ${customer.lastName || ''}`;
+    firstName.textContent = `${customer.firstName || ''}`;
+    lastName.textContent = `${customer.lastName || ''}`;
     date.textContent = customer.dateOfBirth || '';
 
-    accountInfoField.append(formTitle, name, date);
+    name.append(firstName, lastName);
+    accountInfoField.append(formTitle, name, date, buttonEdit);
 
     return accountInfoField;
   }

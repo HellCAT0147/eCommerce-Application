@@ -47,6 +47,7 @@ export enum Elem {
   content = 'content',
   close = 'close',
   price = 'price',
+  subtitle = 'subtitle',
 }
 
 export enum Mode {
@@ -95,6 +96,7 @@ export enum Mode {
   info = 'info',
   price = 'price',
   disc = 'discounted',
+  account = 'account',
 }
 
 export enum Base {
@@ -112,6 +114,7 @@ export enum Base {
   btns_colored = `${btns} ${btns}_colored`,
   btns_bordered = `${btns} ${btns}_bordered`,
   btns_empty = `${btns} ${btns}_empty`,
+  btns_edit = `${btns} ${btns}_edit`,
   select = `${form}__select`,
   options = `${form}__options`,
   links = `links`,
@@ -125,6 +128,7 @@ export enum Base {
   sw_page = 'swiper-pagination',
   cards = 'cards',
   modal = 'modal',
+  prof_f = 'profile__field',
 }
 
 export enum Buttons {
@@ -135,6 +139,7 @@ export enum Buttons {
   CATALOG = 'CATALOG',
   PROFILE = 'MY PROFILE',
   BURGER = 'burger',
+  EDIT = 'Edit',
 }
 
 export enum Titles {

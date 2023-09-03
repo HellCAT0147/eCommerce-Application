@@ -1,21 +1,39 @@
 .profile {
+  &__form {
+    row-gap: 30px;
+  }
+
   &__address {
     row-gap: 30px;
-    .form__title {
-      margin-bottom: 10px;
-    }
   }
 
   &__field {
     display: flex;
     flex-direction: column;
+    border: none;
+    row-gap: 10px;
     &_default {
       order: -1;
     }
   }
 
+  &__content {
+    display: flex;
+    column-gap: 3px;
+  }
+
+  &__text {
+    @include font(400, 1.6rem, 100%, $color-Light-gray);
+  }
+
   &__title {
+    @extend %font-main;
     @include font(400, 2.4rem, 100%, $color-dark);
+  }
+
+  &__subtitle {
+    @extend %font-main;
+    @include font(600, 1.8rem, 100%, $color-dark-gray);
   }
 
   &__article {
