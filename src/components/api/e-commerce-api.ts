@@ -291,7 +291,8 @@ export default class ECommerceApi {
   public async getProducts(
     sortParameters: Array<SortParameter>,
     pagination: Pagination = new Pagination(),
-    whereClause?: Array<string>
+    whereClause?: Array<string>,
+    query?: string
   ): Promise<ResultPagination<ProductProjection> | ErrorObject> {
     try {
       const response = (
@@ -305,6 +306,8 @@ export default class ECommerceApi {
               limit: pagination.pageSize,
               offset: pagination.offset,
               withTotal: true,
+              fuzzy: true,
+              'text.en-US': query,
             },
           })
           .execute()
