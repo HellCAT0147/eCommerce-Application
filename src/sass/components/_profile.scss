@@ -1,18 +1,26 @@
 .profile {
-  &__form {
-    row-gap: 30px;
-  }
-
-  &__address {
-    row-gap: 30px;
-  }
-
   &__field {
     display: flex;
     flex-direction: column;
     border: none;
     row-gap: 10px;
     &_default {
+      order: -1;
+    }
+  }
+
+  &__addresses {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  &__address {
+    flex-grow: 1;
+    max-width: 50%;
+    &_billing-default {
+      order: -2;
+    }
+    &_shipping-default {
       order: -1;
     }
   }
@@ -27,6 +35,7 @@
   }
 
   &__title {
+    margin-top: 40px;
     @extend %font-main;
     @include font(400, 2.4rem, 100%, $color-dark);
   }

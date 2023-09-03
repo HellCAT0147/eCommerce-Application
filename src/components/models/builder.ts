@@ -29,6 +29,7 @@ export enum Elem {
   circle = 'circle',
   go_home = 'go-home',
   address = 'address',
+  addresses = 'addresses',
   select = 'select',
   option = 'option',
   text = 'text',
@@ -97,6 +98,7 @@ export enum Mode {
   price = 'price',
   disc = 'discounted',
   account = 'account',
+  address = 'address',
 }
 
 export enum Base {
@@ -140,6 +142,7 @@ export enum Buttons {
   PROFILE = 'MY PROFILE',
   BURGER = 'burger',
   EDIT = 'Edit',
+  ADDRESS = 'Edit Address',
 }
 
 export enum Titles {

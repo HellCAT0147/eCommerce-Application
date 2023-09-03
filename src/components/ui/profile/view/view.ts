@@ -55,7 +55,7 @@ export default class ViewProfile {
   }
 
   private createAddresses(customer: Customer): HTMLElement {
-    const addresses: HTMLElement = new Builder('div', Base.form, Blocks.prof, Elem.address, '').element();
+    const addresses: HTMLElement = new Builder('div', Base.form, Blocks.prof, Elem.addresses, '').element();
     const listAddresses: Address[] = customer.addresses;
     const dataAddress: DataAddresses = this.getDataAddresses(customer);
 

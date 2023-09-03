@@ -57,7 +57,7 @@ export default class FormViewProfile extends FormViewReg {
     const accountInfoField: HTMLFieldSetElement = new Builder('', Base.prof_f, page, Elem.account, '').field();
     const formTitle: HTMLElement = new Builder('', '', page, Elem.subtitle, '').h(2);
     formTitle.textContent = `${Titles.CONTACT_INFO}`.toUpperCase();
-    const name: HTMLElement = new Builder('div', '', page, Elem.content, '').element();
+    const content: HTMLElement = new Builder('div', '', page, Elem.content, '').element();
     const firstName: HTMLParagraphElement = new Builder('', '', page, Elem.text, Mode.f_name).p();
     const lastName: HTMLParagraphElement = new Builder('', '', page, Elem.text, Mode.l_name).p();
     const date: HTMLParagraphElement = new Builder('', '', page, Elem.text, Mode.date).p();
@@ -68,28 +68,36 @@ export default class FormViewProfile extends FormViewReg {
     lastName.textContent = `${customer.lastName || ''}`;
     date.textContent = customer.dateOfBirth || '';
 
-    name.append(firstName, lastName);
-    accountInfoField.append(formTitle, name, date, buttonEdit);
+    content.append(firstName, lastName);
+    accountInfoField.append(formTitle, content, date, buttonEdit);
 
     return accountInfoField;
   }
 
-  public createAddressField(
-    address: Address,
-    type: string,
-    defAddress: string,
-    haveNotDefault?: boolean
-  ): HTMLFieldSetElement {
+  public createAddressField(address: Address, type: string, defAddress: string): HTMLFieldSetElement {
     const page: string = this.pageName;
-    const addressField: HTMLFieldSetElement = new Builder('', Base.field, page, Elem.field, defAddress).field();
-    const formTitle: HTMLElement = new Builder('', Base.form_title, Blocks.form, Elem.title, '').h(3);
-    formTitle.textContent = `${defAddress} ${type} ${Titles.ADDRESS}`.toUpperCase().trim();
-    const addressText: HTMLElement = new Builder('', '', this.pageName, Elem.text, Mode.f_name).h(4);
-    addressText.textContent = `${address.streetName}, ${address.postalCode}, ${address.city}, ${address.country}, ${address.firstName} ${address.lastName}`;
-    if (haveNotDefault) {
-      addressText.textContent = `${Titles.HAVE_NOT} ${defAddress} ${type} ${Titles.ADDRESS}`;
+    let mode: string = type;
+    if (defAddress) {
+      mode = `${type}-${defAddress}`;
     }
-    addressField.append(formTitle, addressText);
+    const addressField: HTMLFieldSetElement = new Builder('', Base.prof_f, page, Elem.address, mode).field();
+    const formTitle: HTMLElement = new Builder('', '', page, Elem.subtitle, '').h(2);
+    formTitle.textContent = `${defAddress} ${type} ${Titles.ADDRESS}`.toUpperCase().trim();
+    const content: HTMLElement = new Builder('div', '', page, Elem.content, '').element();
+    const street: HTMLElement = new Builder('', '', page, Elem.text, Mode.street).p();
+    const postal: HTMLElement = new Builder('', '', page, Elem.text, Mode.postal).p();
+    const city: HTMLElement = new Builder('', '', page, Elem.text, Mode.city).p();
+    const country: HTMLElement = new Builder('', '', page, Elem.text, Mode.country).p();
+    const buttonEdit: HTMLButtonElement = new Builder('', Base.btns_edit, page, Elem.btn, Mode.address).button();
+    buttonEdit.textContent = Buttons.ADDRESS;
+
+    street.textContent = `${address.streetName}`;
+    postal.textContent = `${address.postalCode}`;
+    city.textContent = `${address.city}`;
+    country.textContent = `${address.country}`;
+
+    content.append(street, postal, city, country);
+    addressField.append(formTitle, content, buttonEdit);
 
     return addressField;
   }
