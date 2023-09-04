@@ -4,10 +4,7 @@ import {
   HttpMiddlewareOptions,
   RefreshAuthMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
-import {
-  PasswordAuthMiddlewareOptions,
-  TokenCache,
-} from '@commercetools/sdk-client-v2/dist/declarations/src/types/sdk';
+import { PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2/dist/declarations/src/types/sdk';
 import {
   Address,
   CategoryPagedQueryResponse,
@@ -115,8 +112,7 @@ export default class ECommerceApi {
           }
           return result.body;
         })
-        .catch((e) => {
-          // console.log(e);
+        .catch(() => {
           this.tokenCachesStore.unset();
           this.initClientAndApiRoot();
           return null;
