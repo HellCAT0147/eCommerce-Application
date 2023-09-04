@@ -109,4 +109,35 @@
       @include font(600, 1.4rem, 100%, $color-Light-gray);
     }
   }
+
+  &__errors {
+    max-width: fit-content;
+    width: 100%;
+    margin-top: -$base-intend;
+    padding: 5px 10px;
+    align-self: flex-end;
+    text-align: right;
+    background-color: $color-error;
+
+    &_response {
+      margin-top: 0;
+      animation: disappear 0.5s linear 4.5s forwards;
+    }
+  }
+
+  &__error {
+    padding: 5px 20px 5px 5px;
+    background-image: url('../assets/ico/x-marks-the-spot.svg');
+    background-repeat: no-repeat;
+    background-position: right;
+  }
+}
+
+@keyframes disappear {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }

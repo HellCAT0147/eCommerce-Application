@@ -4,18 +4,58 @@ import Builder from '../../builder/html-builder';
 import { Pages } from '../../../models/router';
 import { DataAddresses } from '../../../models/commerce';
 import FormViewProfile from './form';
-import { Countries } from '../../../models/validation';
+import { Countries, Errors, InputType } from '../../../models/validation';
 
 export default class ViewProfile {
   protected formView: FormViewProfile;
 
+  private pageName: string;
+
   public constructor(pageName: string = Pages.PROFILE) {
     this.formView = new FormViewProfile(pageName);
+    this.pageName = pageName;
+  }
+
+  protected highlightInput(input: HTMLElement | null, isValid: boolean): void {
+    if (input) {
+      if (isValid) {
+        input.classList.add(Mode.valid);
+        input.classList.remove(Mode.invalid);
+      } else {
+        input.classList.remove(Mode.valid);
+        input.classList.add(Mode.invalid);
+      }
+    }
   }
 
   public showError(msg: string): string {
     // TODO implement popup with error
     return msg;
+  }
+
+  public showErrors(place: HTMLElement | null, errors: Errors[] | string[], inputType: InputType): void {
+    if (place) {
+      const prevErrorsHolder: HTMLDivElement | null = document.querySelector(`.${this.pageName}__errors_${inputType}`);
+
+      if (prevErrorsHolder) prevErrorsHolder.outerHTML = '';
+      const errorsHolder: HTMLElement = new Builder('div', '', this.pageName, Elem.errs, inputType).element();
+
+      errors.forEach((error) => {
+        const p: HTMLElement = new Builder('p', '', this.pageName, Elem.err, '').element();
+        p.textContent = error;
+        errorsHolder.append(p);
+      });
+      let input: HTMLInputElement | null = document.querySelector(`.${this.pageName}__input_${inputType}`);
+      if (inputType === 'country' || inputType === 'country-bill')
+        input = document.querySelector(`.${this.pageName}__select_${inputType}`);
+
+      if (errors.length) {
+        place.after(errorsHolder);
+        this.highlightInput(input, false);
+      } else {
+        this.highlightInput(input, true);
+      }
+    }
   }
 
   private getDataAddresses(customer: Customer): DataAddresses {

@@ -63,6 +63,7 @@ class Router {
     this.inputs.forEach((input) => {
       input.addEventListener('input', (e: Event) => this.controllerLogin.checkField(e));
       input.addEventListener('input', (e: Event) => this.controllerRegistration.checkField(e));
+      input.addEventListener('input', (e: Event) => this.controllerProfile.checkField(e));
       input.addEventListener('keydown', (e: Event) => this.controllerLogin.sendLogin(e));
       input.addEventListener('keydown', (e: Event) => this.controllerRegistration.sendReg(e));
     });
@@ -100,11 +101,12 @@ class Router {
     selectCurrentPage(Pages.CATALOG);
   }
 
-  private redirectToProfile(isLoggedIn: boolean, route: Routes, isPopState?: boolean): void {
+  private async redirectToProfile(isLoggedIn: boolean, route: Routes, isPopState?: boolean): Promise<void> {
     if (!isPopState) window.history.pushState(null, '', `/${Pages.PROFILE}`);
     route.callback(isLoggedIn);
-    this.controllerProfile.loadProfile();
+    await this.controllerProfile.loadProfile();
     selectCurrentPage(Pages.PROFILE);
+    this.setInputsOnPage();
   }
 
   public async navigate(url: string, isPopState?: boolean): Promise<void> {

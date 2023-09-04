@@ -1,18 +1,204 @@
 import { Customer, ErrorObject } from '@commercetools/platform-sdk';
 import ECommerceApi from '../../../api/e-commerce-api';
 import ViewProfile from '../view/view';
-import RegistrationValidationModel from '../../registration/model/validation';
 import { Blocks, Elem, Mode } from '../../../models/builder';
+import { DateErrors, Errors, InputType, MailErrors, NameErrors, PasswordErrors } from '../../../models/validation';
 
-class ModelProfile extends RegistrationValidationModel {
+class ModelProfile {
   protected eCommerceApi: ECommerceApi;
 
   protected view: ViewProfile;
 
+  private mail: string;
+
+  private password: string;
+
+  private isValid: boolean;
+
+  private firstName: string;
+
+  private lastName: string;
+
+  private date: string;
+
+  private city: string;
+
+  private cityBill: string;
+
   public constructor(eCommerceApi: ECommerceApi) {
-    super(eCommerceApi);
     this.eCommerceApi = eCommerceApi;
     this.view = new ViewProfile();
+    this.mail = '';
+    this.password = '';
+    this.isValid = false;
+    this.firstName = '';
+    this.lastName = '';
+    this.date = '';
+    this.city = '';
+    this.cityBill = '';
+  }
+
+  // protected checkSendable(): boolean {
+  //   if (
+  //     this.mail !== '' &&
+  //     this.password !== '' &&
+  //     this.firstName !== '' &&
+  //     this.lastName !== '' &&
+  //     this.date !== '' &&
+  //     this.country !== '' &&
+  //     this.postal !== '' &&
+  //     this.city !== '' &&
+  //     this.street !== ''
+  //   ) {
+  //     if (this.shippingIsBilling) this.isValid = true;
+  //     else if (this.countryBill !== '' && this.postalBill !== '' && this.cityBill !== '' && this.streetBill !== '')
+  //       this.isValid = true;
+  //     else this.isValid = false;
+  //   } else this.isValid = false;
+
+  //   return this.isValid;
+  // }
+
+  protected setErrors(inputType: InputType, errors: Errors[] | string[], select?: HTMLSelectElement): void {
+    if (select) {
+      this.view.showErrors(select.parentElement, errors, inputType);
+      // this.checkSendable();
+      return;
+    }
+    const inputs: NodeListOf<HTMLInputElement> = document.querySelectorAll('.form__input');
+    inputs.forEach((input) => {
+      if (input.classList.contains(`${Blocks.prof}__${Elem.input}_${inputType}`)) {
+        this.view.showErrors(input.parentElement, errors, inputType);
+      }
+    });
+    // this.checkSendable();
+  }
+
+  private getNameErrors(target: string, name: string): string[] {
+    const errors: string[] = [];
+
+    function errorsHandling(textName: string): void {
+      if (!name.length) errors.push(`${textName} ${NameErrors.short}`);
+      else if (name.match(/\d/)) errors.push(`${textName} ${NameErrors.noDigit}`);
+      else errors.push(`${textName} ${NameErrors.noChar}`);
+    }
+
+    if (target.includes('city-bill')) {
+      this.cityBill = '';
+      errorsHandling('City');
+      this.setErrors('city-bill', errors);
+    } else if (target.includes('city')) {
+      this.city = '';
+      errorsHandling('City');
+      this.setErrors('city', errors);
+    } else if (target.includes('first')) {
+      this.firstName = '';
+      errorsHandling('First');
+      this.setErrors('first-name', errors);
+    } else {
+      this.lastName = '';
+      errorsHandling('Last');
+      this.setErrors('last-name', errors);
+    }
+
+    return errors;
+  }
+
+  public checkName(name: string, target: string): boolean {
+    const regexp: RegExp = /^[a-zA-Zа-яА-ЯёЁғҒиИйІіЙкКқҚлЛмМнНоОпПрРсСтТуУЎўфФхХцЦчЧшШъЪьЬэЭюЮяЯ\s'-]+$/u;
+    if (name.match(regexp)) {
+      if (target.includes('city') && target.includes('bill')) {
+        this.cityBill = name;
+        this.setErrors('city-bill', []);
+      } else if (target.includes('city')) {
+        this.city = name;
+        this.setErrors('city', []);
+      } else if (target.includes('first')) {
+        this.firstName = name;
+        this.setErrors('first-name', []);
+      } else {
+        this.lastName = name;
+        this.setErrors('last-name', []);
+      }
+      return true;
+    }
+
+    this.getNameErrors(target, name);
+
+    return false;
+  }
+
+  public checkPassword(password: string): boolean {
+    const regexp: RegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[^\s]{8,}$/;
+    if (password.match(regexp)) {
+      this.password = password;
+      this.setErrors('password', []);
+      return true;
+    }
+    this.password = '';
+
+    const errors: PasswordErrors[] = [];
+    if (!password.match(/[a-z]/)) errors.push(PasswordErrors.lower);
+    if (!password.match(/[A-Z]/)) errors.push(PasswordErrors.upper);
+    if (!password.match(/[0-9]/)) errors.push(PasswordErrors.digit);
+    if (!password.match(/[!@#$%^&*(),.?":{}|<>]/)) errors.push(PasswordErrors.char);
+    if (password.length < 8) errors.push(PasswordErrors.short);
+    if (password.match(/\s/)) errors.push(PasswordErrors.space);
+    this.setErrors('password', errors);
+
+    return false;
+  }
+
+  public checkMail(mail: string): boolean {
+    const regexp: RegExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (mail.match(regexp)) {
+      this.mail = mail;
+      this.setErrors('email', []);
+      return true;
+    }
+    this.mail = '';
+
+    const errors: MailErrors[] = [];
+    if (!mail.includes('@')) {
+      errors.push(MailErrors.at);
+      errors.push(MailErrors.domain);
+    } else if (mail.split('@').pop() === '') errors.push(MailErrors.domain);
+    if (mail !== mail.trim()) errors.push(MailErrors.space);
+    if (!errors.length) errors.push(MailErrors.format);
+    this.setErrors('email', errors);
+
+    return false;
+  }
+
+  public checkBirthDate(date: string): boolean {
+    const regexp: RegExp = /^\d{4}-\d{2}-\d{2}$/;
+    const minDate = new Date();
+    const maxDate = new Date();
+    const inputDate = new Date(date);
+
+    if (date.match(regexp)) {
+      const maxRealAge: number = 150;
+      const minLimitAge: number = 13;
+      const increaseInfelicityDays: number = 1;
+
+      minDate.setFullYear(minDate.getFullYear() - maxRealAge);
+      maxDate.setFullYear(maxDate.getFullYear() - minLimitAge);
+      maxDate.setDate(maxDate.getDate() + increaseInfelicityDays);
+      if (inputDate >= minDate && inputDate <= maxDate) {
+        this.date = date;
+        this.setErrors('date-of-birth', []);
+        return true;
+      }
+    }
+
+    this.date = '';
+    const errors: DateErrors[] = [];
+    if (inputDate < minDate) errors.push(DateErrors.correct);
+    else if (inputDate > maxDate) errors.push(DateErrors.noChild);
+    else errors.push(DateErrors.invalid);
+    this.setErrors('date-of-birth', errors);
+
+    return false;
   }
 
   public openEditMode(target: HTMLElement): void {
