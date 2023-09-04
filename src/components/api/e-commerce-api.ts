@@ -19,6 +19,8 @@ import {
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import { ErrorObject } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/error';
 import { Category } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/category';
+import { _BaseAddress } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/common';
+import { ApiRequest } from '@commercetools/platform-sdk/dist/declarations/src/generated/shared/utils/requests-utils';
 import TokenCachesStore from './token-caches-store';
 import compareObjects from '../utils/compare-objects';
 import { DataBase } from '../models/commerce';
@@ -81,6 +83,26 @@ export default class ECommerceApi {
     this.initClientAndApiRoot();
   }
 
+  private async updateMe(apiRoot: ByProjectKeyRequestBuilder): Promise<void> {
+    this.meLoggedInPromise = apiRoot
+      .me()
+      .get()
+      .execute()
+      .then((result) => {
+        if (result.statusCode !== 200) {
+          this.tokenCachesStore.unset();
+          this.initClientAndApiRoot();
+          return null;
+        }
+        return result.body;
+      })
+      .catch(() => {
+        this.tokenCachesStore.unset();
+        this.initClientAndApiRoot();
+        return null;
+      });
+  }
+
   private initClientAndApiRoot(): void {
     const creds = this.tokenCachesStore.getDefault();
     let preClient: Client = this.clientBuilder.withAnonymousSessionFlow(this.copyAuthParams()).build();
@@ -100,23 +122,7 @@ export default class ECommerceApi {
     this.apiRoot = preApiRoot;
 
     if (creds !== this.tokenCachesStore.defaultTokenStore) {
-      this.meLoggedInPromise = preApiRoot
-        .me()
-        .get()
-        .execute()
-        .then((result) => {
-          if (result.statusCode !== 200) {
-            this.tokenCachesStore.unset();
-            this.initClientAndApiRoot();
-            return null;
-          }
-          return result.body;
-        })
-        .catch(() => {
-          this.tokenCachesStore.unset();
-          this.initClientAndApiRoot();
-          return null;
-        });
+      this.updateMe(preApiRoot);
     }
   }
 
@@ -352,6 +358,20 @@ export default class ECommerceApi {
     return requestResponse.body.results;
   }
 
+  private async wrapUserUpdateOperation(
+    block: (customer: Customer) => Promise<ClientResponse<Customer>>
+  ): Promise<Customer | null> {
+    const meNow = await this.meLoggedInPromise;
+    if (meNow == null) return null;
+
+    const newMePromise = block(meNow);
+    const newMe = await newMePromise;
+    if (newMe.statusCode != null && newMe.statusCode >= 200 && newMe.statusCode < 300) {
+      this.meLoggedInPromise = newMePromise.then((response) => response.body);
+    }
+    return newMe.body;
+  }
+
   public async getCategoriesTree(): Promise<Map<string | undefined, Array<Category>> | ErrorObject> {
     const capturedCategories: Map<string | undefined, Array<Category>> | undefined = this.categoriesCache;
     if (capturedCategories) {
@@ -448,5 +468,141 @@ export default class ECommerceApi {
     } catch (e) {
       return this.errorObjectOrThrow(e);
     }
+  }
+
+  public async deleteUserAddress(id: string): Promise<ErrorObject | boolean> {
+    try {
+      const promise = this.wrapUserUpdateOperation((me) => {
+        return this.apiRoot
+          .me()
+          .post({
+            body: {
+              version: me.version,
+              actions: [
+                {
+                  action: 'removeAddress',
+                  addressId: id,
+                },
+              ],
+            },
+          })
+          .execute();
+      });
+      const result = await promise;
+      if (result != null) {
+        return true;
+      }
+    } catch (e) {
+      return this.errorObjectOrThrow(e);
+    }
+    return true;
+  }
+
+  private async addAddress(address: Address, customer: Customer): Promise<ClientResponse<Customer>> {
+    return this.apiRoot
+      .me()
+      .post({
+        body: {
+          version: customer.version,
+          actions: [
+            {
+              action: 'addAddress',
+              address,
+            },
+          ],
+        },
+      })
+      .execute();
+  }
+
+  private async buildAndExecuteAddAddressActions(
+    address: Address,
+    isBillingAddress: boolean,
+    isShippingAddress: boolean,
+    isDefaultBillingAddress: boolean,
+    isDefaultShippingAddress: boolean,
+    customerVersion: number
+  ): Promise<ClientResponse<Customer>> {
+    const actions: Array<MyCustomerUpdateAction> = [];
+
+    if (isBillingAddress) {
+      actions.push({
+        action: 'addBillingAddressId',
+        addressId: address.id,
+      });
+    }
+
+    if (isShippingAddress) {
+      actions.push({
+        action: 'addShippingAddressId',
+        addressId: address.id,
+      });
+    }
+
+    if (isDefaultBillingAddress) {
+      actions.push({
+        action: 'setDefaultBillingAddress',
+        addressId: address.id,
+      });
+    }
+
+    if (isDefaultShippingAddress) {
+      actions.push({
+        action: 'setDefaultShippingAddress',
+        addressId: address.id,
+      });
+    }
+
+    return this.apiRoot
+      .me()
+      .post({
+        body: {
+          version: customerVersion,
+          actions,
+        },
+      })
+      .execute();
+  }
+
+  public async addUserAddress(
+    address: Address,
+    isBillingAddress: boolean,
+    isShippingAddress: boolean,
+    isDefaultBillingAddress: boolean,
+    isDefaultShippingAddress: boolean
+  ): Promise<ErrorObject | boolean> {
+    const me = await this.meLoggedInPromise;
+    if (me == null) return false;
+    const oldAddresses = me.addresses.map((oldAddress) => oldAddress.id);
+    try {
+      const newAddressPromise = this.wrapUserUpdateOperation((currentMe) => {
+        return this.addAddress(address, currentMe);
+      });
+      const useWithNewAddress = await newAddressPromise;
+      if (useWithNewAddress != null) {
+        const newAddressesPromises = useWithNewAddress.addresses
+          .map((currentAddress) => {
+            if (!oldAddresses.includes(currentAddress.id)) {
+              return this.wrapUserUpdateOperation((newMe) => {
+                return this.buildAndExecuteAddAddressActions(
+                  currentAddress,
+                  isBillingAddress,
+                  isShippingAddress,
+                  isDefaultBillingAddress,
+                  isDefaultShippingAddress,
+                  newMe.version
+                );
+              });
+            }
+            return null;
+          })
+          .filter((promise) => promise != null);
+        await Promise.all(newAddressesPromises);
+        return true;
+      }
+    } catch (e) {
+      return this.errorObjectOrThrow(e);
+    }
+    return true;
   }
 }
