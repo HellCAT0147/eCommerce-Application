@@ -25,6 +25,36 @@ export default class FormViewProfile extends FormViewReg {
     return addresses;
   }
 
+  public createPasswordUpdateForm(): HTMLFieldSetElement {
+    const page: string = this.pageName;
+    const passwordField: HTMLFieldSetElement = new Builder('', Base.subform, page, Elem.pass, '').field();
+    passwordField.setAttribute('id', `${Elem.modal}-${Mode.pass}`);
+    const formTitle: HTMLElement = new Builder('', Base.form_title, Blocks.form, Elem.title, '').h(2);
+    formTitle.textContent = `${Titles.UPDATE} ${Titles.PASSWORD} `;
+    const currentPassword: HTMLFieldSetElement = new Builder('', Base.field, page, 'field', Mode.pass).field();
+    const labelPassword: HTMLLabelElement = this.createLabel(page, Mode.pass);
+    const inputPassword: HTMLInputElement = this.createInput(page, Mode.pass);
+    const newPassword: HTMLFieldSetElement = new Builder('', Base.field, page, 'field', Mode.pass_new).field();
+    const showPassword: HTMLButtonElement = this.createShowPassword();
+    const labelNewPassword: HTMLLabelElement = this.createLabel(page, Mode.pass_new);
+    const inputNewPassword: HTMLInputElement = this.createInput(page, Mode.pass_new);
+    const showNewPassword: HTMLButtonElement = this.createShowPassword(Mode.new);
+    const formFieldControl: HTMLFieldSetElement = new Builder('', Base.field, page, Elem.field, Mode.control).field();
+    const buttonSave: HTMLButtonElement = new Builder('', Base.btns_colored, page, Elem.btn, Mode.save).button();
+    buttonSave.classList.add(`${Base.btns_modal}`);
+    buttonSave.textContent = Buttons.SAVE;
+    const buttonBack: HTMLButtonElement = new Builder('', Base.btns_empty, page, Elem.btn, Mode.back).button();
+    buttonBack.classList.add(`${Base.btns_modal}`);
+    buttonBack.textContent = Buttons.BACK;
+
+    currentPassword.append(labelPassword, inputPassword, showPassword);
+    newPassword.append(labelNewPassword, inputNewPassword, showNewPassword);
+    formFieldControl.append(buttonSave, buttonBack);
+    passwordField.append(formTitle, currentPassword, newPassword, formFieldControl);
+
+    return passwordField;
+  }
+
   public createAccountInfoUpdateForm(): HTMLFieldSetElement {
     const page: string = this.pageName;
     const accountInfoField: HTMLFieldSetElement = new Builder('', Base.subform, page, Elem.account, '').field();
@@ -144,16 +174,16 @@ export default class FormViewProfile extends FormViewReg {
     const formTitleShip: HTMLElement = new Builder('h2', Base.form_title, Blocks.form, Elem.title, '').element();
     formTitleShip.textContent = `${title} ${Titles.ADDRESS}`;
     const formFieldCountry: HTMLFieldSetElement = new Builder('', Base.field, page, 'field', country).field();
-    const labelCountry: HTMLLabelElement = this.createLabel(page, country, Mode.country);
+    const labelCountry: HTMLLabelElement = this.createLabel(page, country);
     const inputCountry: HTMLSelectElement = this.createSelectMenu(page, country);
     const formFieldPostal: HTMLFieldSetElement = new Builder('', Base.field, page, 'field', postal).field();
-    const labelPostal: HTMLLabelElement = this.createLabel(page, postal, Mode.postal);
+    const labelPostal: HTMLLabelElement = this.createLabel(page, postal);
     const inputPostal: HTMLInputElement = this.createInput(page, postal);
     const formFieldCity: HTMLFieldSetElement = new Builder('', Base.field, page, 'field', city).field();
-    const labelCity: HTMLLabelElement = this.createLabel(page, city, Mode.city);
+    const labelCity: HTMLLabelElement = this.createLabel(page, city);
     const inputCity: HTMLInputElement = this.createInput(page, city);
     const formFieldStreet: HTMLFieldSetElement = new Builder('', Base.field, page, 'field', street).field();
-    const labelStreet: HTMLLabelElement = this.createLabel(page, street, Mode.street);
+    const labelStreet: HTMLLabelElement = this.createLabel(page, street);
     const inputStreet: HTMLInputElement = this.createInput(page, street);
     const formFieldControl: HTMLFieldSetElement = new Builder('', Base.field, page, Elem.field, Mode.control).field();
     const buttonSave: HTMLButtonElement = new Builder('', Base.btns_colored, page, Elem.btn, Mode.save).button();

@@ -1,4 +1,4 @@
-import { Image, ProductData, ProductVariant, ProductProjection, Price } from '@commercetools/platform-sdk';
+import { Image, ProductData, ProductVariant, ProductProjection } from '@commercetools/platform-sdk';
 import { Category } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/category';
 import { Base, Blocks, Elem, Mode } from '../../../models/builder';
 import Builder from '../../builder/html-builder';
@@ -596,6 +596,11 @@ export default class ViewCatalog {
     products.forEach((product: ProductProjection) => {
       page.append(this.createCatalogCard(product));
     });
+    if (products.length < 1) {
+      const emptyList = new Builder('div', '', Blocks.catalog, 'empty-list', '').element();
+      emptyList.innerText = 'SORRY, NOTHING TO SHOW';
+      page.append(emptyList);
+    }
     return page;
   }
 

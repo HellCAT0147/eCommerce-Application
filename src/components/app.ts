@@ -37,6 +37,7 @@ class App {
     const body: HTMLElement | null = document.querySelector('.body');
     if (body) {
       body.addEventListener('click', (e: MouseEvent): void => this.controller.delegateMouseEvent(e));
+      body.addEventListener('keyup', (e: KeyboardEvent): void => this.controller.delegateKeyboardEvent(e));
     }
   }
 }
