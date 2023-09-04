@@ -46,6 +46,10 @@ class MainController {
     return url;
   }
 
+  public delegateKeyboardEvent(e: KeyboardEvent): void {
+    this.router.controllerCatalog.keyboardEnterEvent(e);
+  }
+
   public delegateMouseEvent(e: MouseEvent): void {
     const { target } = e;
 

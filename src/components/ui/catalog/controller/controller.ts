@@ -43,6 +43,13 @@ class ControllerCatalog {
     if (closeBtn) this.model.destroyModal(closeBtn);
   }
 
+  public keyboardEnterEvent(e: KeyboardEvent): void {
+    const searchInput: HTMLElement | null = document.getElementById('search-input');
+    if (e.code === 'Enter' && searchInput && searchInput === document.activeElement) {
+      document.getElementById('search-button')?.click();
+    }
+  }
+
   public loadProduct(key: string, response: Product | ErrorObject): void {
     // TODO load a specific product card when navigating through the browser bar.
     this.model.fetchProduct(key, response);
