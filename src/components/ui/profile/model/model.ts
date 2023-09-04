@@ -12,6 +12,7 @@ import {
   PasswordErrors,
   PostalErrors,
 } from '../../../models/validation';
+// TODO: import { ClientResponse } from '@commercetools/sdk-client-v2';
 
 class ModelProfile {
   protected eCommerceApi: ECommerceApi;
@@ -346,7 +347,7 @@ class ModelProfile {
         this.eCommerceApi.deleteUserAddress(idAddress).then((result) => {
           if (typeof result === 'boolean') {
             if (result) {
-              // TODO:: Update successful
+              this.getProfile(Mode.update);
             } else {
               // TODO:: In fact, unauthorized
             }
@@ -487,20 +488,15 @@ class ModelProfile {
   public async updateAddress(): Promise<void> {
     if (this.checkSendableAddress()) {
       try {
-        const response: Customer | ErrorObject = await this.eCommerceApi.updatePersonalData(
-          this.firstName,
-          this.lastName,
-          new Date(this.date),
-          this.mail
-        );
-        if ('message' in response && 'code' in response) {
+        // TODO: const response: boolean | ErrorObject = await this.eCommerceApi.updateUserAddress();
+        /* if ('message' in response && 'code' in response) {
           this.view.showMessage(false, response.message);
           this.view.showError(response.message);
         } else if (response) {
           this.view.toggleDisplayModal(`${Mode.account}`, false);
           this.view.showMessage(true);
           await this.getProfile(Mode.update);
-        }
+        } */
       } catch (error) {
         if (error instanceof Error) this.view.showError(error.message);
       }
