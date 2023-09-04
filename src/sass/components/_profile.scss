@@ -1,4 +1,10 @@
 .profile {
+  &__form {
+    &.hidden {
+      display: none;
+    }
+  }
+
   &__forms {
     display: flex;
     flex-direction: column;
@@ -49,16 +55,10 @@
     display: none;
     width: 70%;
     &.opened {
-      position: absolute;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 10px 30px;
       background: $color-light;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 300;
     }
   }
 

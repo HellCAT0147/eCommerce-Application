@@ -113,14 +113,14 @@ export default class ViewProfile {
   }
 
   public toggleDisplayModal(mode: string, display: boolean): void {
-    const body: HTMLElement | null = document.querySelector(`.${Blocks.body}`);
+    const form: HTMLElement | null = document.querySelector(`.${Blocks.prof}__${Elem.form}`);
     const modal: HTMLElement | null = document.querySelector(`.${Blocks.prof}__${Elem.modal}_${mode}`);
-    if (modal && body) {
+    if (modal && form) {
       if (display) {
-        body.classList.add(`${Mode.over}`);
+        form.classList.add(`${Mode.hidden}`);
         modal.classList.add(`${Mode.opened}`);
       } else {
-        body.classList.remove(`${Mode.over}`);
+        form.classList.remove(`${Mode.hidden}`);
         modal.classList.remove(`${Mode.opened}`);
       }
     }
