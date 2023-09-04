@@ -1,3 +1,4 @@
+import { Category } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/category';
 import CatalogViewControlPanelsState from '../models/catalog-view-control-panels-state';
 
 function createQueryArrays(key: string, values: Array<string>): Array<string> {
@@ -17,6 +18,12 @@ export default function createQueryStringFromCatalogViewState(state: CatalogView
   resultQuery.push(...createQueryArrays('size', state.sizes));
   resultQuery.push(...createQueryArrays('brand', state.brands));
   resultQuery.push(`variants.price.centAmount:range (* to ${state.maxPrice * 100})`);
+
+  const latestCategory: Category | undefined =
+    state.categories.length > 0 ? state.categories[state.categories.length - 1] : undefined;
+  if (latestCategory) {
+    resultQuery.push(`categories.id: subtree("${latestCategory.id}")`);
+  }
 
   if (resultQuery.length === 0) {
     return [];

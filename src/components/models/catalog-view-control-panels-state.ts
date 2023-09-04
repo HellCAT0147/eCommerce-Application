@@ -1,3 +1,4 @@
+import { Category } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/category';
 import SortParameter from './sort-parameter';
 
 type CatalogViewControlPanelsState = {
@@ -7,6 +8,7 @@ type CatalogViewControlPanelsState = {
   maxPrice: number;
   sortParameters: Array<SortParameter>;
   query?: string;
+  categories: Array<Category>;
 };
 
 export default CatalogViewControlPanelsState;
