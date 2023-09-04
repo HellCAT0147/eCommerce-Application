@@ -79,8 +79,11 @@ class ModelProfile {
     }
   }
 
-  private setNoErrors(inputTypes: InputType[]): void {
-    inputTypes.forEach((inputType) => this.setErrors(inputType, []));
+  private setNoErrors(inputTypes: InputType[], isValid: boolean = true): void {
+    inputTypes.forEach((inputType) => {
+      this.setErrors(inputType, []);
+      if (!isValid) this.view.resetInputView(inputType);
+    });
   }
 
   private getNameErrors(target: string, name: string): string[] {
@@ -265,7 +268,7 @@ class ModelProfile {
         if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.pass}`)) {
           this.clearInputs(Mode.pass);
           this.view.toggleDisplayModal(`${Mode.pass}`, true);
-          this.setNoErrors(['password', 'password-new']);
+          this.setNoErrors(['password', 'password-new'], false);
         }
       }
     } catch (error) {
