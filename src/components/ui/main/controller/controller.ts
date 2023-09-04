@@ -9,11 +9,11 @@ class ControllerMain {
 
   public mouseEvent(e: MouseEvent): void {
     const { target } = e;
-    const burgerButtom: HTMLElement | null = document.querySelector(`#${Buttons.BURGER}`);
+    const burgerButton: HTMLElement | null = document.querySelector(`#${Buttons.BURGER}`);
 
     if (target instanceof HTMLElement) {
       const targetHtmlElement: HTMLElement | null = target;
-      if (targetHtmlElement.closest(`#${Buttons.BURGER}`) && burgerButtom) toggleBurgerMenu(burgerButtom);
+      if (targetHtmlElement.closest(`#${Buttons.BURGER}`) && burgerButton) toggleBurgerMenu(burgerButton);
     }
   }
 }
