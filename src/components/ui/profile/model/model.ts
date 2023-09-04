@@ -269,6 +269,16 @@ class ModelProfile {
     }
   }
 
+  public switchPasswordView(button: HTMLButtonElement | null, id?: string): void {
+    if (button) {
+      if (id) {
+        this.view.switchPasswordView(button, id);
+        return;
+      }
+      this.view.switchPasswordView(button);
+    }
+  }
+
   public async updateAccountInfo(): Promise<void> {
     if (this.checkSendableAccount()) {
       try {

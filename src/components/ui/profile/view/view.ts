@@ -158,6 +158,17 @@ export default class ViewProfile {
     return address;
   }
 
+  public switchPasswordView(icon: HTMLButtonElement, id?: string): void {
+    const input: HTMLInputElement | null = document.querySelector(`#${id}`);
+    icon.classList.toggle(`form__button_${Mode.eye_opened}`);
+    icon.classList.toggle(`form__button_${Mode.eye_closed}`);
+
+    if (!input) return;
+    if (icon.classList.contains(`form__button_${Mode.eye_opened}`)) input.type = 'text';
+    else input.type = 'password';
+    input.focus();
+  }
+
   public createModals(main: HTMLElement): void {
     const modalAccount = new Builder('div', '', Blocks.prof, Elem.modal, Mode.account).element();
     const updateAccount: HTMLFieldSetElement = this.formView.createAccountInfoUpdateForm();

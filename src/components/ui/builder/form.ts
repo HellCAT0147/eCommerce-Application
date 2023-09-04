@@ -29,9 +29,10 @@ export default class FormView {
     return this.form;
   }
 
-  private createShowPassword(): HTMLButtonElement {
+  public createShowPassword(mode?: string): HTMLButtonElement {
     const showPassword: HTMLButtonElement = new Builder('', '', Blocks.form, Elem.btn, Mode.eye_closed).button();
-    showPassword.id = 'show-password';
+    if (mode) showPassword.id = `show-password-${Mode.new}`;
+    else showPassword.id = 'show-password';
     return showPassword;
   }
 

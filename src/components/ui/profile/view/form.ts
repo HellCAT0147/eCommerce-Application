@@ -35,8 +35,10 @@ export default class FormViewProfile extends FormViewReg {
     const labelPassword: HTMLLabelElement = this.createLabel(page, Mode.pass);
     const inputPassword: HTMLInputElement = this.createInput(page, Mode.pass);
     const newPassword: HTMLFieldSetElement = new Builder('', Base.field, page, 'field', Mode.pass_new).field();
+    const showPassword: HTMLButtonElement = this.createShowPassword();
     const labelNewPassword: HTMLLabelElement = this.createLabel(page, Mode.pass_new);
     const inputNewPassword: HTMLInputElement = this.createInput(page, Mode.pass_new);
+    const showNewPassword: HTMLButtonElement = this.createShowPassword(Mode.new);
     const formFieldControl: HTMLFieldSetElement = new Builder('', Base.field, page, Elem.field, Mode.control).field();
     const buttonSave: HTMLButtonElement = new Builder('', Base.btns_colored, page, Elem.btn, Mode.save).button();
     buttonSave.classList.add(`${Base.btns_modal}`);
@@ -45,8 +47,8 @@ export default class FormViewProfile extends FormViewReg {
     buttonBack.classList.add(`${Base.btns_modal}`);
     buttonBack.textContent = Buttons.BACK;
 
-    currentPassword.append(labelPassword, inputPassword);
-    newPassword.append(labelNewPassword, inputNewPassword);
+    currentPassword.append(labelPassword, inputPassword, showPassword);
+    newPassword.append(labelNewPassword, inputNewPassword, showNewPassword);
     formFieldControl.append(buttonSave, buttonBack);
     passwordField.append(formTitle, currentPassword, newPassword, formFieldControl);
 
