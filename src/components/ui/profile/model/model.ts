@@ -48,6 +48,13 @@ class ModelProfile {
     return this.isValid;
   }
 
+  protected checkSendablePassword(): boolean {
+    if (this.password !== '' && this.newPassword) this.isValid = true;
+    else this.isValid = false;
+
+    return this.isValid;
+  }
+
   protected setErrors(inputType: InputType, errors: Errors[] | string[], select?: HTMLSelectElement): void {
     if (select) {
       this.view.showErrors(select.parentElement, errors, inputType);
@@ -269,8 +276,7 @@ class ModelProfile {
       if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.account}`)) this.updateAccountInfo();
       if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.address}`))
         this.view.toggleDisplayModal(`${Mode.address}`, false);
-      if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.pass}`))
-        this.view.toggleDisplayModal(`${Mode.pass}`, false);
+      if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.pass}`)) this.updatePassword();
     }
   }
 
@@ -281,6 +287,32 @@ class ModelProfile {
         return;
       }
       this.view.switchPasswordView(button);
+    }
+  }
+
+  public async updatePassword(): Promise<void> {
+    if (this.checkSendablePassword()) {
+      try {
+        // console.log('Change Password');
+        // const response: Customer | ErrorObject = await this.eCommerceApi.updatePersonalData(
+        //   this.firstName,
+        //   this.lastName,
+        //   new Date(this.date),
+        //   this.mail
+        // );
+        // if ('message' in response && 'code' in response) {
+        //   this.view.showMessage(false, response.message);
+        //   this.view.showError(response.message);
+        // } else if (response) {
+        //   this.view.toggleDisplayModal(`${Mode.account}`, false);
+        //   this.view.showMessage(true);
+        //   await this.getProfile(Mode.update);
+        // }
+      } catch (error) {
+        if (error instanceof Error) this.view.showError(error.message);
+      }
+    } else {
+      this.view.reminder();
     }
   }
 
