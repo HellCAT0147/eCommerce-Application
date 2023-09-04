@@ -106,6 +106,7 @@ export enum Mode {
   edit = 'edit',
   over = 'overflow',
   update = 'update',
+  fail = 'failed',
 }
 
 export enum Base {

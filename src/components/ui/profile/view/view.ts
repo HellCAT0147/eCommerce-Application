@@ -4,18 +4,87 @@ import Builder from '../../builder/html-builder';
 import { Pages } from '../../../models/router';
 import { DataAddresses } from '../../../models/commerce';
 import FormViewProfile from './form';
-import { Countries } from '../../../models/validation';
+import { Countries, Errors, InputType } from '../../../models/validation';
 
 export default class ViewProfile {
   protected formView: FormViewProfile;
 
+  private pageName: string;
+
+  private isModal: boolean;
+
   public constructor(pageName: string = Pages.PROFILE) {
     this.formView = new FormViewProfile(pageName);
+    this.pageName = pageName;
+    this.isModal = false;
+  }
+
+  public reminder(customMsg: string | null = null, block: Blocks = Blocks.prof): void {
+    const reminder: HTMLElement = new Builder('p', '', block, Elem.err, '').element();
+    const errorsHolder: HTMLElement = new Builder('div', '', block, Elem.errs, Mode.response).element();
+    const form: HTMLFormElement | null = document.querySelector('.form');
+
+    setTimeout(() => {
+      errorsHolder.outerHTML = '';
+    }, 5000);
+
+    if (customMsg === null) {
+      const inputs: NodeListOf<HTMLInputElement> = document.querySelectorAll(`.${Base.inputs}`);
+      const select: HTMLSelectElement | null = document.querySelector(`.${Base.select}`);
+
+      inputs.forEach((el) => {
+        if (el instanceof HTMLInputElement && !el.value.length) this.highlightInput(el, false);
+      });
+      if (select instanceof HTMLSelectElement && select.value === '') this.highlightInput(select, false);
+
+      reminder.textContent = 'Please fill in the required fields correctly';
+    } else reminder.textContent = customMsg;
+
+    if (!form) return;
+    errorsHolder.appendChild(reminder);
+    form.appendChild(errorsHolder);
+  }
+
+  protected highlightInput(input: HTMLElement | null, isValid: boolean): void {
+    if (input) {
+      if (isValid) {
+        input.classList.add(Mode.valid);
+        input.classList.remove(Mode.invalid);
+      } else {
+        input.classList.remove(Mode.valid);
+        input.classList.add(Mode.invalid);
+      }
+    }
   }
 
   public showError(msg: string): string {
-    // TODO implement popup with error
+    // TODO display error message;
     return msg;
+  }
+
+  public showErrors(place: HTMLElement | null, errors: Errors[] | string[], inputType: InputType): void {
+    if (place) {
+      const prevErrorsHolder: HTMLDivElement | null = document.querySelector(`.${this.pageName}__errors_${inputType}`);
+
+      if (prevErrorsHolder) prevErrorsHolder.outerHTML = '';
+      const errorsHolder: HTMLElement = new Builder('div', '', this.pageName, Elem.errs, inputType).element();
+
+      errors.forEach((error) => {
+        const p: HTMLElement = new Builder('p', '', this.pageName, Elem.err, '').element();
+        p.textContent = error;
+        errorsHolder.append(p);
+      });
+      let input: HTMLInputElement | null = document.querySelector(`.${this.pageName}__input_${inputType}`);
+      if (inputType === 'country' || inputType === 'country-bill')
+        input = document.querySelector(`.${this.pageName}__select_${inputType}`);
+
+      if (errors.length) {
+        place.after(errorsHolder);
+        this.highlightInput(input, false);
+      } else {
+        this.highlightInput(input, true);
+      }
+    }
   }
 
   private getDataAddresses(customer: Customer): DataAddresses {
@@ -89,26 +158,32 @@ export default class ViewProfile {
     return address;
   }
 
-  public showProfile(customer: Customer): void {
+  public createModals(main: HTMLElement): void {
+    const modalAccount = new Builder('div', '', Blocks.prof, Elem.modal, Mode.account).element();
+    const updateAccount: HTMLFieldSetElement = this.formView.createAccountInfoUpdateForm();
+    const modalAddress = new Builder('div', '', Blocks.prof, Elem.modal, Mode.address).element();
+    const updateAddress: HTMLFieldSetElement = this.updateAddresses();
+    modalAccount.appendChild(updateAccount);
+    modalAddress.appendChild(updateAddress);
+    main.append(modalAccount, modalAddress);
+  }
+
+  public showProfile(customer: Customer, mode?: string): void {
     const main: HTMLFormElement | null = document.querySelector(`.${Blocks.main}__${Pages.PROFILE}`);
     if (main) {
-      main.innerHTML = '';
-      const modalAccount = new Builder('div', '', Blocks.prof, Elem.modal, Mode.account).element();
-      const updateAccount: HTMLFieldSetElement = this.formView.createAccountInfoUpdateForm();
-      const modalAddress = new Builder('div', '', Blocks.prof, Elem.modal, Mode.address).element();
-      const updateAddress: HTMLFieldSetElement = this.updateAddresses();
+      if (mode !== Mode.update) this.createModals(main);
       const form = this.formView.getForm();
       form.innerHTML = '';
+      form.classList.remove(`${Mode.hidden}`);
       const title: HTMLHeadingElement = new Builder('', '', Blocks.prof, Elem.title, '').h(1);
       title.textContent = `${Titles.ACCOUNT_INFO}`;
       const accountInfo: HTMLFieldSetElement = this.formView.createAccountInfo(customer);
       const addressBook: HTMLHeadingElement = new Builder('', '', Blocks.prof, Elem.title, '').h(2);
       addressBook.textContent = `${Titles.ADDRESS_BOOK}`;
       const addresses = this.createAddresses(customer);
-      modalAccount.appendChild(updateAccount);
-      modalAddress.appendChild(updateAddress);
+
       form.append(title, accountInfo, addressBook, addresses);
-      main.append(modalAccount, modalAddress, form);
+      main.append(form);
     }
   }
 
@@ -208,23 +283,34 @@ export default class ViewProfile {
     }
   }
 
-  public showMessage(isSuccess?: boolean): void {
+  public showMessage(isSuccess?: boolean, message?: string): void {
     const body: HTMLElement | null = document.querySelector(`${Blocks.body}`);
     const oldMessageHolder: HTMLElement | null = document.querySelector(`.${Blocks.prof}__${Elem.mess}`);
     if (oldMessageHolder) {
       oldMessageHolder.classList.remove(`${Blocks.prof}__${Elem.mess}_${Mode.hidden}`);
+      const messageText: HTMLElement | null = oldMessageHolder.querySelector(`.${Elem.mess}__${Elem.text}`);
+      if (messageText) {
+        if (isSuccess) messageText.textContent = `${Titles.SUCCESS_UPDATE}`;
+        else messageText.textContent = `${message}`;
+      }
+      if (!isSuccess) oldMessageHolder.classList.add(`${Blocks.prof}__${Elem.mess}_${Mode.fail}`);
     } else {
       const messageHolder: HTMLElement = new Builder('div', '', Blocks.prof, Elem.mess, '').element();
       const messageIcon: HTMLElement = new Builder('div', '', Elem.mess, Elem.image, '').element();
       const messageText: HTMLElement = new Builder('div', '', Elem.mess, Elem.text, '').element();
-      if (isSuccess) messageText.textContent = `${Titles.SUCCESS_UPDATE}`;
-      else messageText.textContent = `${Titles.FAILED_UPDATE}`;
+      if (isSuccess) {
+        messageText.textContent = `${Titles.SUCCESS_UPDATE}`;
+      } else {
+        messageText.textContent = `${message}`;
+        messageHolder.classList.add(`${Blocks.prof}__${Elem.mess}_${Mode.fail}`);
+      }
 
       messageHolder.append(messageIcon, messageText);
       if (body) body.appendChild(messageHolder);
       if (messageHolder) {
         setTimeout(() => {
           messageHolder.classList.add(`${Blocks.prof}__${Elem.mess}_${Mode.hidden}`);
+          messageHolder.classList.remove(`${Blocks.prof}__${Elem.mess}_${Mode.fail}`);
         }, 1500);
       }
     }
@@ -232,6 +318,7 @@ export default class ViewProfile {
     setTimeout(() => {
       if (oldMessageHolder) {
         oldMessageHolder.classList.add(`${Blocks.prof}__${Elem.mess}_${Mode.hidden}`);
+        oldMessageHolder.classList.remove(`${Blocks.prof}__${Elem.mess}_${Mode.fail}`);
       }
     }, 1500);
   }
