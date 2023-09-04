@@ -415,7 +415,7 @@ export default class ECommerceApi {
           .execute();
         return true;
       }
-      return response.body;
+      return response;
     } catch (e) {
       return this.errorObjectOrThrow(e);
     }
