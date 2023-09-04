@@ -392,7 +392,7 @@ export default class ECommerceApi {
     lastName: string,
     dateOfBirth: Date,
     email: string
-  ): Promise<ErrorObject | true> {
+  ): Promise<ErrorObject | Customer> {
     try {
       const response: Customer | ErrorObject = await this.getCustomer();
       if ('email' in response) {
@@ -413,7 +413,6 @@ export default class ECommerceApi {
           .me()
           .post({ body: { version: currentUser.version, actions } })
           .execute();
-        return true;
       }
       return response;
     } catch (e) {

@@ -241,13 +241,16 @@ class ModelProfile {
   public async updateAccountInfo(): Promise<void> {
     if (this.checkSendableAccount()) {
       try {
-        const response: true | ErrorObject = await this.eCommerceApi.updatePersonalData(
+        const response: Customer | ErrorObject = await this.eCommerceApi.updatePersonalData(
           this.firstName,
           this.lastName,
           new Date(this.date),
           this.mail
         );
-        if (response) {
+        if ('message' in response && 'code' in response) {
+          this.view.showMessage(false, response.message);
+          this.view.showError(response.message);
+        } else if (response) {
           this.view.toggleDisplayModal(`${Mode.account}`, false);
           this.view.showMessage(true);
           await this.getProfile();
