@@ -399,11 +399,10 @@ export default class ECommerceApi {
     }
   }
 
-  public async updatePassword(oldPassword: string, newPassword: string): Promise<ErrorObject | boolean> {
+  public async updatePassword(oldPassword: string, newPassword: string): Promise<ErrorObject | Customer | null> {
     try {
       const response: Customer | null = await this.meLoggedInPromise;
       if (response !== null) {
-        // console.log('Пользователь найден');
         await this.apiRoot
           .me()
           .password()
@@ -415,15 +414,11 @@ export default class ECommerceApi {
             },
           })
           .execute();
-        // console.log('Ну вродь всё поменялось...');
         this.logout();
         await this.login(response.email, newPassword);
-        return true;
       }
-      // console.log('Пользователь НЕ найден!!!');
-      return false;
+      return response;
     } catch (e) {
-      // console.log('Ошибка, пойманная кэтчем');
       return this.errorObjectOrThrow(e);
     }
   }

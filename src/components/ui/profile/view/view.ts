@@ -305,7 +305,8 @@ export default class ViewProfile {
       const messageText: HTMLElement | null = oldMessageHolder.querySelector(`.${Elem.mess}__${Elem.text}`);
       if (messageText) {
         if (isSuccess) messageText.textContent = `${Titles.SUCCESS_UPDATE}`;
-        else messageText.textContent = `${message}`;
+        else if (message) messageText.textContent = `${message}`;
+        else messageText.textContent = `${Titles.FAILED_UPDATE}`;
       }
       if (!isSuccess) oldMessageHolder.classList.add(`${Blocks.prof}__${Elem.mess}_${Mode.fail}`);
     } else {
@@ -314,8 +315,11 @@ export default class ViewProfile {
       const messageText: HTMLElement = new Builder('div', '', Elem.mess, Elem.text, '').element();
       if (isSuccess) {
         messageText.textContent = `${Titles.SUCCESS_UPDATE}`;
-      } else {
+      } else if (message) {
         messageText.textContent = `${message}`;
+        messageHolder.classList.add(`${Blocks.prof}__${Elem.mess}_${Mode.fail}`);
+      } else {
+        messageText.textContent = `${Titles.FAILED_UPDATE}`;
         messageHolder.classList.add(`${Blocks.prof}__${Elem.mess}_${Mode.fail}`);
       }
 

@@ -40,7 +40,7 @@ export default class FormView {
     const input: HTMLInputElement = new Builder('', Base.inputs, pageName, Elem.input, inputName).input();
 
     if (inputName === Mode.email) input.setAttribute('type', 'text');
-    else if (inputName === Mode.pass) input.setAttribute('type', 'password');
+    else if (inputName === Mode.pass || inputName === Mode.pass_new) input.setAttribute('type', 'password');
     else if (inputName === Mode.date) {
       const currentDate: Date = new Date();
       const yearMin: number = currentDate.getFullYear() - 150;

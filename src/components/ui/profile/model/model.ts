@@ -231,8 +231,17 @@ class ModelProfile {
     return false;
   }
 
-  private setCurrentPassword(password: string | undefined): void {
-    if (password) this.password = password;
+  private clearInputs(mode: string): void {
+    const modal: HTMLElement | null = document.querySelector(`#${Elem.modal}-${mode}`);
+    if (modal) {
+      const inputs: NodeListOf<Element> = modal.querySelectorAll(`.${Blocks.prof}__${Elem.input}`);
+      inputs.forEach((input: Element) => {
+        if (input instanceof HTMLInputElement) {
+          const localInput: HTMLInputElement = input;
+          localInput.value = '';
+        }
+      });
+    }
   }
 
   public async openEditMode(target: HTMLElement): Promise<void> {
@@ -254,8 +263,9 @@ class ModelProfile {
           this.view.toggleDisplayModal(`${Mode.address}`, true);
         }
         if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.pass}`)) {
-          this.setCurrentPassword(response.password);
+          this.clearInputs(Mode.pass);
           this.view.toggleDisplayModal(`${Mode.pass}`, true);
+          this.setNoErrors(['password', 'password-new']);
         }
       }
     } catch (error) {
@@ -293,21 +303,17 @@ class ModelProfile {
   public async updatePassword(): Promise<void> {
     if (this.checkSendablePassword()) {
       try {
-        // console.log('Change Password');
-        // const response: Customer | ErrorObject = await this.eCommerceApi.updatePersonalData(
-        //   this.firstName,
-        //   this.lastName,
-        //   new Date(this.date),
-        //   this.mail
-        // );
-        // if ('message' in response && 'code' in response) {
-        //   this.view.showMessage(false, response.message);
-        //   this.view.showError(response.message);
-        // } else if (response) {
-        //   this.view.toggleDisplayModal(`${Mode.account}`, false);
-        //   this.view.showMessage(true);
-        //   await this.getProfile(Mode.update);
-        // }
+        const response: Customer | ErrorObject | null = await this.eCommerceApi.updatePassword(
+          this.password,
+          this.newPassword
+        );
+        if (response && 'message' in response && 'code' in response) {
+          this.view.showMessage(false, response.message);
+          this.view.showError(response.message);
+        } else if (response) {
+          this.view.toggleDisplayModal(`${Mode.pass}`, false);
+          this.view.showMessage(true);
+        }
       } catch (error) {
         if (error instanceof Error) this.view.showError(error.message);
       }
