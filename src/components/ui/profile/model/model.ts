@@ -12,6 +12,7 @@ import {
   PasswordErrors,
   PostalErrors,
 } from '../../../models/validation';
+// TODO: import { ClientResponse } from '@commercetools/sdk-client-v2';
 
 class ModelProfile {
   protected eCommerceApi: ECommerceApi;
@@ -64,7 +65,14 @@ class ModelProfile {
   }
 
   protected checkSendablePassword(): boolean {
-    if (this.password !== '' && this.newPassword) this.isValid = true;
+    if (this.password !== '' && this.newPassword !== '') this.isValid = true;
+    else this.isValid = false;
+
+    return this.isValid;
+  }
+
+  protected checkSendableAddress(): boolean {
+    if (this.country !== '' && this.postal !== '' && this.city !== '' && this.street !== '') this.isValid = true;
     else this.isValid = false;
 
     return this.isValid;
@@ -332,6 +340,45 @@ class ModelProfile {
     }
   }
 
+  private async checkDeleteAddress(target: HTMLElement): Promise<void> {
+    if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.del}`)) {
+      const idAddress = target.getAttribute('data-id');
+      if (idAddress) {
+        this.eCommerceApi.deleteUserAddress(idAddress).then((result) => {
+          if (typeof result === 'boolean') {
+            if (result) {
+              this.getProfile(Mode.update);
+            } else {
+              // TODO:: In fact, unauthorized
+            }
+          } else {
+            // TODO:: result == ErrorObject
+          }
+        });
+      }
+    }
+  }
+
+  private async checkAddAddress(target: HTMLElement): Promise<void> {
+    if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.add}`)) {
+      this.view.fillAddressModal(target);
+      this.view.toggleDisplayModal(`${Mode.address}`, true);
+      // this.eCommerceApi.addUserAddress(
+      //
+      // ).then((result) => {
+      //   if (typeof result === 'boolean') {
+      //     if (result) {
+      //       // TODO:: Update successful
+      //     } else {
+      //       // TODO:: In fact, unauthorized
+      //     }
+      //   } else {
+      //     // TODO:: result == ErrorObject
+      //   }
+      // });
+    }
+  }
+
   public async openEditMode(target: HTMLElement): Promise<void> {
     try {
       const response: Customer | ErrorObject = await this.eCommerceApi.getCustomer();
@@ -351,16 +398,8 @@ class ModelProfile {
           this.view.toggleDisplayModal(`${Mode.address}`, true);
           const idAddress = target.getAttribute('data-id');
         }
-        if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.del}`)) {
-          const idAddress = target.getAttribute('data-id');
-          // TODO Delete address.
-        }
-        if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.add}`)) {
-          this.view.fillAddressModal(target);
-          this.view.toggleDisplayModal(`${Mode.address}`, true);
-          // this.view.showButton(`${Mode.address}`, true);
-          // TODO Add address.
-        }
+        await this.checkDeleteAddress(target);
+        await this.checkAddAddress(target);
         if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.pass}`)) {
           this.clearInputs(Mode.pass);
           this.view.toggleDisplayModal(`${Mode.pass}`, true);
@@ -383,8 +422,9 @@ class ModelProfile {
     }
     if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.save}`)) {
       if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.account}`)) this.updateAccountInfo();
-      if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.address}`))
+      if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.address}`)) {
         this.view.toggleDisplayModal(`${Mode.address}`, false);
+      }
       if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.pass}`)) this.updatePassword();
     }
   }
@@ -438,6 +478,26 @@ class ModelProfile {
           this.view.showMessage(true);
           await this.getProfile(Mode.update);
         }
+      } catch (error) {
+        if (error instanceof Error) this.view.showError(error.message);
+      }
+    } else {
+      this.view.reminder();
+    }
+  }
+
+  public async updateAddress(): Promise<void> {
+    if (this.checkSendableAddress()) {
+      try {
+        // TODO: const response: boolean | ErrorObject = await this.eCommerceApi.updateUserAddress();
+        /* if ('message' in response && 'code' in response) {
+          this.view.showMessage(false, response.message);
+          this.view.showError(response.message);
+        } else if (response) {
+          this.view.toggleDisplayModal(`${Mode.account}`, false);
+          this.view.showMessage(true);
+          await this.getProfile(Mode.update);
+        } */
       } catch (error) {
         if (error instanceof Error) this.view.showError(error.message);
       }
