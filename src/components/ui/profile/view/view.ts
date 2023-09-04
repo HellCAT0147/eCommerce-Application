@@ -11,9 +11,38 @@ export default class ViewProfile {
 
   private pageName: string;
 
+  private isModal: boolean;
+
   public constructor(pageName: string = Pages.PROFILE) {
     this.formView = new FormViewProfile(pageName);
     this.pageName = pageName;
+    this.isModal = false;
+  }
+
+  public reminder(customMsg: string | null = null, block: Blocks = Blocks.prof): void {
+    const reminder: HTMLElement = new Builder('p', '', block, Elem.err, '').element();
+    const errorsHolder: HTMLElement = new Builder('div', '', block, Elem.errs, Mode.response).element();
+    const form: HTMLFormElement | null = document.querySelector('.form');
+
+    setTimeout(() => {
+      errorsHolder.outerHTML = '';
+    }, 5000);
+
+    if (customMsg === null) {
+      const inputs: NodeListOf<HTMLInputElement> = document.querySelectorAll(`.${Base.inputs}`);
+      const select: HTMLSelectElement | null = document.querySelector(`.${Base.select}`);
+
+      inputs.forEach((el) => {
+        if (el instanceof HTMLInputElement && !el.value.length) this.highlightInput(el, false);
+      });
+      if (select instanceof HTMLSelectElement && select.value === '') this.highlightInput(select, false);
+
+      reminder.textContent = 'Please fill in the required fields correctly';
+    } else reminder.textContent = customMsg;
+
+    if (!form) return;
+    errorsHolder.appendChild(reminder);
+    form.appendChild(errorsHolder);
   }
 
   protected highlightInput(input: HTMLElement | null, isValid: boolean): void {
@@ -129,14 +158,21 @@ export default class ViewProfile {
     return address;
   }
 
+  public createModals(main: HTMLElement): void {
+    const modalAccount = new Builder('div', '', Blocks.prof, Elem.modal, Mode.account).element();
+    const updateAccount: HTMLFieldSetElement = this.formView.createAccountInfoUpdateForm();
+    const modalAddress = new Builder('div', '', Blocks.prof, Elem.modal, Mode.address).element();
+    const updateAddress: HTMLFieldSetElement = this.updateAddresses();
+    modalAccount.appendChild(updateAccount);
+    modalAddress.appendChild(updateAddress);
+    main.append(modalAccount, modalAddress);
+  }
+
   public showProfile(customer: Customer): void {
     const main: HTMLFormElement | null = document.querySelector(`.${Blocks.main}__${Pages.PROFILE}`);
     if (main) {
-      main.innerHTML = '';
-      const modalAccount = new Builder('div', '', Blocks.prof, Elem.modal, Mode.account).element();
-      const updateAccount: HTMLFieldSetElement = this.formView.createAccountInfoUpdateForm();
-      const modalAddress = new Builder('div', '', Blocks.prof, Elem.modal, Mode.address).element();
-      const updateAddress: HTMLFieldSetElement = this.updateAddresses();
+      this.createModals(main);
+
       const form = this.formView.getForm();
       form.innerHTML = '';
       const title: HTMLHeadingElement = new Builder('', '', Blocks.prof, Elem.title, '').h(1);
@@ -145,10 +181,9 @@ export default class ViewProfile {
       const addressBook: HTMLHeadingElement = new Builder('', '', Blocks.prof, Elem.title, '').h(2);
       addressBook.textContent = `${Titles.ADDRESS_BOOK}`;
       const addresses = this.createAddresses(customer);
-      modalAccount.appendChild(updateAccount);
-      modalAddress.appendChild(updateAddress);
+
       form.append(title, accountInfo, addressBook, addresses);
-      main.append(modalAccount, modalAddress, form);
+      main.append(form);
     }
   }
 
@@ -216,9 +251,13 @@ export default class ViewProfile {
   public fillAccountModal(target: HTMLElement): void {
     const content: HTMLElement | null = target.closest(`.${Blocks.prof}__${Elem.account}`);
     const firstName: HTMLInputElement | null = document.querySelector(`#${Blocks.prof}-${Mode.f_name}`);
+    this.highlightInput(firstName, true);
     const lastName: HTMLInputElement | null = document.querySelector(`#${Blocks.prof}-${Mode.l_name}`);
+    this.highlightInput(lastName, true);
     const date: HTMLInputElement | null = document.querySelector(`#${Blocks.prof}-${Mode.date}`);
+    this.highlightInput(date, true);
     const email: HTMLInputElement | null = document.querySelector(`#${Blocks.prof}-${Mode.email}`);
+    this.highlightInput(email, true);
     if (content) {
       const firstNameElement: HTMLElement | null = content.querySelector(
         `.${Blocks.prof}__${Elem.text}_${Mode.f_name}`

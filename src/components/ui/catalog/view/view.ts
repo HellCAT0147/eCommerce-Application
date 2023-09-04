@@ -1,4 +1,4 @@
-import { Image, ProductData, ProductVariant, ProductProjection, Price } from '@commercetools/platform-sdk';
+import { Image, ProductData, ProductVariant, ProductProjection } from '@commercetools/platform-sdk';
 import { Category } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/category';
 import { Base, Blocks, Elem, Mode } from '../../../models/builder';
 import Builder from '../../builder/html-builder';

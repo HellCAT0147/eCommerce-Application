@@ -38,31 +38,24 @@ class ModelProfile {
     this.cityBill = '';
   }
 
-  // protected checkSendable(): boolean {
-  //   if (
-  //     this.mail !== '' &&
-  //     this.password !== '' &&
-  //     this.firstName !== '' &&
-  //     this.lastName !== '' &&
-  //     this.date !== '' &&
-  //     this.country !== '' &&
-  //     this.postal !== '' &&
-  //     this.city !== '' &&
-  //     this.street !== ''
-  //   ) {
-  //     if (this.shippingIsBilling) this.isValid = true;
-  //     else if (this.countryBill !== '' && this.postalBill !== '' && this.cityBill !== '' && this.streetBill !== '')
-  //       this.isValid = true;
-  //     else this.isValid = false;
-  //   } else this.isValid = false;
+  protected checkSendableAccount(): boolean {
+    if (this.mail !== '' && this.firstName !== '' && this.lastName !== '' && this.date !== '') this.isValid = true;
+    else this.isValid = false;
 
-  //   return this.isValid;
-  // }
+    return this.isValid;
+  }
 
   protected setErrors(inputType: InputType, errors: Errors[] | string[], select?: HTMLSelectElement): void {
     if (select) {
       this.view.showErrors(select.parentElement, errors, inputType);
-      // this.checkSendable();
+      if (
+        inputType === Mode.email ||
+        inputType === Mode.f_name ||
+        inputType === Mode.l_name ||
+        inputType === Mode.date
+      ) {
+        this.checkSendableAccount();
+      }
       return;
     }
     const inputs: NodeListOf<HTMLInputElement> = document.querySelectorAll('.form__input');
@@ -71,7 +64,9 @@ class ModelProfile {
         this.view.showErrors(input.parentElement, errors, inputType);
       }
     });
-    // this.checkSendable();
+    if (inputType === Mode.email || inputType === Mode.f_name || inputType === Mode.l_name || inputType === Mode.date) {
+      this.checkSendableAccount();
+    }
   }
 
   private getNameErrors(target: string, name: string): string[] {
@@ -201,14 +196,26 @@ class ModelProfile {
     return false;
   }
 
-  public openEditMode(target: HTMLElement): void {
-    if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.account}`)) {
-      this.view.fillAccountModal(target);
-      this.view.toggleDisplayModal(`${Mode.account}`, true);
-    }
-    if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.address}`)) {
-      this.view.fillAddressModal(target);
-      this.view.toggleDisplayModal(`${Mode.address}`, true);
+  public async openEditMode(target: HTMLElement): Promise<void> {
+    try {
+      const response: Customer | ErrorObject = await this.eCommerceApi.getCustomer();
+      if ('message' in response && 'code' in response) this.view.showError(response.message);
+      else {
+        if (response.firstName) this.firstName = response.firstName;
+        if (response.lastName) this.lastName = response.lastName;
+        if (response.email) this.mail = response.email;
+        if (response.dateOfBirth) this.date = response.dateOfBirth;
+        if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.account}`)) {
+          this.view.fillAccountModal(target);
+          this.view.toggleDisplayModal(`${Mode.account}`, true);
+        }
+        if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.address}`)) {
+          this.view.fillAddressModal(target);
+          this.view.toggleDisplayModal(`${Mode.address}`, true);
+        }
+      }
+    } catch (error) {
+      if (error instanceof Error) this.view.showError(error.message);
     }
   }
 
@@ -220,11 +227,31 @@ class ModelProfile {
         this.view.toggleDisplayModal(`${Mode.address}`, false);
     }
     if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.save}`)) {
-      this.view.showMessage(true);
-      if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.account}`))
-        this.view.toggleDisplayModal(`${Mode.account}`, false);
+      if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.account}`)) this.updateAccountInfo();
       if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.address}`))
         this.view.toggleDisplayModal(`${Mode.address}`, false);
+    }
+  }
+
+  public async updateAccountInfo(): Promise<void> {
+    if (this.checkSendableAccount()) {
+      try {
+        const response: true | ErrorObject = await this.eCommerceApi.updatePersonalData(
+          this.firstName,
+          this.lastName,
+          new Date(this.date),
+          this.mail
+        );
+        if (response) {
+          this.view.toggleDisplayModal(`${Mode.account}`, false);
+          this.view.showMessage(true);
+          await this.getProfile();
+        }
+      } catch (error) {
+        if (error instanceof Error) this.view.showError(error.message);
+      }
+    } else {
+      this.view.reminder();
     }
   }
 
