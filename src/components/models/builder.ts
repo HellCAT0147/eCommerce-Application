@@ -152,6 +152,7 @@ export enum Buttons {
   ADDRESS = 'Edit Address',
   SAVE = 'SAVE',
   BACK = 'BACK',
+  CHANGE_PASS = 'Change Password',
 }
 
 export enum Titles {

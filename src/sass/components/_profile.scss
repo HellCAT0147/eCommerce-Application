@@ -15,6 +15,18 @@
     }
   }
 
+  &__wrapper {
+    &_account {
+      flex-grow: 1;
+      max-width: 50%;
+    }
+
+    &_control {
+      justify-content: flex-start;
+      column-gap: 20px;
+    }
+  }
+
   &__addresses {
     flex-direction: row;
     flex-wrap: wrap;
@@ -54,6 +66,7 @@
   &__modal {
     display: none;
     width: 70%;
+    margin-top: 40px;
     &.opened {
       display: flex;
       justify-content: center;

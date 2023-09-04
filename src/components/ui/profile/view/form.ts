@@ -29,7 +29,7 @@ export default class FormViewProfile extends FormViewReg {
     const page: string = this.pageName;
     const accountInfoField: HTMLFieldSetElement = new Builder('', Base.subform, page, Elem.account, '').field();
     accountInfoField.setAttribute('id', `${Elem.modal}-${Mode.account}`);
-    const formTitle: HTMLElement = new Builder('', Base.form_title, Blocks.form, Elem.title, Mode.ship).h(2);
+    const formTitle: HTMLElement = new Builder('', Base.form_title, Blocks.form, Elem.title, '').h(2);
     formTitle.textContent = `${Titles.UPDATE} ${Titles.CONTACT_INFO} `;
     const firstName: HTMLFieldSetElement = new Builder('', Base.field, page, 'field', Mode.f_name).field();
     const labelFirstName: HTMLLabelElement = this.createLabel(page, Mode.f_name);
@@ -64,6 +64,7 @@ export default class FormViewProfile extends FormViewReg {
   public createAccountInfo(customer: Customer): HTMLFieldSetElement {
     const page: string = this.pageName;
     const accountInfoField: HTMLFieldSetElement = new Builder('', Base.prof_f, page, Elem.account, '').field();
+    accountInfoField.classList.add(`${page}__${Elem.wrapper}_${Mode.account}`);
     const formTitle: HTMLElement = new Builder('', '', page, Elem.subtitle, '').h(2);
     formTitle.textContent = `${Titles.CONTACT_INFO}`.toUpperCase();
     const content: HTMLElement = new Builder('div', '', page, Elem.content, '').element();
@@ -71,8 +72,12 @@ export default class FormViewProfile extends FormViewReg {
     const lastName: HTMLParagraphElement = new Builder('', '', page, Elem.text, Mode.l_name).p();
     const date: HTMLParagraphElement = new Builder('', '', page, Elem.text, Mode.date).p();
     const email: HTMLParagraphElement = new Builder('', '', page, Elem.text, Mode.email).p();
+    const formFieldControl: HTMLFieldSetElement = new Builder('', Base.field, page, Elem.field, Mode.control).field();
+    formFieldControl.classList.add(`${page}__${Elem.wrapper}_${Mode.control}`);
     const buttonEdit: HTMLButtonElement = new Builder('', Base.btns_edit, page, Elem.btn, Mode.account).button();
     buttonEdit.textContent = Buttons.EDIT;
+    const buttonEditPassword: HTMLButtonElement = new Builder('', Base.btns_edit, page, Elem.btn, Mode.pass).button();
+    buttonEditPassword.textContent = Buttons.CHANGE_PASS;
 
     firstName.textContent = `${customer.firstName || ''}`;
     lastName.textContent = `${customer.lastName || ''}`;
@@ -80,7 +85,8 @@ export default class FormViewProfile extends FormViewReg {
     email.textContent = customer.email || '';
 
     content.append(firstName, lastName);
-    accountInfoField.append(formTitle, content, date, email, buttonEdit);
+    formFieldControl.append(buttonEdit, buttonEditPassword);
+    accountInfoField.append(formTitle, content, date, email, formFieldControl);
 
     return accountInfoField;
   }
