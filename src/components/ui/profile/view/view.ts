@@ -175,6 +175,7 @@ export default class ViewProfile {
 
       const form = this.formView.getForm();
       form.innerHTML = '';
+      form.classList.remove(`${Mode.hidden}`);
       const title: HTMLHeadingElement = new Builder('', '', Blocks.prof, Elem.title, '').h(1);
       title.textContent = `${Titles.ACCOUNT_INFO}`;
       const accountInfo: HTMLFieldSetElement = this.formView.createAccountInfo(customer);
