@@ -194,6 +194,7 @@ export enum Titles {
   HAVE_NOT = `You have not set a`,
   UPDATE = `Update`,
   PASSWORD = `Password`,
+  ADD = `Add`,
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;

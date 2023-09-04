@@ -2,7 +2,16 @@ import { Customer, ErrorObject } from '@commercetools/platform-sdk';
 import ECommerceApi from '../../../api/e-commerce-api';
 import ViewProfile from '../view/view';
 import { Blocks, Elem, Mode } from '../../../models/builder';
-import { DateErrors, Errors, InputType, MailErrors, NameErrors, PasswordErrors } from '../../../models/validation';
+import {
+  Countries,
+  DateErrors,
+  Errors,
+  InputType,
+  MailErrors,
+  NameErrors,
+  PasswordErrors,
+  PostalErrors,
+} from '../../../models/validation';
 
 class ModelProfile {
   protected eCommerceApi: ECommerceApi;
@@ -25,7 +34,11 @@ class ModelProfile {
 
   private city: string;
 
-  private cityBill: string;
+  private street: string;
+
+  private postal: string;
+
+  private country: Countries | string;
 
   public constructor(eCommerceApi: ECommerceApi) {
     this.eCommerceApi = eCommerceApi;
@@ -38,7 +51,9 @@ class ModelProfile {
     this.lastName = '';
     this.date = '';
     this.city = '';
-    this.cityBill = '';
+    this.street = '';
+    this.postal = '';
+    this.country = '';
   }
 
   protected checkSendableAccount(): boolean {
@@ -92,11 +107,7 @@ class ModelProfile {
       else errors.push(`${textName} ${NameErrors.noChar}`);
     }
 
-    if (target.includes('city-bill')) {
-      this.cityBill = '';
-      errorsHandling('City');
-      this.setErrors('city-bill', errors);
-    } else if (target.includes('city')) {
+    if (target.includes('city')) {
       this.city = '';
       errorsHandling('City');
       this.setErrors('city', errors);
@@ -116,10 +127,7 @@ class ModelProfile {
   public checkName(name: string, target: string): boolean {
     const regexp: RegExp = /^[a-zA-Zа-яА-ЯёЁғҒиИйІіЙкКқҚлЛмМнНоОпПрРсСтТуУЎўфФхХцЦчЧшШъЪьЬэЭюЮяЯ\s'-]+$/u;
     if (name.match(regexp)) {
-      if (target.includes('city') && target.includes('bill')) {
-        this.cityBill = name;
-        this.setErrors('city-bill', []);
-      } else if (target.includes('city')) {
+      if (target.includes('city')) {
         this.city = name;
         this.setErrors('city', []);
       } else if (target.includes('first')) {
@@ -133,6 +141,86 @@ class ModelProfile {
     }
 
     this.getNameErrors(target, name);
+
+    return false;
+  }
+
+  public checkPostal(postal: string): boolean {
+    let regexp: RegExp;
+    const { country } = this;
+    switch (country) {
+      case Countries.BY:
+      case Countries.RU:
+      case Countries.UZ:
+        regexp = /^\d{6}$/;
+        break;
+      case Countries.US:
+        regexp = /^\d{5}(-\d{4})?$/;
+        break;
+      default:
+        this.setErrors(`postal-code`, [PostalErrors.notSelected]);
+        return false;
+    }
+    if (postal.match(regexp)) {
+      this.postal = postal;
+      this.setErrors(`postal-code`, []);
+      return true;
+    }
+    switch (country) {
+      case Countries.BY:
+        this.setErrors(`postal-code`, [PostalErrors.BY]);
+        break;
+      case Countries.RU:
+        this.setErrors(`postal-code`, [PostalErrors.RU]);
+        break;
+      case Countries.US:
+        this.setErrors(`postal-code`, [PostalErrors.US]);
+        break;
+      case Countries.UZ:
+        this.setErrors(`postal-code`, [PostalErrors.UZ]);
+        break;
+      default:
+        break;
+    }
+    return false;
+  }
+
+  public checkCountry(select: HTMLSelectElement): boolean {
+    this.postal = '';
+    const postalCodeInput: HTMLInputElement | null = document.querySelector(
+      `.${Blocks.prof}__${Elem.input}_${Mode.postal}`
+    );
+    this.view.resetPostal(select.parentElement);
+
+    const country: string = select.value;
+    const countries: string[] = Object.values(Countries);
+    if (countries.includes(country)) {
+      this.country = country;
+      this.setErrors('country', [], select);
+      if (postalCodeInput) this.checkPostal('');
+      return true;
+    }
+
+    this.country = '';
+    this.setErrors('country', [PostalErrors.notSelected], select);
+
+    if (postalCodeInput) this.checkPostal('');
+
+    return false;
+  }
+
+  public checkStreet(target: HTMLInputElement): boolean {
+    const street: string = target.value;
+
+    if (street.trim().length) {
+      this.street = street;
+      this.setErrors('street', []);
+      return true;
+    }
+
+    const msg: string = 'Must contain at least one character';
+    this.street = '';
+    this.setErrors('street', [msg]);
 
     return false;
   }

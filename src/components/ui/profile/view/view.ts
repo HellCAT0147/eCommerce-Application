@@ -169,6 +169,15 @@ export default class ViewProfile {
     input.focus();
   }
 
+  public resetPostal(selectField: HTMLElement | null): void {
+    if (!selectField) return;
+    const fieldset: Element | null = selectField.nextElementSibling;
+    if (!fieldset) return;
+    const postal: HTMLElement | null = fieldset.querySelector('.form__input');
+    if (!postal) return;
+    if (postal instanceof HTMLInputElement) postal.value = '';
+  }
+
   public createModals(main: HTMLElement): void {
     const modalAccount = new Builder('div', '', Blocks.prof, Elem.modal, Mode.account).element();
     const updateAccount: HTMLFieldSetElement = this.formView.createAccountInfoUpdateForm();
@@ -179,7 +188,7 @@ export default class ViewProfile {
     modalAccount.appendChild(updateAccount);
     modalAddress.appendChild(updateAddress);
     modalPassword.appendChild(updatePassword);
-    main.append(modalAccount, modalAddress, modalPassword);
+    main.append(modalAccount, modalPassword, modalAddress);
   }
 
   public showProfile(customer: Customer, mode?: string): void {
