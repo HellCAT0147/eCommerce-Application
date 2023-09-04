@@ -347,7 +347,7 @@ export default class ViewCatalog {
     return searchWrapper;
   }
 
-  private createBrandFilterBox(): HTMLElement {
+  public createBrandFilterBox(): HTMLElement {
     const brandFilter: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter', 'brand').element();
     const brandFilterHeader: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter-box', 'header').element();
     brandFilterHeader.innerText = 'BRAND';
@@ -386,7 +386,7 @@ export default class ViewCatalog {
     return brandFilter;
   }
 
-  private createSizeFilterBox(): HTMLElement {
+  public createSizeFilterBox(): HTMLElement {
     const sizeFilter: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter', 'size').element();
     const sizeFilterHeader: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter-box', 'header').element();
     sizeFilterHeader.innerText = 'SIZE';
@@ -425,7 +425,7 @@ export default class ViewCatalog {
     return sizeFilter;
   }
 
-  private createColorFilterBox(): HTMLElement {
+  public createColorFilterBox(): HTMLElement {
     const colorFilter: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter', 'color').element();
     const colorFilterHeader: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter-box', 'header').element();
     colorFilterHeader.innerText = 'COLOR';
@@ -465,7 +465,7 @@ export default class ViewCatalog {
     return colorFilter;
   }
 
-  private createPriceFilter(): HTMLElement {
+  public createPriceFilter(): HTMLElement {
     const priceFilter: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter', 'price').element();
     const priceFilterHeader: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter-box', 'header').element();
     priceFilterHeader.innerText = 'MAX PRICE';
@@ -495,7 +495,7 @@ export default class ViewCatalog {
     return priceFilter;
   }
 
-  private createFilters(): HTMLElement {
+  public createFilters(): HTMLElement {
     const filters: HTMLElement = ViewCatalog.filtersWrapperBuilder.element();
     const filtersHeader: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter', 'header').element();
     filtersHeader.innerText = 'FILTERS';
@@ -517,7 +517,7 @@ export default class ViewCatalog {
     return filters;
   }
 
-  private createPageSettings(): HTMLElement {
+  public createPageSettings(): HTMLElement {
     const sortingDropdown: HTMLElement = new Builder('div', '', Blocks.catalog, 'sorting-dropdown', '').element();
 
     const nameAsc: HTMLElement = new Builder('div', '', Blocks.catalog, 'sorting-name-asc', '').element();
