@@ -253,7 +253,7 @@ class ModelProfile {
         } else if (response) {
           this.view.toggleDisplayModal(`${Mode.account}`, false);
           this.view.showMessage(true);
-          await this.getProfile();
+          await this.getProfile(Mode.update);
         }
       } catch (error) {
         if (error instanceof Error) this.view.showError(error.message);
@@ -263,11 +263,11 @@ class ModelProfile {
     }
   }
 
-  public async getProfile(): Promise<void> {
+  public async getProfile(mode?: string): Promise<void> {
     try {
       const response: Customer | ErrorObject = await this.eCommerceApi.getCustomer();
       if ('message' in response && 'code' in response) this.view.showError(response.message);
-      else this.view.showProfile(response);
+      else this.view.showProfile(response, mode);
     } catch (error) {
       if (error instanceof Error) this.view.showError(error.message);
     }

@@ -166,15 +166,12 @@ export default class ViewProfile {
     modalAccount.appendChild(updateAccount);
     modalAddress.appendChild(updateAddress);
     main.append(modalAccount, modalAddress);
-
-    this.isModal = true;
   }
 
-  public showProfile(customer: Customer): void {
+  public showProfile(customer: Customer, mode?: string): void {
     const main: HTMLFormElement | null = document.querySelector(`.${Blocks.main}__${Pages.PROFILE}`);
     if (main) {
-      if (!this.isModal) this.createModals(main);
-
+      if (mode !== Mode.update) this.createModals(main);
       const form = this.formView.getForm();
       form.innerHTML = '';
       form.classList.remove(`${Mode.hidden}`);
