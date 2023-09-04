@@ -69,6 +69,10 @@ class ModelProfile {
     }
   }
 
+  private setNoErrors(inputTypes: InputType[]): void {
+    inputTypes.forEach((inputType) => this.setErrors(inputType, []));
+  }
+
   private getNameErrors(target: string, name: string): string[] {
     const errors: string[] = [];
 
@@ -208,6 +212,7 @@ class ModelProfile {
         if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.account}`)) {
           this.view.fillAccountModal(target);
           this.view.toggleDisplayModal(`${Mode.account}`, true);
+          this.setNoErrors(['first-name', 'last-name', 'date-of-birth', 'email']);
         }
         if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.address}`)) {
           this.view.fillAddressModal(target);
