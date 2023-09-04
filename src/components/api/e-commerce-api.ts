@@ -68,8 +68,6 @@ export default class ECommerceApi {
         },
       },
       scopes,
-      tokenCache: this.tokenCachesStore,
-      fetch,
     };
 
     // Configure httpMiddlewareOptions
@@ -85,13 +83,12 @@ export default class ECommerceApi {
 
   private initClientAndApiRoot(): void {
     const creds = this.tokenCachesStore.getDefault();
-    let preClient: Client = this.clientBuilder.withAnonymousSessionFlow(this.baseAuthParams).build();
+    let preClient: Client = this.clientBuilder.withAnonymousSessionFlow(this.copyAuthParams()).build();
 
     if (creds !== this.tokenCachesStore.defaultTokenStore) {
       const authParams: RefreshAuthMiddlewareOptions = {
-        ...this.baseAuthParams,
+        ...this.copyAuthParams(),
         refreshToken: creds.refreshToken as string,
-        tokenCache: this.tokenCachesStore,
       };
       preClient = this.clientBuilder.withRefreshTokenFlow(authParams).build();
     }
@@ -203,7 +200,7 @@ export default class ECommerceApi {
     defaultBillingAddress: number | undefined,
     defaultShippingAddress: number | undefined
   ): Promise<ErrorObject | boolean> {
-    const authParams = this.baseAuthParams;
+    const authParams = this.copyAuthParams();
     authParams.credentials.user.username = email;
     authParams.credentials.user.password = password;
     try {
@@ -242,8 +239,17 @@ export default class ECommerceApi {
     return true;
   }
 
+  private copyAuthParams(): PasswordAuthMiddlewareOptions {
+    const newAuthParams = structuredClone(this.baseAuthParams);
+
+    newAuthParams.tokenCache = this.tokenCachesStore;
+    newAuthParams.fetch = fetch;
+
+    return newAuthParams;
+  }
+
   public async login(email: string, password: string): Promise<ErrorObject | true> {
-    const authParams: PasswordAuthMiddlewareOptions = { ...this.baseAuthParams }; // copy of base auth params
+    const authParams: PasswordAuthMiddlewareOptions = this.copyAuthParams(); // copy of base auth params
     authParams.credentials.user.username = email;
     authParams.credentials.user.password = password;
 
@@ -256,7 +262,7 @@ export default class ECommerceApi {
       const meResponse: ClientResponse<Customer> = await apiRoot.me().get().execute();
 
       if (meResponse.statusCode === 200) {
-        this.apiRoot = apiRoot;
+        this.initClientAndApiRoot();
         return true;
       }
     } catch (e) {
@@ -382,6 +388,30 @@ export default class ECommerceApi {
     try {
       const response: ClientResponse<Customer> = await this.apiRoot.me().get().execute();
       return response.body;
+    } catch (e) {
+      return this.errorObjectOrThrow(e);
+    }
+  }
+
+  public async updatePassword(oldPassword: string, newPassword: string): Promise<ErrorObject | Customer | null> {
+    try {
+      const response: Customer | null = await this.meLoggedInPromise;
+      if (response !== null) {
+        await this.apiRoot
+          .me()
+          .password()
+          .post({
+            body: {
+              version: response.version,
+              currentPassword: oldPassword,
+              newPassword,
+            },
+          })
+          .execute();
+        this.logout();
+        await this.login(response.email, newPassword);
+      }
+      return response;
     } catch (e) {
       return this.errorObjectOrThrow(e);
     }

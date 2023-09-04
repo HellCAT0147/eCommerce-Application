@@ -158,14 +158,28 @@ export default class ViewProfile {
     return address;
   }
 
+  public switchPasswordView(icon: HTMLButtonElement, id?: string): void {
+    const input: HTMLInputElement | null = document.querySelector(`#${id}`);
+    icon.classList.toggle(`form__button_${Mode.eye_opened}`);
+    icon.classList.toggle(`form__button_${Mode.eye_closed}`);
+
+    if (!input) return;
+    if (icon.classList.contains(`form__button_${Mode.eye_opened}`)) input.type = 'text';
+    else input.type = 'password';
+    input.focus();
+  }
+
   public createModals(main: HTMLElement): void {
     const modalAccount = new Builder('div', '', Blocks.prof, Elem.modal, Mode.account).element();
     const updateAccount: HTMLFieldSetElement = this.formView.createAccountInfoUpdateForm();
     const modalAddress = new Builder('div', '', Blocks.prof, Elem.modal, Mode.address).element();
     const updateAddress: HTMLFieldSetElement = this.updateAddresses();
+    const modalPassword = new Builder('div', '', Blocks.prof, Elem.modal, Mode.pass).element();
+    const updatePassword: HTMLFieldSetElement = this.formView.createPasswordUpdateForm();
     modalAccount.appendChild(updateAccount);
     modalAddress.appendChild(updateAddress);
-    main.append(modalAccount, modalAddress);
+    modalPassword.appendChild(updatePassword);
+    main.append(modalAccount, modalAddress, modalPassword);
   }
 
   public showProfile(customer: Customer, mode?: string): void {
@@ -291,7 +305,8 @@ export default class ViewProfile {
       const messageText: HTMLElement | null = oldMessageHolder.querySelector(`.${Elem.mess}__${Elem.text}`);
       if (messageText) {
         if (isSuccess) messageText.textContent = `${Titles.SUCCESS_UPDATE}`;
-        else messageText.textContent = `${message}`;
+        else if (message) messageText.textContent = `${message}`;
+        else messageText.textContent = `${Titles.FAILED_UPDATE}`;
       }
       if (!isSuccess) oldMessageHolder.classList.add(`${Blocks.prof}__${Elem.mess}_${Mode.fail}`);
     } else {
@@ -300,8 +315,11 @@ export default class ViewProfile {
       const messageText: HTMLElement = new Builder('div', '', Elem.mess, Elem.text, '').element();
       if (isSuccess) {
         messageText.textContent = `${Titles.SUCCESS_UPDATE}`;
-      } else {
+      } else if (message) {
         messageText.textContent = `${message}`;
+        messageHolder.classList.add(`${Blocks.prof}__${Elem.mess}_${Mode.fail}`);
+      } else {
+        messageText.textContent = `${Titles.FAILED_UPDATE}`;
         messageHolder.classList.add(`${Blocks.prof}__${Elem.mess}_${Mode.fail}`);
       }
 
@@ -321,5 +339,11 @@ export default class ViewProfile {
         oldMessageHolder.classList.remove(`${Blocks.prof}__${Elem.mess}_${Mode.fail}`);
       }
     }, 1500);
+  }
+
+  public resetInputView(inputType: InputType): void {
+    const initInput: HTMLInputElement | null = document.querySelector(`.profile__input_${inputType}`);
+    initInput?.classList.remove(Mode.valid);
+    initInput?.classList.remove(Mode.invalid);
   }
 }
