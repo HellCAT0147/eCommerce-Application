@@ -349,6 +349,7 @@ class ModelProfile {
         if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.address}`)) {
           this.view.fillAddressModal(target);
           this.view.toggleDisplayModal(`${Mode.address}`, true);
+          const idAddress = target.getAttribute('data-id');
         }
         if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.del}`)) {
           const idAddress = target.getAttribute('data-id');
@@ -357,6 +358,7 @@ class ModelProfile {
         if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.add}`)) {
           this.view.fillAddressModal(target);
           this.view.toggleDisplayModal(`${Mode.address}`, true);
+          // this.view.showButton(`${Mode.address}`, true);
           // TODO Add address.
         }
         if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.pass}`)) {

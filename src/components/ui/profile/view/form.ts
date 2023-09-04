@@ -201,6 +201,21 @@ export default class FormViewProfile extends FormViewReg {
     return addressField;
   }
 
+  public createButtons(formFieldControl: HTMLFieldSetElement): void {
+    const page: string = this.pageName;
+    const buttonSave: HTMLButtonElement = new Builder('', Base.btns_colored, page, Elem.btn, Mode.save).button();
+    buttonSave.classList.add(`${Base.btns_modal}`);
+    buttonSave.textContent = Buttons.SAVE;
+    const buttonAdd: HTMLButtonElement = new Builder('', Base.btns_colored, page, Elem.btn, Mode.add).button();
+    buttonAdd.classList.add(`${Base.btns_modal}`);
+    buttonAdd.textContent = Buttons.ADD_ADDRESS;
+    const buttonBack: HTMLButtonElement = new Builder('', Base.btns_empty, page, Elem.btn, Mode.back).button();
+    buttonBack.classList.add(`${Base.btns_modal}`);
+    buttonBack.textContent = Buttons.BACK;
+
+    formFieldControl.append(buttonSave, buttonAdd, buttonBack);
+  }
+
   public createAddressUpdateForm(
     street: InputType,
     city: InputType,
@@ -235,19 +250,13 @@ export default class FormViewProfile extends FormViewReg {
     const box: HTMLFieldSetElement = new Builder('', Base.field, page, Elem.field, Mode.check).field();
     this.createCheckBoxes(box);
     const formFieldControl: HTMLFieldSetElement = new Builder('', Base.field, page, Elem.field, Mode.control).field();
-    const buttonSave: HTMLButtonElement = new Builder('', Base.btns_colored, page, Elem.btn, Mode.save).button();
-    buttonSave.classList.add(`${Base.btns_modal}`);
-    buttonSave.textContent = Buttons.SAVE;
-    const buttonBack: HTMLButtonElement = new Builder('', Base.btns_empty, page, Elem.btn, Mode.back).button();
-    buttonBack.classList.add(`${Base.btns_modal}`);
-    buttonBack.textContent = Buttons.BACK;
+    this.createButtons(formFieldControl);
     formFieldStreet.append(labelStreet, inputStreet);
     formFieldCity.append(labelCity, inputCity);
     formFieldPostal.append(labelPostal, inputPostal);
     formFieldCountry.append(labelCountry, inputCountry);
     formFieldAddress.appendChild(formTitleShip);
     if (check) formFieldAddress.appendChild(check);
-    formFieldControl.append(buttonSave, buttonBack);
     formFieldAddress.append(formFieldCountry, formFieldPostal, formFieldCity, formFieldStreet, box, formFieldControl);
     return formFieldAddress;
   }

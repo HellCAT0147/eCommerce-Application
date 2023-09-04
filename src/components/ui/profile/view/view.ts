@@ -239,6 +239,10 @@ export default class ViewProfile {
     }
   }
 
+  // public showButton(): void {
+
+  // }
+
   public fillAddressModal(target: HTMLElement): void {
     const content: HTMLElement | null = target.closest(`.${Blocks.prof}__${Elem.address}`);
     const country: HTMLInputElement | null = document.querySelector(`#${Blocks.prof}-${Mode.country}`);
