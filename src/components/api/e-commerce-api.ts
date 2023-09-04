@@ -4,7 +4,10 @@ import {
   HttpMiddlewareOptions,
   RefreshAuthMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
-import { PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2/dist/declarations/src/types/sdk';
+import {
+  PasswordAuthMiddlewareOptions,
+  TokenCache,
+} from '@commercetools/sdk-client-v2/dist/declarations/src/types/sdk';
 import {
   Address,
   CategoryPagedQueryResponse,
@@ -68,8 +71,6 @@ export default class ECommerceApi {
         },
       },
       scopes,
-      tokenCache: this.tokenCachesStore,
-      fetch,
     };
 
     // Configure httpMiddlewareOptions
@@ -85,13 +86,12 @@ export default class ECommerceApi {
 
   private initClientAndApiRoot(): void {
     const creds = this.tokenCachesStore.getDefault();
-    let preClient: Client = this.clientBuilder.withAnonymousSessionFlow(this.baseAuthParams).build();
+    let preClient: Client = this.clientBuilder.withAnonymousSessionFlow(this.copyAuthParams()).build();
 
     if (creds !== this.tokenCachesStore.defaultTokenStore) {
       const authParams: RefreshAuthMiddlewareOptions = {
-        ...this.baseAuthParams,
+        ...this.copyAuthParams(),
         refreshToken: creds.refreshToken as string,
-        tokenCache: this.tokenCachesStore,
       };
       preClient = this.clientBuilder.withRefreshTokenFlow(authParams).build();
     }
@@ -115,7 +115,8 @@ export default class ECommerceApi {
           }
           return result.body;
         })
-        .catch(() => {
+        .catch((e) => {
+          // console.log(e);
           this.tokenCachesStore.unset();
           this.initClientAndApiRoot();
           return null;
@@ -203,7 +204,7 @@ export default class ECommerceApi {
     defaultBillingAddress: number | undefined,
     defaultShippingAddress: number | undefined
   ): Promise<ErrorObject | boolean> {
-    const authParams = this.baseAuthParams;
+    const authParams = this.copyAuthParams();
     authParams.credentials.user.username = email;
     authParams.credentials.user.password = password;
     try {
@@ -242,8 +243,17 @@ export default class ECommerceApi {
     return true;
   }
 
+  private copyAuthParams(): PasswordAuthMiddlewareOptions {
+    const newAuthParams = structuredClone(this.baseAuthParams);
+
+    newAuthParams.tokenCache = this.tokenCachesStore;
+    newAuthParams.fetch = fetch;
+
+    return newAuthParams;
+  }
+
   public async login(email: string, password: string): Promise<ErrorObject | true> {
-    const authParams: PasswordAuthMiddlewareOptions = { ...this.baseAuthParams }; // copy of base auth params
+    const authParams: PasswordAuthMiddlewareOptions = this.copyAuthParams(); // copy of base auth params
     authParams.credentials.user.username = email;
     authParams.credentials.user.password = password;
 
@@ -256,10 +266,12 @@ export default class ECommerceApi {
       const meResponse: ClientResponse<Customer> = await apiRoot.me().get().execute();
 
       if (meResponse.statusCode === 200) {
-        this.apiRoot = apiRoot;
+        this.initClientAndApiRoot();
         return true;
       }
     } catch (e) {
+      // console.log(email, password);
+      // console.log('не могу залогиниться');
       return this.errorObjectOrThrow(e);
     }
     return true;
@@ -383,6 +395,35 @@ export default class ECommerceApi {
       const response: ClientResponse<Customer> = await this.apiRoot.me().get().execute();
       return response.body;
     } catch (e) {
+      return this.errorObjectOrThrow(e);
+    }
+  }
+
+  public async updatePassword(oldPassword: string, newPassword: string): Promise<ErrorObject | boolean> {
+    try {
+      const response: Customer | null = await this.meLoggedInPromise;
+      if (response !== null) {
+        // console.log('Пользователь найден');
+        await this.apiRoot
+          .me()
+          .password()
+          .post({
+            body: {
+              version: response.version,
+              currentPassword: oldPassword,
+              newPassword,
+            },
+          })
+          .execute();
+        // console.log('Ну вродь всё поменялось...');
+        this.logout();
+        await this.login(response.email, newPassword);
+        return true;
+      }
+      // console.log('Пользователь НЕ найден!!!');
+      return false;
+    } catch (e) {
+      // console.log('Ошибка, пойманная кэтчем');
       return this.errorObjectOrThrow(e);
     }
   }

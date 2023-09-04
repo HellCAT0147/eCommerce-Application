@@ -94,6 +94,7 @@ export default class ModelCatalog {
   }
 
   public createModal(img: EventTarget): void {
+    // this.eCommerceApi.updatePassword('asd2asdA1!', 'asd2asdA1!');
     if (img instanceof HTMLImageElement) {
       const slides: HTMLCollection | undefined = img.parentElement?.parentElement?.children;
       if (!slides) return;
