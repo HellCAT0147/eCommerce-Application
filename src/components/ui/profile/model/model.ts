@@ -11,6 +11,8 @@ class ModelProfile {
 
   private mail: string;
 
+  private newPassword: string;
+
   private password: string;
 
   private isValid: boolean;
@@ -29,6 +31,7 @@ class ModelProfile {
     this.eCommerceApi = eCommerceApi;
     this.view = new ViewProfile();
     this.mail = '';
+    this.newPassword = '';
     this.password = '';
     this.isValid = false;
     this.firstName = '';
@@ -144,6 +147,27 @@ class ModelProfile {
     return false;
   }
 
+  public checkNewPassword(password: string): boolean {
+    const regexp: RegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[^\s]{8,}$/;
+    if (password.match(regexp)) {
+      this.newPassword = password;
+      this.setErrors('password-new', []);
+      return true;
+    }
+    this.newPassword = '';
+
+    const errors: PasswordErrors[] = [];
+    if (!password.match(/[a-z]/)) errors.push(PasswordErrors.lower);
+    if (!password.match(/[A-Z]/)) errors.push(PasswordErrors.upper);
+    if (!password.match(/[0-9]/)) errors.push(PasswordErrors.digit);
+    if (!password.match(/[!@#$%^&*(),.?":{}|<>]/)) errors.push(PasswordErrors.char);
+    if (password.length < 8) errors.push(PasswordErrors.short);
+    if (password.match(/\s/)) errors.push(PasswordErrors.space);
+    this.setErrors('password-new', errors);
+
+    return false;
+  }
+
   public checkMail(mail: string): boolean {
     const regexp: RegExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (mail.match(regexp)) {
@@ -196,6 +220,10 @@ class ModelProfile {
     return false;
   }
 
+  private setCurrentPassword(password: string | undefined): void {
+    if (password) this.password = password;
+  }
+
   public async openEditMode(target: HTMLElement): Promise<void> {
     try {
       const response: Customer | ErrorObject = await this.eCommerceApi.getCustomer();
@@ -213,6 +241,10 @@ class ModelProfile {
           this.view.fillAddressModal(target);
           this.view.toggleDisplayModal(`${Mode.address}`, true);
         }
+        if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.pass}`)) {
+          this.setCurrentPassword(response.password);
+          this.view.toggleDisplayModal(`${Mode.pass}`, true);
+        }
       }
     } catch (error) {
       if (error instanceof Error) this.view.showError(error.message);
@@ -225,11 +257,15 @@ class ModelProfile {
         this.view.toggleDisplayModal(`${Mode.account}`, false);
       if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.address}`))
         this.view.toggleDisplayModal(`${Mode.address}`, false);
+      if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.pass}`))
+        this.view.toggleDisplayModal(`${Mode.pass}`, false);
     }
     if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.save}`)) {
       if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.account}`)) this.updateAccountInfo();
       if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.address}`))
         this.view.toggleDisplayModal(`${Mode.address}`, false);
+      if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.pass}`))
+        this.view.toggleDisplayModal(`${Mode.pass}`, false);
     }
   }
 

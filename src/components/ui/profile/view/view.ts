@@ -163,9 +163,12 @@ export default class ViewProfile {
     const updateAccount: HTMLFieldSetElement = this.formView.createAccountInfoUpdateForm();
     const modalAddress = new Builder('div', '', Blocks.prof, Elem.modal, Mode.address).element();
     const updateAddress: HTMLFieldSetElement = this.updateAddresses();
+    const modalPassword = new Builder('div', '', Blocks.prof, Elem.modal, Mode.pass).element();
+    const updatePassword: HTMLFieldSetElement = this.formView.createPasswordUpdateForm();
     modalAccount.appendChild(updateAccount);
     modalAddress.appendChild(updateAddress);
-    main.append(modalAccount, modalAddress);
+    modalPassword.appendChild(updatePassword);
+    main.append(modalAccount, modalAddress, modalPassword);
   }
 
   public showProfile(customer: Customer): void {

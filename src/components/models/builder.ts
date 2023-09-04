@@ -50,11 +50,13 @@ export enum Elem {
   close = 'close',
   price = 'price',
   subtitle = 'subtitle',
+  pass = 'password',
 }
 
 export enum Mode {
   email = 'email',
   pass = 'password',
+  pass_new = 'password-new',
   eye_closed = 'eye-closed',
   eye_opened = 'eye-opened',
   sign = 'sign',
@@ -183,6 +185,7 @@ export enum Titles {
   PRODUCT = `Product`,
   HAVE_NOT = `You have not set a`,
   UPDATE = `Update`,
+  PASSWORD = `Password`,
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;

@@ -16,7 +16,8 @@ class ControllerProfile extends ControllerRegistration {
     if (!(target instanceof HTMLInputElement)) return;
     if (target.id.includes('email')) {
       this.model.checkMail(target.value);
-    } else if (target.id.includes('password')) this.model.checkPassword(target.value);
+    } else if (target.id.includes('password-new')) this.model.checkNewPassword(target.value);
+    else if (target.id.includes('password')) this.model.checkPassword(target.value);
     else if (target.id.includes('name') || target.id.includes('city')) this.model.checkName(target.value, target.id);
     else if (target.id.includes('date-of-birth')) this.model.checkBirthDate(target.value);
   }

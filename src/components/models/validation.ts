@@ -1,4 +1,4 @@
-export type InputTypeLogin = 'email' | 'password';
+export type InputTypeLogin = 'email' | 'password' | 'password-new';
 
 export type AddressFields = 'street' | 'city' | 'postal-code' | 'country';
 
