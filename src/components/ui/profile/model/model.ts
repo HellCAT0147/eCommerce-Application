@@ -2,6 +2,7 @@ import { Customer, ErrorObject } from '@commercetools/platform-sdk';
 import ECommerceApi from '../../../api/e-commerce-api';
 import ViewProfile from '../view/view';
 import RegistrationValidationModel from '../../registration/model/validation';
+import { Blocks, Elem, Mode } from '../../../models/builder';
 
 class ModelProfile extends RegistrationValidationModel {
   protected eCommerceApi: ECommerceApi;
@@ -12,6 +13,33 @@ class ModelProfile extends RegistrationValidationModel {
     super(eCommerceApi);
     this.eCommerceApi = eCommerceApi;
     this.view = new ViewProfile();
+  }
+
+  public openEditMode(target: HTMLElement): void {
+    if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.account}`)) {
+      this.view.fillAccountModal(target);
+      this.view.toggleDisplayModal(`${Mode.account}`, true);
+    }
+    if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.address}`)) {
+      this.view.fillAddressModal(target);
+      this.view.toggleDisplayModal(`${Mode.address}`, true);
+    }
+  }
+
+  public modalEvent(target: HTMLElement): void {
+    if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.back}`)) {
+      if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.account}`))
+        this.view.toggleDisplayModal(`${Mode.account}`, false);
+      if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.address}`))
+        this.view.toggleDisplayModal(`${Mode.address}`, false);
+    }
+    if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.save}`)) {
+      this.view.showMessage(true);
+      if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.account}`))
+        this.view.toggleDisplayModal(`${Mode.account}`, false);
+      if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.address}`))
+        this.view.toggleDisplayModal(`${Mode.address}`, false);
+    }
   }
 
   public async getProfile(): Promise<void> {

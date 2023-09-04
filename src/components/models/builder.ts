@@ -30,6 +30,7 @@ export enum Elem {
   circle = 'circle',
   go_home = 'go-home',
   address = 'address',
+  addresses = 'addresses',
   select = 'select',
   option = 'option',
   text = 'text',
@@ -48,6 +49,7 @@ export enum Elem {
   content = 'content',
   close = 'close',
   price = 'price',
+  subtitle = 'subtitle',
 }
 
 export enum Mode {
@@ -96,6 +98,14 @@ export enum Mode {
   info = 'info',
   price = 'price',
   disc = 'discounted',
+  account = 'account',
+  address = 'address',
+  save = 'save',
+  control = 'control',
+  back = 'back',
+  edit = 'edit',
+  over = 'overflow',
+  update = 'update',
 }
 
 export enum Base {
@@ -113,6 +123,8 @@ export enum Base {
   btns_colored = `${btns} ${btns}_colored`,
   btns_bordered = `${btns} ${btns}_bordered`,
   btns_empty = `${btns} ${btns}_empty`,
+  btns_edit = `${btns} ${btns}_edit`,
+  btns_modal = `${btns}_modal`,
   select = `${form}__select`,
   options = `${form}__options`,
   links = `links`,
@@ -126,6 +138,7 @@ export enum Base {
   sw_page = 'swiper-pagination',
   cards = 'cards',
   modal = 'modal',
+  prof_f = 'profile__forms',
 }
 
 export enum Buttons {
@@ -136,6 +149,11 @@ export enum Buttons {
   CATALOG = 'CATALOG',
   PROFILE = 'MY PROFILE',
   BURGER = 'burger',
+  EDIT = 'Edit',
+  ADDRESS = 'Edit Address',
+  SAVE = 'SAVE',
+  BACK = 'BACK',
+  CHANGE_PASS = 'Change Password',
 }
 
 export enum Titles {
@@ -156,12 +174,15 @@ export enum Titles {
   HAVE_ACCOUNT = `Already have an account?`,
   NOT_HAVE_ACCOUNT = `Don't have an account yet?`,
   SUCCESS_LOGIN = `You've successfully logged`,
+  SUCCESS_UPDATE = `You've successfully update the information`,
+  FAILED_UPDATE = `You failed to update the information.`,
   CATALOG = `Shopping Without Limits`,
   ACCOUNT_INFO = `Account Information`,
   CONTACT_INFO = `Contact Information`,
   ADDRESS_BOOK = `Address Book`,
   PRODUCT = `Product`,
   HAVE_NOT = `You have not set a`,
+  UPDATE = `Update`,
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;

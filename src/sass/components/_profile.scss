@@ -1,30 +1,112 @@
 .profile {
-  &__address {
-    row-gap: 30px;
-    .form__title {
-      margin-bottom: 10px;
+  &__form {
+    &.hidden {
+      display: none;
     }
   }
 
-  &__field {
+  &__forms {
     display: flex;
     flex-direction: column;
+    border: none;
+    row-gap: 10px;
     &_default {
       order: -1;
     }
   }
 
+  &__wrapper {
+    &_account {
+      flex-grow: 1;
+      max-width: 50%;
+    }
+
+    &_control {
+      justify-content: flex-start;
+      column-gap: 20px;
+    }
+  }
+
+  &__addresses {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  &__address {
+    flex-grow: 1;
+    max-width: 50%;
+    &_billing-default {
+      order: -2;
+    }
+    &_shipping-default {
+      order: -1;
+    }
+  }
+
+  &__content {
+    display: flex;
+    column-gap: 3px;
+  }
+
+  &__text {
+    @include font(400, 1.6rem, 100%, $color-Light-gray);
+  }
+
   &__title {
+    margin-top: 40px;
+    @extend %font-main;
     @include font(400, 2.4rem, 100%, $color-dark);
   }
 
-  &__article {
-    display: flex;
+  &__subtitle {
+    @extend %font-main;
+    @include font(600, 1.8rem, 100%, $color-dark-gray);
   }
 
-  &__person {
+  &__modal {
+    display: none;
+    width: 70%;
+    margin-top: 40px;
+    &.opened {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: $color-light;
+    }
+  }
+
+  &__message {
+    position: absolute;
     display: flex;
     align-items: center;
     column-gap: 5px;
+    padding: 20px 30px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: $color-success;
+
+    .message__image {
+      background-image: url('../assets/ico/on.svg');
+      flex-shrink: 0;
+      width: 11px;
+      height: 10px;
+    }
+
+    .message__text {
+      text-align: center;
+      @include font(400, 1.6rem, 100%, $color-success-intensive);
+    }
+
+    &_hidden {
+      display: none;
+    }
+  }
+
+  &__button {
+    @extend %font-main;
+    &_back {
+      @include font(600, 1.4rem, 100%, $color-Light-gray);
+    }
   }
 }
