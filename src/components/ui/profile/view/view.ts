@@ -58,7 +58,7 @@ export default class ViewProfile {
   }
 
   public showError(msg: string): string {
-    // TODO implement popup with error
+    // TODO display error message;
     return msg;
   }
 
@@ -182,11 +182,10 @@ export default class ViewProfile {
     main.append(modalAccount, modalAddress, modalPassword);
   }
 
-  public showProfile(customer: Customer): void {
+  public showProfile(customer: Customer, mode?: string): void {
     const main: HTMLFormElement | null = document.querySelector(`.${Blocks.main}__${Pages.PROFILE}`);
     if (main) {
-      this.createModals(main);
-
+      if (mode !== Mode.update) this.createModals(main);
       const form = this.formView.getForm();
       form.innerHTML = '';
       form.classList.remove(`${Mode.hidden}`);
@@ -266,13 +265,9 @@ export default class ViewProfile {
   public fillAccountModal(target: HTMLElement): void {
     const content: HTMLElement | null = target.closest(`.${Blocks.prof}__${Elem.account}`);
     const firstName: HTMLInputElement | null = document.querySelector(`#${Blocks.prof}-${Mode.f_name}`);
-    this.highlightInput(firstName, true);
     const lastName: HTMLInputElement | null = document.querySelector(`#${Blocks.prof}-${Mode.l_name}`);
-    this.highlightInput(lastName, true);
     const date: HTMLInputElement | null = document.querySelector(`#${Blocks.prof}-${Mode.date}`);
-    this.highlightInput(date, true);
     const email: HTMLInputElement | null = document.querySelector(`#${Blocks.prof}-${Mode.email}`);
-    this.highlightInput(email, true);
     if (content) {
       const firstNameElement: HTMLElement | null = content.querySelector(
         `.${Blocks.prof}__${Elem.text}_${Mode.f_name}`
@@ -302,23 +297,34 @@ export default class ViewProfile {
     }
   }
 
-  public showMessage(isSuccess?: boolean): void {
+  public showMessage(isSuccess?: boolean, message?: string): void {
     const body: HTMLElement | null = document.querySelector(`${Blocks.body}`);
     const oldMessageHolder: HTMLElement | null = document.querySelector(`.${Blocks.prof}__${Elem.mess}`);
     if (oldMessageHolder) {
       oldMessageHolder.classList.remove(`${Blocks.prof}__${Elem.mess}_${Mode.hidden}`);
+      const messageText: HTMLElement | null = oldMessageHolder.querySelector(`.${Elem.mess}__${Elem.text}`);
+      if (messageText) {
+        if (isSuccess) messageText.textContent = `${Titles.SUCCESS_UPDATE}`;
+        else messageText.textContent = `${message}`;
+      }
+      if (!isSuccess) oldMessageHolder.classList.add(`${Blocks.prof}__${Elem.mess}_${Mode.fail}`);
     } else {
       const messageHolder: HTMLElement = new Builder('div', '', Blocks.prof, Elem.mess, '').element();
       const messageIcon: HTMLElement = new Builder('div', '', Elem.mess, Elem.image, '').element();
       const messageText: HTMLElement = new Builder('div', '', Elem.mess, Elem.text, '').element();
-      if (isSuccess) messageText.textContent = `${Titles.SUCCESS_UPDATE}`;
-      else messageText.textContent = `${Titles.FAILED_UPDATE}`;
+      if (isSuccess) {
+        messageText.textContent = `${Titles.SUCCESS_UPDATE}`;
+      } else {
+        messageText.textContent = `${message}`;
+        messageHolder.classList.add(`${Blocks.prof}__${Elem.mess}_${Mode.fail}`);
+      }
 
       messageHolder.append(messageIcon, messageText);
       if (body) body.appendChild(messageHolder);
       if (messageHolder) {
         setTimeout(() => {
           messageHolder.classList.add(`${Blocks.prof}__${Elem.mess}_${Mode.hidden}`);
+          messageHolder.classList.remove(`${Blocks.prof}__${Elem.mess}_${Mode.fail}`);
         }, 1500);
       }
     }
@@ -326,6 +332,7 @@ export default class ViewProfile {
     setTimeout(() => {
       if (oldMessageHolder) {
         oldMessageHolder.classList.add(`${Blocks.prof}__${Elem.mess}_${Mode.hidden}`);
+        oldMessageHolder.classList.remove(`${Blocks.prof}__${Elem.mess}_${Mode.fail}`);
       }
     }, 1500);
   }

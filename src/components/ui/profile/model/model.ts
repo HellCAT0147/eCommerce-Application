@@ -72,6 +72,10 @@ class ModelProfile {
     }
   }
 
+  private setNoErrors(inputTypes: InputType[]): void {
+    inputTypes.forEach((inputType) => this.setErrors(inputType, []));
+  }
+
   private getNameErrors(target: string, name: string): string[] {
     const errors: string[] = [];
 
@@ -236,6 +240,7 @@ class ModelProfile {
         if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.account}`)) {
           this.view.fillAccountModal(target);
           this.view.toggleDisplayModal(`${Mode.account}`, true);
+          this.setNoErrors(['first-name', 'last-name', 'date-of-birth', 'email']);
         }
         if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.address}`)) {
           this.view.fillAddressModal(target);
@@ -282,16 +287,19 @@ class ModelProfile {
   public async updateAccountInfo(): Promise<void> {
     if (this.checkSendableAccount()) {
       try {
-        const response: true | ErrorObject = await this.eCommerceApi.updatePersonalData(
+        const response: Customer | ErrorObject = await this.eCommerceApi.updatePersonalData(
           this.firstName,
           this.lastName,
           new Date(this.date),
           this.mail
         );
-        if (response) {
+        if ('message' in response && 'code' in response) {
+          this.view.showMessage(false, response.message);
+          this.view.showError(response.message);
+        } else if (response) {
           this.view.toggleDisplayModal(`${Mode.account}`, false);
           this.view.showMessage(true);
-          await this.getProfile();
+          await this.getProfile(Mode.update);
         }
       } catch (error) {
         if (error instanceof Error) this.view.showError(error.message);
@@ -301,11 +309,11 @@ class ModelProfile {
     }
   }
 
-  public async getProfile(): Promise<void> {
+  public async getProfile(mode?: string): Promise<void> {
     try {
       const response: Customer | ErrorObject = await this.eCommerceApi.getCustomer();
       if ('message' in response && 'code' in response) this.view.showError(response.message);
-      else this.view.showProfile(response);
+      else this.view.showProfile(response, mode);
     } catch (error) {
       if (error instanceof Error) this.view.showError(error.message);
     }

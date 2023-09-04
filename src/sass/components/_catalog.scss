@@ -1,4 +1,7 @@
 .catalog {
+  &__empty-list {
+    font-size: 2rem;
+  }
   &__breadcrumbs_wrapper {
     width: 94vw;
     display: flex;

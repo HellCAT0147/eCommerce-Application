@@ -101,6 +101,17 @@
     &_hidden {
       display: none;
     }
+
+    &_failed {
+      background-color: $color-error;
+      .message__text {
+        @include font(400, 1.6rem, 100%, $color-error-text);
+      }
+
+      .message__image {
+        background-image: url('../assets/ico/x-marks-the-spot.svg');
+      }
+    }
   }
 
   &__button {
