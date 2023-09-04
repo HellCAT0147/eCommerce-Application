@@ -515,6 +515,24 @@ export default class ECommerceApi {
       .execute();
   }
 
+  private async updateAddress(id: string, address: Address, customer: Customer): Promise<ClientResponse<Customer>> {
+    return this.apiRoot
+      .me()
+      .post({
+        body: {
+          version: customer.version,
+          actions: [
+            {
+              action: 'changeAddress',
+              addressId: id,
+              address,
+            },
+          ],
+        },
+      })
+      .execute();
+  }
+
   private async buildAndExecuteAddAddressActions(
     address: Address,
     isBillingAddress: boolean,
@@ -525,19 +543,15 @@ export default class ECommerceApi {
   ): Promise<ClientResponse<Customer>> {
     const actions: Array<MyCustomerUpdateAction> = [];
 
-    if (isBillingAddress) {
-      actions.push({
-        action: 'addBillingAddressId',
-        addressId: address.id,
-      });
-    }
+    actions.push({
+      action: isBillingAddress ? 'addBillingAddressId' : 'removeBillingAddressId',
+      addressId: address.id,
+    });
 
-    if (isShippingAddress) {
-      actions.push({
-        action: 'addShippingAddressId',
-        addressId: address.id,
-      });
-    }
+    actions.push({
+      action: isShippingAddress ? 'addShippingAddressId' : 'removeShippingAddressId',
+      addressId: address.id,
+    });
 
     if (isDefaultBillingAddress) {
       actions.push({
@@ -577,6 +591,49 @@ export default class ECommerceApi {
     try {
       const newAddressPromise = this.wrapUserUpdateOperation((currentMe) => {
         return this.addAddress(address, currentMe);
+      });
+      const useWithNewAddress = await newAddressPromise;
+      if (useWithNewAddress != null) {
+        const newAddressesPromises = useWithNewAddress.addresses
+          .map((currentAddress) => {
+            if (!oldAddresses.includes(currentAddress.id)) {
+              return this.wrapUserUpdateOperation((newMe) => {
+                return this.buildAndExecuteAddAddressActions(
+                  currentAddress,
+                  isBillingAddress,
+                  isShippingAddress,
+                  isDefaultBillingAddress,
+                  isDefaultShippingAddress,
+                  newMe.version
+                );
+              });
+            }
+            return null;
+          })
+          .filter((promise) => promise != null);
+        await Promise.all(newAddressesPromises);
+        return true;
+      }
+    } catch (e) {
+      return this.errorObjectOrThrow(e);
+    }
+    return true;
+  }
+
+  public async updateUserAddress(
+    id: string,
+    address: Address,
+    isBillingAddress: boolean,
+    isShippingAddress: boolean,
+    isDefaultBillingAddress: boolean,
+    isDefaultShippingAddress: boolean
+  ): Promise<ErrorObject | boolean> {
+    const me = await this.meLoggedInPromise;
+    if (me == null) return false;
+    const oldAddresses = me.addresses.map((oldAddress) => oldAddress.id);
+    try {
+      const newAddressPromise = this.wrapUserUpdateOperation((currentMe) => {
+        return this.updateAddress(id, address, currentMe);
       });
       const useWithNewAddress = await newAddressPromise;
       if (useWithNewAddress != null) {
