@@ -262,6 +262,15 @@ class ModelProfile {
           this.view.fillAddressModal(target);
           this.view.toggleDisplayModal(`${Mode.address}`, true);
         }
+        if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.del}`)) {
+          const idAddress = target.getAttribute('data-id');
+          // TODO Delete address.
+        }
+        if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.add}`)) {
+          this.view.fillAddressModal(target);
+          this.view.toggleDisplayModal(`${Mode.address}`, true);
+          // TODO Add address.
+        }
         if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.pass}`)) {
           this.clearInputs(Mode.pass);
           this.view.toggleDisplayModal(`${Mode.pass}`, true);

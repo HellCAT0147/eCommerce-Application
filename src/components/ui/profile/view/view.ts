@@ -1,5 +1,5 @@
 import { Address, Customer } from '@commercetools/platform-sdk';
-import { Base, Blocks, Elem, Mode, Titles } from '../../../models/builder';
+import { Base, Blocks, Buttons, Elem, Mode, Titles } from '../../../models/builder';
 import Builder from '../../builder/html-builder';
 import { Pages } from '../../../models/router';
 import { DataAddresses } from '../../../models/commerce';
@@ -195,8 +195,10 @@ export default class ViewProfile {
       const addressBook: HTMLHeadingElement = new Builder('', '', Blocks.prof, Elem.title, '').h(2);
       addressBook.textContent = `${Titles.ADDRESS_BOOK}`;
       const addresses = this.createAddresses(customer);
+      const buttonAdd: HTMLButtonElement = new Builder('', Base.btns_edit, this.pageName, Elem.btn, Mode.add).button();
+      buttonAdd.textContent = Buttons.ADD_ADDRESS;
 
-      form.append(title, accountInfo, addressBook, addresses);
+      form.append(title, accountInfo, addressBook, addresses, buttonAdd);
       main.append(form);
     }
   }

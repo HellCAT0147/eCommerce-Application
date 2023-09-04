@@ -8,6 +8,7 @@ import { InputType } from '../../../models/validation';
 export default class FormViewProfile extends FormViewReg {
   public constructor(pageName: string = Pages.PROFILE) {
     super(pageName);
+    this.pageName = pageName;
     const form: HTMLFormElement = new Builder('', Base.form, pageName, Blocks.form, '').form();
     this.form = form;
   }
@@ -121,6 +122,39 @@ export default class FormViewProfile extends FormViewReg {
     return accountInfoField;
   }
 
+  public createCheckBoxes(checkBoxes: HTMLFieldSetElement): void {
+    const checkBilling: HTMLElement = new Builder('div', Base.check, this.pageName, Elem.field, Mode.bill).element();
+    const inputBilling: HTMLInputElement = this.createInput(this.pageName, Mode.bill);
+    const labelBilling: HTMLLabelElement = this.createLabel(this.pageName, Mode.bill, Titles.BILLING, true);
+    checkBilling.append(inputBilling, labelBilling);
+    const checkShipping: HTMLElement = new Builder('div', Base.check, this.pageName, Elem.field, Mode.ship).element();
+    const inputShipping: HTMLInputElement = this.createInput(this.pageName, Mode.ship);
+    const labelShipping: HTMLLabelElement = this.createLabel(this.pageName, Mode.ship, Titles.SHIPPING, true);
+    checkShipping.append(inputShipping, labelShipping);
+    const checkBillDef: HTMLElement = new Builder(
+      'div',
+      Base.check,
+      this.pageName,
+      Elem.field,
+      Mode.bill_def
+    ).element();
+    const inputBillDef: HTMLInputElement = this.createInput(this.pageName, Mode.bill_def);
+    const labelBillDef: HTMLLabelElement = this.createLabel(this.pageName, Mode.bill_def, Titles.DEFAULT_BILL, true);
+    checkBillDef.append(inputBillDef, labelBillDef);
+    const checkBillShip: HTMLElement = new Builder(
+      'div',
+      Base.check,
+      this.pageName,
+      Elem.field,
+      Mode.ship_def
+    ).element();
+    const inputShipDef: HTMLInputElement = this.createInput(this.pageName, Mode.ship_def);
+    const labelShipDef: HTMLLabelElement = this.createLabel(this.pageName, Mode.ship_def, Titles.DEFAULT_SHIP, true);
+    checkBillShip.append(inputShipDef, labelShipDef);
+
+    checkBoxes.append(checkBilling, checkShipping, checkBillDef, checkBillShip);
+  }
+
   public createAddressField(type: string, defAddress: string, address?: Address): HTMLFieldSetElement {
     const page: string = this.pageName;
     let mode: string = type;
@@ -136,8 +170,21 @@ export default class FormViewProfile extends FormViewReg {
     const postal: HTMLElement = new Builder('', '', page, Elem.text, Mode.postal).p();
     const city: HTMLElement = new Builder('', '', page, Elem.text, Mode.city).p();
     const country: HTMLElement = new Builder('', '', page, Elem.text, Mode.country).p();
-    const buttonEdit: HTMLButtonElement = new Builder('', Base.btns_edit, page, Elem.btn, Mode.address).button();
-    buttonEdit.textContent = Buttons.ADDRESS;
+    const formFieldControl: HTMLFieldSetElement = new Builder('', Base.field, page, Elem.field, Mode.control).field();
+    formFieldControl.classList.add(`${page}__${Elem.wrapper}_${Mode.control}`);
+    if (address && address.id) {
+      const buttonEdit: HTMLButtonElement = new Builder('', Base.btns_edit, page, Elem.btn, Mode.address).button();
+      buttonEdit.textContent = Buttons.EDIT_ADDRESS;
+      buttonEdit.setAttribute('data-id', `${address.id}`);
+      const buttonDelete: HTMLButtonElement = new Builder('', Base.btns_edit, page, Elem.btn, Mode.del).button();
+      buttonDelete.textContent = Buttons.DEL_ADDRESS;
+      buttonDelete.setAttribute('data-id', `${address.id}`);
+      formFieldControl.append(buttonEdit, buttonDelete);
+    } else {
+      const buttonAdd: HTMLButtonElement = new Builder('', Base.btns_edit, page, Elem.btn, Mode.add).button();
+      buttonAdd.textContent = Buttons.ADD_ADDRESS;
+      formFieldControl.appendChild(buttonAdd);
+    }
 
     if (address) {
       street.textContent = `${address.streetName},`;
@@ -149,7 +196,7 @@ export default class FormViewProfile extends FormViewReg {
     }
 
     content.append(street, postal, city, country);
-    addressField.append(formTitle, info, content, buttonEdit);
+    addressField.append(formTitle, info, content, formFieldControl);
 
     return addressField;
   }
@@ -185,6 +232,8 @@ export default class FormViewProfile extends FormViewReg {
     const formFieldStreet: HTMLFieldSetElement = new Builder('', Base.field, page, 'field', street).field();
     const labelStreet: HTMLLabelElement = this.createLabel(page, street);
     const inputStreet: HTMLInputElement = this.createInput(page, street);
+    const box: HTMLFieldSetElement = new Builder('', Base.field, page, Elem.field, Mode.check).field();
+    this.createCheckBoxes(box);
     const formFieldControl: HTMLFieldSetElement = new Builder('', Base.field, page, Elem.field, Mode.control).field();
     const buttonSave: HTMLButtonElement = new Builder('', Base.btns_colored, page, Elem.btn, Mode.save).button();
     buttonSave.classList.add(`${Base.btns_modal}`);
@@ -192,7 +241,6 @@ export default class FormViewProfile extends FormViewReg {
     const buttonBack: HTMLButtonElement = new Builder('', Base.btns_empty, page, Elem.btn, Mode.back).button();
     buttonBack.classList.add(`${Base.btns_modal}`);
     buttonBack.textContent = Buttons.BACK;
-
     formFieldStreet.append(labelStreet, inputStreet);
     formFieldCity.append(labelCity, inputCity);
     formFieldPostal.append(labelPostal, inputPostal);
@@ -200,8 +248,7 @@ export default class FormViewProfile extends FormViewReg {
     formFieldAddress.appendChild(formTitleShip);
     if (check) formFieldAddress.appendChild(check);
     formFieldControl.append(buttonSave, buttonBack);
-    formFieldAddress.append(formFieldCountry, formFieldPostal, formFieldCity, formFieldStreet, formFieldControl);
-
+    formFieldAddress.append(formFieldCountry, formFieldPostal, formFieldCity, formFieldStreet, box, formFieldControl);
     return formFieldAddress;
   }
 }
