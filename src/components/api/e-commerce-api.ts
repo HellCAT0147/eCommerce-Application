@@ -336,24 +336,28 @@ export default class ECommerceApi {
     email: string
   ): Promise<ErrorObject | true> {
     try {
-      const currentUser = await this.getCustomer();
-      const actions: MyCustomerUpdateAction[] = [];
-      const year = dateOfBirth.getFullYear();
-      const month = (dateOfBirth.getMonth() + 1).toString().padStart(2, '0');
-      const day = dateOfBirth.getDate().toString().padStart(2, '0');
-      const formattedDate = `${year}-${month}-${day}`;
+      const response: Customer | ErrorObject = await this.getCustomer();
+      if ('email' in response) {
+        const currentUser: Customer | ErrorObject = response;
+        const actions: MyCustomerUpdateAction[] = [];
+        const year: number = dateOfBirth.getFullYear();
+        const month: string = (dateOfBirth.getMonth() + 1).toString().padStart(2, '0');
+        const day: string = dateOfBirth.getDate().toString().padStart(2, '0');
+        const formattedDate: string = `${year}-${month}-${day}`;
 
-      if (firstName !== currentUser.firstName) actions.push({ action: 'setFirstName', firstName });
-      if (lastName !== currentUser.lastName) actions.push({ action: 'setLastName', lastName });
-      if (formattedDate !== currentUser.dateOfBirth)
-        actions.push({ action: 'setDateOfBirth', dateOfBirth: formattedDate });
-      if (email !== currentUser.email) actions.push({ action: 'changeEmail', email });
+        if (firstName !== currentUser.firstName) actions.push({ action: 'setFirstName', firstName });
+        if (lastName !== currentUser.lastName) actions.push({ action: 'setLastName', lastName });
+        if (formattedDate !== currentUser.dateOfBirth)
+          actions.push({ action: 'setDateOfBirth', dateOfBirth: formattedDate });
+        if (email !== currentUser.email) actions.push({ action: 'changeEmail', email });
 
-      await this.apiRoot
-        .me()
-        .post({ body: { version: currentUser.version, actions } })
-        .execute();
-      return true;
+        await this.apiRoot
+          .me()
+          .post({ body: { version: currentUser.version, actions } })
+          .execute();
+        return true;
+      }
+      return response.body;
     } catch (e) {
       return this.errorObjectOrThrow(e);
     }
