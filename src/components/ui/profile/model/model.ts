@@ -64,7 +64,14 @@ class ModelProfile {
   }
 
   protected checkSendablePassword(): boolean {
-    if (this.password !== '' && this.newPassword) this.isValid = true;
+    if (this.password !== '' && this.newPassword !== '') this.isValid = true;
+    else this.isValid = false;
+
+    return this.isValid;
+  }
+
+  protected checkSendableAddress(): boolean {
+    if (this.country !== '' && this.postal !== '' && this.city !== '' && this.street !== '') this.isValid = true;
     else this.isValid = false;
 
     return this.isValid;
@@ -381,8 +388,9 @@ class ModelProfile {
     }
     if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.save}`)) {
       if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.account}`)) this.updateAccountInfo();
-      if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.address}`))
+      if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.address}`)) {
         this.view.toggleDisplayModal(`${Mode.address}`, false);
+      }
       if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.pass}`)) this.updatePassword();
     }
   }
@@ -421,6 +429,31 @@ class ModelProfile {
 
   public async updateAccountInfo(): Promise<void> {
     if (this.checkSendableAccount()) {
+      try {
+        const response: Customer | ErrorObject = await this.eCommerceApi.updatePersonalData(
+          this.firstName,
+          this.lastName,
+          new Date(this.date),
+          this.mail
+        );
+        if ('message' in response && 'code' in response) {
+          this.view.showMessage(false, response.message);
+          this.view.showError(response.message);
+        } else if (response) {
+          this.view.toggleDisplayModal(`${Mode.account}`, false);
+          this.view.showMessage(true);
+          await this.getProfile(Mode.update);
+        }
+      } catch (error) {
+        if (error instanceof Error) this.view.showError(error.message);
+      }
+    } else {
+      this.view.reminder();
+    }
+  }
+
+  public async updateAddress(): Promise<void> {
+    if (this.checkSendableAddress()) {
       try {
         const response: Customer | ErrorObject = await this.eCommerceApi.updatePersonalData(
           this.firstName,
