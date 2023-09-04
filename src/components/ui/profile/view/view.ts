@@ -293,7 +293,7 @@ export default class ViewProfile {
         if (isSuccess) messageText.textContent = `${Titles.SUCCESS_UPDATE}`;
         else messageText.textContent = `${message}`;
       }
-      if (!isSuccess) oldMessageHolder.classList.add(`${Blocks.prof}__${Elem.mess}_${Mode.failed}`);
+      if (!isSuccess) oldMessageHolder.classList.add(`${Blocks.prof}__${Elem.mess}_${Mode.fail}`);
     } else {
       const messageHolder: HTMLElement = new Builder('div', '', Blocks.prof, Elem.mess, '').element();
       const messageIcon: HTMLElement = new Builder('div', '', Elem.mess, Elem.image, '').element();
@@ -302,7 +302,7 @@ export default class ViewProfile {
         messageText.textContent = `${Titles.SUCCESS_UPDATE}`;
       } else {
         messageText.textContent = `${message}`;
-        messageHolder.classList.add(`${Blocks.prof}__${Elem.mess}_${Mode.failed}`);
+        messageHolder.classList.add(`${Blocks.prof}__${Elem.mess}_${Mode.fail}`);
       }
 
       messageHolder.append(messageIcon, messageText);
@@ -310,7 +310,7 @@ export default class ViewProfile {
       if (messageHolder) {
         setTimeout(() => {
           messageHolder.classList.add(`${Blocks.prof}__${Elem.mess}_${Mode.hidden}`);
-          messageHolder.classList.remove(`${Blocks.prof}__${Elem.mess}_${Mode.failed}`);
+          messageHolder.classList.remove(`${Blocks.prof}__${Elem.mess}_${Mode.fail}`);
         }, 1500);
       }
     }
@@ -318,7 +318,7 @@ export default class ViewProfile {
     setTimeout(() => {
       if (oldMessageHolder) {
         oldMessageHolder.classList.add(`${Blocks.prof}__${Elem.mess}_${Mode.hidden}`);
-        oldMessageHolder.classList.remove(`${Blocks.prof}__${Elem.mess}_${Mode.failed}`);
+        oldMessageHolder.classList.remove(`${Blocks.prof}__${Elem.mess}_${Mode.fail}`);
       }
     }, 1500);
   }
