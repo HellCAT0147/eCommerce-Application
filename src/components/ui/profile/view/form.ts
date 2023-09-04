@@ -206,9 +206,11 @@ export default class FormViewProfile extends FormViewReg {
     const buttonSave: HTMLButtonElement = new Builder('', Base.btns_colored, page, Elem.btn, Mode.save).button();
     buttonSave.classList.add(`${Base.btns_modal}`);
     buttonSave.textContent = Buttons.SAVE;
+    buttonSave.classList.add(`${Elem.modal}_${Mode.hidden}`);
     const buttonAdd: HTMLButtonElement = new Builder('', Base.btns_colored, page, Elem.btn, Mode.add).button();
     buttonAdd.classList.add(`${Base.btns_modal}`);
     buttonAdd.textContent = Buttons.ADD_ADDRESS;
+    buttonAdd.classList.add(`${Elem.modal}_${Mode.hidden}`);
     const buttonBack: HTMLButtonElement = new Builder('', Base.btns_empty, page, Elem.btn, Mode.back).button();
     buttonBack.classList.add(`${Base.btns_modal}`);
     buttonBack.textContent = Buttons.BACK;
@@ -233,8 +235,12 @@ export default class FormViewProfile extends FormViewReg {
       Elem.address,
       mode
     ).field();
-    const formTitleShip: HTMLElement = new Builder('h2', Base.form_title, Blocks.form, Elem.title, '').element();
-    formTitleShip.textContent = `${title} ${Titles.ADDRESS}`;
+    const formTitleSave: HTMLElement = new Builder('h2', Base.form_title, Blocks.form, Elem.title, Mode.save).element();
+    formTitleSave.textContent = `${title} ${Titles.ADDRESS}`;
+    formTitleSave.classList.add(`${Elem.modal}_${Mode.hidden}`);
+    const formTitleAdd: HTMLElement = new Builder('h2', Base.form_title, Blocks.form, Elem.title, Mode.add).element();
+    formTitleAdd.textContent = `${Titles.ADD} ${Titles.ADDRESS}`;
+    formTitleAdd.classList.add(`${Elem.modal}_${Mode.hidden}`);
     const formFieldCountry: HTMLFieldSetElement = new Builder('', Base.field, page, 'field', country).field();
     const labelCountry: HTMLLabelElement = this.createLabel(page, country);
     const inputCountry: HTMLSelectElement = this.createSelectMenu(page, country);
@@ -255,7 +261,7 @@ export default class FormViewProfile extends FormViewReg {
     formFieldCity.append(labelCity, inputCity);
     formFieldPostal.append(labelPostal, inputPostal);
     formFieldCountry.append(labelCountry, inputCountry);
-    formFieldAddress.appendChild(formTitleShip);
+    formFieldAddress.append(formTitleSave, formTitleAdd);
     if (check) formFieldAddress.appendChild(check);
     formFieldAddress.append(formFieldCountry, formFieldPostal, formFieldCity, formFieldStreet, box, formFieldControl);
     return formFieldAddress;

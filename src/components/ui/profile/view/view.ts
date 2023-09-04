@@ -239,9 +239,28 @@ export default class ViewProfile {
     }
   }
 
-  // public showButton(): void {
-
-  // }
+  public showHiddenElements(mode: string): void {
+    const modal: HTMLElement | null = document.querySelector(`.${Blocks.prof}__${Elem.modal}_${Mode.address}`);
+    if (modal) {
+      const buttonSave: HTMLButtonElement | null = modal.querySelector(`.${Blocks.prof}__${Elem.btn}_${Mode.save}`);
+      const titleSave: HTMLButtonElement | null = modal.querySelector(`.${Blocks.form}__${Elem.title}_${Mode.save}`);
+      const buttonAdd: HTMLButtonElement | null = modal.querySelector(`.${Blocks.prof}__${Elem.btn}_${Mode.add}`);
+      const titleAdd: HTMLButtonElement | null = modal.querySelector(`.${Blocks.form}__${Elem.title}_${Mode.add}`);
+      if (buttonSave && titleSave && buttonAdd && titleAdd) {
+        if (mode === Mode.save) {
+          buttonAdd.classList.add(`${Elem.modal}_${Mode.hidden}`);
+          titleAdd.classList.add(`${Elem.modal}_${Mode.hidden}`);
+          buttonSave.classList.remove(`${Elem.modal}_${Mode.hidden}`);
+          titleSave.classList.remove(`${Elem.modal}_${Mode.hidden}`);
+        } else if (mode === Mode.add) {
+          buttonSave.classList.add(`${Elem.modal}_${Mode.hidden}`);
+          titleSave.classList.add(`${Elem.modal}_${Mode.hidden}`);
+          buttonAdd.classList.remove(`${Elem.modal}_${Mode.hidden}`);
+          titleAdd.classList.remove(`${Elem.modal}_${Mode.hidden}`);
+        }
+      }
+    }
+  }
 
   public fillAddressModal(target: HTMLElement): void {
     const content: HTMLElement | null = target.closest(`.${Blocks.prof}__${Elem.address}`);

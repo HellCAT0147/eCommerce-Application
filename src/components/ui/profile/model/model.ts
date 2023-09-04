@@ -363,6 +363,7 @@ class ModelProfile {
     if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.add}`)) {
       this.view.fillAddressModal(target);
       this.view.toggleDisplayModal(`${Mode.address}`, true);
+      this.view.showHiddenElements(`${Mode.add}`);
       // this.eCommerceApi.addUserAddress(
       //
       // ).then((result) => {
@@ -397,14 +398,15 @@ class ModelProfile {
           this.view.fillAddressModal(target);
           this.view.toggleDisplayModal(`${Mode.address}`, true);
           const idAddress = target.getAttribute('data-id');
+          this.view.showHiddenElements(`${Mode.save}`);
         }
-        await this.checkDeleteAddress(target);
-        await this.checkAddAddress(target);
         if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.pass}`)) {
           this.clearInputs(Mode.pass);
           this.view.toggleDisplayModal(`${Mode.pass}`, true);
           this.setNoErrors(['password', 'password-new']);
         }
+        await this.checkDeleteAddress(target);
+        await this.checkAddAddress(target);
       }
     } catch (error) {
       if (error instanceof Error) this.view.showError(error.message);
