@@ -270,8 +270,6 @@ export default class ECommerceApi {
         return true;
       }
     } catch (e) {
-      // console.log(email, password);
-      // console.log('не могу залогиниться');
       return this.errorObjectOrThrow(e);
     }
     return true;
@@ -403,7 +401,6 @@ export default class ECommerceApi {
     try {
       const response: Customer | null = await this.meLoggedInPromise;
       if (response !== null) {
-        // console.log('Пользователь найден');
         await this.apiRoot
           .me()
           .password()
@@ -415,15 +412,12 @@ export default class ECommerceApi {
             },
           })
           .execute();
-        // console.log('Ну вродь всё поменялось...');
         this.logout();
         await this.login(response.email, newPassword);
         return true;
       }
-      // console.log('Пользователь НЕ найден!!!');
       return false;
     } catch (e) {
-      // console.log('Ошибка, пойманная кэтчем');
       return this.errorObjectOrThrow(e);
     }
   }
