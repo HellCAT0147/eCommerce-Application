@@ -332,6 +332,45 @@ class ModelProfile {
     }
   }
 
+  private async checkDeleteAddress(target: HTMLElement): Promise<void> {
+    if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.del}`)) {
+      const idAddress = target.getAttribute('data-id');
+      if (idAddress) {
+        this.eCommerceApi.deleteUserAddress(idAddress).then((result) => {
+          if (typeof result === 'boolean') {
+            if (result) {
+              // TODO:: Update successful
+            } else {
+              // TODO:: In fact, unauthorized
+            }
+          } else {
+            // TODO:: result == ErrorObject
+          }
+        });
+      }
+    }
+  }
+
+  private async checkAddAddress(target: HTMLElement): Promise<void> {
+    if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.add}`)) {
+      this.view.fillAddressModal(target);
+      this.view.toggleDisplayModal(`${Mode.address}`, true);
+      // this.eCommerceApi.addUserAddress(
+      //
+      // ).then((result) => {
+      //   if (typeof result === 'boolean') {
+      //     if (result) {
+      //       // TODO:: Update successful
+      //     } else {
+      //       // TODO:: In fact, unauthorized
+      //     }
+      //   } else {
+      //     // TODO:: result == ErrorObject
+      //   }
+      // });
+    }
+  }
+
   public async openEditMode(target: HTMLElement): Promise<void> {
     try {
       const response: Customer | ErrorObject = await this.eCommerceApi.getCustomer();
@@ -350,15 +389,8 @@ class ModelProfile {
           this.view.fillAddressModal(target);
           this.view.toggleDisplayModal(`${Mode.address}`, true);
         }
-        if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.del}`)) {
-          const idAddress = target.getAttribute('data-id');
-          // TODO Delete address.
-        }
-        if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.add}`)) {
-          this.view.fillAddressModal(target);
-          this.view.toggleDisplayModal(`${Mode.address}`, true);
-          // TODO Add address.
-        }
+        await this.checkDeleteAddress(target);
+        await this.checkAddAddress(target);
         if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.pass}`)) {
           this.clearInputs(Mode.pass);
           this.view.toggleDisplayModal(`${Mode.pass}`, true);
