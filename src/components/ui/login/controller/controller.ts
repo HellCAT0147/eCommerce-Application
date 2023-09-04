@@ -40,7 +40,7 @@ class ControllerLogin {
     }
   }
 
-  protected getAPI(): ECommerceApi {
+  public getAPI(): ECommerceApi {
     return this.eCommerceApi;
   }
 }
