@@ -441,7 +441,6 @@ class ModelProfile {
               // TODO:: result == ErrorObject
             }
           });
-        // this.getProfile(Mode.update);
       } catch (error) {
         if (error instanceof Error) this.view.showError(error.message);
       }
