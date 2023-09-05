@@ -205,26 +205,26 @@ class ModelProfile {
         regexp = /^\d{5}(-\d{4})?$/;
         break;
       default:
-        this.setErrors(`postal-code`, [PostalErrors.notSelected]);
+        this.setErrors(Mode.postal, [PostalErrors.notSelected]);
         return false;
     }
     if (postal.match(regexp)) {
       this.postal = postal;
-      this.setErrors(`postal-code`, []);
+      this.setErrors(Mode.postal, []);
       return true;
     }
     switch (country) {
       case Countries.BY:
-        this.setErrors(`postal-code`, [PostalErrors.BY]);
+        this.setErrors(Mode.postal, [PostalErrors.BY]);
         break;
       case Countries.RU:
-        this.setErrors(`postal-code`, [PostalErrors.RU]);
+        this.setErrors(Mode.postal, [PostalErrors.RU]);
         break;
       case Countries.US:
-        this.setErrors(`postal-code`, [PostalErrors.US]);
+        this.setErrors(Mode.postal, [PostalErrors.US]);
         break;
       case Countries.UZ:
-        this.setErrors(`postal-code`, [PostalErrors.UZ]);
+        this.setErrors(Mode.postal, [PostalErrors.UZ]);
         break;
       default:
         break;
@@ -401,10 +401,10 @@ class ModelProfile {
               this.view.showMessage(true);
               this.getProfile(Mode.update);
             } else {
-              // TODO:: In fact, unauthorized
+              this.view.showMessage(false, 'You are not logged in');
             }
           } else {
-            // TODO:: result == ErrorObject
+            this.view.showMessage(false, result.message);
           }
         });
       }
@@ -431,14 +431,14 @@ class ModelProfile {
           .then((result) => {
             if (typeof result === 'boolean') {
               if (result) {
-                this.getProfile(Mode.update);
                 this.view.toggleDisplayModal(`${Mode.address}`, false);
                 this.view.showMessage(true);
+                this.getProfile(Mode.update);
               } else {
-                // TODO:: In fact, unauthorized
+                this.view.showMessage(false, 'You are not logged in');
               }
             } else {
-              // TODO:: result == ErrorObject
+              this.view.showMessage(false, result.message);
             }
           });
       } catch (error) {
@@ -643,13 +643,13 @@ class ModelProfile {
           if (response) {
             this.view.toggleDisplayModal(`${Mode.address}`, false);
             this.view.showMessage(true);
+            await this.getProfile(Mode.update);
           } else {
             this.view.showMessage(false, 'You are not logged in');
           }
         } else {
           this.view.showMessage(false, response.message);
         }
-        await this.getProfile(Mode.update);
       } catch (error) {
         if (error instanceof Error) this.view.showError(error.message);
       }
