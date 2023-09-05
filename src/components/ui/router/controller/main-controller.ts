@@ -1,4 +1,5 @@
 import TokenCachesStore from '../../../api/token-caches-store';
+import { Base, Blocks } from '../../../models/builder';
 import { Pages } from '../../../models/router';
 import Router from '../model/router';
 
@@ -37,10 +38,16 @@ class MainController {
         url = Pages.LOGIN;
       } else if (url === Pages.GO_TO_REG) {
         url = Pages.REGISTRATION;
+      } else if (url === Pages.GO_TO_PROF) {
+        url = Pages.PROFILE;
       }
     }
 
     return url;
+  }
+
+  public delegateKeyboardEvent(e: KeyboardEvent): void {
+    this.router.controllerCatalog.keyboardEnterEvent(e);
   }
 
   public delegateMouseEvent(e: MouseEvent): void {
@@ -57,15 +64,27 @@ class MainController {
           this.tokenCachesStore.unset();
         }
         const urlButton: string = this.getUrlElement(navButton);
-        window.history.pushState(null, '', `/${urlButton}`);
         this.router.navigate(urlButton);
       }
-      if (targetHtmlElement.closest(`.main__${Pages.MAIN}`)) {
-        this.router.controllerMain.buttonEvent(e);
-      } else if (targetHtmlElement.closest(`.main__${Pages.LOGIN}`)) {
+
+      this.router.controllerMain.mouseEvent(e);
+
+      if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.MAIN}`)) {
+        this.router.controllerMain.mouseEvent(e);
+      } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.LOGIN}`)) {
         this.router.controllerLogin.buttonEvent(e);
-      } else if (targetHtmlElement.closest(`.main__${Pages.REGISTRATION}`)) {
+      } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.REGISTRATION}`)) {
         this.router.controllerRegistration.buttonEvent(e);
+      } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.CATALOG}`)) {
+        const card: HTMLElement | null = targetHtmlElement.closest(`.${Base.cards}`);
+        if (card) {
+          const id: string = this.getUrlElement(card);
+          this.router.navigate(`${Pages.CATALOG}/${id}`);
+        } else {
+          this.router.controllerCatalog.mouseEvent(e);
+        }
+      } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.PROFILE}`)) {
+        this.router.controllerProfile.mouseEvent(e);
       }
     }
   }

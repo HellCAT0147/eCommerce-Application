@@ -1,4 +1,4 @@
-export type InputTypeLogin = 'email' | 'password';
+export type InputTypeLogin = 'email' | 'password' | 'password-new';
 
 export type AddressFields = 'street' | 'city' | 'postal-code' | 'country';
 
@@ -6,7 +6,7 @@ export type BillAddressFields = 'street-bill' | 'city-bill' | 'postal-code-bill'
 
 export type PersonFields = 'first-name' | 'last-name' | 'date-of-birth';
 
-export type Check = 'both-address' | 'shipping' | 'billing';
+export type Check = 'both-address' | 'shipping' | 'billing' | 'billing-default' | 'shipping-default';
 
 export type InputType = InputTypeLogin | PersonFields | AddressFields | BillAddressFields | Check;
 

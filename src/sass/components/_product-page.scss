@@ -1,0 +1,116 @@
+.product {
+  &__image {
+    width: 100%;
+    height: 100%;
+
+    &_clickable {
+      cursor: pointer;
+    }
+  }
+
+  &__title {
+    @include font(500, 1rem, 20px, $color-dark);
+
+    &_big {
+      font-size: 4.8rem;
+      line-height: 56px;
+
+      @include media-tablet {
+        text-align: center;
+      }
+    }
+
+    &_price {
+      font-size: 1.4rem;
+    }
+
+    @include media-mobile-large {
+      @include font(500, 1, 20px, $color-dark);
+
+      &_big {
+        font-size: 3.5rem;
+        line-height: 40px;
+      }
+    }
+  }
+
+  &__wrapper {
+    max-width: $tablet-landscape-width;
+
+    &_body {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-bottom: 20px;
+
+      @include media-tablet-landscape {
+        grid-template-columns: 1fr 2fr;
+      }
+
+      @include media-small-desktop {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    &_info {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 20px;
+    }
+  }
+
+  &__price {
+    @include font(500, 2rem, 20px, $color-dark);
+    text-decoration: line-through;
+
+    &_discounted {
+      @include font(500, 2.6rem, 20px, $color-price);
+      margin-left: 7px;
+      text-decoration: none;
+    }
+  }
+
+  &__description {
+    @include font(normal, 1.9rem, 140%, $color-dark);
+  }
+
+  &__modal {
+    position: fixed;
+    z-index: 101;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba($color-dark, 0.6);
+
+    & .swiper {
+      width: unset;
+    }
+  }
+}
+
+.modal {
+  &__content {
+    position: relative;
+    padding: 10px;
+  }
+
+  &__close {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    cursor: pointer;
+    background: url('../assets/ico/close-btn.svg') no-repeat 100% / cover;
+    z-index: 2;
+
+    @include media-hover-desktop {
+      &:hover {
+        background: url('../assets/ico/close-btn-hovered.svg') no-repeat 100% / cover;
+      }
+    }
+  }
+}

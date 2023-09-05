@@ -5,6 +5,18 @@
   color: $color;
 }
 
+@mixin media-tablet-landscape {
+  @media (max-width: $tablet-landscape-width) {
+    @content;
+  }
+}
+
+@mixin media-small-desktop {
+  @media (max-width: $small-desktop-width) {
+    @content;
+  }
+}
+
 @mixin media-tablet {
   @media (max-width: $tablet-width) {
     @content;
@@ -19,6 +31,18 @@
 
 @mixin media-mobile-medium {
   @media (max-width: $mobile-medium-width) {
+    @content;
+  }
+}
+
+@mixin media-hover-mobile {
+  @media (hover: none) and (pointer: coarse) {
+    @content;
+  }
+}
+
+@mixin media-hover-desktop {
+  @media (hover: hover) and (pointer: fine) {
     @content;
   }
 }

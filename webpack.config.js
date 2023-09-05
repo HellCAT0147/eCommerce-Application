@@ -3,6 +3,7 @@ const { merge } = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const Dotenv = require('dotenv-webpack');
 
 const baseConfig = {
   entry: ['./src/components/index.ts', './src/sass/style.scss'],
@@ -42,6 +43,9 @@ const baseConfig = {
       filename: 'style.css',
     }),
     new CleanWebpackPlugin(),
+    new Dotenv({
+      systemvars: true,
+    }),
   ],
 };
 

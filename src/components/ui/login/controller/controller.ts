@@ -1,19 +1,13 @@
 import ValidationModel from '../model/validation';
 import ECommerceApi from '../../../api/e-commerce-api';
-import eCommerceAPIConfig from '../../../api/e-commerce-api-config-realization';
 
 class ControllerLogin {
-  private eCommerceApi: ECommerceApi;
-
   protected validationModel: ValidationModel;
 
-  public constructor() {
-    this.eCommerceApi = new ECommerceApi(
-      eCommerceAPIConfig.projectKey,
-      eCommerceAPIConfig.clientId,
-      eCommerceAPIConfig.clientSecret,
-      eCommerceAPIConfig.region
-    );
+  protected eCommerceApi: ECommerceApi;
+
+  public constructor(eCommerceApi: ECommerceApi) {
+    this.eCommerceApi = eCommerceApi;
     this.validationModel = new ValidationModel(this.eCommerceApi);
   }
 
@@ -28,9 +22,8 @@ class ControllerLogin {
     e.preventDefault();
     const { target } = e;
     if (!(target instanceof HTMLElement)) return;
-
     const showPassword: HTMLButtonElement | null = target.closest('#show-password');
-    this.validationModel.switchPasswordView(showPassword);
+    if (showPassword) this.validationModel.switchPasswordView(showPassword);
 
     const signIn: HTMLButtonElement | null = target.closest('.login__button_sign');
     if (signIn) this.validationModel.send();
@@ -47,7 +40,7 @@ class ControllerLogin {
     }
   }
 
-  protected getAPI(): ECommerceApi {
+  public getAPI(): ECommerceApi {
     return this.eCommerceApi;
   }
 }

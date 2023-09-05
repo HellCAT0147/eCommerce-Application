@@ -19,10 +19,10 @@ function createTemplate(): HTMLBodyElement | null {
   return body || null;
 }
 
-function createTemplateMain(isloggedIn?: boolean): void {
+function createTemplateMain(isLoggedIn?: boolean): void {
   const body: HTMLBodyElement | null = document.querySelector('body');
   const header: HTMLElement | null = document.querySelector('header');
-  const newHeader: HTMLElement = createHeader(isloggedIn);
+  const newHeader: HTMLElement = createHeader(isLoggedIn);
 
   if (body && header) {
     body.removeChild(header);
@@ -40,9 +40,10 @@ function createTemplateMain(isloggedIn?: boolean): void {
   title.textContent = `eCommerce - ${Titles.MAIN} Page`;
   const linkLogin: HTMLAnchorElement = new Builder('', Base.links, Blocks.main, Elem.link, Mode.login).a();
   const linkRegistration: HTMLElement = new Builder('', Base.links, Blocks.main, Elem.link, Mode.reg).a();
+  const linkProfile: HTMLElement = new Builder('', Base.links, Blocks.main, Elem.link, Mode.prof).a();
 
   if (main) {
-    main.append(title, linkLogin, linkRegistration);
+    main.append(title, linkLogin, linkRegistration, linkProfile);
   }
 }
 

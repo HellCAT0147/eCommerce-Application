@@ -1,5 +1,3 @@
-// TODO adapt setErrors
-// import { Errors, RegistrationInputType } from '../../../models/validation';
 import { Address, ErrorObject } from '@commercetools/platform-sdk';
 import ECommerceApi from '../../../api/e-commerce-api';
 import { Countries, DateErrors, Errors, InputType, NameErrors, PostalErrors } from '../../../models/validation';
@@ -133,7 +131,7 @@ export default class RegistrationValidationModel extends ValidationModel {
       maxDate.setDate(maxDate.getDate() + increaseInfelicityDays);
       if (inputDate >= minDate && inputDate <= maxDate) {
         this.date = date;
-        this.setErrors('date-of-birth', []);
+        this.setErrors(`${Mode.date}`, []);
         return true;
       }
     }
@@ -143,7 +141,7 @@ export default class RegistrationValidationModel extends ValidationModel {
     if (inputDate < minDate) errors.push(DateErrors.correct);
     else if (inputDate > maxDate) errors.push(DateErrors.noChild);
     else errors.push(DateErrors.invalid);
-    this.setErrors('date-of-birth', errors);
+    this.setErrors(`${Mode.date}`, errors);
 
     return false;
   }

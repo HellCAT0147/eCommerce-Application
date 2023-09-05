@@ -29,9 +29,10 @@ export default class FormView {
     return this.form;
   }
 
-  private createShowPassword(): HTMLButtonElement {
+  public createShowPassword(mode?: string): HTMLButtonElement {
     const showPassword: HTMLButtonElement = new Builder('', '', Blocks.form, Elem.btn, Mode.eye_closed).button();
-    showPassword.id = 'show-password';
+    if (mode) showPassword.id = `show-password-${Mode.new}`;
+    else showPassword.id = 'show-password';
     return showPassword;
   }
 
@@ -39,7 +40,7 @@ export default class FormView {
     const input: HTMLInputElement = new Builder('', Base.inputs, pageName, Elem.input, inputName).input();
 
     if (inputName === Mode.email) input.setAttribute('type', 'text');
-    else if (inputName === Mode.pass) input.setAttribute('type', 'password');
+    else if (inputName === Mode.pass || inputName === Mode.pass_new) input.setAttribute('type', 'password');
     else if (inputName === Mode.date) {
       const currentDate: Date = new Date();
       const yearMin: number = currentDate.getFullYear() - 150;
@@ -52,7 +53,13 @@ export default class FormView {
       input.setAttribute('type', 'date');
       input.setAttribute('min', formattedMinDate);
       input.setAttribute('max', formattedMaxDate);
-    } else if (inputName === Mode.both || inputName === Mode.ship || inputName === Mode.bill) {
+    } else if (
+      inputName === Mode.both ||
+      inputName === Mode.ship ||
+      inputName === Mode.bill ||
+      inputName === Mode.ship_def ||
+      inputName === Mode.bill_def
+    ) {
       input.setAttribute('type', 'checkbox');
       input.setAttribute('checked', 'checked');
     }
@@ -212,7 +219,7 @@ export default class FormView {
     if (!sendButton) return;
     sendButton.disabled = disable;
   }
-  
+
   public addTabAndFocus(): void {
     const firstInput: HTMLInputElement | null = document.querySelector(`.${Base.inputs}`);
     const showPasswordButton: HTMLButtonElement | null = document.querySelector(`#show-password`);
