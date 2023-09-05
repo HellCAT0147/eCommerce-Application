@@ -109,6 +109,8 @@ export default class ViewProfile {
       type = Mode.bill;
       if (address.id === dataAddresses.billing) {
         defAddress = Mode.default;
+      } else {
+        defAddress = '';
       }
       const addresses: HTMLElement = this.formView.createAddressField(type, defAddress, address);
       field.append(addresses);
@@ -117,6 +119,8 @@ export default class ViewProfile {
       type = Mode.ship;
       if (address.id === dataAddresses.shipping) {
         defAddress = Mode.default;
+      } else {
+        defAddress = '';
       }
       const addresses: HTMLElement = this.formView.createAddressField(type, defAddress, address);
       field.append(addresses);
