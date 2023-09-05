@@ -125,6 +125,14 @@ export default class ViewProfile {
       const addresses: HTMLElement = this.formView.createAddressField(type, defAddress, address);
       field.append(addresses);
     }
+    if (dataAddresses.all_ship && dataAddresses.all_bill) {
+      if (!dataAddresses.all_ship.includes(address.id) && !dataAddresses.all_bill.includes(address.id)) {
+        type = '';
+        defAddress = '';
+        const addresses: HTMLElement = this.formView.createAddressField(type, defAddress, address);
+        field.append(addresses);
+      }
+    }
 
     return field;
   }
