@@ -53,6 +53,13 @@ export enum PostalErrors {
   notSelected = 'Select the country',
 }
 
+export interface IsChecked {
+  isSetBill: boolean;
+  isSetShip: boolean;
+  isSetBillDef: boolean;
+  isSetShipDef: boolean;
+}
+
 export type LoginErrors = MailErrors | PasswordErrors;
 
 export type Errors = LoginErrors | NameErrors | DateErrors | PostalErrors;

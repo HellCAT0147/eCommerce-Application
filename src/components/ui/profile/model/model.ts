@@ -7,6 +7,7 @@ import {
   DateErrors,
   Errors,
   InputType,
+  IsChecked,
   MailErrors,
   NameErrors,
   PasswordErrors,
@@ -505,6 +506,25 @@ class ModelProfile {
     this.view.checkedBoxes();
   }
 
+  private setCheckStatus(customer: Customer): void {
+    this.billing = customer.billingAddressIds ? customer.billingAddressIds.includes(this.idAddress) : false;
+    this.shipping = customer.shippingAddressIds ? customer.shippingAddressIds.includes(this.idAddress) : false;
+    this.billingDefault = customer.defaultBillingAddressId
+      ? customer.defaultBillingAddressId.includes(this.idAddress)
+      : false;
+    this.shippingDefault = customer.defaultShippingAddressId
+      ? customer.defaultShippingAddressId.includes(this.idAddress)
+      : false;
+
+    const isChecked: IsChecked = {
+      isSetBill: this.billing,
+      isSetShip: this.shipping,
+      isSetBillDef: this.billingDefault,
+      isSetShipDef: this.shippingDefault,
+    };
+    this.view.checkedBoxes(isChecked);
+  }
+
   public async openEditMode(target: HTMLElement): Promise<void> {
     try {
       const response: Customer | ErrorObject = await this.eCommerceApi.getCustomer();
@@ -521,8 +541,8 @@ class ModelProfile {
         }
         if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.address}`)) {
           this.setIdAddress(target);
-          this.resetCheckBoxes();
           const address: Address = this.searchAddress(response);
+          this.setCheckStatus(response);
           this.setCurrentAddress(address);
           this.view.fillAddressModal(target, address);
           this.view.toggleDisplayModal(`${Mode.address}`, true);
