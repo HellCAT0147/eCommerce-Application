@@ -22,7 +22,7 @@ export default class ViewProfile {
   public reminder(customMsg: string | null = null, block: Blocks = Blocks.prof): void {
     const reminder: HTMLElement = new Builder('p', '', block, Elem.err, '').element();
     const errorsHolder: HTMLElement = new Builder('div', '', block, Elem.errs, Mode.response).element();
-    const form: HTMLFormElement | null = document.querySelector('.form');
+    const form: HTMLFormElement | null = document.querySelector('.opened .form');
 
     setTimeout(() => {
       errorsHolder.outerHTML = '';
