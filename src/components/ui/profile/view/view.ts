@@ -245,13 +245,19 @@ export default class ViewProfile {
     const defBill: HTMLInputElement | null = document.querySelector(`.${Blocks.prof}__${Elem.input}_${Mode.bill_def}`);
     const defShip: HTMLInputElement | null = document.querySelector(`.${Blocks.prof}__${Elem.input}_${Mode.ship_def}`);
     if (bill && ship && defBill && defShip) {
+      bill.disabled = false;
+      ship.disabled = false;
       if (isChecked) {
         bill.checked = isChecked.isSetBill;
         ship.checked = isChecked.isSetShip;
         defBill.checked = isChecked.isSetBillDef;
         defShip.checked = isChecked.isSetShipDef;
+        if (isChecked.isSetBillDef) bill.disabled = true;
+        if (isChecked.isSetShipDef) ship.disabled = true;
       } else {
+        bill.disabled = true;
         bill.checked = true;
+        ship.disabled = true;
         ship.checked = true;
         defBill.checked = true;
         defShip.checked = true;
