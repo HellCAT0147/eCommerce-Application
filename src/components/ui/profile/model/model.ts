@@ -75,10 +75,18 @@ class ModelProfile {
 
   public setBillingDefault(target: HTMLInputElement): void {
     this.billingDefault = target.checked;
+    if (this.billingDefault) {
+      this.billing = true;
+      this.view.setCheckBoxAndLock(true);
+    } else this.view.unlockCheckBox(true);
   }
 
   public setShippingDefault(target: HTMLInputElement): void {
     this.shippingDefault = target.checked;
+    if (this.shippingDefault) {
+      this.shipping = true;
+      this.view.setCheckBoxAndLock(false);
+    } else this.view.unlockCheckBox(false);
   }
 
   public setBilling(target: HTMLInputElement): void {

@@ -411,4 +411,21 @@ export default class ViewProfile {
     initInput?.classList.remove(Mode.valid);
     initInput?.classList.remove(Mode.invalid);
   }
+
+  public setCheckBoxAndLock(isBill: boolean): void {
+    let checkBox: HTMLInputElement | null;
+    if (isBill) checkBox = document.querySelector('#profile-billing');
+    else checkBox = document.querySelector('#profile-shipping');
+    if (checkBox) {
+      checkBox.checked = true;
+      checkBox.disabled = true;
+    }
+  }
+
+  public unlockCheckBox(isBill: boolean): void {
+    let checkBox: HTMLInputElement | null;
+    if (isBill) checkBox = document.querySelector('#profile-billing');
+    else checkBox = document.querySelector('#profile-shipping');
+    if (checkBox) checkBox.disabled = false;
+  }
 }
