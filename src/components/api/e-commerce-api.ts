@@ -19,6 +19,8 @@ import {
   MyCustomerRemoveBillingAddressIdAction,
   Product,
   ProductProjection,
+  MyCustomerSetDefaultBillingAddressAction,
+  MyCustomerSetDefaultShippingAddressAction,
 } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import { ErrorObject } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/error';
@@ -537,6 +539,7 @@ export default class ECommerceApi {
 
   private buildAddressModificationAction(
     id: string | undefined,
+    setDefault?: 'setDefaultBillingAddress' | 'setDefaultShippingAddress',
     addAction?: 'addBillingAddressId' | 'addShippingAddressId',
     removeAction?: 'removeBillingAddressId' | 'removeShippingAddressId'
   ): Array<
@@ -544,8 +547,10 @@ export default class ECommerceApi {
     | MyCustomerAddShippingAddressIdAction
     | MyCustomerRemoveBillingAddressIdAction
     | MyCustomerRemoveShippingAddressIdAction
+    | MyCustomerSetDefaultBillingAddressAction
+    | MyCustomerSetDefaultShippingAddressAction
   > {
-    const action = addAction || removeAction;
+    const action = setDefault || addAction || removeAction;
     if (action) {
       return [
         {
@@ -558,7 +563,7 @@ export default class ECommerceApi {
   }
 
   private async buildAndExecuteAddAddressActions(
-    address: Address,
+    id: string | undefined,
     isBillingAddress: boolean,
     isShippingAddress: boolean,
     isDefaultBillingAddress: boolean,
@@ -571,30 +576,18 @@ export default class ECommerceApi {
 
     actions.push(
       ...this.buildAddressModificationAction(
-        address.id,
+        id,
+        isDefaultBillingAddress ? 'setDefaultBillingAddress' : undefined,
         isBillingAddress ? 'addBillingAddressId' : undefined,
         removeIsBilling ? 'removeBillingAddressId' : undefined
       ),
       ...this.buildAddressModificationAction(
-        address.id,
+        id,
+        isDefaultShippingAddress ? 'setDefaultShippingAddress' : undefined,
         isShippingAddress ? 'addShippingAddressId' : undefined,
         removeIsShipping ? 'removeShippingAddressId' : undefined
       )
     );
-
-    if (isDefaultBillingAddress) {
-      actions.push({
-        action: 'setDefaultBillingAddress',
-        addressId: address.id,
-      });
-    }
-
-    if (isDefaultShippingAddress) {
-      actions.push({
-        action: 'setDefaultShippingAddress',
-        addressId: address.id,
-      });
-    }
 
     return this.apiRoot
       .me()
@@ -628,7 +621,7 @@ export default class ECommerceApi {
             if (!oldAddresses.includes(currentAddress.id)) {
               return this.wrapUserUpdateOperation((newMe) => {
                 return this.buildAndExecuteAddAddressActions(
-                  currentAddress,
+                  currentAddress.id,
                   isBillingAddress,
                   isShippingAddress,
                   isDefaultBillingAddress,
@@ -661,33 +654,24 @@ export default class ECommerceApi {
   ): Promise<ErrorObject | boolean> {
     const me = await this.meLoggedInPromise;
     if (me == null) return false;
-    const oldAddresses = me.addresses.map((oldAddress) => oldAddress.id);
     try {
       const newAddressPromise = this.wrapUserUpdateOperation((currentMe) => {
         return this.updateAddress(id, address, currentMe);
       });
       const useWithNewAddress = await newAddressPromise;
       if (useWithNewAddress != null) {
-        const newAddressesPromises = useWithNewAddress.addresses
-          .map((currentAddress) => {
-            if (!oldAddresses.includes(currentAddress.id)) {
-              return this.wrapUserUpdateOperation((newMe) => {
-                return this.buildAndExecuteAddAddressActions(
-                  currentAddress,
-                  isBillingAddress,
-                  isShippingAddress,
-                  isDefaultBillingAddress,
-                  isDefaultShippingAddress,
-                  newMe.version,
-                  currentAddress.id ? newMe.billingAddressIds?.includes(currentAddress.id) : undefined,
-                  currentAddress.id ? newMe.shippingAddressIds?.includes(currentAddress.id) : undefined
-                );
-              });
-            }
-            return null;
-          })
-          .filter((promise) => promise != null);
-        await Promise.all(newAddressesPromises);
+        await this.wrapUserUpdateOperation((newMe) => {
+          return this.buildAndExecuteAddAddressActions(
+            id,
+            isBillingAddress,
+            isShippingAddress,
+            isDefaultBillingAddress,
+            isDefaultShippingAddress,
+            newMe.version,
+            id ? newMe.billingAddressIds?.includes(id) : undefined,
+            id ? newMe.shippingAddressIds?.includes(id) : undefined
+          );
+        });
         return true;
       }
     } catch (e) {
