@@ -12,15 +12,17 @@ import {
   createApiBuilderFromCtpClient,
   Customer,
   CustomerSignInResult,
+  MyCustomerRemoveShippingAddressIdAction,
   MyCustomerUpdateAction,
+  MyCustomerAddBillingAddressIdAction,
+  MyCustomerAddShippingAddressIdAction,
+  MyCustomerRemoveBillingAddressIdAction,
   Product,
   ProductProjection,
 } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import { ErrorObject } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/error';
 import { Category } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/category';
-import { _BaseAddress } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/common';
-import { ApiRequest } from '@commercetools/platform-sdk/dist/declarations/src/generated/shared/utils/requests-utils';
 import TokenCachesStore from './token-caches-store';
 import compareObjects from '../utils/compare-objects';
 import { DataBase } from '../models/commerce';
@@ -533,25 +535,52 @@ export default class ECommerceApi {
       .execute();
   }
 
+  private buildAddressModificationAction(
+    id: string | undefined,
+    addAction?: 'addBillingAddressId' | 'addShippingAddressId',
+    removeAction?: 'removeBillingAddressId' | 'removeShippingAddressId'
+  ): Array<
+    | MyCustomerAddBillingAddressIdAction
+    | MyCustomerAddShippingAddressIdAction
+    | MyCustomerRemoveBillingAddressIdAction
+    | MyCustomerRemoveShippingAddressIdAction
+  > {
+    const action = addAction || removeAction;
+    if (action) {
+      return [
+        {
+          action,
+          addressId: id,
+        },
+      ];
+    }
+    return [];
+  }
+
   private async buildAndExecuteAddAddressActions(
     address: Address,
     isBillingAddress: boolean,
     isShippingAddress: boolean,
     isDefaultBillingAddress: boolean,
     isDefaultShippingAddress: boolean,
-    customerVersion: number
+    customerVersion: number,
+    removeIsBilling: boolean = false,
+    removeIsShipping: boolean = false
   ): Promise<ClientResponse<Customer>> {
     const actions: Array<MyCustomerUpdateAction> = [];
 
-    actions.push({
-      action: isBillingAddress ? 'addBillingAddressId' : 'removeBillingAddressId',
-      addressId: address.id,
-    });
-
-    actions.push({
-      action: isShippingAddress ? 'addShippingAddressId' : 'removeShippingAddressId',
-      addressId: address.id,
-    });
+    actions.push(
+      ...this.buildAddressModificationAction(
+        address.id,
+        isBillingAddress ? 'addBillingAddressId' : undefined,
+        removeIsBilling ? 'removeBillingAddressId' : undefined
+      ),
+      ...this.buildAddressModificationAction(
+        address.id,
+        isShippingAddress ? 'addShippingAddressId' : undefined,
+        removeIsShipping ? 'removeShippingAddressId' : undefined
+      )
+    );
 
     if (isDefaultBillingAddress) {
       actions.push({
@@ -604,7 +633,9 @@ export default class ECommerceApi {
                   isShippingAddress,
                   isDefaultBillingAddress,
                   isDefaultShippingAddress,
-                  newMe.version
+                  newMe.version,
+                  false,
+                  false
                 );
               });
             }
@@ -647,7 +678,9 @@ export default class ECommerceApi {
                   isShippingAddress,
                   isDefaultBillingAddress,
                   isDefaultShippingAddress,
-                  newMe.version
+                  newMe.version,
+                  currentAddress.id ? newMe.billingAddressIds?.includes(currentAddress.id) : undefined,
+                  currentAddress.id ? newMe.shippingAddressIds?.includes(currentAddress.id) : undefined
                 );
               });
             }
