@@ -398,7 +398,9 @@ export default class ViewProfile {
   }
 
   public resetInputView(inputType: InputType): void {
-    const initInput: HTMLInputElement | null = document.querySelector(`.profile__input_${inputType}`);
+    let initInput: HTMLElement | null;
+    if (inputType === Mode.country) initInput = document.querySelector(`.${Blocks.prof}__${Elem.select}_${inputType}`);
+    else initInput = document.querySelector(`.${Blocks.prof}__${Elem.input}_${inputType}`);
     initInput?.classList.remove(Mode.valid);
     initInput?.classList.remove(Mode.invalid);
   }

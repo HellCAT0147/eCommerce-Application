@@ -540,6 +540,7 @@ class ModelProfile {
           this.view.clearAddressModal();
           this.view.toggleDisplayModal(`${Mode.address}`, true);
           this.view.showHiddenElements(`${Mode.add}`);
+          this.setNoErrors([`${Mode.country}`, `${Mode.city}`, `${Mode.postal}`, `${Mode.street}`], false);
         }
         await this.checkDeleteAddress(target);
       }
