@@ -4,7 +4,7 @@ import Builder from '../../builder/html-builder';
 import { Pages } from '../../../models/router';
 import { DataAddresses } from '../../../models/commerce';
 import FormViewProfile from './form';
-import { Countries, Errors, InputType } from '../../../models/validation';
+import { Countries, Errors, InputType, IsChecked } from '../../../models/validation';
 
 export default class ViewProfile {
   protected formView: FormViewProfile;
@@ -239,16 +239,23 @@ export default class ViewProfile {
     }
   }
 
-  public checkedBoxes(): void {
+  public checkedBoxes(isChecked?: IsChecked): void {
     const bill: HTMLInputElement | null = document.querySelector(`.${Blocks.prof}__${Elem.input}_${Mode.bill}`);
     const ship: HTMLInputElement | null = document.querySelector(`.${Blocks.prof}__${Elem.input}_${Mode.ship}`);
     const defBill: HTMLInputElement | null = document.querySelector(`.${Blocks.prof}__${Elem.input}_${Mode.bill_def}`);
     const defShip: HTMLInputElement | null = document.querySelector(`.${Blocks.prof}__${Elem.input}_${Mode.ship_def}`);
     if (bill && ship && defBill && defShip) {
-      bill.checked = true;
-      ship.checked = true;
-      defBill.checked = true;
-      defShip.checked = true;
+      if (isChecked) {
+        bill.checked = isChecked.isSetBill;
+        ship.checked = isChecked.isSetShip;
+        defBill.checked = isChecked.isSetBillDef;
+        defShip.checked = isChecked.isSetShipDef;
+      } else {
+        bill.checked = true;
+        ship.checked = true;
+        defBill.checked = true;
+        defShip.checked = true;
+      }
     }
   }
 
