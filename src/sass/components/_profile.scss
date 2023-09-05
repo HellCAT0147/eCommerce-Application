@@ -80,16 +80,6 @@
     flex-direction: row;
     flex-wrap: wrap;
     row-gap: 40px;
-    & .profile__forms:nth-child(even) {
-      align-self: flex-end;
-      align-items: end;
-      @include media-mobile-large {
-        align-items: center;
-      }
-    }
-    @include media-mobile-large {
-      align-items: center;
-    }
   }
 
   &__address {
@@ -197,6 +187,16 @@
       @include font(600, 1.4rem, 100%, $color-Light-gray);
       &:hover {
         color: $color-main-second;
+      }
+    }
+    &_add {
+      border: none;
+      padding: 18px 55px;
+      color: $color-light;
+      background: $color-dark;
+      letter-spacing: 0.05rem;
+      &:hover {
+        background: $color-main-second;
       }
     }
   }

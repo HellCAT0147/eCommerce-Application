@@ -176,10 +176,6 @@ export default class FormViewProfile extends FormViewReg {
       buttonDelete.textContent = Buttons.DEL_ADDRESS;
       buttonDelete.setAttribute('data-id', `${address.id}`);
       formFieldControl.append(buttonEdit, buttonDelete);
-    } else {
-      const buttonAdd: HTMLButtonElement = new Builder('', Base.btns_edit, page, Elem.btn, Mode.add).button();
-      buttonAdd.textContent = Buttons.ADD_ADDRESS;
-      formFieldControl.appendChild(buttonAdd);
     }
 
     if (address) {
