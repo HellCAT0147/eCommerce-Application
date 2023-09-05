@@ -455,6 +455,49 @@ class ModelProfile {
     if (idAddress) this.idAddress = idAddress;
   }
 
+  private searchAddress(customer: Customer): Address {
+    let currentAddress: Address = {
+      country: '',
+    };
+    const { addresses } = customer;
+    addresses.forEach((address: Address) => {
+      if (address.id === this.idAddress) {
+        currentAddress = address;
+      }
+    });
+    return currentAddress;
+  }
+
+  public async getCustomer(): Promise<Customer | ErrorObject | unknown> {
+    try {
+      const response: Customer | ErrorObject = await this.eCommerceApi.getCustomer();
+      if ('message' in response && 'code' in response) {
+        this.view.showError(response.message);
+        return response;
+      }
+      return response;
+    } catch (error) {
+      if (error instanceof Error) this.view.showError(error.message);
+      return error;
+    }
+  }
+
+  public setCurrentAddress(address: Address): void {
+    if (address.postalCode && address.city && address.streetName) {
+      this.country = address.country;
+      this.postal = address.postalCode;
+      this.city = address.city;
+      this.street = address.streetName;
+    }
+  }
+
+  public resetAddress(): void {
+    this.country = '';
+    this.postal = '';
+    this.city = '';
+    this.street = '';
+  }
+
   public async openEditMode(target: HTMLElement): Promise<void> {
     try {
       const response: Customer | ErrorObject = await this.eCommerceApi.getCustomer();
@@ -471,7 +514,9 @@ class ModelProfile {
         }
         if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.address}`)) {
           this.setIdAddress(target);
-          this.view.fillAddressModal(target);
+          const address: Address = this.searchAddress(response);
+          this.setCurrentAddress(address);
+          this.view.fillAddressModal(target, address);
           this.view.toggleDisplayModal(`${Mode.address}`, true);
           this.view.showHiddenElements(`${Mode.save}`);
           this.setNoErrors([`${Mode.country}`, `${Mode.city}`, `${Mode.postal}`, `${Mode.street}`]);
@@ -482,6 +527,7 @@ class ModelProfile {
           this.setNoErrors(['password', 'password-new'], false);
         }
         if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.add}`)) {
+          this.resetAddress();
           this.view.clearAddressModal();
           this.view.toggleDisplayModal(`${Mode.address}`, true);
           this.view.showHiddenElements(`${Mode.add}`);

@@ -281,36 +281,18 @@ export default class ViewProfile {
     }
   }
 
-  public fillAddressModal(target: HTMLElement): void {
-    const content: HTMLElement | null = target.closest(`.${Blocks.prof}__${Elem.address}`);
+  public fillAddressModal(target: HTMLElement, address: Address): void {
     const country: HTMLInputElement | null = document.querySelector(`#${Blocks.prof}-${Mode.country}`);
     const postal: HTMLInputElement | null = document.querySelector(`#${Blocks.prof}-${Mode.postal}`);
     const city: HTMLInputElement | null = document.querySelector(`#${Blocks.prof}-${Mode.city}`);
     const street: HTMLInputElement | null = document.querySelector(`#${Blocks.prof}-${Mode.street}`);
-    if (content) {
-      const countryElement: HTMLElement | null = content.querySelector(`.${Blocks.prof}__${Elem.text}_${Mode.country}`);
-      const postalElement: HTMLElement | null = content.querySelector(`.${Blocks.prof}__${Elem.text}_${Mode.postal}`);
-      const cityElement: HTMLElement | null = content.querySelector(`.${Blocks.prof}__${Elem.text}_${Mode.city}`);
-      const streetElement: HTMLElement | null = content.querySelector(`.${Blocks.prof}__${Elem.text}_${Mode.street}`);
-      if (countryElement && postalElement && cityElement && streetElement) {
-        const countryContent: string | null = countryElement.textContent;
-        const postalContent: string | null = postalElement.textContent;
-        const cityContent: string | null = cityElement.textContent;
-        const streetContent: string | null = streetElement.textContent;
-        if (country && postal && city && street) {
-          if (countryContent && postalContent && cityContent && streetContent) {
-            const countrySelect: Countries = this.findCountry(countryContent.slice(0, -1));
-            country.value = countrySelect;
-            postal.value = postalContent.slice(0, -1);
-            city.value = cityContent.slice(0, -1);
-            street.value = streetContent.slice(0, -1);
-          } else {
-            country.value = '';
-            postal.value = '';
-            city.value = '';
-            street.value = '';
-          }
-        }
+    if (country && postal && city && street) {
+      if (address.postalCode && address.city && address.streetName) {
+        const countrySelect: Countries = this.findCountry(address.country);
+        country.value = countrySelect;
+        postal.value = address.postalCode;
+        city.value = address.city;
+        street.value = address.streetName;
       }
     }
   }
