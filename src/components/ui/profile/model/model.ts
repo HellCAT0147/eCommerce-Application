@@ -584,11 +584,17 @@ class ModelProfile {
           this.billingDefault,
           this.shippingDefault
         );
-        if (response) {
-          this.view.toggleDisplayModal(`${Mode.address}`, false);
-          this.view.showMessage(true);
-          await this.getProfile(Mode.update);
+        if (typeof response === 'boolean') {
+          if (response) {
+            this.view.toggleDisplayModal(`${Mode.address}`, false);
+            this.view.showMessage(true);
+          } else {
+            this.view.showMessage(false, 'You are not logged in');
+          }
+        } else {
+          this.view.showMessage(false, response.message);
         }
+        await this.getProfile(Mode.update);
       } catch (error) {
         if (error instanceof Error) this.view.showError(error.message);
       }
