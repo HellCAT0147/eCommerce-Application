@@ -239,6 +239,19 @@ export default class ViewProfile {
     }
   }
 
+  public checkedBoxes(): void {
+    const bill: HTMLInputElement | null = document.querySelector(`.${Blocks.prof}__${Elem.input}_${Mode.bill}`);
+    const ship: HTMLInputElement | null = document.querySelector(`.${Blocks.prof}__${Elem.input}_${Mode.ship}`);
+    const defBill: HTMLInputElement | null = document.querySelector(`.${Blocks.prof}__${Elem.input}_${Mode.bill_def}`);
+    const defShip: HTMLInputElement | null = document.querySelector(`.${Blocks.prof}__${Elem.input}_${Mode.ship_def}`);
+    if (bill && ship && defBill && defShip) {
+      bill.checked = true;
+      ship.checked = true;
+      defBill.checked = true;
+      defShip.checked = true;
+    }
+  }
+
   public findCountry(codeCountry: string): Countries {
     switch (codeCountry) {
       case 'BY':

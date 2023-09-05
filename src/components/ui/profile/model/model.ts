@@ -498,6 +498,14 @@ class ModelProfile {
     this.street = '';
   }
 
+  private resetCheckBoxes(): void {
+    this.billing = true;
+    this.shipping = true;
+    this.billingDefault = true;
+    this.shippingDefault = true;
+    this.view.checkedBoxes();
+  }
+
   public async openEditMode(target: HTMLElement): Promise<void> {
     try {
       const response: Customer | ErrorObject = await this.eCommerceApi.getCustomer();
@@ -514,6 +522,7 @@ class ModelProfile {
         }
         if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.address}`)) {
           this.setIdAddress(target);
+          this.resetCheckBoxes();
           const address: Address = this.searchAddress(response);
           this.setCurrentAddress(address);
           this.view.fillAddressModal(target, address);
@@ -528,6 +537,7 @@ class ModelProfile {
         }
         if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.add}`)) {
           this.resetAddress();
+          this.resetCheckBoxes();
           this.view.clearAddressModal();
           this.view.toggleDisplayModal(`${Mode.address}`, true);
           this.view.showHiddenElements(`${Mode.add}`);
