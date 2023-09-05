@@ -112,7 +112,8 @@ export default class ViewProfile {
       }
       const addresses: HTMLElement = this.formView.createAddressField(type, defAddress, address);
       field.append(addresses);
-    } else if (dataAddresses.all_ship && dataAddresses.all_ship.includes(address.id)) {
+    }
+    if (dataAddresses.all_ship && dataAddresses.all_ship.includes(address.id)) {
       type = Mode.ship;
       if (address.id === dataAddresses.shipping) {
         defAddress = Mode.default;
@@ -259,6 +260,20 @@ export default class ViewProfile {
           titleAdd.classList.remove(`${Elem.modal}_${Mode.hidden}`);
         }
       }
+    }
+  }
+
+  public clearAddressModal(): void {
+    const country: HTMLInputElement | null = document.querySelector(`#${Blocks.prof}-${Mode.country}`);
+    const postal: HTMLInputElement | null = document.querySelector(`#${Blocks.prof}-${Mode.postal}`);
+    const city: HTMLInputElement | null = document.querySelector(`#${Blocks.prof}-${Mode.city}`);
+    const street: HTMLInputElement | null = document.querySelector(`#${Blocks.prof}-${Mode.street}`);
+
+    if (country && postal && city && street) {
+      country.value = '';
+      postal.value = '';
+      city.value = '';
+      street.value = '';
     }
   }
 

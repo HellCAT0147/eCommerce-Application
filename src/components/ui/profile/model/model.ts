@@ -1,4 +1,4 @@
-import { Customer, ErrorObject } from '@commercetools/platform-sdk';
+import { Address, Customer, ErrorObject } from '@commercetools/platform-sdk';
 import ECommerceApi from '../../../api/e-commerce-api';
 import ViewProfile from '../view/view';
 import { Blocks, Elem, Mode } from '../../../models/builder';
@@ -41,6 +41,16 @@ class ModelProfile {
 
   private country: Countries | string;
 
+  private billingDefault: boolean;
+
+  private shippingDefault: boolean;
+
+  private shipping: boolean;
+
+  private billing: boolean;
+
+  private idAddress: string;
+
   public constructor(eCommerceApi: ECommerceApi) {
     this.eCommerceApi = eCommerceApi;
     this.view = new ViewProfile();
@@ -55,6 +65,27 @@ class ModelProfile {
     this.street = '';
     this.postal = '';
     this.country = '';
+    this.billingDefault = true;
+    this.shippingDefault = true;
+    this.shipping = true;
+    this.billing = true;
+    this.idAddress = '';
+  }
+
+  public setBillingDefault(target: HTMLInputElement): void {
+    this.billingDefault = target.checked;
+  }
+
+  public setShippingDefault(target: HTMLInputElement): void {
+    this.shippingDefault = target.checked;
+  }
+
+  public setBilling(target: HTMLInputElement): void {
+    this.billing = target.checked;
+  }
+
+  public setShipping(target: HTMLInputElement): void {
+    this.shipping = target.checked;
   }
 
   protected checkSendableAccount(): boolean {
@@ -340,6 +371,18 @@ class ModelProfile {
     }
   }
 
+  private getCountryCode(country: Countries | string): string {
+    const fullCountries: string[] = Object.values(Countries);
+    const countriesCodes: string[] = Object.keys(Countries);
+    let id: number = 0;
+
+    fullCountries.forEach((localCountry, i) => {
+      if (localCountry === country) id = i;
+    });
+
+    return countriesCodes[id];
+  }
+
   private async checkDeleteAddress(target: HTMLElement): Promise<void> {
     if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.del}`)) {
       const idAddress = target.getAttribute('data-id');
@@ -347,6 +390,7 @@ class ModelProfile {
         this.eCommerceApi.deleteUserAddress(idAddress).then((result) => {
           if (typeof result === 'boolean') {
             if (result) {
+              this.view.showMessage(true);
               this.getProfile(Mode.update);
             } else {
               // TODO:: In fact, unauthorized
@@ -359,25 +403,48 @@ class ModelProfile {
     }
   }
 
-  private async checkAddAddress(target: HTMLElement): Promise<void> {
-    if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.add}`)) {
-      this.view.fillAddressModal(target);
-      this.view.toggleDisplayModal(`${Mode.address}`, true);
-      this.view.showHiddenElements(`${Mode.add}`);
-      // this.eCommerceApi.addUserAddress(
-      //
-      // ).then((result) => {
-      //   if (typeof result === 'boolean') {
-      //     if (result) {
-      //       // TODO:: Update successful
-      //     } else {
-      //       // TODO:: In fact, unauthorized
-      //     }
-      //   } else {
-      //     // TODO:: result == ErrorObject
-      //   }
-      // });
+  private prepareAddress(): Address {
+    const address: Address = {
+      country: this.getCountryCode(this.country),
+      postalCode: this.postal,
+      city: this.city,
+      streetName: this.street,
+    };
+
+    return address;
+  }
+
+  private async checkAddAddress(): Promise<void> {
+    if (this.checkSendableAddress()) {
+      const address: Address = this.prepareAddress();
+      try {
+        this.eCommerceApi
+          .addUserAddress(address, this.billing, this.shipping, this.billingDefault, this.shippingDefault)
+          .then((result) => {
+            if (typeof result === 'boolean') {
+              if (result) {
+                this.getProfile(Mode.update);
+                this.view.toggleDisplayModal(`${Mode.address}`, false);
+                this.view.showMessage(true);
+              } else {
+                // TODO:: In fact, unauthorized
+              }
+            } else {
+              // TODO:: result == ErrorObject
+            }
+          });
+        // this.getProfile(Mode.update);
+      } catch (error) {
+        if (error instanceof Error) this.view.showError(error.message);
+      }
+    } else {
+      this.view.reminder();
     }
+  }
+
+  private setIdAddress(target: HTMLElement): void {
+    const idAddress: string | null = target.getAttribute('data-id');
+    if (idAddress) this.idAddress = idAddress;
   }
 
   public async openEditMode(target: HTMLElement): Promise<void> {
@@ -395,25 +462,30 @@ class ModelProfile {
           this.setNoErrors(['first-name', 'last-name', 'date-of-birth', 'email']);
         }
         if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.address}`)) {
+          this.setIdAddress(target);
           this.view.fillAddressModal(target);
           this.view.toggleDisplayModal(`${Mode.address}`, true);
-          const idAddress = target.getAttribute('data-id');
           this.view.showHiddenElements(`${Mode.save}`);
+          this.setNoErrors([`${Mode.country}`, `${Mode.city}`, `${Mode.postal}`, `${Mode.street}`]);
         }
         if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.pass}`)) {
           this.clearInputs(Mode.pass);
           this.view.toggleDisplayModal(`${Mode.pass}`, true);
           this.setNoErrors(['password', 'password-new']);
         }
+        if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.add}`)) {
+          this.view.clearAddressModal();
+          this.view.toggleDisplayModal(`${Mode.address}`, true);
+          this.view.showHiddenElements(`${Mode.add}`);
+        }
         await this.checkDeleteAddress(target);
-        await this.checkAddAddress(target);
       }
     } catch (error) {
       if (error instanceof Error) this.view.showError(error.message);
     }
   }
 
-  public modalEvent(target: HTMLElement): void {
+  public async modalEvent(target: HTMLElement): Promise<void> {
     if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.back}`)) {
       if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.account}`))
         this.view.toggleDisplayModal(`${Mode.account}`, false);
@@ -424,10 +496,13 @@ class ModelProfile {
     }
     if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.save}`)) {
       if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.account}`)) this.updateAccountInfo();
-      if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.address}`)) {
-        this.view.toggleDisplayModal(`${Mode.address}`, false);
-      }
+      if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.address}`)) this.updateAddress();
       if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.pass}`)) this.updatePassword();
+    }
+    if (target.classList.contains(`${Blocks.prof}__${Elem.btn}_${Mode.add}`)) {
+      if (target.closest(`.${Blocks.prof}__${Elem.modal}_${Mode.address}`)) {
+        await this.checkAddAddress();
+      }
     }
   }
 
@@ -489,17 +564,23 @@ class ModelProfile {
   }
 
   public async updateAddress(): Promise<void> {
+    const address: Address = this.prepareAddress();
     if (this.checkSendableAddress()) {
+      if (!this.idAddress) return;
       try {
-        // TODO: const response: boolean | ErrorObject = await this.eCommerceApi.updateUserAddress();
-        /* if ('message' in response && 'code' in response) {
-          this.view.showMessage(false, response.message);
-          this.view.showError(response.message);
-        } else if (response) {
-          this.view.toggleDisplayModal(`${Mode.account}`, false);
+        const response: boolean | ErrorObject = await this.eCommerceApi.updateUserAddress(
+          this.idAddress,
+          address,
+          this.billing,
+          this.shipping,
+          this.billingDefault,
+          this.shippingDefault
+        );
+        if (response) {
+          this.view.toggleDisplayModal(`${Mode.address}`, false);
           this.view.showMessage(true);
           await this.getProfile(Mode.update);
-        } */
+        }
       } catch (error) {
         if (error instanceof Error) this.view.showError(error.message);
       }
