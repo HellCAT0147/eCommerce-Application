@@ -6,7 +6,7 @@ export type BillAddressFields = 'street-bill' | 'city-bill' | 'postal-code-bill'
 
 export type PersonFields = 'first-name' | 'last-name' | 'date-of-birth';
 
-export type Check = 'both-address' | 'shipping' | 'billing';
+export type Check = 'both-address' | 'shipping' | 'billing' | 'billing-default' | 'shipping-default';
 
 export type InputType = InputTypeLogin | PersonFields | AddressFields | BillAddressFields | Check;
 

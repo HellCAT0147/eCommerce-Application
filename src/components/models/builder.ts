@@ -110,6 +110,10 @@ export enum Mode {
   update = 'update',
   new = 'new',
   fail = 'failed',
+  del = 'delete',
+  add = 'add',
+  bill_def = 'billing-default',
+  ship_def = 'shipping-default',
 }
 
 export enum Base {
@@ -154,7 +158,9 @@ export enum Buttons {
   PROFILE = 'MY PROFILE',
   BURGER = 'burger',
   EDIT = 'Edit',
-  ADDRESS = 'Edit Address',
+  EDIT_ADDRESS = 'Edit Address',
+  DEL_ADDRESS = 'Delete Address',
+  ADD_ADDRESS = 'Add Address',
   SAVE = 'SAVE',
   BACK = 'BACK',
   CHANGE_PASS = 'Change Password',
@@ -188,6 +194,7 @@ export enum Titles {
   HAVE_NOT = `You have not set a`,
   UPDATE = `Update`,
   PASSWORD = `Password`,
+  ADD = `Add`,
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;

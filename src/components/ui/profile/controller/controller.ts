@@ -20,6 +20,12 @@ class ControllerProfile extends ControllerRegistration {
     else if (target.id.includes('password')) this.model.checkPassword(target.value);
     else if (target.id.includes('name') || target.id.includes('city')) this.model.checkName(target.value, target.id);
     else if (target.id.includes('date-of-birth')) this.model.checkBirthDate(target.value);
+    else if (target.id.includes('street')) this.model.checkStreet(target);
+    else if (target.id.includes('postal-code')) this.model.checkPostal(target.value);
+    else if (target.id.includes('billing-default')) this.model.setBillingDefault(target);
+    else if (target.id.includes('shipping-default')) this.model.setShippingDefault(target);
+    else if (target.id.includes('billing')) this.model.setBilling(target);
+    else if (target.id.includes('shipping')) this.model.setShipping(target);
   }
 
   public mouseEvent(e: MouseEvent): void {
@@ -37,6 +43,13 @@ class ControllerProfile extends ControllerRegistration {
       e.preventDefault();
       this.model.modalEvent(target);
     }
+  }
+
+  public selectMenu(e: Event): void {
+    const { target } = e;
+    if (!(target instanceof HTMLSelectElement)) return;
+    e.preventDefault();
+    this.model.checkCountry(target);
   }
 
   public async loadProfile(): Promise<void> {

@@ -1,5 +1,5 @@
 import { Address, Customer } from '@commercetools/platform-sdk';
-import { Base, Blocks, Elem, Mode, Titles } from '../../../models/builder';
+import { Base, Blocks, Buttons, Elem, Mode, Titles } from '../../../models/builder';
 import Builder from '../../builder/html-builder';
 import { Pages } from '../../../models/router';
 import { DataAddresses } from '../../../models/commerce';
@@ -22,7 +22,7 @@ export default class ViewProfile {
   public reminder(customMsg: string | null = null, block: Blocks = Blocks.prof): void {
     const reminder: HTMLElement = new Builder('p', '', block, Elem.err, '').element();
     const errorsHolder: HTMLElement = new Builder('div', '', block, Elem.errs, Mode.response).element();
-    const form: HTMLFormElement | null = document.querySelector('.form');
+    const form: HTMLFormElement | null = document.querySelector('.opened .form');
 
     setTimeout(() => {
       errorsHolder.outerHTML = '';
@@ -109,16 +109,29 @@ export default class ViewProfile {
       type = Mode.bill;
       if (address.id === dataAddresses.billing) {
         defAddress = Mode.default;
+      } else {
+        defAddress = '';
       }
       const addresses: HTMLElement = this.formView.createAddressField(type, defAddress, address);
       field.append(addresses);
-    } else if (dataAddresses.all_ship && dataAddresses.all_ship.includes(address.id)) {
+    }
+    if (dataAddresses.all_ship && dataAddresses.all_ship.includes(address.id)) {
       type = Mode.ship;
       if (address.id === dataAddresses.shipping) {
         defAddress = Mode.default;
+      } else {
+        defAddress = '';
       }
       const addresses: HTMLElement = this.formView.createAddressField(type, defAddress, address);
       field.append(addresses);
+    }
+    if (dataAddresses.all_ship && dataAddresses.all_bill) {
+      if (!dataAddresses.all_ship.includes(address.id) && !dataAddresses.all_bill.includes(address.id)) {
+        type = '';
+        defAddress = '';
+        const addresses: HTMLElement = this.formView.createAddressField(type, defAddress, address);
+        field.append(addresses);
+      }
     }
 
     return field;
@@ -169,6 +182,15 @@ export default class ViewProfile {
     input.focus();
   }
 
+  public resetPostal(selectField: HTMLElement | null): void {
+    if (!selectField) return;
+    const fieldset: Element | null = selectField.nextElementSibling;
+    if (!fieldset) return;
+    const postal: HTMLElement | null = fieldset.querySelector('.form__input');
+    if (!postal) return;
+    if (postal instanceof HTMLInputElement) postal.value = '';
+  }
+
   public createModals(main: HTMLElement): void {
     const modalAccount = new Builder('div', '', Blocks.prof, Elem.modal, Mode.account).element();
     const updateAccount: HTMLFieldSetElement = this.formView.createAccountInfoUpdateForm();
@@ -179,7 +201,7 @@ export default class ViewProfile {
     modalAccount.appendChild(updateAccount);
     modalAddress.appendChild(updateAddress);
     modalPassword.appendChild(updatePassword);
-    main.append(modalAccount, modalAddress, modalPassword);
+    main.append(modalAccount, modalPassword, modalAddress);
   }
 
   public showProfile(customer: Customer, mode?: string): void {
@@ -195,8 +217,10 @@ export default class ViewProfile {
       const addressBook: HTMLHeadingElement = new Builder('', '', Blocks.prof, Elem.title, '').h(2);
       addressBook.textContent = `${Titles.ADDRESS_BOOK}`;
       const addresses = this.createAddresses(customer);
+      const buttonAdd: HTMLButtonElement = new Builder('', Base.btns_edit, this.pageName, Elem.btn, Mode.add).button();
+      buttonAdd.textContent = Buttons.ADD_ADDRESS;
 
-      form.append(title, accountInfo, addressBook, addresses);
+      form.append(title, accountInfo, addressBook, addresses, buttonAdd);
       main.append(form);
     }
   }
@@ -215,6 +239,19 @@ export default class ViewProfile {
     }
   }
 
+  public checkedBoxes(): void {
+    const bill: HTMLInputElement | null = document.querySelector(`.${Blocks.prof}__${Elem.input}_${Mode.bill}`);
+    const ship: HTMLInputElement | null = document.querySelector(`.${Blocks.prof}__${Elem.input}_${Mode.ship}`);
+    const defBill: HTMLInputElement | null = document.querySelector(`.${Blocks.prof}__${Elem.input}_${Mode.bill_def}`);
+    const defShip: HTMLInputElement | null = document.querySelector(`.${Blocks.prof}__${Elem.input}_${Mode.ship_def}`);
+    if (bill && ship && defBill && defShip) {
+      bill.checked = true;
+      ship.checked = true;
+      defBill.checked = true;
+      defShip.checked = true;
+    }
+  }
+
   public findCountry(codeCountry: string): Countries {
     switch (codeCountry) {
       case 'BY':
@@ -228,36 +265,55 @@ export default class ViewProfile {
     }
   }
 
-  public fillAddressModal(target: HTMLElement): void {
-    const content: HTMLElement | null = target.closest(`.${Blocks.prof}__${Elem.address}`);
+  public showHiddenElements(mode: string): void {
+    const modal: HTMLElement | null = document.querySelector(`.${Blocks.prof}__${Elem.modal}_${Mode.address}`);
+    if (modal) {
+      const buttonSave: HTMLButtonElement | null = modal.querySelector(`.${Blocks.prof}__${Elem.btn}_${Mode.save}`);
+      const titleSave: HTMLButtonElement | null = modal.querySelector(`.${Blocks.form}__${Elem.title}_${Mode.save}`);
+      const buttonAdd: HTMLButtonElement | null = modal.querySelector(`.${Blocks.prof}__${Elem.btn}_${Mode.add}`);
+      const titleAdd: HTMLButtonElement | null = modal.querySelector(`.${Blocks.form}__${Elem.title}_${Mode.add}`);
+      if (buttonSave && titleSave && buttonAdd && titleAdd) {
+        if (mode === Mode.save) {
+          buttonAdd.classList.add(`${Elem.modal}_${Mode.hidden}`);
+          titleAdd.classList.add(`${Elem.modal}_${Mode.hidden}`);
+          buttonSave.classList.remove(`${Elem.modal}_${Mode.hidden}`);
+          titleSave.classList.remove(`${Elem.modal}_${Mode.hidden}`);
+        } else if (mode === Mode.add) {
+          buttonSave.classList.add(`${Elem.modal}_${Mode.hidden}`);
+          titleSave.classList.add(`${Elem.modal}_${Mode.hidden}`);
+          buttonAdd.classList.remove(`${Elem.modal}_${Mode.hidden}`);
+          titleAdd.classList.remove(`${Elem.modal}_${Mode.hidden}`);
+        }
+      }
+    }
+  }
+
+  public clearAddressModal(): void {
     const country: HTMLInputElement | null = document.querySelector(`#${Blocks.prof}-${Mode.country}`);
     const postal: HTMLInputElement | null = document.querySelector(`#${Blocks.prof}-${Mode.postal}`);
     const city: HTMLInputElement | null = document.querySelector(`#${Blocks.prof}-${Mode.city}`);
     const street: HTMLInputElement | null = document.querySelector(`#${Blocks.prof}-${Mode.street}`);
-    if (content) {
-      const countryElement: HTMLElement | null = content.querySelector(`.${Blocks.prof}__${Elem.text}_${Mode.country}`);
-      const postalElement: HTMLElement | null = content.querySelector(`.${Blocks.prof}__${Elem.text}_${Mode.postal}`);
-      const cityElement: HTMLElement | null = content.querySelector(`.${Blocks.prof}__${Elem.text}_${Mode.city}`);
-      const streetElement: HTMLElement | null = content.querySelector(`.${Blocks.prof}__${Elem.text}_${Mode.street}`);
-      if (countryElement && postalElement && cityElement && streetElement) {
-        const countryContent: string | null = countryElement.textContent;
-        const postalContent: string | null = postalElement.textContent;
-        const cityContent: string | null = cityElement.textContent;
-        const streetContent: string | null = streetElement.textContent;
-        if (country && postal && city && street) {
-          if (countryContent && postalContent && cityContent && streetContent) {
-            const countrySelect: Countries = this.findCountry(countryContent.slice(0, -1));
-            country.value = countrySelect;
-            postal.value = postalContent.slice(0, -1);
-            city.value = cityContent.slice(0, -1);
-            street.value = streetContent.slice(0, -1);
-          } else {
-            country.value = '';
-            postal.value = '';
-            city.value = '';
-            street.value = '';
-          }
-        }
+
+    if (country && postal && city && street) {
+      country.value = '';
+      postal.value = '';
+      city.value = '';
+      street.value = '';
+    }
+  }
+
+  public fillAddressModal(target: HTMLElement, address: Address): void {
+    const country: HTMLInputElement | null = document.querySelector(`#${Blocks.prof}-${Mode.country}`);
+    const postal: HTMLInputElement | null = document.querySelector(`#${Blocks.prof}-${Mode.postal}`);
+    const city: HTMLInputElement | null = document.querySelector(`#${Blocks.prof}-${Mode.city}`);
+    const street: HTMLInputElement | null = document.querySelector(`#${Blocks.prof}-${Mode.street}`);
+    if (country && postal && city && street) {
+      if (address.postalCode && address.city && address.streetName) {
+        const countrySelect: Countries = this.findCountry(address.country);
+        country.value = countrySelect;
+        postal.value = address.postalCode;
+        city.value = address.city;
+        street.value = address.streetName;
       }
     }
   }

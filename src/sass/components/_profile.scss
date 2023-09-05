@@ -1,5 +1,8 @@
 .profile {
   &__form {
+    @include media-mobile-large {
+      align-items: center;
+    }
     &.hidden {
       display: none;
     }
@@ -15,31 +18,87 @@
     }
   }
 
+  &__field {
+    &_check {
+      flex-direction: column;
+      row-gap: 10px;
+    }
+
+    &.form__check {
+      > * {
+        padding: 0;
+        border: none;
+        flex-shrink: 0;
+        width: auto;
+        max-width: 100%;
+      }
+      justify-content: flex-start;
+      @include media-mobile-large {
+        flex-direction: row;
+      }
+    }
+
+    &_control {
+      @include media-mobile-large {
+        row-gap: 20px;
+      }
+    }
+    @include media-mobile-large {
+      flex-direction: column;
+    }
+  }
+
+  &__input,
+  &__label,
+  &__select {
+    @include media-mobile-large {
+      width: 100%;
+      max-width: 100%;
+    }
+  }
+
   &__wrapper {
     &_account {
       flex-grow: 1;
       max-width: 50%;
+      @include media-mobile-large {
+        max-width: 100%;
+        align-items: center;
+      }
     }
 
     &_control {
       justify-content: flex-start;
       column-gap: 20px;
+      @include media-mobile-large {
+        flex-direction: row;
+      }
     }
   }
 
   &__addresses {
     flex-direction: row;
     flex-wrap: wrap;
+    row-gap: 40px;
+    @include media-mobile-large {
+      align-items: center;
+    }
   }
 
   &__address {
     flex-grow: 1;
-    max-width: 50%;
+    max-width: 48%;
+    min-width: 250px;
     &_billing-default {
       order: -2;
     }
     &_shipping-default {
       order: -1;
+    }
+    @include media-mobile-large {
+      max-width: 100%;
+      min-width: none;
+      align-items: center;
     }
   }
 
@@ -72,6 +131,13 @@
       justify-content: center;
       align-items: center;
       background: $color-light;
+    }
+    &.profile__field {
+      @include media-mobile-large {
+        flex-direction: column;
+        max-width: 100%;
+        align-items: center;
+      }
     }
   }
 
@@ -150,5 +216,11 @@
   }
   100% {
     opacity: 0;
+  }
+}
+
+.modal {
+  &_hidden {
+    display: none;
   }
 }

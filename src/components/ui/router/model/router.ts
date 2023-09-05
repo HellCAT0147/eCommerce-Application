@@ -55,9 +55,10 @@ class Router {
   private setInputsOnPage(): void {
     const selects: NodeListOf<HTMLSelectElement> = document.querySelectorAll('.form__select');
 
-    selects.forEach((select: HTMLSelectElement) =>
-      select.addEventListener('change', (e: Event) => this.controllerRegistration.selectMenu(e))
-    );
+    selects.forEach((select: HTMLSelectElement) => {
+      select.addEventListener('change', (e: Event) => this.controllerRegistration.selectMenu(e));
+      select.addEventListener('change', (e: Event) => this.controllerProfile.selectMenu(e));
+    });
 
     this.inputs = this.getInputsOnPage();
     this.inputs.forEach((input) => {
