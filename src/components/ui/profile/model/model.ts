@@ -135,7 +135,12 @@ class ModelProfile {
 
   private setNoErrors(inputTypes: InputType[], isValid: boolean = true): void {
     inputTypes.forEach((inputType) => {
-      this.setErrors(inputType, []);
+      if (inputType === `${Mode.country}`) {
+        const countrySelect: HTMLSelectElement | null = document.querySelector(
+          `.${Blocks.prof}__${Elem.select}_${Mode.country}`
+        );
+        if (countrySelect) this.setErrors(inputType, [], countrySelect);
+      } else this.setErrors(inputType, []);
       if (!isValid) this.view.resetInputView(inputType);
     });
   }
