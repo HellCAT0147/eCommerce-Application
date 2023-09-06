@@ -365,15 +365,16 @@ export default class ECommerceApi {
   private async wrapUserUpdateOperation(
     block: (customer: Customer) => Promise<ClientResponse<Customer>>
   ): Promise<Customer | null> {
-    const meNow = await this.meLoggedInPromise;
-    if (meNow == null) return null;
-
-    const newMePromise = block(meNow);
-    const newMe = await newMePromise;
-    if (newMe.statusCode != null && newMe.statusCode >= 200 && newMe.statusCode < 300) {
-      this.meLoggedInPromise = newMePromise.then((response) => response.body);
+    const result: Customer | ErrorObject = await this.getCustomer();
+    if ('email' in result) {
+      const newMePromise = block(result as Customer);
+      const newMe = await newMePromise;
+      if (newMe.statusCode != null && newMe.statusCode >= 200 && newMe.statusCode < 300) {
+        this.meLoggedInPromise = newMePromise.then((response) => response.body);
+      }
+      return newMe.body;
     }
-    return newMe.body;
+    return null;
   }
 
   public async getCategoriesTree(): Promise<Map<string | undefined, Array<Category>> | ErrorObject> {
@@ -419,8 +420,8 @@ export default class ECommerceApi {
 
   public async updatePassword(oldPassword: string, newPassword: string): Promise<ErrorObject | Customer | null> {
     try {
-      const response: Customer | null = await this.meLoggedInPromise;
-      if (response !== null) {
+      const response: Customer | ErrorObject = await this.getCustomer();
+      if ('email' in response) {
         await this.apiRoot
           .me()
           .password()
