@@ -19,7 +19,7 @@ function createTemplate(): HTMLBodyElement | null {
   return body || null;
 }
 
-function createTemplateMain(isLoggedIn?: boolean): void {
+function createTemplateMain(isLoggedIn?: boolean): HTMLBodyElement | null {
   const body: HTMLBodyElement | null = document.querySelector('body');
   const header: HTMLElement | null = document.querySelector('header');
   const newHeader: HTMLElement = createHeader(isLoggedIn);
@@ -45,6 +45,8 @@ function createTemplateMain(isLoggedIn?: boolean): void {
   if (main) {
     main.append(title, linkLogin, linkRegistration, linkProfile);
   }
+
+  return body || null;
 }
 
 export { createTemplate, createTemplateMain };

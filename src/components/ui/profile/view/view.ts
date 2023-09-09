@@ -87,7 +87,7 @@ export default class ViewProfile {
     }
   }
 
-  private getDataAddresses(customer: Customer): DataAddresses {
+  public getDataAddresses(customer: Customer): DataAddresses {
     const dataAddresses: DataAddresses = {
       billing: '',
       shipping: '',
@@ -102,7 +102,7 @@ export default class ViewProfile {
     return dataAddresses;
   }
 
-  private parseAddress(address: Address, dataAddresses: DataAddresses, field: HTMLElement): HTMLElement {
+  public parseAddress(address: Address, dataAddresses: DataAddresses, field: HTMLElement): HTMLElement {
     let type: string = '';
     let defAddress: string = '';
     if (dataAddresses.all_bill && dataAddresses.all_bill.includes(address.id)) {
@@ -137,7 +137,7 @@ export default class ViewProfile {
     return field;
   }
 
-  private createAddresses(customer: Customer): HTMLElement {
+  public createAddresses(customer: Customer): HTMLElement {
     const addresses: HTMLElement = new Builder('div', Base.form, Blocks.prof, Elem.addresses, '').element();
     const listAddresses: Address[] = customer.addresses;
     const dataAddress: DataAddresses = this.getDataAddresses(customer);
@@ -158,7 +158,7 @@ export default class ViewProfile {
     return addresses;
   }
 
-  private updateAddresses(): HTMLFieldSetElement {
+  public updateAddresses(): HTMLFieldSetElement {
     const address: HTMLFieldSetElement = this.formView.createAddressUpdateForm(
       Mode.street,
       Mode.city,
