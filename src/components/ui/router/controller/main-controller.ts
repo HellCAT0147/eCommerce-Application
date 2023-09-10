@@ -32,7 +32,7 @@ class MainController {
 
     if (idElement) {
       url = `${idElement}`;
-      if (url === Pages.GO_TO_MAIN || url === Pages.SIGN_OUT) {
+      if (url === Pages.GO_TO_MAIN || url === Pages.SIGN_OUT || url === Pages.LOGO_MAIN) {
         url = Pages.MAIN;
       } else if (url === Pages.GO_TO_LOGIN) {
         url = Pages.LOGIN;

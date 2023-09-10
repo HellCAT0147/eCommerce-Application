@@ -14,11 +14,15 @@ function createHamburger(): HTMLElement {
 }
 
 function toggleBurgerMenu(burger: HTMLElement): void {
-  const navigation: HTMLElement | null = document.querySelector(`.${Blocks.header}__${Elem.nav}`);
+  const navigation: NodeListOf<Element> = document.querySelectorAll(`.${Blocks.header}__${Elem.nav}`);
 
   burger.classList.toggle(`${Elem.burger}_${Mode.opened}`);
 
-  if (navigation) navigation.classList.toggle(`${Blocks.header}__${Elem.nav}_${Mode.opened}`);
+  if (navigation) {
+    navigation.forEach((nav) => {
+      nav.classList.toggle(`${Blocks.header}__${Elem.nav}_${Mode.opened}`);
+    });
+  }
 }
 
 export { createHamburger, toggleBurgerMenu };

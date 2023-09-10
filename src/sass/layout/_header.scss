@@ -19,18 +19,17 @@
   &__nav {
     display: flex;
     justify-content: space-between;
-    column-gap: 12px;
     @extend %transition;
-    @include media-mobile-medium {
+    @include media-mobile-large {
       position: fixed;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
       row-gap: 30px;
       width: 100%;
-      height: 100vh;
+      height: 50vh;
       background: $color-dark;
-      top: 0;
+      top: 50vh;
       right: -100%;
       z-index: 10;
       transition: all 0.2s ease-out;
@@ -38,13 +37,20 @@
     &_opened {
       right: 0;
     }
+    &_static {
+      @include media-mobile-large {
+        padding-bottom: 30px;
+        top: 0vh;
+        justify-content: flex-end;
+      }
+    }
   }
   &__button {
     position: relative;
     @extend %font-main;
     @include font(600, 1.4rem, 100%, $color-light);
     @extend %transition;
-    @include media-mobile-medium {
+    @include media-mobile-large {
       width: fit-content;
       @include font(600, 2.4rem, 100%, $color-light);
     }

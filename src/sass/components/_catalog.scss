@@ -3,8 +3,8 @@
     font-size: 2rem;
   }
   &__breadcrumbs_wrapper {
-    width: 94vw;
     display: flex;
+    align-self: flex-start;
     flex-direction: row;
     column-gap: 5px;
     margin-left: 35px;
