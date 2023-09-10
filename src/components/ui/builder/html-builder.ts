@@ -84,7 +84,10 @@ class Builder {
     const button: HTMLButtonElement = document.createElement('button');
     button.className = `${this.base}`;
     button.classList.add('redirect__buttons');
-    if (this.mode === Mode.catalog) {
+    if (this.mode === Mode.main) {
+      button.textContent = `${Buttons.HOME}`;
+      button.setAttribute('id', `${Pages.MAIN}`);
+    } else if (this.mode === Mode.catalog) {
       button.textContent = `${Buttons.CATALOG}`;
       button.setAttribute('id', `${Pages.CATALOG}`);
     } else if (this.mode === Mode.sign) {
@@ -99,6 +102,9 @@ class Builder {
     } else if (this.mode === Mode.prof) {
       button.textContent = `${Buttons.PROFILE}`;
       button.setAttribute('id', `${Pages.PROFILE}`);
+    } else if (this.mode === Mode.about) {
+      button.textContent = `${Buttons.ABOUT_US}`;
+      button.setAttribute('id', `${Pages.ABOUT_US}`);
     }
     this.setProperties(button);
 

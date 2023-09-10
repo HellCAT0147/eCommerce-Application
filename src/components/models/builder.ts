@@ -114,6 +114,8 @@ export enum Mode {
   add = 'add',
   bill_def = 'billing-default',
   ship_def = 'shipping-default',
+  about = 'about-us',
+  main = 'main',
 }
 
 export enum Base {
@@ -150,12 +152,14 @@ export enum Base {
 }
 
 export enum Buttons {
+  HOME = 'HOME',
   SIGN = 'SIGN IN',
   SIGN_OUT = 'SIGN OUT',
   CREATE = 'CREATE AN ACCOUNT',
   GO_HOME = 'GO TO MAIN PAGE',
   CATALOG = 'CATALOG',
   PROFILE = 'MY PROFILE',
+  ABOUT_US = 'ABOUT US',
   BURGER = 'burger',
   EDIT = 'Edit',
   EDIT_ADDRESS = 'Edit Address',

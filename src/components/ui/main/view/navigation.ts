@@ -15,7 +15,7 @@ export default function createNavigation(isLoggedIn?: boolean): HTMLElement {
   ).redirect();
   const createButton: HTMLElement = new Builder('', Base.btns_empty, Blocks.header, Elem.btn, Mode.create).redirect();
 
-  navigation.appendChild(catalogButton);
+  navigation.append(catalogButton);
   if (isLoggedIn) {
     navigation.append(signOutButton, profileButton);
   } else {
