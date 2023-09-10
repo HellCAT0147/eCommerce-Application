@@ -1,5 +1,5 @@
-import createTemplateAboutUS from '../template';
+import createTemplateAboutUs from '../template';
 
-test('createTemplateAboutUS function should create HTMLElement', () => {
-  expect(createTemplateAboutUS()).toBeInstanceOf(HTMLElement);
+test('createTemplateAboutUs function should create HTMLElement', () => {
+  expect(createTemplateAboutUs()).toBeInstanceOf(HTMLElement);
 });

@@ -1,5 +1,5 @@
 import { Pages } from '../../../models/router';
-import createTemplateAboutUS from '../../about_us/view/template';
+import createTemplateAboutUs from '../../about_us/view/template';
 import createTemplateCatalog from '../../catalog/view/template';
 import createTemplateLogin from '../../login/view/template';
 import { createTemplateMain } from '../../main/view/template';
@@ -59,7 +59,7 @@ const basicRoutes = [
   {
     path: `${Pages.ABOUT_US}`,
     callback: (isLoggedIn?: boolean): void => {
-      createTemplateAboutUS(isLoggedIn);
+      createTemplateAboutUs(isLoggedIn);
     },
   },
 ];

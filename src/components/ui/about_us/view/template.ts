@@ -3,7 +3,7 @@ import { Pages } from '../../../models/router';
 import Builder from '../../builder/html-builder';
 import createHeader from '../../main/view/header';
 
-export default function createTemplateAboutUS(isLoggedIn?: boolean): HTMLElement {
+export default function createTemplateAboutUs(isLoggedIn?: boolean): HTMLElement {
   const body: HTMLBodyElement | null = document.querySelector(`${Blocks.body}`);
   const header: HTMLElement | null = document.querySelector(`${Blocks.header}`);
   const newHeader: HTMLElement = createHeader(isLoggedIn);
