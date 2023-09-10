@@ -1,3 +1,5 @@
+import { Pages } from '../../../models/router';
+
 export default function selectCurrentPage(url: string): void {
   const headerButtons: NodeListOf<HTMLElement> = document.querySelectorAll('.header__button');
 
@@ -8,7 +10,9 @@ export default function selectCurrentPage(url: string): void {
   headerButtons.forEach((button: HTMLElement) => {
     const id: string | null = button.getAttribute('id');
 
-    if (id === url) {
+    if (url === id) {
+      button.classList.add('current-page');
+    } else if (url === '' && id === Pages.MAIN) {
       button.classList.add('current-page');
     }
   });

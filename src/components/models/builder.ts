@@ -116,6 +116,7 @@ export enum Mode {
   ship_def = 'shipping-default',
   about = 'about-us',
   main = 'main',
+  static = 'static',
 }
 
 export enum Base {
@@ -199,6 +200,7 @@ export enum Titles {
   UPDATE = `Update`,
   PASSWORD = `Password`,
   ADD = `Add`,
+  ABOUT_US = `About Us`,
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;
