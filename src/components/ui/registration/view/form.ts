@@ -56,7 +56,7 @@ export default class FormViewReg extends FormView {
     if (postal instanceof HTMLInputElement) postal.value = '';
   }
 
-  private createFieldCheck(): HTMLFieldSetElement {
+  public createFieldCheck(): HTMLFieldSetElement {
     const fieldCheck: HTMLFieldSetElement = new Builder('', Base.subform, this.pageName, Elem.check, '').field();
     const formFieldCheckShipping: HTMLElement = new Builder(
       'div',
@@ -84,7 +84,7 @@ export default class FormViewReg extends FormView {
     return fieldCheck;
   }
 
-  private createFieldForBilling(): HTMLFieldSetElement {
+  public createFieldForBilling(): HTMLFieldSetElement {
     const fieldAddressBilling: HTMLFieldSetElement = this.createAddress(
       Mode.street_bill,
       Mode.city_bill,

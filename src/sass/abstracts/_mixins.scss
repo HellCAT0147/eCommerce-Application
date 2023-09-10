@@ -58,4 +58,7 @@
   border: none;
   background-color: transparent;
   cursor: pointer;
+  @include media-mobile-large {
+    top: 60%;
+  }
 }

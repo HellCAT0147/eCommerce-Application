@@ -4,7 +4,7 @@ import Builder from '../../builder/html-builder';
 import { Pages } from '../../../models/router';
 import { DataAddresses } from '../../../models/commerce';
 import FormViewProfile from './form';
-import { Countries, Errors, InputType } from '../../../models/validation';
+import { Countries, Errors, InputType, IsChecked } from '../../../models/validation';
 
 export default class ViewProfile {
   protected formView: FormViewProfile;
@@ -87,7 +87,7 @@ export default class ViewProfile {
     }
   }
 
-  private getDataAddresses(customer: Customer): DataAddresses {
+  public getDataAddresses(customer: Customer): DataAddresses {
     const dataAddresses: DataAddresses = {
       billing: '',
       shipping: '',
@@ -102,7 +102,7 @@ export default class ViewProfile {
     return dataAddresses;
   }
 
-  private parseAddress(address: Address, dataAddresses: DataAddresses, field: HTMLElement): HTMLElement {
+  public parseAddress(address: Address, dataAddresses: DataAddresses, field: HTMLElement): HTMLElement {
     let type: string = '';
     let defAddress: string = '';
     if (dataAddresses.all_bill && dataAddresses.all_bill.includes(address.id)) {
@@ -137,7 +137,7 @@ export default class ViewProfile {
     return field;
   }
 
-  private createAddresses(customer: Customer): HTMLElement {
+  public createAddresses(customer: Customer): HTMLElement {
     const addresses: HTMLElement = new Builder('div', Base.form, Blocks.prof, Elem.addresses, '').element();
     const listAddresses: Address[] = customer.addresses;
     const dataAddress: DataAddresses = this.getDataAddresses(customer);
@@ -158,7 +158,7 @@ export default class ViewProfile {
     return addresses;
   }
 
-  private updateAddresses(): HTMLFieldSetElement {
+  public updateAddresses(): HTMLFieldSetElement {
     const address: HTMLFieldSetElement = this.formView.createAddressUpdateForm(
       Mode.street,
       Mode.city,
@@ -239,16 +239,29 @@ export default class ViewProfile {
     }
   }
 
-  public checkedBoxes(): void {
+  public checkedBoxes(isChecked?: IsChecked): void {
     const bill: HTMLInputElement | null = document.querySelector(`.${Blocks.prof}__${Elem.input}_${Mode.bill}`);
     const ship: HTMLInputElement | null = document.querySelector(`.${Blocks.prof}__${Elem.input}_${Mode.ship}`);
     const defBill: HTMLInputElement | null = document.querySelector(`.${Blocks.prof}__${Elem.input}_${Mode.bill_def}`);
     const defShip: HTMLInputElement | null = document.querySelector(`.${Blocks.prof}__${Elem.input}_${Mode.ship_def}`);
     if (bill && ship && defBill && defShip) {
-      bill.checked = true;
-      ship.checked = true;
-      defBill.checked = true;
-      defShip.checked = true;
+      bill.disabled = false;
+      ship.disabled = false;
+      if (isChecked) {
+        bill.checked = isChecked.isSetBill;
+        ship.checked = isChecked.isSetShip;
+        defBill.checked = isChecked.isSetBillDef;
+        defShip.checked = isChecked.isSetShipDef;
+        if (isChecked.isSetBillDef) bill.disabled = true;
+        if (isChecked.isSetShipDef) ship.disabled = true;
+      } else {
+        bill.disabled = true;
+        bill.checked = true;
+        ship.disabled = true;
+        ship.checked = true;
+        defBill.checked = true;
+        defShip.checked = true;
+      }
     }
   }
 
@@ -398,8 +411,27 @@ export default class ViewProfile {
   }
 
   public resetInputView(inputType: InputType): void {
-    const initInput: HTMLInputElement | null = document.querySelector(`.profile__input_${inputType}`);
+    let initInput: HTMLElement | null;
+    if (inputType === Mode.country) initInput = document.querySelector(`.${Blocks.prof}__${Elem.select}_${inputType}`);
+    else initInput = document.querySelector(`.${Blocks.prof}__${Elem.input}_${inputType}`);
     initInput?.classList.remove(Mode.valid);
     initInput?.classList.remove(Mode.invalid);
+  }
+
+  public setCheckBoxAndLock(isBill: boolean): void {
+    let checkBox: HTMLInputElement | null;
+    if (isBill) checkBox = document.querySelector('#profile-billing');
+    else checkBox = document.querySelector('#profile-shipping');
+    if (checkBox) {
+      checkBox.checked = true;
+      checkBox.disabled = true;
+    }
+  }
+
+  public unlockCheckBox(isBill: boolean): void {
+    let checkBox: HTMLInputElement | null;
+    if (isBill) checkBox = document.querySelector('#profile-billing');
+    else checkBox = document.querySelector('#profile-shipping');
+    if (checkBox) checkBox.disabled = false;
   }
 }

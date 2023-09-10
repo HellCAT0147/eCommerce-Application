@@ -121,9 +121,9 @@ class Router {
       window.history.replaceState(null, '', `/${url}`);
       this.navigate(Pages.NOT_FOUND);
     } else {
-      const token = this.tokenCachesStore.getDefault();
-      const tokenDefault = this.tokenCachesStore.defaultTokenStore;
-      if (token !== tokenDefault) {
+      /* const token = this.tokenCachesStore.getDefault();
+      const tokenDefault = this.tokenCachesStore.defaultTokenStore; */
+      if (await this.eCommerceApi.isLoggedIn()) {
         if (urlParsed.resource && !urlParsed.details) {
           await this.redirectToProduct(true, urlParsed.resource, route, isPopState);
           return;

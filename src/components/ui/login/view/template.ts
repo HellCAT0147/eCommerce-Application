@@ -4,7 +4,7 @@ import Builder from '../../builder/html-builder';
 import createHeader from '../../main/view/header';
 import FormViewLogin from './form';
 
-export default function createTemplateLogin(isLoggedIn?: boolean): HTMLElement {
+export default function createTemplateLogin(isLoggedIn?: boolean): HTMLBodyElement | null {
   const body: HTMLBodyElement | null = document.querySelector('body');
   const header: HTMLElement | null = document.querySelector('header');
   const newHeader: HTMLElement = createHeader(isLoggedIn);
@@ -38,5 +38,5 @@ export default function createTemplateLogin(isLoggedIn?: boolean): HTMLElement {
 
   formView.addTabAndFocus();
 
-  return newHeader;
+  return body || null;
 }
