@@ -581,6 +581,7 @@ export default class ViewCatalog {
     basePrice.innerText = `${product.masterVariant.prices?.[0].value.centAmount.toString().slice(0, -2)} RUB`;
     priceTag.append(basePrice);
     if (product.masterVariant.prices?.[0].discounted) {
+      basePrice.classList.add('before-disc');
       const discountedPrice: HTMLElement = new Builder('span', '', Blocks.catalog, 'card', 'disc-price').element();
       discountedPrice.innerText = `${product.masterVariant.prices?.[0].discounted.value.centAmount
         .toString()

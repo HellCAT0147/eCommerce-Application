@@ -209,8 +209,10 @@
     line-height: 1;
   }
   &__card_base-price {
-    text-decoration-line: line-through;
     font-size: 1.4rem;
+    .before-disc {
+      text-decoration-line: line-through;
+    }
   }
   &__card_disc-price {
     color: $color-price;
