@@ -1,7 +1,7 @@
-import { Base, Blocks, Elem, Mode } from '../../../models/builder';
+import { Base, Blocks, Elem, Mode, Titles } from '../../../models/builder';
 import { Pages } from '../../../models/router';
 
-export default function selectCurrentPage(url: string): void {
+function selectCurrentPage(url: string): void {
   const headerButtons: NodeListOf<HTMLElement> = document.querySelectorAll('.header__button');
   const bagIcon: HTMLElement | null = document.querySelector(`.${Blocks.header}__${Elem.bag}`);
 
@@ -24,3 +24,12 @@ export default function selectCurrentPage(url: string): void {
     });
   }
 }
+
+function showQuantity(quantity: number): void {
+  const quantityParagraph: HTMLElement | null = document.querySelector(`.${Blocks.header}__${Elem.quantity}`);
+  if (quantityParagraph) {
+    quantityParagraph.textContent = `${quantity} ${Titles.PCS}`;
+  }
+}
+
+export { selectCurrentPage, showQuantity };

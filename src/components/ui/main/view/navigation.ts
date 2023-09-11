@@ -20,7 +20,6 @@ export default function createNavigation(isLoggedIn?: boolean): HTMLElement {
   const quantity: HTMLParagraphElement = new Builder('', '', Blocks.header, Elem.quantity, '').p();
 
   shoppingText.textContent = Titles.SHOP_CART;
-  quantity.textContent = `0 ${Titles.PCS}`;
 
   shopping.append(shoppingText, quantity);
   cartButton.append(bag, shopping);

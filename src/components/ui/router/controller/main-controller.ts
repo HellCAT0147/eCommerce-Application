@@ -90,6 +90,8 @@ class MainController {
         }
       } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.PROFILE}`)) {
         this.router.controllerProfile.mouseEvent(e);
+      } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.CART}`)) {
+        this.router.controllerCart.mouseEvent(e);
       }
     }
   }

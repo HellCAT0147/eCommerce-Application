@@ -17,7 +17,7 @@ class ControllerCart {
     e.preventDefault();
   }
 
-  public async loaCart(): Promise<void> {
+  public async loadCart(): Promise<void> {
     // TODO add method for getting cart await this.model.getCart();
   }
 }
