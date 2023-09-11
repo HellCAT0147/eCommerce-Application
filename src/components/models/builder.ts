@@ -123,6 +123,7 @@ export enum Mode {
   static = 'static',
   cart = 'cart',
   link = 'link',
+  colored = 'colored',
 }
 
 export enum Base {
@@ -142,6 +143,7 @@ export enum Base {
   btns_empty = `${btns} ${btns}_empty`,
   btns_edit = `${btns} ${btns}_edit`,
   btns_modal = `${btns}_modal`,
+  btns_redirect = `redirect__buttons`,
   select = `${form}__select`,
   options = `${form}__options`,
   links = `links`,
@@ -156,6 +158,7 @@ export enum Base {
   cards = 'cards',
   modal = 'modal',
   prof_f = 'profile__forms',
+  current_page = 'current-page',
 }
 
 export enum Buttons {
