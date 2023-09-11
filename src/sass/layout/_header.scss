@@ -54,6 +54,36 @@
       width: fit-content;
       @include font(600, 2.4rem, 100%, $color-light);
     }
+    &_cart {
+      display: flex;
+      align-items: center;
+      column-gap: 11px;
+      @extend %font-second;
+    }
+  }
+
+  &__shopping {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    row-gap: 3px;
+  }
+
+  &__text {
+    @include font(500, 1.2rem, 100%, $color-light);
+  }
+
+  &__quantity {
+    @include font(700, 1.4rem, 100%, $color-light);
+  }
+
+  &__bag {
+    display: block;
+    width: 18px;
+    height: 22px;
+    background: url('../assets/ico/bag.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
   }
 }
 

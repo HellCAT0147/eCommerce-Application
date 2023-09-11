@@ -51,6 +51,10 @@ export enum Elem {
   price = 'price',
   subtitle = 'subtitle',
   pass = 'password',
+  cart = 'cart',
+  bag = 'bag',
+  shopping = 'shopping',
+  quantity = 'quantity',
 }
 
 export enum Mode {
@@ -117,6 +121,8 @@ export enum Mode {
   about = 'about-us',
   main = 'main',
   static = 'static',
+  cart = 'cart',
+  link = 'link',
 }
 
 export enum Base {
@@ -201,6 +207,8 @@ export enum Titles {
   PASSWORD = `Password`,
   ADD = `Add`,
   ABOUT_US = `About Us`,
+  SHOP_CART = `Shopping Cart`,
+  PCS = `pcs`,
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;
