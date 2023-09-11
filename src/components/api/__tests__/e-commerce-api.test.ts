@@ -139,6 +139,10 @@ beforeEach(() => {
   newMockedClientBuilder.withRefreshTokenFlow.mockClear();
 });
 
+global.structuredClone = jest.fn((val) => {
+  return JSON.parse(JSON.stringify(val));
+});
+
 test('Anonymous client has been created correctly', () => {
   const api = new ECommerceApi(projectKey, clientId, clientSecret, region, tokenCachesStore);
 
