@@ -82,7 +82,7 @@ class MainController {
         this.router.controllerRegistration.buttonEvent(e);
       } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.CATALOG}`)) {
         const card: HTMLElement | null = targetHtmlElement.closest(`.${Base.cards}`);
-        if (card) {
+        if (card && !targetHtmlElement.classList.contains(`${Blocks.catalog}__${Elem.btn}_${Mode.cart}`)) {
           const id: string = this.getUrlElement(card);
           this.router.navigate(`${Pages.CATALOG}/${id}`);
         } else {

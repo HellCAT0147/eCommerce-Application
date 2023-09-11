@@ -136,6 +136,7 @@ export enum Mode {
   main = 'main',
   static = 'static',
   cart = 'cart',
+<<<<<<< HEAD
   link = 'link',
   colored = 'colored',
   promo = 'promo',
@@ -148,6 +149,8 @@ export enum Mode {
   inc = 'increase',
   item = 'item',
   available = 'available',
+=======
+>>>>>>> 95e3c77 (feat: add button styles, remove button ignore)
 }
 
 export enum Base {

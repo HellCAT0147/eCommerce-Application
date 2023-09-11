@@ -588,7 +588,9 @@ export default class ViewCatalog {
         .slice(0, -2)} RUB`;
       priceTag.append(discountedPrice);
     }
-    card.append(cardPic, nameTag, descriptionTag, readMore, priceTag);
+    const addToCart = new Builder('button', Base.btns_colored, Blocks.catalog, Elem.btn, Mode.cart).button();
+    addToCart.innerText = 'ADD TO CART';
+    card.append(cardPic, nameTag, descriptionTag, readMore, priceTag, addToCart);
     card.setAttribute('id', (product.key || '0').split('-')[1]);
     return card;
   }

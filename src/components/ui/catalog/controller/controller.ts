@@ -22,7 +22,6 @@ class ControllerCatalog {
   public mouseEvent(e: MouseEvent): void {
     const { target } = e;
     if (!(target instanceof HTMLElement)) return;
-
     switch (target.tagName) {
       case 'BUTTON':
         if (target.id === ViewCatalog.resetButtonId) {
