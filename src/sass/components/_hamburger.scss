@@ -9,7 +9,7 @@
   &:hover {
     opacity: 0.9;
   }
-  @include media-mobile-large {
+  @include media-tablet {
     display: inline-block;
   }
 }

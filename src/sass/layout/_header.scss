@@ -3,7 +3,7 @@
   justify-content: space-between;
   width: 100%;
   height: 115px;
-  display: flex;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
   padding: 21px 21px;
   background: $color-dark;
@@ -20,7 +20,7 @@
     display: flex;
     justify-content: space-between;
     @extend %transition;
-    @include media-mobile-large {
+    @include media-tablet {
       position: fixed;
       flex-direction: column;
       justify-content: flex-start;
@@ -38,7 +38,8 @@
       right: 0;
     }
     &_static {
-      @include media-mobile-large {
+      margin-left: 145px;
+      @include media-tablet {
         padding-bottom: 30px;
         top: 0vh;
         justify-content: flex-end;
@@ -50,7 +51,7 @@
     @extend %font-main;
     @include font(600, 1.4rem, 100%, $color-light);
     @extend %transition;
-    @include media-mobile-large {
+    @include media-tablet {
       width: fit-content;
       @include font(600, 2.4rem, 100%, $color-light);
     }
@@ -58,7 +59,11 @@
       display: flex;
       align-items: center;
       column-gap: 11px;
+      margin-left: 19px;
       @extend %font-second;
+      @include media-tablet {
+        margin-left: 0px;
+      }
     }
   }
 
@@ -71,10 +76,16 @@
 
   &__text {
     @include font(500, 1.2rem, 100%, $color-light);
+    @include media-tablet {
+      @include font(500, 1.4rem, 100%, $color-light);
+    }
   }
 
   &__quantity {
     @include font(700, 1.4rem, 100%, $color-light);
+    @include media-tablet {
+      @include font(500, 1.6rem, 100%, $color-light);
+    }
   }
 
   &__bag {
@@ -84,6 +95,11 @@
     background: url('../assets/ico/bag.svg');
     background-repeat: no-repeat;
     background-size: contain;
+    @include media-tablet {
+      width: 27px;
+      height: 33px;
+      @include font(500, 1.4rem, 100%, $color-light);
+    }
   }
 }
 
