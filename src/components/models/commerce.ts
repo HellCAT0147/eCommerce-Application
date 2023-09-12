@@ -1,7 +1,7 @@
 export enum DataBase {
   key_prefix = 'product',
   img_alt = 'preview of clothes',
-  currency_ru = 'RUB',
+  currency = 'RUB',
 }
 
 export type AddressType = string | undefined;

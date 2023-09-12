@@ -710,7 +710,7 @@ export default class ECommerceApi {
           .carts()
           .post({
             body: {
-              currency: DataBase.currency_ru,
+              currency: DataBase.currency,
             },
           })
           .execute();
