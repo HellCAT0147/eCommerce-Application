@@ -16,7 +16,7 @@ export default class CartModel {
       // TODO add method for getting cart
       // const response: ErrorObject | true = await this.eCommerceApi.login(this.mail, this.password);
       // if (response === true) {
-      // TODO this.view.showCart();
+      this.view.showCart();
       // } else {
       //   this.formView.reminder(response.message);
       // }
