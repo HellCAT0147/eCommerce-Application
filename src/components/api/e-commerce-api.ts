@@ -4,7 +4,10 @@ import {
   HttpMiddlewareOptions,
   RefreshAuthMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
-import { PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2/dist/declarations/src/types/sdk';
+import {
+  PasswordAuthMiddlewareOptions,
+  TokenStore,
+} from '@commercetools/sdk-client-v2/dist/declarations/src/types/sdk';
 import {
   Address,
   CategoryPagedQueryResponse,
@@ -21,6 +24,8 @@ import {
   ProductProjection,
   MyCustomerSetDefaultBillingAddressAction,
   MyCustomerSetDefaultShippingAddressAction,
+  Cart,
+  CartUpdateAction,
 } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import { ErrorObject } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/error';
@@ -111,7 +116,7 @@ export default class ECommerceApi {
     const creds = this.tokenCachesStore.getDefault();
     let preClient: Client = this.clientBuilder.withAnonymousSessionFlow(this.copyAuthParams()).build();
 
-    if (creds !== this.tokenCachesStore.defaultTokenStore) {
+    if (this.tokenCachesStore.getIsAuthorized()) {
       const authParams: RefreshAuthMiddlewareOptions = {
         ...this.copyAuthParams(),
         refreshToken: creds.refreshToken as string,
@@ -125,7 +130,7 @@ export default class ECommerceApi {
     this.ctpClient = preClient;
     this.apiRoot = preApiRoot;
 
-    if (creds !== this.tokenCachesStore.defaultTokenStore) {
+    if (this.tokenCachesStore.getIsAuthorized()) {
       this.updateMe(preApiRoot);
     }
   }
@@ -262,6 +267,8 @@ export default class ECommerceApi {
     const authParams: PasswordAuthMiddlewareOptions = this.copyAuthParams(); // copy of base auth params
     authParams.credentials.user.username = email;
     authParams.credentials.user.password = password;
+    const prevToken: TokenStore = this.tokenCachesStore.getDefault();
+    this.tokenCachesStore.unset();
 
     try {
       this.ctpClient = this.clientBuilder.withPasswordFlow(authParams).build();
@@ -272,11 +279,16 @@ export default class ECommerceApi {
       const meResponse: ClientResponse<Customer> = await apiRoot.me().get().execute();
 
       if (meResponse.statusCode === 200) {
+        this.tokenCachesStore.setIsAuthorized(true);
         this.initClientAndApiRoot();
         return true;
       }
     } catch (e) {
       return this.errorObjectOrThrow(e);
+    } finally {
+      if (this.tokenCachesStore.getDefault() === this.tokenCachesStore.defaultTokenStore) {
+        this.tokenCachesStore.set(prevToken);
+      }
     }
     return true;
   }
@@ -288,7 +300,7 @@ export default class ECommerceApi {
 
   public async isLoggedIn(): Promise<boolean> {
     return (
-      this.tokenCachesStore.getDefault() !== this.tokenCachesStore.defaultTokenStore &&
+      this.tokenCachesStore.getIsAuthorized() &&
       this.meLoggedInPromise !== null &&
       (await this.meLoggedInPromise) !== null
     );
@@ -684,5 +696,14 @@ export default class ECommerceApi {
       return this.errorObjectOrThrow(e);
     }
     return true;
+  }
+
+  public async getActiveCart(): Promise<ClientResponse<Cart> | ErrorObject> {
+    try {
+      const response: ClientResponse<Cart> = await this.apiRoot.me().activeCart().get().execute();
+      return response;
+    } catch (error) {
+      return this.errorObjectOrThrow(error);
+    }
   }
 }

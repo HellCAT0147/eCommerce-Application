@@ -42,6 +42,7 @@ export default class TokenCachesStore {
   }
 
   public unset(tokenCacheOptions?: TokenCacheOptions): void {
+    this.setIsAuthorized(false);
     if (tokenCacheOptions == null) {
       this.storage.removeItem(this.defaultId);
     } else {
@@ -58,5 +59,13 @@ export default class TokenCachesStore {
         i -= 1;
       }
     }
+  }
+
+  public setIsAuthorized(isAuthorized: boolean): void {
+    this.storage.setItem('isAuthorized', JSON.stringify(isAuthorized));
+  }
+
+  public getIsAuthorized(): boolean {
+    return JSON.parse(this.storage.getItem('isAuthorized') || JSON.stringify(false)) as boolean;
   }
 }
