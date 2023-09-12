@@ -1,5 +1,5 @@
 import TokenCachesStore from '../../../api/token-caches-store';
-import { Base, Blocks } from '../../../models/builder';
+import { Base, Blocks, Elem, Mode } from '../../../models/builder';
 import { Pages } from '../../../models/router';
 import Router from '../model/router';
 
@@ -15,7 +15,12 @@ class MainController {
 
   private RedirectButton(target: HTMLElement): HTMLElement | null {
     let navButton: HTMLElement | null = null;
-    const navButtons: NodeListOf<HTMLElement> = document.querySelectorAll('.redirect__buttons');
+    const navButtons: NodeListOf<HTMLElement> = document.querySelectorAll(`.${Base.btns_redirect}`);
+    const cartButton: HTMLElement | null = target.closest(`.${Blocks.header}__${Elem.btn}_${Mode.cart}`);
+
+    if (cartButton) {
+      navButton = cartButton;
+    }
 
     navButtons.forEach((button: HTMLElement) => {
       if (target === button) {
@@ -85,6 +90,8 @@ class MainController {
         }
       } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.PROFILE}`)) {
         this.router.controllerProfile.mouseEvent(e);
+      } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.CART}`)) {
+        this.router.controllerCart.mouseEvent(e);
       }
     }
   }

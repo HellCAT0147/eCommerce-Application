@@ -105,6 +105,8 @@ class Builder {
     } else if (this.mode === Mode.about) {
       button.textContent = `${Buttons.ABOUT_US}`;
       button.setAttribute('id', `${Pages.ABOUT_US}`);
+    } else if (this.mode === Mode.cart) {
+      button.setAttribute('id', `${Pages.CART}`);
     }
     this.setProperties(button);
 

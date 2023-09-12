@@ -21,6 +21,7 @@ export enum Pages {
   PROFILE = 'profile',
   PRODUCT = 'product',
   ABOUT_US = 'about-us',
+  CART = 'cart',
   GO_TO_MAIN = `${GO_TO}-${MAIN}`,
   GO_TO_LOGIN = `${GO_TO}-${LOGIN}`,
   GO_TO_REG = `${GO_TO}-${REGISTRATION}`,

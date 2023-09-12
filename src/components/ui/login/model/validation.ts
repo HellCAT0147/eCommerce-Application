@@ -4,7 +4,8 @@ import { LoginErrors, InputTypeLogin, MailErrors, PasswordErrors } from '../../.
 import FormViewLogin from '../view/form';
 import { Pages, Routes } from '../../../models/router';
 import basicRoutes from '../../router/model/routes';
-import selectCurrentPage from '../../router/view/viewPage';
+import { selectCurrentPage } from '../../router/view/viewPage';
+import { getQuantity, showQuantity } from '../view/view';
 
 export default class ValidationModel {
   protected mail: string;
@@ -102,7 +103,9 @@ export default class ValidationModel {
           const route: Routes | undefined = basicRoutes.find((routeExisting) => routeExisting.path === Pages.MAIN);
           window.history.pushState(null, '', `/${Pages.MAIN}`);
           this.formView.showSuccessLoginMessage();
+          const quantityContent: string = getQuantity();
           if (route) route.callback(true);
+          showQuantity(quantityContent);
           selectCurrentPage(`${Pages.MAIN}`);
         } else {
           this.formView.reminder(response.message);

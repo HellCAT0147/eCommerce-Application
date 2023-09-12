@@ -51,6 +51,10 @@ export enum Elem {
   price = 'price',
   subtitle = 'subtitle',
   pass = 'password',
+  cart = 'cart',
+  bag = 'bag',
+  shopping = 'shopping',
+  quantity = 'quantity',
 }
 
 export enum Mode {
@@ -117,6 +121,9 @@ export enum Mode {
   about = 'about-us',
   main = 'main',
   static = 'static',
+  cart = 'cart',
+  link = 'link',
+  colored = 'colored',
 }
 
 export enum Base {
@@ -136,6 +143,7 @@ export enum Base {
   btns_empty = `${btns} ${btns}_empty`,
   btns_edit = `${btns} ${btns}_edit`,
   btns_modal = `${btns}_modal`,
+  btns_redirect = `redirect__buttons`,
   select = `${form}__select`,
   options = `${form}__options`,
   links = `links`,
@@ -150,6 +158,7 @@ export enum Base {
   cards = 'cards',
   modal = 'modal',
   prof_f = 'profile__forms',
+  current_page = 'current-page',
 }
 
 export enum Buttons {
@@ -201,6 +210,8 @@ export enum Titles {
   PASSWORD = `Password`,
   ADD = `Add`,
   ABOUT_US = `About Us`,
+  SHOP_CART = `Shopping Cart`,
+  PCS = `pcs`,
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;
