@@ -1,4 +1,4 @@
-import { Base, Blocks, Elem, Mode, Titles } from '../../../models/builder';
+import { Base, Blocks, Buttons, Elem, Mode, Titles } from '../../../models/builder';
 import Builder from '../../builder/html-builder';
 import { Pages } from '../../../models/router';
 
@@ -61,15 +61,26 @@ export default class CartView {
     const price: HTMLElement = new Builder('', '', Blocks.cart, Elem.price, '').p();
     const quantity: HTMLElement = new Builder('', '', Blocks.cart, Elem.quantity, '').p();
     const total: HTMLElement = new Builder('', '', Blocks.cart, Elem.total, '').p();
+    const edit: HTMLElement = new Builder('', '', Blocks.cart, Elem.edit, '').p();
+    const control: HTMLElement = new Builder('div', '', Blocks.cart, Elem.control, '').element();
+    const buttonClear: HTMLButtonElement = new Builder(
+      '',
+      Base.btns_bordered,
+      Blocks.cart,
+      Elem.btn,
+      Mode.clear
+    ).button();
+    buttonClear.textContent = Buttons.CLEAR_CART;
 
     product.textContent = `${Elem.product}`.toUpperCase();
     price.textContent = `${Elem.price}`.toUpperCase();
     quantity.textContent = `${Elem.quantity}`.toUpperCase();
     total.textContent = `${Elem.total}`.toUpperCase();
 
-    listHeader.append(product, price, quantity, total);
-    productsList.appendChild(listHeader);
-    article.appendChild(productsList);
+    listHeader.append(product, price, quantity, total, edit);
+    this.fillProductsList(productsList);
+    control.appendChild(buttonClear);
+    article.append(listHeader, productsList, control);
 
     return article;
   }
@@ -82,7 +93,13 @@ export default class CartView {
       const text: HTMLElement = new Builder('div', '', Blocks.order, Elem.text, mode).element();
       const amount: HTMLElement = new Builder('div', '', Blocks.order, Elem.amount, mode).element();
       // TODO get amount from API;
-      text.textContent = `${mode}`;
+      if (mode === Mode.subtotal) {
+        text.textContent = `${Titles.SUBTOTAL}`;
+      } else if (mode === Mode.tax) {
+        text.textContent = `${Titles.TAX}`;
+      } else if (mode === Mode.total) {
+        text.textContent = `${Titles.ORDER}`;
+      }
       amount.textContent = `0.00 ${Titles.CURRENCY}`;
 
       field.append(text, amount);
@@ -93,9 +110,9 @@ export default class CartView {
   private createAside(): HTMLElement {
     const aside: HTMLElement = new Builder('aside', '', Blocks.cart, Elem.aside, '').element();
     const promo: HTMLElement = new Builder('div', '', Blocks.cart, Elem.promo, '').element();
-    const fieldPromo: HTMLFieldSetElement = new Builder('', '', Blocks.cart, Elem.field, '').field();
+    const fieldPromo: HTMLElement = new Builder('div', '', Blocks.cart, Elem.field, '').element();
     const label: HTMLLabelElement = new Builder('', '', Blocks.cart, Elem.label, '').label();
-    const input: HTMLInputElement = new Builder('', '', Blocks.cart, Elem.input, '').input();
+    const input: HTMLInputElement = new Builder('', Base.inputs, Blocks.cart, Elem.input, '').input();
     const buttonPromo: HTMLButtonElement = new Builder(
       '',
       Base.btns_colored,
@@ -103,11 +120,14 @@ export default class CartView {
       Elem.btn,
       Mode.promo
     ).button();
+
     label.textContent = `${Titles.PROMO}`;
     input.setAttribute('placeholder', `${Titles.INPUT_PROMO}`);
+    buttonPromo.textContent = Buttons.PROMO;
 
     const order: HTMLElement = new Builder('div', '', Blocks.cart, Elem.order, '').element();
-    this.createOrderField(order);
+    const fieldOrder: HTMLElement = new Builder('div', '', Blocks.cart, Elem.field, '').element();
+    this.createOrderField(fieldOrder);
     const buttonOrder: HTMLButtonElement = new Builder(
       '',
       Base.btns_colored,
@@ -116,9 +136,11 @@ export default class CartView {
       Mode.order
     ).button();
 
-    fieldPromo.append(label, input, buttonPromo);
-    promo.appendChild(fieldPromo);
-    order.appendChild(buttonOrder);
+    buttonOrder.textContent = Buttons.ORDER;
+
+    fieldPromo.append(label, input);
+    promo.append(fieldPromo, buttonPromo);
+    order.append(fieldOrder, buttonOrder);
     aside.append(promo, order);
 
     return aside;
@@ -126,6 +148,7 @@ export default class CartView {
 
   private fillProductsList(productsList: HTMLElement): void {
     const item: HTMLElement = new Builder('section', '', Blocks.cart, Elem.item, '').element();
+    item.textContent = 'Product';
     // TODO implement method for adding products to list;
 
     productsList.appendChild(item);
@@ -134,11 +157,12 @@ export default class CartView {
   public showCart(): void {
     const main: HTMLFormElement | null = document.querySelector(`.${Blocks.main}__${Pages.CART}`);
     if (main) {
+      const wrapper: HTMLElement = new Builder('div', '', Blocks.cart, Elem.wrapper, '').element();
       const productsList: HTMLElement = this.createProductsList();
-      this.fillProductsList(productsList);
       const aside: HTMLElement = this.createAside();
 
-      main.append(productsList, aside);
+      wrapper.append(productsList, aside);
+      main.append(wrapper);
     }
   }
 }

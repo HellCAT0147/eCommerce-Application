@@ -1,0 +1,120 @@
+.cart {
+  &__wrapper {
+    display: flex;
+    column-gap: 70px;
+    width: 100%;
+    justify-content: center;
+    margin-top: 40px;
+  }
+
+  &__article {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 753px;
+    row-gap: 24px;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 24px 0;
+    border-top: 1px solid $color-input;
+    border-bottom: 1px solid $color-input;
+  }
+
+  &__header {
+    display: flex;
+    width: 100%;
+    column-gap: 40px;
+    @include font(500, 1.8rem, 100%, $color-Light-gray);
+  }
+
+  &__product {
+    flex-grow: 1;
+    max-width: 283px;
+  }
+
+  &__price {
+    flex-grow: 1;
+    max-width: 78px;
+  }
+
+  &__quantity {
+    flex-grow: 1;
+    max-width: 120px;
+  }
+
+  &__total {
+    flex-grow: 1;
+    max-width: 88px;
+  }
+
+  &__edit {
+    flex-grow: 1;
+    max-width: 24px;
+  }
+
+  &__control {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__button {
+    &_clear {
+      align-self: flex-end;
+    }
+  }
+
+  &__aside {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 500px;
+    row-gap: 24px;
+  }
+
+  &__promo,
+  &__order {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid $color-input;
+    background: $color-Light-hover;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    padding: 36px 32px;
+    row-gap: 22px;
+  }
+
+  &__label {
+    font-size: 2.4rem;
+  }
+
+  &__input {
+    width: 100%;
+  }
+}
+
+.order {
+  &__field {
+    display: flex;
+    justify-content: space-between;
+
+    &_subtotal {
+      @include font(500, 1.8rem, 100%, $color-dark);
+    }
+
+    &_tax {
+      @include font(500, 1.8rem, 100%, $color-Light-gray);
+    }
+
+    &_total {
+      margin-top: 5px;
+      @include font(400, 2.4rem, 100%, $color-dark);
+    }
+  }
+}

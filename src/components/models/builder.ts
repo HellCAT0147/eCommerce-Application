@@ -66,6 +66,8 @@ export enum Elem {
   promo = 'promo',
   order = 'order',
   amount = 'amount',
+  control = 'control',
+  edit = 'edit',
 }
 
 export enum Mode {
@@ -140,6 +142,7 @@ export enum Mode {
   tax = 'tax',
   total = 'total',
   order = 'order',
+  clear = 'clear',
 }
 
 export enum Base {
@@ -194,6 +197,9 @@ export enum Buttons {
   SAVE = 'SAVE',
   BACK = 'BACK',
   CHANGE_PASS = 'Change Password',
+  CLEAR_CART = 'CLEAR SHOPPING CART',
+  PROMO = 'APPLY DISCOUNT',
+  ORDER = 'PROCEED TO CHECKOUT',
 }
 
 export enum Titles {
@@ -231,6 +237,9 @@ export enum Titles {
   CURRENCY = `RUB`,
   PROMO = `Apply Discount Code`,
   INPUT_PROMO = `Enter discount code`,
+  SUBTOTAL = `Subtotal`,
+  TAX = `Tax`,
+  ORDER = `Order Total`,
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;
