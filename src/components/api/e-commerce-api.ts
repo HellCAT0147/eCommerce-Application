@@ -21,6 +21,7 @@ import {
   ProductProjection,
   MyCustomerSetDefaultBillingAddressAction,
   MyCustomerSetDefaultShippingAddressAction,
+  Cart,
 } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import { ErrorObject } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/error';
@@ -88,6 +89,7 @@ export default class ECommerceApi {
   }
 
   private async updateMe(apiRoot: ByProjectKeyRequestBuilder): Promise<void> {
+    // TODO: fix bug 403 on catalog page
     this.meLoggedInPromise = apiRoot
       .me()
       .get()
@@ -679,5 +681,14 @@ export default class ECommerceApi {
       return this.errorObjectOrThrow(e);
     }
     return true;
+  }
+
+  public async getActiveCart(): Promise<ClientResponse<Cart> | ErrorObject> {
+    try {
+      const response: ClientResponse<Cart> = await this.apiRoot.me().activeCart().get().execute();
+      return response;
+    } catch (error) {
+      return this.errorObjectOrThrow(error);
+    }
   }
 }
