@@ -52,6 +52,10 @@
       color: $color-Light-gray;
       background: $color-Light-hover;
     }
+    @include media-tablet {
+      width: 30px;
+      height: 30px;
+    }
   }
 
   &:active {

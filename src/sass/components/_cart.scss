@@ -4,7 +4,15 @@
     column-gap: 70px;
     width: 100%;
     justify-content: center;
-    margin-top: 40px;
+    margin: 40px 0;
+    @include media-laptop {
+      column-gap: 40px;
+    }
+    @include media-tablet-landscape {
+      align-items: center;
+      flex-direction: column;
+      row-gap: 60px;
+    }
   }
 
   &__article {
@@ -24,24 +32,43 @@
     border-bottom: 1px solid $color-input;
   }
 
-  &__header {
-    display: flex;
-    width: 100%;
+  &__header,
+  &__item {
+    display: grid;
+    justify-content: space-between;
+    grid-template-columns: 283px 78px 120px 78px 24px;
     column-gap: 40px;
+    @include media-laptop {
+      grid-template-columns: 240px 70px 120px 70px 24px;
+      column-gap: 20px;
+    }
+    @include media-tablet-landscape {
+      grid-template-columns: 283px 78px 120px 78px 24px;
+      column-gap: 40px;
+    }
+    @include media-tablet {
+      grid-template-columns: 180px 50px 90px 50px 24px;
+      column-gap: 20px;
+    }
+    @include media-mobile-large {
+      grid-template-columns: 90px 50px 90px 50px 24px;
+      column-gap: 10px;
+    }
+  }
+
+  &__header {
     @include font(500, 1.8rem, 100%, $color-Light-gray);
   }
 
   &__item {
-    display: flex;
     align-items: center;
-    width: 100%;
-    column-gap: 40px;
   }
 
   &__product {
     display: flex;
-    flex-grow: 1;
-    max-width: 283px;
+    @include media-mobile-large {
+      flex-direction: column;
+    }
   }
 
   &__image {
@@ -49,14 +76,14 @@
   }
 
   &__name {
-    flex-grow: 1;
     padding: 0 18px;
     @include font(500, 1.8rem, 100%, $color-dark);
+    @include media-mobile-large {
+      padding: 5px 0px;
+    }
   }
 
   &__price {
-    flex-grow: 1;
-    max-width: 78px;
     &_item {
       @extend %font-second;
       @include font(500, 1.4rem, 100%, $color-dark);
@@ -64,8 +91,6 @@
   }
 
   &__quantity {
-    flex-grow: 1;
-    max-width: 120px;
     &_item {
       display: flex;
       justify-content: space-between;
@@ -75,14 +100,11 @@
   }
 
   &__amount {
-    width: 38px;
     flex-shrink: 0;
     @include font(400, 1.6rem, 100%, $color-dark);
   }
 
   &__total {
-    flex-grow: 1;
-    max-width: 88px;
     &_item {
       @extend %font-second;
       @include font(500, 1.4rem, 100%, $color-dark);
@@ -90,8 +112,6 @@
   }
 
   &__edit {
-    flex-grow: 1;
-    max-width: 24px;
     flex-shrink: 0;
     &_delete {
       height: 24px;
