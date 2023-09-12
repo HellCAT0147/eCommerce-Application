@@ -720,4 +720,32 @@ export default class ECommerceApi {
       return this.errorObjectOrThrow(error);
     }
   }
+
+  public async addNewProduct(id: string): Promise<ClientResponse<Cart> | ErrorObject> {
+    try {
+      const responseActiveCart: ClientResponse<Cart> | ErrorObject = await this.getActiveCart();
+      const cartId: string = responseActiveCart.body.id;
+      const cartVersion: number = responseActiveCart.body.version;
+      const actions: CartUpdateAction[] = [
+        {
+          action: 'addLineItem',
+          sku: `${id}-s`,
+        },
+      ];
+      if ('code' in responseActiveCart && 'message' in responseActiveCart) return responseActiveCart;
+      const responseAddProduct: ClientResponse<Cart> = await this.apiRoot
+        .carts()
+        .withId({ ID: cartId })
+        .post({
+          body: {
+            version: cartVersion,
+            actions,
+          },
+        })
+        .execute();
+      return responseAddProduct;
+    } catch (error) {
+      return this.errorObjectOrThrow(error);
+    }
+  }
 }
