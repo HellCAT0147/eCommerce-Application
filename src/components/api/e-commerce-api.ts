@@ -748,4 +748,16 @@ export default class ECommerceApi {
       return this.errorObjectOrThrow(error);
     }
   }
+
+  public async isInCart(id: string): Promise<boolean | ErrorObject> {
+    try {
+      const responseActiveCart: ClientResponse<Cart> | ErrorObject = await this.getActiveCart();
+      if ('code' in responseActiveCart && 'message' in responseActiveCart) return responseActiveCart;
+      const items: LineItem[] = responseActiveCart.body.lineItems;
+      if (items.findIndex((item: LineItem): boolean => item.variant.sku === `${id}-s`) !== -1) return true;
+      return false;
+    } catch (error) {
+      return this.errorObjectOrThrow(error);
+    }
+  }
 }
