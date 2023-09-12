@@ -35,6 +35,14 @@ class ControllerCatalog {
           this.currentPagination = this.currentPagination.nextPage();
           this.loadProducts();
         }
+        if (target.classList.contains('catalog__button_cart')) {
+          const id = target.parentElement?.id;
+          if (id) {
+            this.addToCart(id);
+            this.loadProducts();
+            target.setAttribute('disabled', '');
+          }
+        }
         return;
       case 'INPUT':
         return;
@@ -69,6 +77,10 @@ class ControllerCatalog {
   public reloadProducts(): void {
     this.currentPagination = new Pagination();
     this.model.fetchProducts(this.currentPagination, true);
+  }
+
+  public addToCart(id: string): void {
+    this.eCommerceApi.addNewProduct(id);
   }
 }
 

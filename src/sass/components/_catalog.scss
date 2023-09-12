@@ -255,6 +255,14 @@
     font-size: 1.3rem;
   }
 }
+:disabled {
+  background-color: gray;
+  scale: 1;
+  &:hover {
+    background-color: gray;
+    scale: 1;
+  }
+}
 
 @media (max-width: 739px) {
   .catalog {

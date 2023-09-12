@@ -1,4 +1,4 @@
-import { Image, ProductData, ProductVariant, ProductProjection } from '@commercetools/platform-sdk';
+import { Image, ProductData, ProductVariant, ProductProjection, ErrorObject, Cart } from '@commercetools/platform-sdk';
 import { Category } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/category';
 import { Base, Blocks, Elem, Mode } from '../../../models/builder';
 import Builder from '../../builder/html-builder';
@@ -632,7 +632,8 @@ export default class ViewCatalog {
     }
   }
 
-  public fillCatalogPage(resultPagination: ResultPagination<ProductProjection>): HTMLElement {
+  public fillCatalogPage(resultPagination: ResultPagination<ProductProjection> | ErrorObject, cart: Cart): HTMLElement {
+    const productsIdsInCart: Array<string | undefined> = cart.lineItems.map((cartItem) => cartItem.productKey);
     const page: HTMLElement =
       document.getElementById(ViewCatalog.catalogContainerId) ||
       new Builder('div', '', Blocks.catalog, 'page', '').element();
@@ -647,6 +648,12 @@ export default class ViewCatalog {
       emptyList.innerText = 'SORRY, NOTHING TO SHOW';
       page.append(emptyList);
     }
+    Array.from(page.children).forEach((child) => {
+      if (productsIdsInCart.includes(`product-${child.id}`)) {
+        const button = child.getElementsByClassName('catalog__button_cart')[0];
+        button.setAttribute('disabled', '');
+      }
+    });
     return page;
   }
 
@@ -655,12 +662,12 @@ export default class ViewCatalog {
     this.fillBreadcrumbs();
   }
 
-  public constructCatalogPage(resultPagination: ResultPagination<ProductProjection>): void {
+  public constructCatalogPage(resultPagination: ResultPagination<ProductProjection>, cart: Cart): void {
     const main: HTMLFormElement | null = document.querySelector(`.${Blocks.main}__${Mode.catalog}`);
     if (main) {
       main.innerHTML = '';
       const pageAndFilters: HTMLElement = new Builder('div', '', Blocks.catalog, 'page-and-filters', '').element();
-      pageAndFilters.append(this.createFilters(), this.fillCatalogPage(resultPagination));
+      pageAndFilters.append(this.createFilters(), this.fillCatalogPage(resultPagination, cart));
       const searchAndSorting = new Builder('div', '', Blocks.catalog, 'search-and-sorting', '').element();
       searchAndSorting.append(this.createPageSettings(), this.createSearchWrapper());
       main.append(this.createBreadCrumbs(), searchAndSorting, pageAndFilters, this.createPaginationButtons());
