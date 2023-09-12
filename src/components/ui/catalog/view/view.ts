@@ -586,6 +586,22 @@ export default class ViewCatalog {
     return card;
   }
 
+  public createPaginationButtons(): HTMLElement {
+    const buttonsWrapper = new Builder('div', '', Blocks.catalog, 'pagination', 'wrapper').element();
+    buttonsWrapper.classList.add('pagination-wrapper');
+    const prev = new Builder('button', '', Blocks.catalog, 'pagination', 'prev').button();
+    prev.setAttribute('id', 'prev-page-button');
+    prev.innerText = 'PREVIOUS';
+    const curr = new Builder('div', '', Blocks.catalog, 'pagination', 'curr').element();
+    curr.setAttribute('id', 'curr-page-display');
+    curr.innerText = '1';
+    const next = new Builder('button', '', Blocks.catalog, 'pagination', 'prev').button();
+    next.setAttribute('id', 'next-page-button');
+    next.innerText = 'NEXT';
+    buttonsWrapper.append(prev, curr, next);
+    return buttonsWrapper;
+  }
+
   public fillCatalogPage(resultPagination: ResultPagination<ProductProjection>): HTMLElement {
     const page: HTMLElement =
       document.getElementById(ViewCatalog.catalogContainerId) ||
@@ -617,7 +633,7 @@ export default class ViewCatalog {
       pageAndFilters.append(this.createFilters(), this.fillCatalogPage(resultPagination));
       const searchAndSorting = new Builder('div', '', Blocks.catalog, 'search-and-sorting', '').element();
       searchAndSorting.append(this.createPageSettings(), this.createSearchWrapper());
-      main.append(this.createBreadCrumbs(), searchAndSorting, pageAndFilters);
+      main.append(this.createBreadCrumbs(), searchAndSorting, pageAndFilters, this.createPaginationButtons());
     }
   }
 
