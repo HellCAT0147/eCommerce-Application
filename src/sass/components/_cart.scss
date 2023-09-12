@@ -31,29 +31,79 @@
     @include font(500, 1.8rem, 100%, $color-Light-gray);
   }
 
+  &__item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    column-gap: 40px;
+  }
+
   &__product {
+    display: flex;
     flex-grow: 1;
     max-width: 283px;
+  }
+
+  &__image {
+    max-width: 83px;
+  }
+
+  &__name {
+    flex-grow: 1;
+    padding: 0 18px;
+    @include font(500, 1.8rem, 100%, $color-dark);
   }
 
   &__price {
     flex-grow: 1;
     max-width: 78px;
+    &_item {
+      @extend %font-second;
+      @include font(500, 1.4rem, 100%, $color-dark);
+    }
   }
 
   &__quantity {
     flex-grow: 1;
     max-width: 120px;
+    &_item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid $color-input;
+    }
+  }
+
+  &__amount {
+    width: 38px;
+    flex-shrink: 0;
+    @include font(400, 1.6rem, 100%, $color-dark);
   }
 
   &__total {
     flex-grow: 1;
     max-width: 88px;
+    &_item {
+      @extend %font-second;
+      @include font(500, 1.4rem, 100%, $color-dark);
+    }
   }
 
   &__edit {
     flex-grow: 1;
     max-width: 24px;
+    flex-shrink: 0;
+    &_delete {
+      height: 24px;
+      width: 24px;
+      background: url('../assets/ico/delete.svg');
+      background-repeat: no-repeat;
+      background-size: contain;
+      cursor: pointer;
+      &:hover {
+        background: url('../assets/ico/delete_hover.svg');
+      }
+    }
   }
 
   &__control {

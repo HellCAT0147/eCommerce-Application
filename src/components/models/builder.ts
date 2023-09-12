@@ -68,6 +68,7 @@ export enum Elem {
   amount = 'amount',
   control = 'control',
   edit = 'edit',
+  name = 'name',
 }
 
 export enum Mode {
@@ -143,6 +144,10 @@ export enum Mode {
   total = 'total',
   order = 'order',
   clear = 'clear',
+  dec = 'decrease',
+  inc = 'increase',
+  item = 'item',
+  available = 'available',
 }
 
 export enum Base {
@@ -161,6 +166,7 @@ export enum Base {
   btns_bordered = `${btns} ${btns}_bordered`,
   btns_empty = `${btns} ${btns}_empty`,
   btns_edit = `${btns} ${btns}_edit`,
+  btns_quant = `${btns} ${btns}__quantity`,
   btns_modal = `${btns}_modal`,
   btns_redirect = `redirect__buttons`,
   select = `${form}__select`,

@@ -1,3 +1,4 @@
+import { Price, ProductData } from '@commercetools/platform-sdk';
 import { Base, Blocks, Buttons, Elem, Mode, Titles } from '../../../models/builder';
 import Builder from '../../builder/html-builder';
 import { Pages } from '../../../models/router';
@@ -53,7 +54,7 @@ export default class CartView {
     }, 1500);
   }
 
-  private createProductsList(): HTMLElement {
+  private createProductsList(data: ProductData): HTMLElement {
     const article: HTMLElement = new Builder('article', '', Blocks.cart, Elem.article, '').element();
     const productsList: HTMLElement = new Builder('div', '', Blocks.cart, Elem.list, '').element();
     const listHeader: HTMLElement = new Builder('div', '', Blocks.cart, Elem.header, '').element();
@@ -78,7 +79,7 @@ export default class CartView {
     total.textContent = `${Elem.total}`.toUpperCase();
 
     listHeader.append(product, price, quantity, total, edit);
-    this.fillProductsList(productsList);
+    this.fillProductsList(productsList, data);
     control.appendChild(buttonClear);
     article.append(listHeader, productsList, control);
 
@@ -146,19 +147,57 @@ export default class CartView {
     return aside;
   }
 
-  private fillProductsList(productsList: HTMLElement): void {
+  private fillProductsList(productsList: HTMLElement, data: ProductData): void {
     const item: HTMLElement = new Builder('section', '', Blocks.cart, Elem.item, '').element();
-    item.textContent = 'Product';
+    const prices: Price | undefined = data.masterVariant.prices?.[0];
+    let src: string = '';
+    let title: string = '';
+    let basePrice: number;
+    let basePriceFormatted: string = '';
+    if (!data) return;
+    if (data.masterVariant.images) {
+      src = data.masterVariant.images[0].url;
+    }
+    if (data.name) {
+      title = data.name['en-US'].toString();
+    }
+    if (prices !== undefined) {
+      basePrice = prices.value.centAmount / 10 ** prices.value.fractionDigits;
+      basePriceFormatted = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(basePrice);
+    }
+
+    const product: HTMLElement = new Builder('div', '', Blocks.cart, Elem.product, '').element();
+    const img: HTMLElement = new Builder('', '', Blocks.cart, Elem.image, '').img(src, title);
+    const name: HTMLElement = new Builder('', '', Blocks.cart, Elem.name, '').p();
+    const price: HTMLElement = new Builder('', '', Blocks.cart, Elem.price, Mode.item).p();
+    const quantity: HTMLElement = new Builder('div', '', Blocks.cart, Elem.quantity, Mode.item).element();
+    const buttonDec: HTMLButtonElement = new Builder('', Base.btns_quant, Blocks.cart, Elem.btn, Mode.dec).button();
+    const amount: HTMLElement = new Builder('', '', Blocks.cart, Elem.amount, '').p();
+    const buttonInc: HTMLButtonElement = new Builder('', Base.btns_quant, Blocks.cart, Elem.btn, Mode.inc).button();
+    const total: HTMLElement = new Builder('', '', Blocks.cart, Elem.total, Mode.item).p();
+    const edit: HTMLElement = new Builder('span', '', Blocks.cart, Elem.edit, Mode.del).element();
+
+    name.textContent = title;
+    price.textContent = basePriceFormatted;
+    buttonDec.textContent = '-';
+    amount.textContent = '1';
+    buttonInc.textContent = '+';
+    buttonInc.classList.add(`${Base.btns}__${Elem.quantity}_${Mode.available}`);
+    total.textContent = basePriceFormatted;
+
+    product.append(img, name);
+    quantity.append(buttonDec, amount, buttonInc);
+    item.append(product, price, quantity, total, edit);
     // TODO implement method for adding products to list;
 
     productsList.appendChild(item);
   }
 
-  public showCart(): void {
+  public showCart(data: ProductData): void {
     const main: HTMLFormElement | null = document.querySelector(`.${Blocks.main}__${Pages.CART}`);
     if (main) {
       const wrapper: HTMLElement = new Builder('div', '', Blocks.cart, Elem.wrapper, '').element();
-      const productsList: HTMLElement = this.createProductsList();
+      const productsList: HTMLElement = this.createProductsList(data);
       const aside: HTMLElement = this.createAside();
 
       wrapper.append(productsList, aside);

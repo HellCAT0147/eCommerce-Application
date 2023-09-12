@@ -42,6 +42,18 @@
     }
   }
 
+  &__quantity {
+    width: 41px;
+    height: 41px;
+    background: $color-light;
+    @include font(500, 2.4rem, 100%, $color-input);
+    border: none;
+    &_available {
+      color: $color-Light-gray;
+      background: $color-Light-hover;
+    }
+  }
+
   &:active {
     scale: 0.9;
   }
