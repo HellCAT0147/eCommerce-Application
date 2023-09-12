@@ -26,6 +26,7 @@ import {
   MyCustomerSetDefaultShippingAddressAction,
   Cart,
   CartUpdateAction,
+  LineItem,
 } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import { ErrorObject } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/error';
@@ -700,7 +701,20 @@ export default class ECommerceApi {
 
   public async getActiveCart(): Promise<ClientResponse<Cart> | ErrorObject> {
     try {
-      const response: ClientResponse<Cart> = await this.apiRoot.me().activeCart().get().execute();
+      let response: ClientResponse<Cart>;
+      if ((await this.apiRoot.me().carts().get().execute()).body.total)
+        response = await this.apiRoot.me().activeCart().get().execute();
+      else
+        response = await this.apiRoot
+          .me()
+          .carts()
+          .post({
+            body: {
+              currency: 'RUB',
+            },
+          })
+          .execute();
+
       return response;
     } catch (error) {
       return this.errorObjectOrThrow(error);
