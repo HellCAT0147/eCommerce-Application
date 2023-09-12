@@ -224,6 +224,30 @@
     margin: 1vw 0;
     padding: 7px 10px;
   }
+
+  &__pagination_wrapper {
+    display: flex;
+    flex-direction: row;
+  }
+  &__pagination_prev,
+  &__pagination_next {
+    color: white;
+    background-color: black;
+    border-radius: 0;
+    width: 100px;
+    border: none;
+    transition-duration: 0.3s;
+    &:hover {
+      background-color: #c21f39;
+      scale: 1.03;
+      transition-duration: 0.3s;
+    }
+  }
+  &__pagination_curr {
+    width: 30px;
+    text-align: center;
+    font-size: 1.3rem;
+  }
 }
 
 @media (max-width: 739px) {
