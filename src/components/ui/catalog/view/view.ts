@@ -23,6 +23,12 @@ export default class ViewCatalog {
 
   public static resetButtonId = 'reset-filters_btn';
 
+  public static prevPageButtonId: string = 'prev-page-button';
+
+  public static nextPageButtonId: string = 'next-page-button';
+
+  public static pageNumberDisplay: string = 'curr-page-display';
+
   public static nameAscSortingParameters: Array<SortParameter> = [
     {
       field: 'name.en-US',
@@ -590,16 +596,37 @@ export default class ViewCatalog {
     const buttonsWrapper = new Builder('div', '', Blocks.catalog, 'pagination', 'wrapper').element();
     buttonsWrapper.classList.add('pagination-wrapper');
     const prev = new Builder('button', '', Blocks.catalog, 'pagination', 'prev').button();
-    prev.setAttribute('id', 'prev-page-button');
+    prev.setAttribute('id', ViewCatalog.prevPageButtonId);
     prev.innerText = 'PREVIOUS';
     const curr = new Builder('div', '', Blocks.catalog, 'pagination', 'curr').element();
     curr.setAttribute('id', 'curr-page-display');
     curr.innerText = '1';
     const next = new Builder('button', '', Blocks.catalog, 'pagination', 'prev').button();
-    next.setAttribute('id', 'next-page-button');
+    next.setAttribute('id', ViewCatalog.nextPageButtonId);
     next.innerText = 'NEXT';
     buttonsWrapper.append(prev, curr, next);
     return buttonsWrapper;
+  }
+
+  public fillPaginationButtons(pagination: ResultPagination<ProductProjection>): void {
+    const prev = document.getElementById(ViewCatalog.prevPageButtonId);
+    const curr = document.getElementById(ViewCatalog.pageNumberDisplay);
+    const next = document.getElementById(ViewCatalog.nextPageButtonId);
+    const currentNumber = pagination.pageNumber;
+
+    if (prev && next) {
+      prev.removeAttribute('disabled');
+      next.removeAttribute('disabled');
+    }
+    if (currentNumber === 0 && prev) {
+      prev.setAttribute('disabled', '');
+    }
+    if (curr) {
+      curr.innerText = (currentNumber + 1).toString();
+    }
+    if (pagination.pageNumber >= pagination.totalPages - 1 && next) {
+      next.setAttribute('disabled', '');
+    }
   }
 
   public fillCatalogPage(resultPagination: ResultPagination<ProductProjection>): HTMLElement {
@@ -634,6 +661,7 @@ export default class ViewCatalog {
       const searchAndSorting = new Builder('div', '', Blocks.catalog, 'search-and-sorting', '').element();
       searchAndSorting.append(this.createPageSettings(), this.createSearchWrapper());
       main.append(this.createBreadCrumbs(), searchAndSorting, pageAndFilters, this.createPaginationButtons());
+      this.fillPaginationButtons(resultPagination);
     }
   }
 

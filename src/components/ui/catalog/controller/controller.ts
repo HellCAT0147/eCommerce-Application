@@ -28,6 +28,14 @@ class ControllerCatalog {
         if (target.id === ViewCatalog.resetButtonId) {
           this.model.resetProducts();
         }
+        if (target.id === ViewCatalog.prevPageButtonId) {
+          this.currentPagination = this.currentPagination.prevPage();
+          this.loadProducts();
+        }
+        if (target.id === ViewCatalog.nextPageButtonId) {
+          this.currentPagination = this.currentPagination.nextPage();
+          this.loadProducts();
+        }
         return;
       case 'INPUT':
         return;
@@ -60,6 +68,7 @@ class ControllerCatalog {
   }
 
   public reloadProducts(): void {
+    this.currentPagination = new Pagination();
     this.model.fetchProducts(this.currentPagination, true);
   }
 }
