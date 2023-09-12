@@ -80,6 +80,7 @@ export default class ModelCatalog {
       } else {
         if (justFill) {
           this.view.fillCatalogPage(response);
+          this.view.fillPaginationButtons(response);
           return;
         }
         this.view.constructCatalogPage(response);

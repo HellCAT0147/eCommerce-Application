@@ -5,7 +5,7 @@ export default class Pagination {
 
   public offset: number;
 
-  constructor(pageNumber: number = 0, pageSize: number = 16) {
+  constructor(pageNumber: number = 0, pageSize: number = 12) {
     this.pageNumber = pageNumber;
     this.pageSize = pageSize;
     this.offset = pageNumber * pageSize;

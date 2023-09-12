@@ -333,8 +333,13 @@ export default class ECommerceApi {
           .execute()
       ).body;
       const pageNum: number = calculatePageNum(response.offset, response.limit);
-      const total: number | undefined = response.results.length + pagination.offset;
-      return new ResultPagination(response.results, total, pageNum, response.limit);
+      const { total } = response;
+      return new ResultPagination(
+        response.results,
+        total || response.results.length + pagination.offset,
+        pageNum,
+        response.limit
+      );
     } catch (e) {
       return this.errorObjectOrThrow(e);
     }
