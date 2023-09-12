@@ -13,6 +13,8 @@ export enum Blocks {
   catalog = 'catalog',
   modal = 'modal',
   ctrl = 'controls',
+  cart = 'cart',
+  order = 'order',
 }
 
 export enum Elem {
@@ -55,6 +57,18 @@ export enum Elem {
   bag = 'bag',
   shopping = 'shopping',
   quantity = 'quantity',
+  list = 'list',
+  header = 'header',
+  product = 'product',
+  total = 'total',
+  item = 'item',
+  aside = 'aside',
+  promo = 'promo',
+  order = 'order',
+  amount = 'amount',
+  control = 'control',
+  edit = 'edit',
+  name = 'name',
 }
 
 export enum Mode {
@@ -124,6 +138,16 @@ export enum Mode {
   cart = 'cart',
   link = 'link',
   colored = 'colored',
+  promo = 'promo',
+  subtotal = 'subtotal',
+  tax = 'tax',
+  total = 'total',
+  order = 'order',
+  clear = 'clear',
+  dec = 'decrease',
+  inc = 'increase',
+  item = 'item',
+  available = 'available',
 }
 
 export enum Base {
@@ -142,6 +166,7 @@ export enum Base {
   btns_bordered = `${btns} ${btns}_bordered`,
   btns_empty = `${btns} ${btns}_empty`,
   btns_edit = `${btns} ${btns}_edit`,
+  btns_quant = `${btns} ${btns}__quantity`,
   btns_modal = `${btns}_modal`,
   btns_redirect = `redirect__buttons`,
   select = `${form}__select`,
@@ -178,6 +203,9 @@ export enum Buttons {
   SAVE = 'SAVE',
   BACK = 'BACK',
   CHANGE_PASS = 'Change Password',
+  CLEAR_CART = 'CLEAR SHOPPING CART',
+  PROMO = 'APPLY DISCOUNT',
+  ORDER = 'PROCEED TO CHECKOUT',
 }
 
 export enum Titles {
@@ -212,6 +240,12 @@ export enum Titles {
   ABOUT_US = `About Us`,
   SHOP_CART = `Shopping Cart`,
   PCS = `pcs`,
+  CURRENCY = `RUB`,
+  PROMO = `Apply Discount Code`,
+  INPUT_PROMO = `Enter discount code`,
+  SUBTOTAL = `Subtotal`,
+  TAX = `Tax`,
+  ORDER = `Order Total`,
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;

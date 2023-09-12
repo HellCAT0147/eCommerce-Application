@@ -1,0 +1,190 @@
+.cart {
+  &__wrapper {
+    display: flex;
+    column-gap: 70px;
+    width: 100%;
+    justify-content: center;
+    margin: 40px 0;
+    @include media-laptop {
+      column-gap: 40px;
+    }
+    @include media-tablet-landscape {
+      align-items: center;
+      flex-direction: column;
+      row-gap: 60px;
+    }
+  }
+
+  &__article {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 753px;
+    row-gap: 24px;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 24px 0;
+    border-top: 1px solid $color-input;
+    border-bottom: 1px solid $color-input;
+  }
+
+  &__header,
+  &__item {
+    display: grid;
+    justify-content: space-between;
+    grid-template-columns: 283px 78px 120px 78px 24px;
+    column-gap: 40px;
+    @include media-laptop {
+      grid-template-columns: 240px 70px 120px 70px 24px;
+      column-gap: 20px;
+    }
+    @include media-tablet-landscape {
+      grid-template-columns: 283px 78px 120px 78px 24px;
+      column-gap: 40px;
+    }
+    @include media-tablet {
+      grid-template-columns: 180px 50px 90px 50px 24px;
+      column-gap: 20px;
+    }
+    @include media-mobile-large {
+      grid-template-columns: 90px 50px 90px 50px 24px;
+      column-gap: 10px;
+    }
+  }
+
+  &__header {
+    @include font(500, 1.8rem, 100%, $color-Light-gray);
+  }
+
+  &__item {
+    align-items: center;
+  }
+
+  &__product {
+    display: flex;
+    @include media-mobile-large {
+      flex-direction: column;
+    }
+  }
+
+  &__image {
+    max-width: 83px;
+  }
+
+  &__name {
+    padding: 0 18px;
+    @include font(500, 1.8rem, 100%, $color-dark);
+    @include media-mobile-large {
+      padding: 5px 0px;
+    }
+  }
+
+  &__price {
+    &_item {
+      @extend %font-second;
+      @include font(500, 1.4rem, 100%, $color-dark);
+    }
+  }
+
+  &__quantity {
+    &_item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid $color-input;
+    }
+  }
+
+  &__amount {
+    flex-shrink: 0;
+    @include font(400, 1.6rem, 100%, $color-dark);
+  }
+
+  &__total {
+    &_item {
+      @extend %font-second;
+      @include font(500, 1.4rem, 100%, $color-dark);
+    }
+  }
+
+  &__edit {
+    flex-shrink: 0;
+    &_delete {
+      height: 24px;
+      width: 24px;
+      background: url('../assets/ico/delete.svg');
+      background-repeat: no-repeat;
+      background-size: contain;
+      cursor: pointer;
+      &:hover {
+        background: url('../assets/ico/delete_hover.svg');
+      }
+    }
+  }
+
+  &__control {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__button {
+    &_clear {
+      align-self: flex-end;
+    }
+  }
+
+  &__aside {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 500px;
+    row-gap: 24px;
+  }
+
+  &__promo,
+  &__order {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid $color-input;
+    background: $color-Light-hover;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    padding: 36px 32px;
+    row-gap: 22px;
+  }
+
+  &__label {
+    font-size: 2.4rem;
+  }
+
+  &__input {
+    width: 100%;
+  }
+}
+
+.order {
+  &__field {
+    display: flex;
+    justify-content: space-between;
+
+    &_subtotal {
+      @include font(500, 1.8rem, 100%, $color-dark);
+    }
+
+    &_tax {
+      @include font(500, 1.8rem, 100%, $color-Light-gray);
+    }
+
+    &_total {
+      margin-top: 5px;
+      @include font(400, 2.4rem, 100%, $color-dark);
+    }
+  }
+}
