@@ -26,6 +26,7 @@ import {
   MyCustomerSetDefaultShippingAddressAction,
   Cart,
   CartUpdateAction,
+  LineItem,
 } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import { ErrorObject } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/error';
@@ -700,8 +701,61 @@ export default class ECommerceApi {
 
   public async getActiveCart(): Promise<ClientResponse<Cart> | ErrorObject> {
     try {
-      const response: ClientResponse<Cart> = await this.apiRoot.me().activeCart().get().execute();
+      let response: ClientResponse<Cart>;
+      if ((await this.apiRoot.me().carts().get().execute()).body.total)
+        response = await this.apiRoot.me().activeCart().get().execute();
+      else
+        response = await this.apiRoot
+          .me()
+          .carts()
+          .post({
+            body: {
+              currency: DataBase.currency,
+            },
+          })
+          .execute();
+
       return response;
+    } catch (error) {
+      return this.errorObjectOrThrow(error);
+    }
+  }
+
+  public async addNewProduct(id: string): Promise<ClientResponse<Cart> | ErrorObject> {
+    try {
+      const responseActiveCart: ClientResponse<Cart> | ErrorObject = await this.getActiveCart();
+      const cartId: string = responseActiveCart.body.id;
+      const cartVersion: number = responseActiveCart.body.version;
+      const actions: CartUpdateAction[] = [
+        {
+          action: 'addLineItem',
+          sku: `${id}-s`,
+        },
+      ];
+      if ('code' in responseActiveCart && 'message' in responseActiveCart) return responseActiveCart;
+      const responseAddProduct: ClientResponse<Cart> = await this.apiRoot
+        .carts()
+        .withId({ ID: cartId })
+        .post({
+          body: {
+            version: cartVersion,
+            actions,
+          },
+        })
+        .execute();
+      return responseAddProduct;
+    } catch (error) {
+      return this.errorObjectOrThrow(error);
+    }
+  }
+
+  public async isInCart(id: string): Promise<boolean | ErrorObject> {
+    try {
+      const responseActiveCart: ClientResponse<Cart> | ErrorObject = await this.getActiveCart();
+      if ('code' in responseActiveCart && 'message' in responseActiveCart) return responseActiveCart;
+      const items: LineItem[] = responseActiveCart.body.lineItems;
+      if (items.findIndex((item: LineItem): boolean => item.variant.sku === `${id}-s`) !== -1) return true;
+      return false;
     } catch (error) {
       return this.errorObjectOrThrow(error);
     }
