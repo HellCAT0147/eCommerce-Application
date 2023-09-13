@@ -1,4 +1,12 @@
-import { ErrorObject, Price, Product, ProductData, ProductProjection } from '@commercetools/platform-sdk';
+import {
+  Cart,
+  ClientResponse,
+  ErrorObject,
+  Price,
+  Product,
+  ProductData,
+  ProductProjection,
+} from '@commercetools/platform-sdk';
 import ECommerceApi from '../../../api/e-commerce-api';
 import ViewCatalog from '../view/view';
 import ResultPagination from '../../../models/result-pagination';
@@ -70,6 +78,8 @@ export default class ModelCatalog {
         createQueryStringFromCatalogViewState(viewState),
         viewState.query
       );
+      const cartResponse: ClientResponse<Cart> | ErrorObject = await this.eCommerceApi.getActiveCart();
+      const cart: Cart = cartResponse.body;
       this.eCommerceApi.getCategoriesTree().then((categoriesMap) => {
         if (categoriesMap instanceof Map) {
           this.view.fillCategories(categoriesMap);
@@ -79,11 +89,11 @@ export default class ModelCatalog {
         this.view.showError(response.message);
       } else {
         if (justFill) {
-          this.view.fillCatalogPage(response);
+          this.view.fillCatalogPage(response, cart);
           this.view.fillPaginationButtons(response);
           return;
         }
-        this.view.constructCatalogPage(response);
+        this.view.constructCatalogPage(response, cart);
       }
     } catch (error) {
       if (error instanceof Error) this.view.showError(error.message);
@@ -120,5 +130,16 @@ export default class ModelCatalog {
       if (modal) this.view.hideModal(modal);
       this.view.switchScroll(true);
     }
+  }
+
+  public async addToCart(id: string): Promise<void> {
+    this.view.showSpinner(id);
+    const result = await this.eCommerceApi.addNewProduct(id);
+    const isSuccessful = result.body !== undefined;
+    this.view.hideSpinner(id, isSuccessful);
+  }
+
+  public async isInCart(id: string): Promise<boolean | ErrorObject> {
+    return this.eCommerceApi.isInCart(id);
   }
 }

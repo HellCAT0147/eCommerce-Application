@@ -1,4 +1,4 @@
-import { Image, ProductData, ProductVariant, ProductProjection } from '@commercetools/platform-sdk';
+import { Image, ProductData, ProductVariant, ProductProjection, ErrorObject, Cart } from '@commercetools/platform-sdk';
 import { Category } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/category';
 import { Base, Blocks, Elem, Mode } from '../../../models/builder';
 import Builder from '../../builder/html-builder';
@@ -581,13 +581,22 @@ export default class ViewCatalog {
     basePrice.innerText = `${product.masterVariant.prices?.[0].value.centAmount.toString().slice(0, -2)} RUB`;
     priceTag.append(basePrice);
     if (product.masterVariant.prices?.[0].discounted) {
+      basePrice.classList.add('before-disc');
       const discountedPrice: HTMLElement = new Builder('span', '', Blocks.catalog, 'card', 'disc-price').element();
       discountedPrice.innerText = `${product.masterVariant.prices?.[0].discounted.value.centAmount
         .toString()
         .slice(0, -2)} RUB`;
       priceTag.append(discountedPrice);
     }
-    card.append(cardPic, nameTag, descriptionTag, readMore, priceTag);
+    const addToCart = new Builder('button', Base.btns_colored, Blocks.catalog, Elem.btn, Mode.cart).button();
+    const spinner = document.createElement('span');
+    spinner.classList.add('add-spinner');
+    spinner.classList.add('add-spinner_hide');
+    const text = document.createElement('span');
+    text.innerText = 'ADD TO CART';
+    text.classList.add('add-text');
+    addToCart.append(spinner, text);
+    card.append(cardPic, nameTag, descriptionTag, readMore, priceTag, addToCart);
     card.setAttribute('id', (product.key || '0').split('-')[1]);
     return card;
   }
@@ -629,7 +638,8 @@ export default class ViewCatalog {
     }
   }
 
-  public fillCatalogPage(resultPagination: ResultPagination<ProductProjection>): HTMLElement {
+  public fillCatalogPage(resultPagination: ResultPagination<ProductProjection> | ErrorObject, cart: Cart): HTMLElement {
+    const productsIdsInCart: Array<string | undefined> = cart.lineItems.map((cartItem) => cartItem.productKey);
     const page: HTMLElement =
       document.getElementById(ViewCatalog.catalogContainerId) ||
       new Builder('div', '', Blocks.catalog, 'page', '').element();
@@ -644,6 +654,16 @@ export default class ViewCatalog {
       emptyList.innerText = 'SORRY, NOTHING TO SHOW';
       page.append(emptyList);
     }
+    Array.from(page.children).forEach((child) => {
+      if (productsIdsInCart.includes(`product-${child.id}`)) {
+        const button = child.getElementsByClassName('catalog__button_cart')[0];
+        const text = button.getElementsByClassName('add-text')[0];
+        if (text instanceof HTMLSpanElement) {
+          text.innerText = 'ALREADY IN CART';
+        }
+        button.setAttribute('disabled', '');
+      }
+    });
     return page;
   }
 
@@ -652,16 +672,51 @@ export default class ViewCatalog {
     this.fillBreadcrumbs();
   }
 
-  public constructCatalogPage(resultPagination: ResultPagination<ProductProjection>): void {
+  public constructCatalogPage(resultPagination: ResultPagination<ProductProjection>, cart: Cart): void {
     const main: HTMLFormElement | null = document.querySelector(`.${Blocks.main}__${Mode.catalog}`);
     if (main) {
       main.innerHTML = '';
       const pageAndFilters: HTMLElement = new Builder('div', '', Blocks.catalog, 'page-and-filters', '').element();
-      pageAndFilters.append(this.createFilters(), this.fillCatalogPage(resultPagination));
+      pageAndFilters.append(this.createFilters(), this.fillCatalogPage(resultPagination, cart));
       const searchAndSorting = new Builder('div', '', Blocks.catalog, 'search-and-sorting', '').element();
       searchAndSorting.append(this.createPageSettings(), this.createSearchWrapper());
       main.append(this.createBreadCrumbs(), searchAndSorting, pageAndFilters, this.createPaginationButtons());
       this.fillPaginationButtons(resultPagination);
+    }
+  }
+
+  public showSpinner(id: string): void {
+    const card = document.getElementById(id);
+    if (card) {
+      const button = card.getElementsByClassName('catalog__button_cart')[0];
+      if (button) {
+        const spinner = button.getElementsByClassName('add-spinner')[0];
+        if (spinner) {
+          spinner.classList.remove('add-spinner_hide');
+        }
+        const text = button.getElementsByClassName('add-text')[0];
+        if (text instanceof HTMLButtonElement) {
+          text.innerText = 'ADDING...';
+        }
+      }
+    }
+  }
+
+  public hideSpinner(id: string, successfully: boolean): void {
+    const card = document.getElementById(id);
+    if (card) {
+      const button = card.getElementsByClassName('catalog__button_cart')[0];
+      if (button) {
+        const spinner = button.getElementsByClassName('add-spinner')[0];
+        if (spinner) {
+          spinner.classList.add('add-spinner_hide');
+        }
+        const text = button.getElementsByClassName('add-text')[0];
+        if (text instanceof HTMLSpanElement && successfully === true) {
+          text.innerText = 'ALREADY IN CART';
+          button.setAttribute('disabled', '');
+        }
+      }
     }
   }
 

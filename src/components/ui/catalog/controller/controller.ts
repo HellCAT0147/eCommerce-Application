@@ -22,7 +22,6 @@ class ControllerCatalog {
   public mouseEvent(e: MouseEvent): void {
     const { target } = e;
     if (!(target instanceof HTMLElement)) return;
-
     switch (target.tagName) {
       case 'BUTTON':
         if (target.id === ViewCatalog.resetButtonId) {
@@ -36,7 +35,14 @@ class ControllerCatalog {
           this.currentPagination = this.currentPagination.nextPage();
           this.loadProducts();
         }
+        if (target.classList.contains('catalog__button_cart')) {
+          const id = target.parentElement?.id;
+          if (id) {
+            this.model.addToCart(id);
+          }
+        }
         return;
+
       case 'INPUT':
         return;
       default:
