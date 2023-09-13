@@ -725,13 +725,36 @@ export default class ECommerceApi {
     }
   }
 
+  private async modifyCart(
+    cartId: string,
+    cartVersion: number,
+    actions: CartUpdateAction[]
+  ): Promise<Cart | ErrorObject> {
+    try {
+      return (
+        await this.apiRoot
+          .carts()
+          .withId({ ID: cartId })
+          .post({
+            body: {
+              version: cartVersion,
+              actions,
+            },
+          })
+          .execute()
+      ).body;
+    } catch (error) {
+      return this.errorObjectOrThrow(error);
+    }
+  }
+
   public async addNewProduct(id: string): Promise<Cart | ErrorObject> {
     try {
-      const responseActiveCart: Cart | ErrorObject = await this.getActiveCart();
-      if ('code' in responseActiveCart && 'message' in responseActiveCart) return responseActiveCart;
+      const response: Cart | ErrorObject = await this.getActiveCart();
+      if ('code' in response && 'message' in response) return response;
 
-      const cartId: string = responseActiveCart.id;
-      const cartVersion: number = responseActiveCart.version;
+      const cartId: string = response.id;
+      const cartVersion: number = response.version;
       const actions: CartUpdateAction[] = [
         {
           action: 'addLineItem',
@@ -739,18 +762,7 @@ export default class ECommerceApi {
         },
       ];
 
-      const responseAddProduct: ClientResponse<Cart> = await this.apiRoot
-        .carts()
-        .withId({ ID: cartId })
-        .post({
-          body: {
-            version: cartVersion,
-            actions,
-          },
-        })
-        .execute();
-
-      return responseAddProduct.body;
+      return await this.modifyCart(cartId, cartVersion, actions);
     } catch (error) {
       return this.errorObjectOrThrow(error);
     }
@@ -783,12 +795,13 @@ export default class ECommerceApi {
 
   public async removeCartItem(id: string): Promise<Cart | ErrorObject> {
     try {
-      const responseActiveCart: Cart | ErrorObject = await this.getActiveCart();
-      if ('code' in responseActiveCart && 'message' in responseActiveCart) return responseActiveCart;
+      const response: Cart | ErrorObject = await this.getActiveCart();
+      if ('code' in response && 'message' in response) return response;
 
-      const items: LineItem[] = responseActiveCart.lineItems;
+      const items: LineItem[] = response.lineItems;
       const lineItemId: string | undefined = items.find((item: LineItem): boolean => item.variant.sku === `${id}-s`)
         ?.id;
+
       if (lineItemId === undefined) {
         const error: ObjectNotFoundError = {
           code: 'ObjectNotFound',
@@ -797,8 +810,8 @@ export default class ECommerceApi {
         return this.errorObjectOrThrow(error);
       }
 
-      const cartId: string = responseActiveCart.id;
-      const cartVersion: number = responseActiveCart.version;
+      const cartId: string = response.id;
+      const cartVersion: number = response.version;
       const actions: CartUpdateAction[] = [
         {
           action: 'removeLineItem',
@@ -806,18 +819,7 @@ export default class ECommerceApi {
         },
       ];
 
-      const responseRemoveProduct: ClientResponse<Cart> = await this.apiRoot
-        .carts()
-        .withId({ ID: cartId })
-        .post({
-          body: {
-            version: cartVersion,
-            actions,
-          },
-        })
-        .execute();
-
-      return responseRemoveProduct.body;
+      return await this.modifyCart(cartId, cartVersion, actions);
     } catch (error) {
       return this.errorObjectOrThrow(error);
     }
