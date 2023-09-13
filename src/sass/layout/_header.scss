@@ -83,7 +83,7 @@
 
   &__quantity {
     height: 1.4rem;
-    @extend %transition;
+    @extend %smooth-appearance;
     @include font(700, 1.4rem, 100%, $color-light);
     @include media-tablet {
       height: 1.6rem;
