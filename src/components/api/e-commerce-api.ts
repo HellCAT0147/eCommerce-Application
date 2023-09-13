@@ -765,4 +765,16 @@ export default class ECommerceApi {
       return this.errorObjectOrThrow(error);
     }
   }
+
+  public async getCartItemsQuantity(isOnlyUnique: boolean = false): Promise<number | ErrorObject> {
+    try {
+      const responseActiveCart: Cart | ErrorObject = await this.getActiveCart();
+      if ('code' in responseActiveCart && 'message' in responseActiveCart) return responseActiveCart;
+
+      if (isOnlyUnique) return responseActiveCart.lineItems.length || 0;
+      return responseActiveCart.totalLineItemQuantity || 0;
+    } catch (error) {
+      return this.errorObjectOrThrow(error);
+    }
+  }
 }
