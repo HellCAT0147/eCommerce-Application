@@ -699,9 +699,10 @@ export default class ECommerceApi {
     return true;
   }
 
-  public async getActiveCart(): Promise<ClientResponse<Cart> | ErrorObject> {
+  public async getActiveCart(): Promise<Cart | ErrorObject> {
     try {
       let response: ClientResponse<Cart>;
+
       if ((await this.apiRoot.me().carts().get().execute()).body.total)
         response = await this.apiRoot.me().activeCart().get().execute();
       else
@@ -715,24 +716,26 @@ export default class ECommerceApi {
           })
           .execute();
 
-      return response;
+      return response.body;
     } catch (error) {
       return this.errorObjectOrThrow(error);
     }
   }
 
-  public async addNewProduct(id: string): Promise<ClientResponse<Cart> | ErrorObject> {
+  public async addNewProduct(id: string): Promise<Cart | ErrorObject> {
     try {
-      const responseActiveCart: ClientResponse<Cart> | ErrorObject = await this.getActiveCart();
-      const cartId: string = responseActiveCart.body.id;
-      const cartVersion: number = responseActiveCart.body.version;
+      const responseActiveCart: Cart | ErrorObject = await this.getActiveCart();
+      if ('code' in responseActiveCart && 'message' in responseActiveCart) return responseActiveCart;
+
+      const cartId: string = responseActiveCart.id;
+      const cartVersion: number = responseActiveCart.version;
       const actions: CartUpdateAction[] = [
         {
           action: 'addLineItem',
           sku: `${id}-s`,
         },
       ];
-      if ('code' in responseActiveCart && 'message' in responseActiveCart) return responseActiveCart;
+
       const responseAddProduct: ClientResponse<Cart> = await this.apiRoot
         .carts()
         .withId({ ID: cartId })
@@ -743,7 +746,8 @@ export default class ECommerceApi {
           },
         })
         .execute();
-      return responseAddProduct;
+
+      return responseAddProduct.body;
     } catch (error) {
       return this.errorObjectOrThrow(error);
     }
@@ -751,9 +755,10 @@ export default class ECommerceApi {
 
   public async isInCart(id: string): Promise<boolean | ErrorObject> {
     try {
-      const responseActiveCart: ClientResponse<Cart> | ErrorObject = await this.getActiveCart();
+      const responseActiveCart: Cart | ErrorObject = await this.getActiveCart();
       if ('code' in responseActiveCart && 'message' in responseActiveCart) return responseActiveCart;
-      const items: LineItem[] = responseActiveCart.body.lineItems;
+
+      const items: LineItem[] = responseActiveCart.lineItems;
       if (items.findIndex((item: LineItem): boolean => item.variant.sku === `${id}-s`) !== -1) return true;
       return false;
     } catch (error) {
