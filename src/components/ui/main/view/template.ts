@@ -1,4 +1,4 @@
-import { Base, Blocks, Elem, Mode, Titles } from '../../../models/builder';
+import { Base, Blocks, Buttons, Elem, Mode, Titles } from '../../../models/builder';
 import { Pages } from '../../../models/router';
 import Builder from '../../builder/html-builder';
 import createHeader from './header';
@@ -36,14 +36,22 @@ function createTemplateMain(isLoggedIn?: boolean): HTMLBodyElement | null {
     main.innerHTML = '';
   }
 
-  const title: HTMLElement = new Builder('h1', Base.titles, Blocks.main, Elem.title, '').element();
-  title.textContent = `eCommerce - ${Titles.MAIN} Page`;
+  const promoWrapper: HTMLElement = new Builder('section', Base.promo, Blocks.main, Elem.wrapper, '').element();
+  const promoContent: HTMLElement = new Builder('div', '', Blocks.promo, Elem.content, Mode.left).element();
+  const promoTitle: HTMLHeadingElement = new Builder('', '', Blocks.promo, Elem.title, '').h(1);
+  const promoButton: HTMLElement = new Builder('', Base.btns_bordered, Blocks.promo, Elem.btn, Mode.get_promo).button();
   const linkLogin: HTMLAnchorElement = new Builder('', Base.links, Blocks.main, Elem.link, Mode.login).a();
   const linkRegistration: HTMLElement = new Builder('', Base.links, Blocks.main, Elem.link, Mode.reg).a();
   const linkProfile: HTMLElement = new Builder('', Base.links, Blocks.main, Elem.link, Mode.prof).a();
 
+  promoTitle.textContent = Titles.PROMO_TITLE;
+  promoButton.textContent = Buttons.GET_PROMO;
+
+  promoContent.append(promoTitle, promoButton);
+  promoWrapper.append(promoContent);
+
   if (main) {
-    main.append(title, linkLogin, linkRegistration, linkProfile);
+    main.append(promoWrapper, linkLogin, linkRegistration, linkProfile);
   }
 
   return body || null;

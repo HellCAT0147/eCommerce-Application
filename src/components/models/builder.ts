@@ -15,6 +15,7 @@ export enum Blocks {
   ctrl = 'controls',
   cart = 'cart',
   order = 'order',
+  promo = 'promo',
 }
 
 export enum Elem {
@@ -148,6 +149,9 @@ export enum Mode {
   inc = 'increase',
   item = 'item',
   available = 'available',
+  get_promo = 'get-promo',
+  left = 'left',
+  right = 'right',
 }
 
 export enum Base {
@@ -184,6 +188,7 @@ export enum Base {
   modal = 'modal',
   prof_f = 'profile__forms',
   current_page = 'current-page',
+  promo = 'promo',
 }
 
 export enum Buttons {
@@ -206,6 +211,7 @@ export enum Buttons {
   CLEAR_CART = 'CLEAR SHOPPING CART',
   PROMO = 'APPLY DISCOUNT',
   ORDER = 'PROCEED TO CHECKOUT',
+  GET_PROMO = 'GET PROMO',
 }
 
 export enum Titles {
@@ -248,6 +254,7 @@ export enum Titles {
   ORDER = `Order Total`,
   EMPTY_CART = `There are no products in your cart yet.`,
   GO_CATALOG = `For a selection of products please go to the`,
+  PROMO_TITLE = `SUMMER SALE GET 30% OFF ON ALL DRESS.`,
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;
