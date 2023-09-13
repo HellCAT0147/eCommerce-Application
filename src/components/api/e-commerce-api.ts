@@ -824,4 +824,37 @@ export default class ECommerceApi {
       return this.errorObjectOrThrow(error);
     }
   }
+
+  public async setCartItemQuantity(id: string, quantity: number): Promise<Cart | ErrorObject> {
+    try {
+      const response: Cart | ErrorObject = await this.getActiveCart();
+      if ('code' in response && 'message' in response) return response;
+
+      const items: LineItem[] = response.lineItems;
+      const lineItemId: string | undefined = items.find((item: LineItem): boolean => item.variant.sku === `${id}-s`)
+        ?.id;
+
+      if (lineItemId === undefined) {
+        const error: ObjectNotFoundError = {
+          code: 'ObjectNotFound',
+          message: `Unable to find the item with ID #${id} in cart`,
+        };
+        return this.errorObjectOrThrow(error);
+      }
+
+      const cartId: string = response.id;
+      const cartVersion: number = response.version;
+      const actions: CartUpdateAction[] = [
+        {
+          action: 'changeLineItemQuantity',
+          lineItemId,
+          quantity,
+        },
+      ];
+
+      return await this.modifyCart(cartId, cartVersion, actions);
+    } catch (error) {
+      return this.errorObjectOrThrow(error);
+    }
+  }
 }
