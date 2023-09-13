@@ -31,6 +31,7 @@
     row-gap: 18px;
     border-top: 1px solid $color-input;
     border-bottom: 1px solid $color-input;
+    @include font(500, 1.8rem, 100%, $color-dark);
   }
 
   &__header,
@@ -167,6 +168,11 @@
 
   &__input {
     width: 100%;
+  }
+
+  &__link {
+    display: inline-block;
+    width: fit-content;
   }
 }
 

@@ -246,6 +246,8 @@ export enum Titles {
   SUBTOTAL = `Subtotal`,
   TAX = `Tax`,
   ORDER = `Order Total`,
+  EMPTY_CART = `There are no products in your cart yet.`,
+  GO_CATALOG = `For a selection of products please go to the`,
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;

@@ -79,7 +79,14 @@ export default class CartView {
     total.textContent = `${Elem.total}`.toUpperCase();
 
     listHeader.append(product, price, quantity, total, edit);
-    this.fillProductsList(productsList, listItem);
+    if (!listItem.length) {
+      const linkCatalog: HTMLAnchorElement = new Builder('', Base.links, Blocks.cart, Elem.link, Mode.catalog).a();
+      linkCatalog.textContent = `${Titles.GO_CATALOG} ${Buttons.CATALOG.toLocaleLowerCase()}.`;
+      productsList.textContent = Titles.EMPTY_CART;
+      productsList.append(linkCatalog);
+    } else {
+      this.fillProductsList(productsList, listItem);
+    }
     control.appendChild(buttonClear);
     article.append(listHeader, productsList, control);
 
