@@ -148,7 +148,9 @@ export default class CartView {
   }
 
   private renderItem(productsList: HTMLElement, lineItem: LineItem): void {
+    const key: string | undefined = lineItem.productKey?.split(`-`)[1];
     const item: HTMLElement = new Builder('section', '', Blocks.cart, Elem.item, '').element();
+    if (key) item.setAttribute('data-key', key);
     const prices: Price | undefined = lineItem.variant.prices?.[0];
     const totalPrice: number = lineItem.totalPrice.centAmount / 10 ** lineItem.totalPrice.fractionDigits;
     let src: string = '';
@@ -166,9 +168,9 @@ export default class CartView {
     if (totalPrice !== undefined) {
       totalPriceFormatted = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(totalPrice);
     }
-    const product: HTMLElement = new Builder('div', '', Blocks.cart, Elem.product, '').element();
-    const img: HTMLElement = new Builder('', '', Blocks.cart, Elem.image, '').img(src, title);
-    const name: HTMLElement = new Builder('', '', Blocks.cart, Elem.name, '').p();
+    const product: HTMLElement = new Builder('div', '', Blocks.cart, Elem.product, Mode.item).element();
+    const img: HTMLElement = new Builder('', '', Blocks.cart, Elem.image, Mode.item).img(src, title);
+    const name: HTMLElement = new Builder('', '', Blocks.cart, Elem.name, Mode.item).p();
     const price: HTMLElement = new Builder('', '', Blocks.cart, Elem.price, Mode.item).p();
     const quantity: HTMLElement = new Builder('div', '', Blocks.cart, Elem.quantity, Mode.item).element();
     const buttonDec: HTMLButtonElement = new Builder('', Base.btns_quant, Blocks.cart, Elem.btn, Mode.dec).button();
