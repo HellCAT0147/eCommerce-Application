@@ -1,4 +1,4 @@
-import { ErrorObject, Product } from '@commercetools/platform-sdk';
+import { Cart, ErrorObject } from '@commercetools/platform-sdk';
 import ECommerceApi from '../../../api/e-commerce-api';
 import CartView from '../view/view';
 
@@ -14,11 +14,10 @@ export default class CartModel {
 
   public async getCart(): Promise<void> {
     try {
-      // TODO add method for getting cart
-      const response: Product | ErrorObject = await this.eCommerceApi.getProduct('5');
+      const response: Cart | ErrorObject = await this.eCommerceApi.getActiveCart();
       if ('message' in response && 'code' in response) {
         // TODO this.view.showError(response.message);
-      } else this.view.showCart(response.masterData.current);
+      } else this.view.showCart(response);
     } catch (error) {
       if (error instanceof Error) {
         // TODO call the view method to display the error message

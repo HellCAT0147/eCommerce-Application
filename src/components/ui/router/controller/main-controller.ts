@@ -45,6 +45,8 @@ class MainController {
         url = Pages.REGISTRATION;
       } else if (url === Pages.GO_TO_PROF) {
         url = Pages.PROFILE;
+      } else if (url === Pages.GO_TO_CATALOG) {
+        url = Pages.CATALOG;
       }
     }
 

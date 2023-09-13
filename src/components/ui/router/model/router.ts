@@ -123,8 +123,16 @@ class Router {
   }
 
   private async setQuantity(): Promise<number> {
-    // TODO get quantity from API and assign a value to the quantity variable
-    const quantity: number = 285;
+    let quantity: number = 0;
+    try {
+      const response: number | ErrorObject = await this.eCommerceApi.getCartItemsQuantity();
+      if (typeof response === 'number') quantity = response;
+    } catch (error) {
+      if (error instanceof Error) {
+        // TODO implement method showError();
+      }
+    }
+
     showQuantity(quantity);
 
     return quantity;

@@ -76,3 +76,16 @@
   height: 3px;
   width: 100%;
 }
+
+%smooth-appearance {
+  animation: smooth-appearance 1s 1;
+  animation-iteration-count: 1;
+  @keyframes smooth-appearance {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+}
