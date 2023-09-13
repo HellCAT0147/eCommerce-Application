@@ -132,6 +132,13 @@ export default class ModelCatalog {
     }
   }
 
+  public async addToCart(id: string): Promise<void> {
+    this.view.showSpinner(id);
+    const result = await this.eCommerceApi.addNewProduct(id);
+    const isSuccessful = result.body !== undefined;
+    this.view.hideSpinner(id, isSuccessful);
+  }
+
   public async isInCart(id: string): Promise<boolean | ErrorObject> {
     return this.eCommerceApi.isInCart(id);
   }

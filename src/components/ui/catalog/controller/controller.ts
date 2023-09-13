@@ -38,12 +38,11 @@ class ControllerCatalog {
         if (target.classList.contains('catalog__button_cart')) {
           const id = target.parentElement?.id;
           if (id) {
-            this.addToCart(id);
-            this.loadProducts();
-            target.setAttribute('disabled', '');
+            this.model.addToCart(id);
           }
         }
         return;
+
       case 'INPUT':
         return;
       default:
@@ -77,10 +76,6 @@ class ControllerCatalog {
   public reloadProducts(): void {
     this.currentPagination = new Pagination();
     this.model.fetchProducts(this.currentPagination, true);
-  }
-
-  public addToCart(id: string): void {
-    this.eCommerceApi.addNewProduct(id);
   }
 }
 

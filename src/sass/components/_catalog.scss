@@ -1,3 +1,9 @@
+@keyframes spinner-border {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .catalog {
   &__empty-list {
     font-size: 2rem;
@@ -225,6 +231,9 @@
     min-width: 180px;
     margin: 1vw 0;
     padding: 7px 10px;
+    & span {
+      pointer-events: none;
+    }
   }
 
   &__pagination_wrapper {
@@ -262,6 +271,22 @@
     background-color: gray;
     scale: 1;
   }
+}
+.add-spinner {
+  display: inline-block;
+  width: 1.3rem;
+  height: 1.3rem;
+  vertical-align: -0.125em;
+  border: 0.2em solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  -webkit-animation: 0.75s linear infinite spinner-border;
+  animation: 0.75s linear infinite spinner-border;
+  margin-right: 10px;
+}
+
+.add-spinner_hide {
+  display: none;
 }
 
 @media (max-width: 739px) {
