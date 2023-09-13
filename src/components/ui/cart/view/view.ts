@@ -1,4 +1,4 @@
-import { Price, ProductData } from '@commercetools/platform-sdk';
+import { Cart, LineItem, Price } from '@commercetools/platform-sdk';
 import { Base, Blocks, Buttons, Elem, Mode, Titles } from '../../../models/builder';
 import Builder from '../../builder/html-builder';
 import { Pages } from '../../../models/router';
@@ -54,7 +54,7 @@ export default class CartView {
     }, 1500);
   }
 
-  private createProductsList(data: ProductData): HTMLElement {
+  private createProductsList(listItem: LineItem[]): HTMLElement {
     const article: HTMLElement = new Builder('article', '', Blocks.cart, Elem.article, '').element();
     const productsList: HTMLElement = new Builder('div', '', Blocks.cart, Elem.list, '').element();
     const listHeader: HTMLElement = new Builder('div', '', Blocks.cart, Elem.header, '').element();
@@ -79,7 +79,7 @@ export default class CartView {
     total.textContent = `${Elem.total}`.toUpperCase();
 
     listHeader.append(product, price, quantity, total, edit);
-    this.fillProductsList(productsList, data);
+    this.fillProductsList(productsList, listItem);
     control.appendChild(buttonClear);
     article.append(listHeader, productsList, control);
 
@@ -147,25 +147,25 @@ export default class CartView {
     return aside;
   }
 
-  private fillProductsList(productsList: HTMLElement, data: ProductData): void {
+  private renderItem(productsList: HTMLElement, lineItem: LineItem): void {
     const item: HTMLElement = new Builder('section', '', Blocks.cart, Elem.item, '').element();
-    const prices: Price | undefined = data.masterVariant.prices?.[0];
+    const prices: Price | undefined = lineItem.variant.prices?.[0];
+    const totalPrice: number = lineItem.totalPrice.centAmount / 10 ** lineItem.totalPrice.fractionDigits;
     let src: string = '';
     let title: string = '';
     let basePrice: number;
     let basePriceFormatted: string = '';
-    if (!data) return;
-    if (data.masterVariant.images) {
-      src = data.masterVariant.images[0].url;
-    }
-    if (data.name) {
-      title = data.name['en-US'].toString();
-    }
+    let totalPriceFormatted: string = '';
+    if (!lineItem) return;
+    if (lineItem.variant.images) src = lineItem.variant.images[0].url;
+    if (lineItem.name) title = lineItem.name['en-US'].toString();
     if (prices !== undefined) {
       basePrice = prices.value.centAmount / 10 ** prices.value.fractionDigits;
       basePriceFormatted = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(basePrice);
     }
-
+    if (totalPrice !== undefined) {
+      totalPriceFormatted = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(totalPrice);
+    }
     const product: HTMLElement = new Builder('div', '', Blocks.cart, Elem.product, '').element();
     const img: HTMLElement = new Builder('', '', Blocks.cart, Elem.image, '').img(src, title);
     const name: HTMLElement = new Builder('', '', Blocks.cart, Elem.name, '').p();
@@ -180,24 +180,29 @@ export default class CartView {
     name.textContent = title;
     price.textContent = basePriceFormatted;
     buttonDec.textContent = '-';
-    amount.textContent = '1';
+    amount.textContent = `${lineItem.quantity}`;
     buttonInc.textContent = '+';
     buttonInc.classList.add(`${Base.btns}__${Elem.quantity}_${Mode.available}`);
-    total.textContent = basePriceFormatted;
+    total.textContent = totalPriceFormatted;
 
     product.append(img, name);
     quantity.append(buttonDec, amount, buttonInc);
     item.append(product, price, quantity, total, edit);
-    // TODO implement method for adding products to list;
 
     productsList.appendChild(item);
   }
 
-  public showCart(data: ProductData): void {
+  private fillProductsList(productsList: HTMLElement, listItem: LineItem[]): void {
+    listItem.forEach((lineItem: LineItem) => {
+      this.renderItem(productsList, lineItem);
+    });
+  }
+
+  public showCart(cart: Cart): void {
     const main: HTMLFormElement | null = document.querySelector(`.${Blocks.main}__${Pages.CART}`);
     if (main) {
       const wrapper: HTMLElement = new Builder('div', '', Blocks.cart, Elem.wrapper, '').element();
-      const productsList: HTMLElement = this.createProductsList(data);
+      const productsList: HTMLElement = this.createProductsList(cart.lineItems);
       const aside: HTMLElement = this.createAside();
 
       wrapper.append(productsList, aside);
