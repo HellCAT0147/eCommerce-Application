@@ -793,7 +793,7 @@ export default class ECommerceApi {
     }
   }
 
-  public async removeCartItem(id: string): Promise<Cart | ErrorObject> {
+  public async removeCartItem(id: string, isDecrease: boolean = false): Promise<Cart | ErrorObject> {
     try {
       const response: Cart | ErrorObject = await this.getActiveCart();
       if ('code' in response && 'message' in response) return response;
@@ -812,12 +812,18 @@ export default class ECommerceApi {
 
       const cartId: string = response.id;
       const cartVersion: number = response.version;
-      const actions: CartUpdateAction[] = [
-        {
+      const actions: CartUpdateAction[] = [];
+      if (isDecrease)
+        actions.push({
           action: 'removeLineItem',
           lineItemId,
-        },
-      ];
+          quantity: 1,
+        });
+      else
+        actions.push({
+          action: 'removeLineItem',
+          lineItemId,
+        });
 
       return await this.modifyCart(cartId, cartVersion, actions);
     } catch (error) {
