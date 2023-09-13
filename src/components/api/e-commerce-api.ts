@@ -29,7 +29,10 @@ import {
   LineItem,
 } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
-import { ErrorObject } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/error';
+import {
+  ErrorObject,
+  ObjectNotFoundError,
+} from '@commercetools/platform-sdk/dist/declarations/src/generated/models/error';
 import { Category } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/category';
 import TokenCachesStore from './token-caches-store';
 import compareObjects from '../utils/compare-objects';
@@ -722,13 +725,36 @@ export default class ECommerceApi {
     }
   }
 
+  private async modifyCart(
+    cartId: string,
+    cartVersion: number,
+    actions: CartUpdateAction[]
+  ): Promise<Cart | ErrorObject> {
+    try {
+      return (
+        await this.apiRoot
+          .carts()
+          .withId({ ID: cartId })
+          .post({
+            body: {
+              version: cartVersion,
+              actions,
+            },
+          })
+          .execute()
+      ).body;
+    } catch (error) {
+      return this.errorObjectOrThrow(error);
+    }
+  }
+
   public async addNewProduct(id: string): Promise<Cart | ErrorObject> {
     try {
-      const responseActiveCart: Cart | ErrorObject = await this.getActiveCart();
-      if ('code' in responseActiveCart && 'message' in responseActiveCart) return responseActiveCart;
+      const response: Cart | ErrorObject = await this.getActiveCart();
+      if ('code' in response && 'message' in response) return response;
 
-      const cartId: string = responseActiveCart.id;
-      const cartVersion: number = responseActiveCart.version;
+      const cartId: string = response.id;
+      const cartVersion: number = response.version;
       const actions: CartUpdateAction[] = [
         {
           action: 'addLineItem',
@@ -736,18 +762,7 @@ export default class ECommerceApi {
         },
       ];
 
-      const responseAddProduct: ClientResponse<Cart> = await this.apiRoot
-        .carts()
-        .withId({ ID: cartId })
-        .post({
-          body: {
-            version: cartVersion,
-            actions,
-          },
-        })
-        .execute();
-
-      return responseAddProduct.body;
+      return await this.modifyCart(cartId, cartVersion, actions);
     } catch (error) {
       return this.errorObjectOrThrow(error);
     }
@@ -755,10 +770,10 @@ export default class ECommerceApi {
 
   public async isInCart(id: string): Promise<boolean | ErrorObject> {
     try {
-      const responseActiveCart: Cart | ErrorObject = await this.getActiveCart();
-      if ('code' in responseActiveCart && 'message' in responseActiveCart) return responseActiveCart;
+      const response: Cart | ErrorObject = await this.getActiveCart();
+      if ('code' in response && 'message' in response) return response;
 
-      const items: LineItem[] = responseActiveCart.lineItems;
+      const items: LineItem[] = response.lineItems;
       if (items.findIndex((item: LineItem): boolean => item.variant.sku === `${id}-s`) !== -1) return true;
       return false;
     } catch (error) {
@@ -768,11 +783,82 @@ export default class ECommerceApi {
 
   public async getCartItemsQuantity(isOnlyUnique: boolean = false): Promise<number | ErrorObject> {
     try {
-      const responseActiveCart: Cart | ErrorObject = await this.getActiveCart();
-      if ('code' in responseActiveCart && 'message' in responseActiveCart) return responseActiveCart;
+      const response: Cart | ErrorObject = await this.getActiveCart();
+      if ('code' in response && 'message' in response) return response;
 
-      if (isOnlyUnique) return responseActiveCart.lineItems.length || 0;
-      return responseActiveCart.totalLineItemQuantity || 0;
+      if (isOnlyUnique) return response.lineItems.length || 0;
+      return response.totalLineItemQuantity || 0;
+    } catch (error) {
+      return this.errorObjectOrThrow(error);
+    }
+  }
+
+  public async removeCartItem(id: string, isDecrease: boolean = false): Promise<Cart | ErrorObject> {
+    try {
+      const response: Cart | ErrorObject = await this.getActiveCart();
+      if ('code' in response && 'message' in response) return response;
+
+      const items: LineItem[] = response.lineItems;
+      const lineItemId: string | undefined = items.find((item: LineItem): boolean => item.variant.sku === `${id}-s`)
+        ?.id;
+
+      if (lineItemId === undefined) {
+        const error: ObjectNotFoundError = {
+          code: 'ObjectNotFound',
+          message: `Unable to find the item with ID #${id} in cart`,
+        };
+        return this.errorObjectOrThrow(error);
+      }
+
+      const cartId: string = response.id;
+      const cartVersion: number = response.version;
+      const actions: CartUpdateAction[] = [];
+      if (isDecrease)
+        actions.push({
+          action: 'removeLineItem',
+          lineItemId,
+          quantity: 1,
+        });
+      else
+        actions.push({
+          action: 'removeLineItem',
+          lineItemId,
+        });
+
+      return await this.modifyCart(cartId, cartVersion, actions);
+    } catch (error) {
+      return this.errorObjectOrThrow(error);
+    }
+  }
+
+  public async setCartItemQuantity(id: string, quantity: number): Promise<Cart | ErrorObject> {
+    try {
+      const response: Cart | ErrorObject = await this.getActiveCart();
+      if ('code' in response && 'message' in response) return response;
+
+      const items: LineItem[] = response.lineItems;
+      const lineItemId: string | undefined = items.find((item: LineItem): boolean => item.variant.sku === `${id}-s`)
+        ?.id;
+
+      if (lineItemId === undefined) {
+        const error: ObjectNotFoundError = {
+          code: 'ObjectNotFound',
+          message: `Unable to find the item with ID #${id} in cart`,
+        };
+        return this.errorObjectOrThrow(error);
+      }
+
+      const cartId: string = response.id;
+      const cartVersion: number = response.version;
+      const actions: CartUpdateAction[] = [
+        {
+          action: 'changeLineItemQuantity',
+          lineItemId,
+          quantity,
+        },
+      ];
+
+      return await this.modifyCart(cartId, cartVersion, actions);
     } catch (error) {
       return this.errorObjectOrThrow(error);
     }
