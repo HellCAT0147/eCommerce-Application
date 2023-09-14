@@ -2,6 +2,7 @@ import { Cart, LineItem, Price } from '@commercetools/platform-sdk';
 import { Base, Blocks, Buttons, Elem, Mode, Titles } from '../../../models/builder';
 import Builder from '../../builder/html-builder';
 import { Pages } from '../../../models/router';
+import { DataOrder } from '../../../models/commerce';
 
 export default class CartView {
   private pageName: string;
@@ -93,29 +94,30 @@ export default class CartView {
     return article;
   }
 
-  private createOrderField(order: HTMLElement): void {
-    const fieldsMode: string[] = [Mode.subtotal, Mode.tax, Mode.total];
+  private createOrderField(order: HTMLElement, orderData: DataOrder): void {
+    const fieldsMode: string[] = [Mode.subtotal, Mode.sale, Mode.total];
 
     fieldsMode.forEach((mode) => {
       const field: HTMLElement = new Builder('div', '', Blocks.order, Elem.field, mode).element();
       const text: HTMLElement = new Builder('div', '', Blocks.order, Elem.text, mode).element();
       const amount: HTMLElement = new Builder('div', '', Blocks.order, Elem.amount, mode).element();
-      // TODO get amount from API;
       if (mode === Mode.subtotal) {
         text.textContent = `${Titles.SUBTOTAL}`;
-      } else if (mode === Mode.tax) {
-        text.textContent = `${Titles.TAX}`;
+        amount.textContent = orderData.subtotal;
+      } else if (mode === Mode.sale) {
+        text.textContent = `${Titles.SALE}`;
+        amount.textContent = `- ${orderData.sale}`;
       } else if (mode === Mode.total) {
         text.textContent = `${Titles.ORDER}`;
+        amount.textContent = orderData.total;
       }
-      amount.textContent = `0.00 ${Titles.CURRENCY}`;
 
       field.append(text, amount);
       order.appendChild(field);
     });
   }
 
-  private createAside(): HTMLElement {
+  private createAside(orderData: DataOrder): HTMLElement {
     const aside: HTMLElement = new Builder('aside', '', Blocks.cart, Elem.aside, '').element();
     const promo: HTMLElement = new Builder('div', '', Blocks.cart, Elem.promo, '').element();
     const fieldPromo: HTMLElement = new Builder('div', '', Blocks.cart, Elem.field, '').element();
@@ -135,7 +137,7 @@ export default class CartView {
 
     const order: HTMLElement = new Builder('div', '', Blocks.cart, Elem.order, '').element();
     const fieldOrder: HTMLElement = new Builder('div', '', Blocks.cart, Elem.field, '').element();
-    this.createOrderField(fieldOrder);
+    this.createOrderField(fieldOrder, orderData);
     const buttonOrder: HTMLButtonElement = new Builder(
       '',
       Base.btns_colored,
@@ -207,12 +209,12 @@ export default class CartView {
     });
   }
 
-  public showCart(cart: Cart): void {
+  public showCart(cart: Cart, order: DataOrder): void {
     const main: HTMLFormElement | null = document.querySelector(`.${Blocks.main}__${Pages.CART}`);
     if (main) {
       const wrapper: HTMLElement = new Builder('div', '', Blocks.cart, Elem.wrapper, '').element();
       const productsList: HTMLElement = this.createProductsList(cart.lineItems);
-      const aside: HTMLElement = this.createAside();
+      const aside: HTMLElement = this.createAside(order);
 
       wrapper.append(productsList, aside);
       main.append(wrapper);

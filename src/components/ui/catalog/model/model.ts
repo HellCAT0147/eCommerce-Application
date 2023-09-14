@@ -1,12 +1,4 @@
-import {
-  Cart,
-  ClientResponse,
-  ErrorObject,
-  Price,
-  Product,
-  ProductData,
-  ProductProjection,
-} from '@commercetools/platform-sdk';
+import { Cart, ErrorObject, Price, Product, ProductData, ProductProjection } from '@commercetools/platform-sdk';
 import ECommerceApi from '../../../api/e-commerce-api';
 import ViewCatalog from '../view/view';
 import ResultPagination from '../../../models/result-pagination';
@@ -78,22 +70,25 @@ export default class ModelCatalog {
         createQueryStringFromCatalogViewState(viewState),
         viewState.query
       );
-      const cartResponse: ClientResponse<Cart> | ErrorObject = await this.eCommerceApi.getActiveCart();
-      const cart: Cart = cartResponse.body;
+      const cartResponse: Cart | ErrorObject = await this.eCommerceApi.getActiveCart();
       this.eCommerceApi.getCategoriesTree().then((categoriesMap) => {
         if (categoriesMap instanceof Map) {
           this.view.fillCategories(categoriesMap);
         }
       });
+      if ('message' in cartResponse && 'code' in cartResponse) {
+        this.view.showError(cartResponse.message);
+        return;
+      }
       if ('message' in response && 'code' in response) {
         this.view.showError(response.message);
       } else {
         if (justFill) {
-          this.view.fillCatalogPage(response, cart);
+          this.view.fillCatalogPage(response, cartResponse);
           this.view.fillPaginationButtons(response);
           return;
         }
-        this.view.constructCatalogPage(response, cart);
+        this.view.constructCatalogPage(response, cartResponse);
       }
     } catch (error) {
       if (error instanceof Error) this.view.showError(error.message);
@@ -135,7 +130,7 @@ export default class ModelCatalog {
   public async addToCart(id: string): Promise<void> {
     this.view.showSpinner(id);
     const result = await this.eCommerceApi.addNewProduct(id);
-    const isSuccessful = result.body !== undefined;
+    const isSuccessful = result !== undefined;
     this.view.hideSpinner(id, isSuccessful);
   }
 

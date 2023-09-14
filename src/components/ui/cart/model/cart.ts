@@ -1,6 +1,7 @@
-import { Cart, ErrorObject } from '@commercetools/platform-sdk';
+import { Cart, ErrorObject, LineItem, Price } from '@commercetools/platform-sdk';
 import ECommerceApi from '../../../api/e-commerce-api';
 import CartView from '../view/view';
+import { DataOrder } from '../../../models/commerce';
 
 export default class CartModel {
   protected view: CartView;
@@ -12,12 +13,52 @@ export default class CartModel {
     this.view = new CartView();
   }
 
+  private getOrderData(cart: Cart): DataOrder {
+    const order: DataOrder = {
+      subtotal: '',
+      sale: '',
+      total: '',
+    };
+    let subtotal: number = 0;
+    let sale: number = 0;
+    let total: number = 0;
+    const listItems: LineItem[] = cart.lineItems;
+    const { totalPrice } = cart;
+
+    listItems.forEach((lineItem: LineItem) => {
+      const price: Price | undefined = lineItem.variant.prices?.[0];
+      const { quantity } = lineItem;
+      if (price) {
+        const basePrice: number = price.value.centAmount / 10 ** price.value.fractionDigits;
+        subtotal += basePrice * quantity;
+      }
+    });
+
+    total = totalPrice.centAmount / 10 ** totalPrice.fractionDigits;
+    sale = total - subtotal;
+
+    if (subtotal !== undefined) {
+      order.subtotal = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(subtotal);
+    }
+    if (sale !== undefined) {
+      order.sale = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(sale);
+    }
+    if (total !== undefined) {
+      order.total = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(total);
+    }
+
+    return order;
+  }
+
   public async getCart(): Promise<void> {
     try {
       const response: Cart | ErrorObject = await this.eCommerceApi.getActiveCart();
       if ('message' in response && 'code' in response) {
         // TODO this.view.showError(response.message);
-      } else this.view.showCart(response);
+      } else {
+        const order: DataOrder = this.getOrderData(response);
+        this.view.showCart(response, order);
+      }
     } catch (error) {
       if (error instanceof Error) {
         // TODO call the view method to display the error message
