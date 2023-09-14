@@ -270,11 +270,17 @@
     gap: 10px;
     overflow: hidden;
     justify-items: center;
-    & .catalog__button-cart_add {
-      min-width: 140px;
+    & .catalog__button-cart_add,
+    & .catalog__button-cart_remove {
+      min-width: 120px;
     }
   }
 }
+.product__wrapper_price,
+.product__description {
+  margin-left: 10px;
+}
+
 :disabled {
   background-color: gray;
   scale: 1;
