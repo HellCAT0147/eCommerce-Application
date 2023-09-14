@@ -134,5 +134,16 @@ export default class ModelCatalog {
     const result = await this.eCommerceApi.addNewProduct(id);
     const isSuccessful = result.lineItems !== undefined;
     this.view.hideAddSpinner(id, isSuccessful);
+    this.view.updateAddCartButton(id, false);
+    this.view.updateRemoveCartButton(id, true);
+  }
+
+  public async removeFromCart(id: string): Promise<void> {
+    this.view.showRemoveSpinner(id);
+    const result = await this.eCommerceApi.removeCartItem(id);
+    const isSuccessful = result.lineItems !== undefined;
+    this.view.hideRemoveSpinner(id, isSuccessful);
+    this.view.updateAddCartButton(id, true);
+    this.view.updateRemoveCartButton(id, false);
   }
 }

@@ -40,17 +40,21 @@ class ControllerCatalog {
         }
         if (target.classList.contains('catalog__button-cart_add')) {
           let id: string | undefined;
-          if (target.parentElement?.id) {
-            id = target.parentElement?.id;
-          } else {
+          if (target.parentElement?.id) id = target.parentElement?.id;
+          else {
             const main = target.closest('.main');
-            if (main) {
-              id = main.id;
-            }
+            if (main) id = main.id;
           }
-          if (id) {
-            this.model.addToCart(id);
+          if (id) this.model.addToCart(id);
+        }
+        if (target.classList.contains('catalog__button-cart_remove')) {
+          let id: string | undefined;
+          if (target.parentElement?.id) id = target.parentElement?.id;
+          else {
+            const main = target.closest('.main');
+            if (main) id = main.id;
           }
+          if (id) this.model.removeFromCart(id);
         }
         return;
 
@@ -60,10 +64,8 @@ class ControllerCatalog {
         e.preventDefault();
         break;
     }
-
     const img: HTMLImageElement | null = target.closest(`.${Blocks.product}__${Base.img}_${Mode.click}`);
     if (img) this.model.createModal(target);
-
     const closeBtn: HTMLDivElement | null = target.closest(`.${Blocks.modal}__${Elem.close}`);
     if (closeBtn) this.model.destroyModal(closeBtn);
   }

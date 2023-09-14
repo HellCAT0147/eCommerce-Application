@@ -113,6 +113,52 @@ export default class ViewCatalog {
     return emptyButton;
   }
 
+  public updateAddCartButton(id: string, on: boolean): void {
+    const product = document.getElementById(id);
+    if (product) {
+      const button = product.getElementsByClassName('catalog__button-cart_add')[0];
+      if (button && button instanceof HTMLButtonElement) {
+        if (on) {
+          button.removeAttribute('disabled');
+          const textWrapper = button.getElementsByClassName('add-text')[0];
+          if (textWrapper && textWrapper instanceof HTMLSpanElement) {
+            textWrapper.innerText = 'ADD TO CART';
+          }
+        }
+        if (!on) {
+          button.setAttribute('disabled', '');
+          const textWrapper = button.getElementsByClassName('add-text')[0];
+          if (textWrapper && textWrapper instanceof HTMLSpanElement) {
+            textWrapper.innerText = 'ALREADY IN CART';
+          }
+        }
+      }
+    }
+  }
+
+  public updateRemoveCartButton(id: string, on: boolean): void {
+    const product = document.getElementById(id);
+    if (product) {
+      const button = product.getElementsByClassName('catalog__button-cart_remove')[0];
+      if (button && button instanceof HTMLButtonElement) {
+        if (on) {
+          button.removeAttribute('disabled');
+          const textWrapper = button.getElementsByClassName('add-text')[0];
+          if (textWrapper && textWrapper instanceof HTMLSpanElement) {
+            textWrapper.innerText = 'REMOVE FROM CART';
+          }
+        }
+      }
+      if (!on) {
+        button.setAttribute('disabled', '');
+        const textWrapper = button.getElementsByClassName('add-text')[0];
+        if (textWrapper && textWrapper instanceof HTMLSpanElement) {
+          textWrapper.innerText = 'REMOVED FROM CART';
+        }
+      }
+    }
+  }
+
   public showProduct(
     data: ProductData,
     name: string,

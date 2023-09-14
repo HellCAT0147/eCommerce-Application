@@ -149,6 +149,7 @@ export enum Mode {
   inc = 'increase',
   item = 'item',
   available = 'available',
+  remove = 'remove',
 }
 
 export enum Base {

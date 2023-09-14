@@ -83,7 +83,11 @@ class MainController {
         this.router.controllerRegistration.buttonEvent(e);
       } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.CATALOG}`)) {
         const card: HTMLElement | null = targetHtmlElement.closest(`.${Base.cards}`);
-        if (card && !targetHtmlElement.classList.contains(`${Blocks.catalog}__${Elem.btn_cart}_${Mode.add}`)) {
+        if (
+          card &&
+          !targetHtmlElement.classList.contains(`${Blocks.catalog}__${Elem.btn_cart}_${Mode.add}`) &&
+          !targetHtmlElement.classList.contains(`${Blocks.catalog}__${Elem.btn_cart}_${Mode.remove}`)
+        ) {
           const id: string = this.getUrlElement(card);
           this.router.navigate(`${Pages.CATALOG}/${id}`);
         } else {
