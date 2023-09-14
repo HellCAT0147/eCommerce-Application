@@ -130,9 +130,9 @@ export default class ModelCatalog {
   }
 
   public async addToCart(id: string): Promise<void> {
-    this.view.showSpinner(id);
+    this.view.showAddSpinner(id);
     const result = await this.eCommerceApi.addNewProduct(id);
     const isSuccessful = result.lineItems !== undefined;
-    this.view.hideSpinner(id, isSuccessful);
+    this.view.hideAddSpinner(id, isSuccessful);
   }
 }

@@ -26,17 +26,28 @@ class ControllerCatalog {
       case 'BUTTON':
         if (target.id === ViewCatalog.resetButtonId) {
           this.model.resetProducts();
+          break;
         }
         if (target.id === ViewCatalog.prevPageButtonId) {
           this.currentPagination = this.currentPagination.prevPage();
           this.loadProducts();
+          break;
         }
         if (target.id === ViewCatalog.nextPageButtonId) {
           this.currentPagination = this.currentPagination.nextPage();
           this.loadProducts();
+          break;
         }
-        if (target.classList.contains('catalog__button_cart')) {
-          const id = target.parentElement?.id;
+        if (target.classList.contains('catalog__button-cart_add')) {
+          let id: string | undefined;
+          if (target.parentElement?.id) {
+            id = target.parentElement?.id;
+          } else {
+            const main = target.closest('.main');
+            if (main) {
+              id = main.id;
+            }
+          }
           if (id) {
             this.model.addToCart(id);
           }

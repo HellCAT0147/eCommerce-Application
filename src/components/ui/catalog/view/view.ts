@@ -1,4 +1,4 @@
-import { Image, ProductData, ProductVariant, ProductProjection, ErrorObject, Cart } from '@commercetools/platform-sdk';
+import { Image, ProductVariant, ProductProjection, ErrorObject, Cart, ProductData } from '@commercetools/platform-sdk';
 import { Category } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/category';
 import { Base, Blocks, Elem, Mode } from '../../../models/builder';
 import Builder from '../../builder/html-builder';
@@ -85,6 +85,34 @@ export default class ViewCatalog {
     return msg;
   }
 
+  public addSpinner(): HTMLElement {
+    const spinner = document.createElement('span');
+    spinner.classList.add('add-spinner');
+    spinner.classList.add('add-spinner_hide');
+    return spinner;
+  }
+
+  public createCartButton(mode: string): HTMLButtonElement {
+    const emptyButton = document.createElement('button');
+    if (mode === 'add') {
+      const button = new Builder('button', Base.btns_colored, Blocks.catalog, 'button-cart', 'add').button();
+      const text: HTMLSpanElement = document.createElement('span');
+      text.innerText = 'ADD TO CART';
+      text.classList.add('add-text');
+      button.append(this.addSpinner(), text);
+      return button;
+    }
+    if (mode === 'remove') {
+      const button = new Builder('button', Base.btns_colored, Blocks.catalog, 'button-cart', 'remove').button();
+      const text: HTMLSpanElement = document.createElement('span');
+      text.innerText = 'REMOVE FROM CART';
+      text.classList.add('add-text');
+      button.append(this.addSpinner(), text);
+      return button;
+    }
+    return emptyButton;
+  }
+
   public showProduct(
     data: ProductData,
     name: string,
@@ -121,10 +149,16 @@ export default class ViewCatalog {
 
       this.addSlider(productBody, images);
 
-      priceHTML.append(priceHeadingHTML, basePriceHTML, discountPriceHTML);
+      const cartButtons: HTMLElement = new Builder('div', '', Blocks.catalog, 'cart-buttons', 'wrapper').element();
+      cartButtons.append(this.createCartButton('add'), this.createCartButton('remove'));
+      priceHTML.append(priceHeadingHTML, basePriceHTML, discountPriceHTML, cartButtons);
       productInfo.append(nameHTML, priceHTML);
       productBody.appendChild(productInfo);
       product.append(productBody, descriptionHTML);
+      const id: string | undefined = data.masterVariant.key;
+      if (id) {
+        main.setAttribute('id', id.toString().split('-')[0]);
+      }
       main.appendChild(product);
     }
   }
@@ -588,15 +622,7 @@ export default class ViewCatalog {
         .slice(0, -2)} RUB`;
       priceTag.append(discountedPrice);
     }
-    const addToCart = new Builder('button', Base.btns_colored, Blocks.catalog, Elem.btn, Mode.cart).button();
-    const spinner = document.createElement('span');
-    spinner.classList.add('add-spinner');
-    spinner.classList.add('add-spinner_hide');
-    const text = document.createElement('span');
-    text.innerText = 'ADD TO CART';
-    text.classList.add('add-text');
-    addToCart.append(spinner, text);
-    card.append(cardPic, nameTag, descriptionTag, readMore, priceTag, addToCart);
+    card.append(cardPic, nameTag, descriptionTag, readMore, priceTag, this.createCartButton('add'));
     card.setAttribute('id', (product.key || '0').split('-')[1]);
     return card;
   }
@@ -685,10 +711,10 @@ export default class ViewCatalog {
     }
   }
 
-  public showSpinner(id: string): void {
+  public showAddSpinner(id: string): void {
     const card = document.getElementById(id);
     if (card) {
-      const button = card.getElementsByClassName('catalog__button_cart')[0];
+      const button = card.getElementsByClassName('catalog__button-cart_add')[0];
       if (button) {
         const spinner = button.getElementsByClassName('add-spinner')[0];
         if (spinner) {
@@ -702,10 +728,10 @@ export default class ViewCatalog {
     }
   }
 
-  public hideSpinner(id: string, successfully: boolean): void {
+  public hideAddSpinner(id: string, successfully: boolean): void {
     const card = document.getElementById(id);
     if (card) {
-      const button = card.getElementsByClassName('catalog__button_cart')[0];
+      const button = card.getElementsByClassName('catalog__button-cart_add')[0];
       if (button) {
         const spinner = button.getElementsByClassName('add-spinner')[0];
         if (spinner) {
@@ -714,6 +740,41 @@ export default class ViewCatalog {
         const text = button.getElementsByClassName('add-text')[0];
         if (text instanceof HTMLSpanElement && successfully === true) {
           text.innerText = 'ALREADY IN CART';
+          button.setAttribute('disabled', '');
+        }
+      }
+    }
+  }
+
+  public showRemoveSpinner(id: string): void {
+    const card = document.getElementById(id);
+    if (card) {
+      const button = card.getElementsByClassName('catalog__button-cart_remove')[0];
+      if (button) {
+        const spinner = button.getElementsByClassName('add-spinner')[0];
+        if (spinner) {
+          spinner.classList.remove('add-spinner_hide');
+        }
+        const text = button.getElementsByClassName('add-text')[0];
+        if (text instanceof HTMLButtonElement) {
+          text.innerText = 'REMOVING...';
+        }
+      }
+    }
+  }
+
+  public hideRemoveSpinner(id: string, successfully: boolean): void {
+    const card = document.getElementById(id);
+    if (card) {
+      const button = card.getElementsByClassName('catalog__button-cart_remove')[0];
+      if (button) {
+        const spinner = button.getElementsByClassName('add-spinner')[0];
+        if (spinner) {
+          spinner.classList.add('add-spinner_hide');
+        }
+        const text = button.getElementsByClassName('add-text')[0];
+        if (text instanceof HTMLSpanElement && successfully === true) {
+          text.innerText = 'REMOVED';
           button.setAttribute('disabled', '');
         }
       }

@@ -19,6 +19,7 @@ export enum Blocks {
 
 export enum Elem {
   btn = 'button',
+  btn_cart = 'button-cart',
   nav = 'nav',
   form = `form`,
   field = `field`,
