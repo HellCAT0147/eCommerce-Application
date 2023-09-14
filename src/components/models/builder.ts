@@ -153,6 +153,7 @@ export enum Mode {
   get_promo = 'get-promo',
   left = 'left',
   right = 'right',
+  dis = 'disabled',
 }
 
 export enum Base {
@@ -258,6 +259,7 @@ export enum Titles {
   PROMO_FIRST = `AUTUMN SALE GET `,
   PROMO_SECOND = `30% OFF `,
   PROMO_LAST = `ON EVERYTHING.`,
+  PROMO_CODE = `RASDAPROJA`,
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;

@@ -32,7 +32,7 @@ class Router {
   constructor(routes: Routes[], eCommerceApi: ECommerceApi) {
     this.routes = routes;
     this.eCommerceApi = eCommerceApi;
-    this.controllerMain = new ControllerMain();
+    this.controllerMain = new ControllerMain(this.eCommerceApi);
     this.controllerLogin = new ControllerLogin(this.eCommerceApi);
     this.controllerRegistration = new ControllerRegistration(this.eCommerceApi);
     this.controllerCatalog = new ControllerCatalog(this.eCommerceApi);

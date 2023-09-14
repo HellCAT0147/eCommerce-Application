@@ -74,9 +74,9 @@ class MainController {
         this.router.navigate(urlButton);
       }
 
-      this.router.controllerMain.mouseEvent(e);
-
-      if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.MAIN}`)) {
+      if (targetHtmlElement.closest(`.${Blocks.header}`)) {
+        this.router.controllerMain.mouseEvent(e);
+      } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.MAIN}`)) {
         this.router.controllerMain.mouseEvent(e);
       } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.LOGIN}`)) {
         this.router.controllerLogin.buttonEvent(e);

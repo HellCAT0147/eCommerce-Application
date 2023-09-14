@@ -46,18 +46,43 @@
       @include font(500, 2rem, 110%, $color-dark);
     }
     @include media-mobile-large {
-      max-width: 155px;
+      max-width: 160px;
       @include font(500, 1.4rem, 110%, $color-dark);
     }
     @include media-mobile-medium {
       max-width: 135px;
       @include font(500, 1.2rem, 110%, $color-dark);
     }
+
     &_second {
       color: transparent;
       -webkit-text-stroke: 1px $color-dark;
       @include media-mobile-large {
         -webkit-text-stroke: 0.5px $color-dark;
+      }
+    }
+
+    &_main {
+      position: relative;
+      margin-top: 10px;
+      &:before {
+        content: '';
+        position: absolute;
+        width: 90%;
+        border-top: 1.5px solid $color-dark;
+        top: -5px;
+        right: 0px;
+      }
+      &:after {
+        content: '';
+        position: absolute;
+        height: 30%;
+        border-right: 1.5px solid $color-dark;
+        top: -5px;
+        right: 0px;
+        @include media-mobile-large {
+          height: 50%;
+        }
       }
     }
   }
@@ -81,6 +106,26 @@
     @include media-mobile-medium {
       padding: 6px 14px;
       @include font(500, 0.8rem, 110%, $color-dark);
+    }
+
+    &.disabled {
+      background: $color-main-second;
+      border: 2px solid $color-main-second;
+      -webkit-user-select: text;
+      user-select: text;
+      color: $color-light;
+      transition: all 0.5s ease-in;
+      transform: rotateY(360deg);
+      cursor: text;
+
+      &:hover {
+        border: 2px solid $color-main-second;
+      }
+      &:active {
+        scale: none;
+        -webkit-user-select: all;
+        user-select: all;
+      }
     }
   }
 }

@@ -38,7 +38,7 @@ function createTemplateMain(isLoggedIn?: boolean): HTMLBodyElement | null {
 
   const promoWrapper: HTMLElement = new Builder('section', Base.promo, Blocks.main, Elem.wrapper, '').element();
   const promoContent: HTMLElement = new Builder('div', '', Blocks.promo, Elem.content, Mode.left).element();
-  const promoTitle: HTMLElement = new Builder('div', '', Blocks.promo, Elem.title, '').element();
+  const promoTitle: HTMLElement = new Builder('div', '', Blocks.promo, Elem.title, Mode.main).element();
   const promoTitleFirst: HTMLHeadingElement = new Builder('', '', Blocks.promo, Elem.title, Mode.first).h(1);
   const promoTitleSecond: HTMLHeadingElement = new Builder('', '', Blocks.promo, Elem.title, Mode.second).h(2);
   const promoTitleLast: HTMLHeadingElement = new Builder('', '', Blocks.promo, Elem.title, Mode.last).h(2);
@@ -51,6 +51,7 @@ function createTemplateMain(isLoggedIn?: boolean): HTMLBodyElement | null {
   promoTitleSecond.textContent = Titles.PROMO_SECOND;
   promoTitleLast.textContent = Titles.PROMO_LAST;
   promoButton.textContent = Buttons.GET_PROMO;
+  promoButton.setAttribute('id', Mode.get_promo);
 
   promoTitle.append(promoTitleFirst, promoTitleSecond, promoTitleLast);
   promoContent.append(promoTitle, promoButton);
