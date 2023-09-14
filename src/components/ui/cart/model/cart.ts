@@ -2,6 +2,7 @@ import { Cart, ErrorObject, LineItem, Price } from '@commercetools/platform-sdk'
 import ECommerceApi from '../../../api/e-commerce-api';
 import CartView from '../view/view';
 import { DataOrder } from '../../../models/commerce';
+import { Blocks, Elem, Mode } from '../../../models/builder';
 
 export default class CartModel {
   protected view: CartView;
@@ -48,6 +49,24 @@ export default class CartModel {
     }
 
     return order;
+  }
+
+  public async setPromoCode(): Promise<void> {
+    const inputPromo: HTMLInputElement | null = document.querySelector(`.${Blocks.cart}__${Elem.input}_${Mode.promo}`);
+    if (!inputPromo) return;
+    try {
+      const response: Cart | ErrorObject = await this.eCommerceApi.applyPromo(inputPromo.value);
+      if ('message' in response && 'code' in response) {
+        // TODO this.view.showError(response.message);
+      } else {
+        const order: DataOrder = this.getOrderData(response);
+        this.view.showCart(response, order);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        // TODO call the view method to display the error message
+      }
+    }
   }
 
   public async getCart(): Promise<void> {

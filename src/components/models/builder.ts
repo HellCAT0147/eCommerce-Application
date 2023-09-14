@@ -156,6 +156,7 @@ export enum Mode {
   left = 'left',
   right = 'right',
   dis = 'disabled',
+  base = 'base',
 }
 
 export enum Base {
