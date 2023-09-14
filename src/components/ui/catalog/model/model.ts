@@ -1,12 +1,4 @@
-import {
-  Cart,
-  ClientResponse,
-  ErrorObject,
-  Price,
-  Product,
-  ProductData,
-  ProductProjection,
-} from '@commercetools/platform-sdk';
+import { Cart, ErrorObject, Price, Product, ProductData, ProductProjection } from '@commercetools/platform-sdk';
 import ECommerceApi from '../../../api/e-commerce-api';
 import ViewCatalog from '../view/view';
 import ResultPagination from '../../../models/result-pagination';
@@ -78,8 +70,13 @@ export default class ModelCatalog {
         createQueryStringFromCatalogViewState(viewState),
         viewState.query
       );
-      const cartResponse: ClientResponse<Cart> | ErrorObject = await this.eCommerceApi.getActiveCart();
-      const cart: Cart = cartResponse.body;
+      const cartResponse: Cart | ErrorObject = await this.eCommerceApi.getActiveCart();
+      const cart: Cart = cartResponse as Cart;
+      const asCartError = cartResponse as ErrorObject;
+      if ('message' in asCartError && 'code' in asCartError) {
+        this.view.showError(asCartError.message);
+        return;
+      }
       this.eCommerceApi.getCategoriesTree().then((categoriesMap) => {
         if (categoriesMap instanceof Map) {
           this.view.fillCategories(categoriesMap);
@@ -135,11 +132,7 @@ export default class ModelCatalog {
   public async addToCart(id: string): Promise<void> {
     this.view.showSpinner(id);
     const result = await this.eCommerceApi.addNewProduct(id);
-    const isSuccessful = result.body !== undefined;
+    const isSuccessful = result.lineItems !== undefined;
     this.view.hideSpinner(id, isSuccessful);
-  }
-
-  public async isInCart(id: string): Promise<boolean | ErrorObject> {
-    return this.eCommerceApi.isInCart(id);
   }
 }
