@@ -105,7 +105,7 @@ export default class ViewCatalog {
     if (mode === 'remove') {
       const button = new Builder('button', Base.btns_colored, Blocks.catalog, 'button-cart', 'remove').button();
       const text: HTMLSpanElement = document.createElement('span');
-      text.innerText = 'REMOVE FROM CART';
+      text.innerText = 'NOT IN CART';
       text.classList.add('add-text');
       button.append(this.addSpinner(), text);
       return button;
@@ -118,7 +118,7 @@ export default class ViewCatalog {
     if (product) {
       const button = product.getElementsByClassName('catalog__button-cart_add')[0];
       if (button && button instanceof HTMLButtonElement) {
-        if (on) {
+        if (on && button.disabled) {
           button.removeAttribute('disabled');
           const textWrapper = button.getElementsByClassName('add-text')[0];
           if (textWrapper && textWrapper instanceof HTMLSpanElement) {
@@ -141,7 +141,7 @@ export default class ViewCatalog {
     if (product) {
       const button = product.getElementsByClassName('catalog__button-cart_remove')[0];
       if (button && button instanceof HTMLButtonElement) {
-        if (on) {
+        if (on && button.disabled) {
           button.removeAttribute('disabled');
           const textWrapper = button.getElementsByClassName('add-text')[0];
           if (textWrapper && textWrapper instanceof HTMLSpanElement) {
@@ -153,10 +153,15 @@ export default class ViewCatalog {
         button.setAttribute('disabled', '');
         const textWrapper = button.getElementsByClassName('add-text')[0];
         if (textWrapper && textWrapper instanceof HTMLSpanElement) {
-          textWrapper.innerText = 'REMOVED FROM CART';
+          textWrapper.innerText = 'NOT IN CART';
         }
       }
     }
+  }
+
+  public updateCartButtons(id: string, addState: boolean, removeState: boolean): void {
+    this.updateAddCartButton(id, addState);
+    this.updateRemoveCartButton(id, removeState);
   }
 
   public showProduct(
@@ -165,12 +170,14 @@ export default class ViewCatalog {
     basePrice: string,
     discountPrice: string,
     description: string,
+    carted: boolean,
     images?: Image[]
   ): void {
     const main: HTMLElement | null = document.querySelector(`.${Blocks.main}__${Mode.catalog}`);
     if (main) {
       main.innerHTML = '';
-
+      const id: string | undefined = data.masterVariant.key;
+      if (id) main.setAttribute('id', id.toString().split('-')[0]);
       const product: HTMLElement = new Builder('article', '', Blocks.product, Elem.wrapper, '').element();
       const productBody: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.body).element();
       const productInfo: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.info).element();
@@ -186,26 +193,23 @@ export default class ViewCatalog {
       ).h(4);
       const basePriceHTML: HTMLElement = new Builder('span', '', Blocks.product, Elem.price, '').element();
       const discountPriceHTML: HTMLElement = new Builder('span', '', Blocks.product, Elem.price, Mode.disc).element();
-
       nameHTML.textContent = name;
       priceHeadingHTML.textContent = 'price total'.toUpperCase();
       basePriceHTML.textContent = basePrice;
       discountPriceHTML.textContent = discountPrice;
       descriptionHTML.textContent = description;
-
       this.addSlider(productBody, images);
-
       const cartButtons: HTMLElement = new Builder('div', '', Blocks.catalog, 'cart-buttons', 'wrapper').element();
-      cartButtons.append(this.createCartButton('add'), this.createCartButton('remove'));
+      const addButton = this.createCartButton('add');
+      const removeButton = this.createCartButton('remove');
+      removeButton.setAttribute('disabled', '');
+      cartButtons.append(addButton, removeButton);
       priceHTML.append(priceHeadingHTML, basePriceHTML, discountPriceHTML, cartButtons);
       productInfo.append(nameHTML, priceHTML);
       productBody.appendChild(productInfo);
       product.append(productBody, descriptionHTML);
-      const id: string | undefined = data.masterVariant.key;
-      if (id) {
-        main.setAttribute('id', id.toString().split('-')[0]);
-      }
       main.appendChild(product);
+      if (carted && id) this.updateCartButtons(id.toString().split('-')[0], false, true);
     }
   }
 

@@ -16,20 +16,21 @@ export default class ModelCatalog {
   }
 
   public async fetchProduct(key: string, preResponse: Product | ErrorObject): Promise<void> {
-    if (preResponse) {
-      this.prepareProduct(preResponse.masterData.current);
+    const carted = await this.eCommerceApi.isInCart(key);
+    if (preResponse && typeof carted === 'boolean') {
+      this.prepareProduct(preResponse.masterData.current, carted);
       return;
     }
     try {
       const response: Product | ErrorObject = await this.eCommerceApi.getProduct(key);
       if ('message' in response && 'code' in response) this.view.showError(response.message);
-      else this.prepareProduct(response.masterData.current);
+      else if (typeof carted === 'boolean') this.prepareProduct(response.masterData.current, carted);
     } catch (error) {
       if (error instanceof Error) this.view.showError(error.message);
     }
   }
 
-  private prepareProduct(data: ProductData): void {
+  private prepareProduct(data: ProductData, carted: boolean): void {
     const name: string = data.name['en-US'].toString().toUpperCase();
     const prices: Price | undefined = data.masterVariant.prices?.[0];
     const description: string = data.description?.['en-US'].toString() ?? '';
@@ -57,6 +58,7 @@ export default class ModelCatalog {
       basePriceFormatted,
       discountPriceFormatted,
       description,
+      carted,
       data.masterVariant.images
     );
   }
@@ -134,8 +136,7 @@ export default class ModelCatalog {
     const result = await this.eCommerceApi.addNewProduct(id);
     const isSuccessful = result.lineItems !== undefined;
     this.view.hideAddSpinner(id, isSuccessful);
-    this.view.updateAddCartButton(id, false);
-    this.view.updateRemoveCartButton(id, true);
+    this.view.updateCartButtons(id, false, true);
   }
 
   public async removeFromCart(id: string): Promise<void> {
@@ -143,7 +144,6 @@ export default class ModelCatalog {
     const result = await this.eCommerceApi.removeCartItem(id);
     const isSuccessful = result.lineItems !== undefined;
     this.view.hideRemoveSpinner(id, isSuccessful);
-    this.view.updateAddCartButton(id, true);
-    this.view.updateRemoveCartButton(id, false);
+    this.view.updateCartButtons(id, true, false);
   }
 }
