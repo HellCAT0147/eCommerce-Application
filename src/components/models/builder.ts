@@ -84,6 +84,7 @@ export enum Mode {
   valid = 'valid',
   invalid = 'invalid',
   first = 'first',
+  second = 'second',
   last = 'last',
   big = 'big',
   small = 'small',
@@ -211,7 +212,7 @@ export enum Buttons {
   CLEAR_CART = 'CLEAR SHOPPING CART',
   PROMO = 'APPLY DISCOUNT',
   ORDER = 'PROCEED TO CHECKOUT',
-  GET_PROMO = 'GET PROMO',
+  GET_PROMO = 'GET PROMO CODE',
 }
 
 export enum Titles {
@@ -254,7 +255,9 @@ export enum Titles {
   ORDER = `Order Total`,
   EMPTY_CART = `There are no products in your cart yet.`,
   GO_CATALOG = `For a selection of products please go to the`,
-  PROMO_TITLE = `SUMMER SALE GET 30% OFF ON ALL DRESS.`,
+  PROMO_FIRST = `AUTUMN SALE GET `,
+  PROMO_SECOND = `30% OFF `,
+  PROMO_LAST = `ON EVERYTHING.`,
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;
