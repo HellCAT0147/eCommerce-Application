@@ -871,4 +871,21 @@ export default class ECommerceApi {
       return this.errorObjectOrThrow(error);
     }
   }
+
+  public async clearCart(): Promise<Cart | ErrorObject> {
+    try {
+      const response: Cart | ErrorObject = await this.getActiveCart();
+      if ('code' in response && 'message' in response) return response;
+
+      await this.apiRoot
+        .carts()
+        .withId({ ID: response.id })
+        .delete({ queryArgs: { version: response.version } })
+        .execute();
+
+      return await this.getActiveCart();
+    } catch (error) {
+      return this.errorObjectOrThrow(error);
+    }
+  }
 }
