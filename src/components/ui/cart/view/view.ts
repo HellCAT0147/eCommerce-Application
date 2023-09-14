@@ -170,16 +170,20 @@ export default class CartView {
 
     basePice.textContent = basePriceFormatted;
 
-    const discount: TypedMoney = lineItem.discountedPricePerQuantity[0].discountedPrice.value;
-    if (discount) {
-      let discPrice: number;
-      let discPriceFormatted: string = '';
-      if (prices !== undefined) {
-        discPrice = discount.centAmount / 10 ** discount.fractionDigits;
-        discPriceFormatted = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(discPrice);
+    const { length } = lineItem.discountedPricePerQuantity;
+    if (length) {
+      const discount: TypedMoney = lineItem.discountedPricePerQuantity[0].discountedPrice.value;
 
-        promoPrice.textContent = discPriceFormatted;
-        basePice.classList.add(Mode.cross);
+      if (discount !== undefined) {
+        let discPrice: number;
+        let discPriceFormatted: string = '';
+        if (prices !== undefined) {
+          discPrice = discount.centAmount / 10 ** discount.fractionDigits;
+          discPriceFormatted = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(discPrice);
+
+          promoPrice.textContent = discPriceFormatted;
+          basePice.classList.add(Mode.cross);
+        }
       }
     }
 
