@@ -682,7 +682,7 @@ export default class ViewCatalog {
     }
     Array.from(page.children).forEach((child) => {
       if (productsIdsInCart.includes(`product-${child.id}`)) {
-        const button = child.getElementsByClassName('catalog__button_cart')[0];
+        const button = child.getElementsByClassName('catalog__button-cart_add')[0];
         const text = button.getElementsByClassName('add-text')[0];
         if (text instanceof HTMLSpanElement) {
           text.innerText = 'ALREADY IN CART';
