@@ -144,6 +144,7 @@ export enum Mode {
   promo = 'promo',
   subtotal = 'subtotal',
   tax = 'tax',
+  sale = 'sale',
   total = 'total',
   order = 'order',
   clear = 'clear',
@@ -155,6 +156,7 @@ export enum Mode {
   left = 'left',
   right = 'right',
   dis = 'disabled',
+  base = 'base',
 }
 
 export enum Base {
@@ -254,6 +256,7 @@ export enum Titles {
   INPUT_PROMO = `Enter discount code`,
   SUBTOTAL = `Subtotal`,
   TAX = `Tax`,
+  SALE = `Sale`,
   ORDER = `Order Total`,
   EMPTY_CART = `There are no products in your cart yet.`,
   GO_CATALOG = `For a selection of products please go to the`,

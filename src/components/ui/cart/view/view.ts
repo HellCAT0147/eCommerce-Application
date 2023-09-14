@@ -1,7 +1,8 @@
-import { Cart, LineItem, Price } from '@commercetools/platform-sdk';
+import { Cart, LineItem, Price, TypedMoney } from '@commercetools/platform-sdk';
 import { Base, Blocks, Buttons, Elem, Mode, Titles } from '../../../models/builder';
 import Builder from '../../builder/html-builder';
 import { Pages } from '../../../models/router';
+import { DataOrder } from '../../../models/commerce';
 
 export default class CartView {
   private pageName: string;
@@ -93,34 +94,35 @@ export default class CartView {
     return article;
   }
 
-  private createOrderField(order: HTMLElement): void {
-    const fieldsMode: string[] = [Mode.subtotal, Mode.tax, Mode.total];
+  private createOrderField(order: HTMLElement, orderData: DataOrder): void {
+    const fieldsMode: string[] = [Mode.subtotal, Mode.sale, Mode.total];
 
     fieldsMode.forEach((mode) => {
       const field: HTMLElement = new Builder('div', '', Blocks.order, Elem.field, mode).element();
       const text: HTMLElement = new Builder('div', '', Blocks.order, Elem.text, mode).element();
       const amount: HTMLElement = new Builder('div', '', Blocks.order, Elem.amount, mode).element();
-      // TODO get amount from API;
       if (mode === Mode.subtotal) {
         text.textContent = `${Titles.SUBTOTAL}`;
-      } else if (mode === Mode.tax) {
-        text.textContent = `${Titles.TAX}`;
+        amount.textContent = orderData.subtotal;
+      } else if (mode === Mode.sale) {
+        text.textContent = `${Titles.SALE}`;
+        amount.textContent = `${orderData.sale}`;
       } else if (mode === Mode.total) {
         text.textContent = `${Titles.ORDER}`;
+        amount.textContent = orderData.total;
       }
-      amount.textContent = `0.00 ${Titles.CURRENCY}`;
 
       field.append(text, amount);
       order.appendChild(field);
     });
   }
 
-  private createAside(): HTMLElement {
+  private createAside(orderData: DataOrder): HTMLElement {
     const aside: HTMLElement = new Builder('aside', '', Blocks.cart, Elem.aside, '').element();
     const promo: HTMLElement = new Builder('div', '', Blocks.cart, Elem.promo, '').element();
     const fieldPromo: HTMLElement = new Builder('div', '', Blocks.cart, Elem.field, '').element();
-    const label: HTMLLabelElement = new Builder('', '', Blocks.cart, Elem.label, '').label();
-    const input: HTMLInputElement = new Builder('', Base.inputs, Blocks.cart, Elem.input, '').input();
+    const label: HTMLLabelElement = new Builder('', '', Blocks.cart, Elem.label, Mode.promo).label();
+    const input: HTMLInputElement = new Builder('', Base.inputs, Blocks.cart, Elem.input, Mode.promo).input();
     const buttonPromo: HTMLButtonElement = new Builder(
       '',
       Base.btns_colored,
@@ -135,7 +137,7 @@ export default class CartView {
 
     const order: HTMLElement = new Builder('div', '', Blocks.cart, Elem.order, '').element();
     const fieldOrder: HTMLElement = new Builder('div', '', Blocks.cart, Elem.field, '').element();
-    this.createOrderField(fieldOrder);
+    this.createOrderField(fieldOrder, orderData);
     const buttonOrder: HTMLButtonElement = new Builder(
       '',
       Base.btns_colored,
@@ -154,45 +156,74 @@ export default class CartView {
     return aside;
   }
 
-  private renderItem(productsList: HTMLElement, lineItem: LineItem): void {
-    const key: string | undefined = lineItem.productKey?.split(`-`)[1];
-    const item: HTMLElement = new Builder('section', '', Blocks.cart, Elem.item, '').element();
-    if (key) item.setAttribute('data-key', key);
+  private fillPrice(lineItem: LineItem): HTMLElement {
     const prices: Price | undefined = lineItem.variant.prices?.[0];
-    const totalPrice: number = lineItem.totalPrice.centAmount / 10 ** lineItem.totalPrice.fractionDigits;
-    let src: string = '';
-    let title: string = '';
     let basePrice: number;
     let basePriceFormatted: string = '';
-    let totalPriceFormatted: string = '';
-    if (!lineItem) return;
-    if (lineItem.variant.images) src = lineItem.variant.images[0].url;
-    if (lineItem.name) title = lineItem.name['en-US'].toString();
     if (prices !== undefined) {
       basePrice = prices.value.centAmount / 10 ** prices.value.fractionDigits;
       basePriceFormatted = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(basePrice);
     }
+    const price: HTMLElement = new Builder('div', '', Blocks.cart, Elem.price, Mode.item).element();
+    const basePice: HTMLElement = new Builder('', '', Blocks.cart, Elem.price, Mode.base).p();
+    const promoPrice: HTMLElement = new Builder('', '', Blocks.cart, Elem.price, Mode.promo).p();
+
+    basePice.textContent = basePriceFormatted;
+
+    const discount: TypedMoney = lineItem.discountedPricePerQuantity[0].discountedPrice.value;
+    if (discount) {
+      let discPrice: number;
+      let discPriceFormatted: string = '';
+      if (prices !== undefined) {
+        discPrice = discount.centAmount / 10 ** discount.fractionDigits;
+        discPriceFormatted = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(discPrice);
+
+        promoPrice.textContent = discPriceFormatted;
+        basePice.classList.add(Mode.cross);
+      }
+    }
+
+    price.append(basePice, promoPrice);
+
+    return price;
+  }
+
+  private renderItem(productsList: HTMLElement, lineItem: LineItem): void {
+    const key: string | undefined = lineItem.productKey?.split(`-`)[1];
+    const item: HTMLElement = new Builder('section', '', Blocks.cart, Elem.item, '').element();
+    if (key) item.setAttribute('data-key', key);
+
+    const totalPrice: number = lineItem.totalPrice.centAmount / 10 ** lineItem.totalPrice.fractionDigits;
+    let src: string = '';
+    let title: string = '';
+
+    let totalPriceFormatted: string = '';
+    if (!lineItem) return;
+    if (lineItem.variant.images) src = lineItem.variant.images[0].url;
+    if (lineItem.name) title = lineItem.name['en-US'].toString();
+
     if (totalPrice !== undefined) {
       totalPriceFormatted = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(totalPrice);
     }
     const product: HTMLElement = new Builder('div', '', Blocks.cart, Elem.product, Mode.item).element();
     const img: HTMLElement = new Builder('', '', Blocks.cart, Elem.image, Mode.item).img(src, title);
     const name: HTMLElement = new Builder('', '', Blocks.cart, Elem.name, Mode.item).p();
-    const price: HTMLElement = new Builder('', '', Blocks.cart, Elem.price, Mode.item).p();
+
     const quantity: HTMLElement = new Builder('div', '', Blocks.cart, Elem.quantity, Mode.item).element();
     const buttonDec: HTMLButtonElement = new Builder('', Base.btns_quant, Blocks.cart, Elem.btn, Mode.dec).button();
-    const amount: HTMLElement = new Builder('', '', Blocks.cart, Elem.amount, '').p();
+    const amount: HTMLInputElement = new Builder('', '', Blocks.cart, Elem.amount, Mode.edit).input();
     const buttonInc: HTMLButtonElement = new Builder('', Base.btns_quant, Blocks.cart, Elem.btn, Mode.inc).button();
     const total: HTMLElement = new Builder('', '', Blocks.cart, Elem.total, Mode.item).p();
     const edit: HTMLElement = new Builder('span', '', Blocks.cart, Elem.edit, Mode.del).element();
 
     name.textContent = title;
-    price.textContent = basePriceFormatted;
     buttonDec.textContent = '-';
-    amount.textContent = `${lineItem.quantity}`;
+    amount.value = `${lineItem.quantity}`;
     buttonInc.textContent = '+';
     buttonInc.classList.add(`${Base.btns}__${Elem.quantity}_${Mode.available}`);
     total.textContent = totalPriceFormatted;
+
+    const price: HTMLElement = this.fillPrice(lineItem);
 
     product.append(img, name);
     quantity.append(buttonDec, amount, buttonInc);
@@ -207,12 +238,13 @@ export default class CartView {
     });
   }
 
-  public showCart(cart: Cart): void {
+  public showCart(cart: Cart, order: DataOrder): void {
     const main: HTMLFormElement | null = document.querySelector(`.${Blocks.main}__${Pages.CART}`);
     if (main) {
+      main.innerHTML = '';
       const wrapper: HTMLElement = new Builder('div', '', Blocks.cart, Elem.wrapper, '').element();
       const productsList: HTMLElement = this.createProductsList(cart.lineItems);
-      const aside: HTMLElement = this.createAside();
+      const aside: HTMLElement = this.createAside(order);
 
       wrapper.append(productsList, aside);
       main.append(wrapper);
