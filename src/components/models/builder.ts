@@ -70,6 +70,7 @@ export enum Elem {
   control = 'control',
   edit = 'edit',
   name = 'name',
+  container = 'container',
 }
 
 export enum Mode {

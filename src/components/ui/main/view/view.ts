@@ -12,7 +12,7 @@ export default class MainView {
     const buttonPromo: HTMLElement | null = document.querySelector(`#${Mode.get_promo}`);
     if (buttonPromo) {
       buttonPromo.classList.add(`${Mode.dis}`);
-      const timer = setTimeout(() => {
+      setTimeout((): void => {
         buttonPromo.textContent = Titles.PROMO_CODE;
       }, 250);
     }

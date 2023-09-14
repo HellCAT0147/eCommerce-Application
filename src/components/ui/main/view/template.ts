@@ -43,6 +43,7 @@ function createTemplateMain(isLoggedIn?: boolean): HTMLBodyElement | null {
   const promoTitleSecond: HTMLHeadingElement = new Builder('', '', Blocks.promo, Elem.title, Mode.second).h(2);
   const promoTitleLast: HTMLHeadingElement = new Builder('', '', Blocks.promo, Elem.title, Mode.last).h(2);
   const promoButton: HTMLElement = new Builder('', Base.btns_bordered, Blocks.promo, Elem.btn, Mode.get_promo).button();
+  const linksContainer: HTMLElement = new Builder('section', '', Blocks.main, Elem.container, Mode.link).element();
   const linkLogin: HTMLAnchorElement = new Builder('', Base.links, Blocks.main, Elem.link, Mode.login).a();
   const linkRegistration: HTMLElement = new Builder('', Base.links, Blocks.main, Elem.link, Mode.reg).a();
   const linkProfile: HTMLElement = new Builder('', Base.links, Blocks.main, Elem.link, Mode.prof).a();
@@ -56,9 +57,10 @@ function createTemplateMain(isLoggedIn?: boolean): HTMLBodyElement | null {
   promoTitle.append(promoTitleFirst, promoTitleSecond, promoTitleLast);
   promoContent.append(promoTitle, promoButton);
   promoWrapper.append(promoContent);
+  linksContainer.append(linkLogin, linkRegistration, linkProfile);
 
   if (main) {
-    main.append(promoWrapper, linkLogin, linkRegistration, linkProfile);
+    main.append(promoWrapper, linksContainer);
   }
 
   return body || null;
