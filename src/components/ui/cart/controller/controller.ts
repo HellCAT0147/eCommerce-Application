@@ -30,6 +30,11 @@ class ControllerCart {
     // TODO add method for getting cart await this.model.getCart();
     this.model.getCart();
   }
+
+  public checkField(input: HTMLInputElement): void {
+    const amount: number = +input.value;
+    this.model.setQuantity(input.closest('.cart__item'), amount);
+  }
 }
 
 export default ControllerCart;

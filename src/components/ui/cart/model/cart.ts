@@ -155,4 +155,24 @@ export default class CartModel {
       this.view.changeCursor(target, false);
     }
   }
+
+  public async setQuantity(item: HTMLElement | null, amount: number): Promise<void> {
+    const dataset: DOMStringMap | undefined = item?.dataset;
+    const id: string | undefined = dataset?.key;
+    if (id === undefined) return;
+
+    delete dataset?.key;
+    const response: Cart | ErrorObject = await this.eCommerceApi.setCartItemQuantity(id, amount);
+    if ('message' in response && 'code' in response) {
+      // TODO this.view.showError(response.message);
+    } else {
+      const order: DataOrder = this.getOrderData(response);
+      this.view.showCart(response, order);
+      // TODO update header cart icon
+    }
+    if (item) {
+      const itemLocal: HTMLElement = item;
+      itemLocal.dataset.key = id;
+    }
+  }
 }

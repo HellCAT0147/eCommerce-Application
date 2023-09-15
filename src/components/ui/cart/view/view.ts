@@ -225,6 +225,7 @@ export default class CartView {
 
     if (lineItem.quantity > 1) buttonDec.classList.add(`${Base.btns}__${Elem.quantity}_${Mode.available}`);
     amount.value = `${lineItem.quantity}`;
+    amount.type = 'number';
     buttonInc.textContent = '+';
     buttonInc.classList.add(`${Base.btns}__${Elem.quantity}_${Mode.available}`);
     total.textContent = totalPriceFormatted;

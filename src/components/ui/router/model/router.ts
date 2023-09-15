@@ -9,6 +9,7 @@ import ECommerceApi from '../../../api/e-commerce-api';
 import { DataBase } from '../../../models/commerce';
 import ControllerProfile from '../../profile/controller/controller';
 import ControllerCart from '../../cart/controller/controller';
+import { Elem } from '../../../models/builder';
 
 class Router {
   public routes: Routes[];
@@ -67,6 +68,21 @@ class Router {
       input.addEventListener('input', (e: Event) => this.controllerProfile.checkField(e));
       input.addEventListener('keydown', (e: Event) => this.controllerLogin.sendLogin(e));
       input.addEventListener('keydown', (e: Event) => this.controllerRegistration.sendReg(e));
+    });
+
+    document.addEventListener('focusout', (e: Event) => {
+      const input: EventTarget | null = e.target;
+      if (input instanceof HTMLInputElement && input.closest(`.${Elem.cart}__${Elem.amount}`))
+        this.controllerCart.checkField(input);
+    });
+
+    // Submit by Enter
+    document.addEventListener('keydown', (e: Event) => {
+      if (!(e instanceof KeyboardEvent && e.key !== 'Enter')) {
+        const input: EventTarget | null = e.target;
+        if (input instanceof HTMLInputElement && input.closest(`.${Elem.cart}__${Elem.amount}`))
+          this.controllerCart.checkField(input);
+      }
     });
   }
 
