@@ -18,11 +18,11 @@ class ControllerCart {
     const targetHtmlElement: HTMLElement | null = target;
     if (targetHtmlElement.closest(`.${Elem.cart}__${Elem.btn}_${Mode.promo}`)) this.model.setPromoCode();
     if (targetHtmlElement.closest(`.${Elem.cart}__${Elem.edit}_${Mode.del}`))
-      this.model.removeItem(targetHtmlElement.closest(`.${Elem.cart}__${Elem.item}`));
+      this.model.removeItem(targetHtmlElement.closest(`.${Elem.cart}__${Elem.item}`), targetHtmlElement);
     if (targetHtmlElement.closest(`.${Elem.cart}__${Elem.btn}_${Mode.inc}`))
-      this.model.increase(targetHtmlElement.closest(`.${Elem.cart}__${Elem.item}`));
+      this.model.increase(targetHtmlElement.closest(`.${Elem.cart}__${Elem.item}`), targetHtmlElement);
     if (targetHtmlElement.closest(`.${Elem.cart}__${Elem.btn}_${Mode.dec}`))
-      this.model.decrease(targetHtmlElement.closest(`.${Elem.cart}__${Elem.item}`));
+      this.model.decrease(targetHtmlElement.closest(`.${Elem.cart}__${Elem.item}`), targetHtmlElement);
     e.preventDefault();
   }
 

@@ -85,12 +85,13 @@ export default class CartModel {
     }
   }
 
-  public async removeItem(item: HTMLElement | null): Promise<void> {
+  public async removeItem(item: HTMLElement | null, target: HTMLElement): Promise<void> {
     const dataset: DOMStringMap | undefined = item?.dataset;
     const id: string | undefined = dataset?.key;
     if (id === undefined) return;
 
     delete dataset?.key;
+    this.view.changeCursor(target, true);
     const response: Cart | ErrorObject = await this.eCommerceApi.removeCartItem(id);
     if ('message' in response && 'code' in response) {
       // TODO this.view.showError(response.message);
@@ -101,15 +102,17 @@ export default class CartModel {
     if (item) {
       const itemLocal: HTMLElement = item;
       itemLocal.dataset.key = id;
+      this.view.changeCursor(target, false);
     }
   }
 
-  public async increase(item: HTMLElement | null): Promise<void> {
+  public async increase(item: HTMLElement | null, target: HTMLElement): Promise<void> {
     const dataset: DOMStringMap | undefined = item?.dataset;
     const id: string | undefined = dataset?.key;
     if (id === undefined) return;
 
     delete dataset?.key;
+    this.view.changeCursor(target, true);
     const response: Cart | ErrorObject = await this.eCommerceApi.addNewProduct(id);
     if ('message' in response && 'code' in response) {
       // TODO this.view.showError(response.message);
@@ -121,16 +124,21 @@ export default class CartModel {
     if (item) {
       const itemLocal: HTMLElement = item;
       itemLocal.dataset.key = id;
+      this.view.changeCursor(target, false);
     }
   }
 
-  public async decrease(item: HTMLElement | null): Promise<void> {
+  public async decrease(item: HTMLElement | null, target: HTMLElement): Promise<void> {
     const dataset: DOMStringMap | undefined = item?.dataset;
     const id: string | undefined = dataset?.key;
     if (id === undefined) return;
 
     delete dataset?.key;
-    const currentAmount: string | undefined = item?.querySelector('input')?.value;
+    this.view.changeCursor(target, true);
+    const input: HTMLInputElement | null | undefined = item?.querySelector(
+      `.${Elem.cart}__${Elem.amount}_${Mode.edit}`
+    );
+    const currentAmount: string | undefined = input?.value;
     if (currentAmount !== undefined && +currentAmount > 1) {
       const response: Cart | ErrorObject = await this.eCommerceApi.removeCartItem(id, true);
       if ('message' in response && 'code' in response) {
@@ -144,6 +152,7 @@ export default class CartModel {
     if (item) {
       const itemLocal: HTMLElement = item;
       itemLocal.dataset.key = id;
+      this.view.changeCursor(target, false);
     }
   }
 }

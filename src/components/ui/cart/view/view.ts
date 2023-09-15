@@ -256,4 +256,10 @@ export default class CartView {
       main.append(wrapper);
     }
   }
+
+  public changeCursor(target: HTMLElement, isLoading: boolean): void {
+    const localTarget: HTMLElement = target;
+    if (isLoading) localTarget.style.cursor = 'wait';
+    else localTarget.style.cursor = '';
+  }
 }
