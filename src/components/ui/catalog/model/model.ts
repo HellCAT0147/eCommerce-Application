@@ -135,6 +135,7 @@ export default class ModelCatalog {
     const isSuccessful = result.lineItems !== undefined;
     this.view.hideAddSpinner(id, isSuccessful);
     this.view.updateCartButtons(id, false, true);
+    // TODO update header cart icon
   }
 
   public async removeFromCart(id: string): Promise<void> {

@@ -222,7 +222,10 @@ export default class CartView {
 
     name.textContent = title;
     buttonDec.textContent = '-';
+
+    if (lineItem.quantity > 1) buttonDec.classList.add(`${Base.btns}__${Elem.quantity}_${Mode.available}`);
     amount.value = `${lineItem.quantity}`;
+    amount.type = 'number';
     buttonInc.textContent = '+';
     buttonInc.classList.add(`${Base.btns}__${Elem.quantity}_${Mode.available}`);
     total.textContent = totalPriceFormatted;
@@ -253,5 +256,11 @@ export default class CartView {
       wrapper.append(productsList, aside);
       main.append(wrapper);
     }
+  }
+
+  public changeCursor(target: HTMLElement, isLoading: boolean): void {
+    const localTarget: HTMLElement = target;
+    if (isLoading) localTarget.style.cursor = 'wait';
+    else localTarget.style.cursor = '';
   }
 }
