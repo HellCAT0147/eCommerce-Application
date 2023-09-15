@@ -84,4 +84,23 @@ export default class CartModel {
       }
     }
   }
+
+  public async removeItem(item: HTMLElement | null): Promise<void> {
+    const dataset: DOMStringMap | undefined = item?.dataset;
+    const id: string | undefined = dataset?.key;
+    if (id === undefined) return;
+
+    delete dataset?.key;
+    const response: Cart | ErrorObject = await this.eCommerceApi.removeCartItem(id);
+    if ('message' in response && 'code' in response) {
+      // TODO this.view.showError(response.message);
+    } else {
+      const order: DataOrder = this.getOrderData(response);
+      this.view.showCart(response, order);
+    }
+    if (item) {
+      const itemLocal: HTMLElement = item;
+      itemLocal.dataset.key = id;
+    }
+  }
 }
