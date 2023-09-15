@@ -94,16 +94,16 @@ export default class ViewCatalog {
 
   public createCartButton(mode: string): HTMLButtonElement {
     const emptyButton = document.createElement('button');
-    if (mode === 'add') {
-      const button = new Builder('button', Base.btns_colored, Blocks.catalog, 'button-cart', 'add').button();
+    if (mode === Mode.add) {
+      const button = new Builder('', Base.btns_colored, Blocks.catalog, 'button-cart', Mode.add).button();
       const text: HTMLSpanElement = document.createElement('span');
       text.innerText = 'ADD TO CART';
       text.classList.add('add-text');
       button.append(this.addSpinner(), text);
       return button;
     }
-    if (mode === 'remove') {
-      const button = new Builder('button', Base.btns_colored, Blocks.catalog, 'button-cart', 'remove').button();
+    if (mode === Mode.remove) {
+      const button = new Builder('', Base.btns_colored, Blocks.catalog, 'button-cart', Mode.remove).button();
       const text: HTMLSpanElement = document.createElement('span');
       text.innerText = 'NOT IN CART';
       text.classList.add('add-text');
@@ -176,10 +176,10 @@ export default class ViewCatalog {
     const main: HTMLElement | null = document.querySelector(`.${Blocks.main}__${Mode.catalog}`);
     if (main) {
       main.innerHTML = '';
-      const id: string | undefined = data.masterVariant.key;
-      if (id) main.setAttribute('id', id.toString().split('-')[0]);
       const product: HTMLElement = new Builder('article', '', Blocks.product, Elem.wrapper, '').element();
       const productBody: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.body).element();
+      const id: string | undefined = data.masterVariant.key;
+      if (id) productBody.setAttribute('id', id.toString().split('-')[0]);
       const productInfo: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.info).element();
       const nameHTML: HTMLHeadingElement = new Builder('', Base.titles, Blocks.product, Elem.title, Mode.big).h(2);
       const descriptionHTML: HTMLParagraphElement = new Builder('', '', Blocks.product, Elem.desc, '').p();
@@ -200,8 +200,8 @@ export default class ViewCatalog {
       descriptionHTML.textContent = description;
       this.addSlider(productBody, images);
       const cartButtons: HTMLElement = new Builder('div', '', Blocks.catalog, 'cart-buttons', 'wrapper').element();
-      const addButton = this.createCartButton('add');
-      const removeButton = this.createCartButton('remove');
+      const addButton = this.createCartButton(Mode.add);
+      const removeButton = this.createCartButton(Mode.remove);
       removeButton.setAttribute('disabled', '');
       cartButtons.append(addButton, removeButton);
       priceHTML.append(priceHeadingHTML, basePriceHTML, discountPriceHTML, cartButtons);
@@ -672,7 +672,7 @@ export default class ViewCatalog {
         .slice(0, -2)} RUB`;
       priceTag.append(discountedPrice);
     }
-    card.append(cardPic, nameTag, descriptionTag, readMore, priceTag, this.createCartButton('add'));
+    card.append(cardPic, nameTag, descriptionTag, readMore, priceTag, this.createCartButton(Mode.add));
     card.setAttribute('id', (product.key || '0').split('-')[1]);
     return card;
   }

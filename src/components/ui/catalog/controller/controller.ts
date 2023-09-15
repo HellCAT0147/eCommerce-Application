@@ -42,8 +42,8 @@ class ControllerCatalog {
           let id: string | undefined;
           if (target.parentElement?.id) id = target.parentElement?.id;
           else {
-            const main = target.closest('.main');
-            if (main) id = main.id;
+            const wrapper = target.closest('.product__wrapper_body');
+            if (wrapper) id = wrapper.id;
           }
           if (id) this.model.addToCart(id);
         }
@@ -51,8 +51,8 @@ class ControllerCatalog {
           let id: string | undefined;
           if (target.parentElement?.id) id = target.parentElement?.id;
           else {
-            const main = target.closest('.main');
-            if (main) id = main.id;
+            const wrapper = target.closest('.product__wrapper_body');
+            if (wrapper) id = wrapper.id;
           }
           if (id) this.model.removeFromCart(id);
         }

@@ -73,11 +73,6 @@ export default class ModelCatalog {
         viewState.query
       );
       const cartResponse: Cart | ErrorObject = await this.eCommerceApi.getActiveCart();
-      const asCartError = cartResponse as ErrorObject;
-      if ('message' in asCartError && 'code' in asCartError) {
-        this.view.showError(asCartError.message);
-        return;
-      }
       this.eCommerceApi.getCategoriesTree().then((categoriesMap) => {
         if (categoriesMap instanceof Map) {
           this.view.fillCategories(categoriesMap);
