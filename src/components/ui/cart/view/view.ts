@@ -222,6 +222,8 @@ export default class CartView {
 
     name.textContent = title;
     buttonDec.textContent = '-';
+
+    if (lineItem.quantity > 1) buttonDec.classList.add(`${Base.btns}__${Elem.quantity}_${Mode.available}`);
     amount.value = `${lineItem.quantity}`;
     buttonInc.textContent = '+';
     buttonInc.classList.add(`${Base.btns}__${Elem.quantity}_${Mode.available}`);

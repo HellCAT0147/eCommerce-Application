@@ -132,6 +132,7 @@ export default class ModelCatalog {
     const result = await this.eCommerceApi.addNewProduct(id);
     const isSuccessful = result !== undefined;
     this.view.hideSpinner(id, isSuccessful);
+    // TODO update header cart icon
   }
 
   public async isInCart(id: string): Promise<boolean | ErrorObject> {

@@ -103,4 +103,47 @@ export default class CartModel {
       itemLocal.dataset.key = id;
     }
   }
+
+  public async increase(item: HTMLElement | null): Promise<void> {
+    const dataset: DOMStringMap | undefined = item?.dataset;
+    const id: string | undefined = dataset?.key;
+    if (id === undefined) return;
+
+    delete dataset?.key;
+    const response: Cart | ErrorObject = await this.eCommerceApi.addNewProduct(id);
+    if ('message' in response && 'code' in response) {
+      // TODO this.view.showError(response.message);
+    } else {
+      const order: DataOrder = this.getOrderData(response);
+      this.view.showCart(response, order);
+      // TODO update header cart icon
+    }
+    if (item) {
+      const itemLocal: HTMLElement = item;
+      itemLocal.dataset.key = id;
+    }
+  }
+
+  public async decrease(item: HTMLElement | null): Promise<void> {
+    const dataset: DOMStringMap | undefined = item?.dataset;
+    const id: string | undefined = dataset?.key;
+    if (id === undefined) return;
+
+    delete dataset?.key;
+    const currentAmount: string | undefined = item?.querySelector('input')?.value;
+    if (currentAmount !== undefined && +currentAmount > 1) {
+      const response: Cart | ErrorObject = await this.eCommerceApi.removeCartItem(id, true);
+      if ('message' in response && 'code' in response) {
+        // TODO this.view.showError(response.message);
+      } else {
+        const order: DataOrder = this.getOrderData(response);
+        this.view.showCart(response, order);
+        // TODO update header cart icon
+      }
+    }
+    if (item) {
+      const itemLocal: HTMLElement = item;
+      itemLocal.dataset.key = id;
+    }
+  }
 }
