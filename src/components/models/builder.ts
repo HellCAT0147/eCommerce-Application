@@ -20,6 +20,7 @@ export enum Blocks {
 
 export enum Elem {
   btn = 'button',
+  btn_cart = 'button-cart',
   nav = 'nav',
   form = `form`,
   field = `field`,
@@ -157,6 +158,7 @@ export enum Mode {
   right = 'right',
   dis = 'disabled',
   base = 'base',
+  remove = 'remove',
 }
 
 export enum Base {
