@@ -21,4 +21,9 @@
       @include font(400, 3.2rem, 100%, $color-dark);
     }
   }
+
+  &__about-us {
+    padding: 0;
+    row-gap: 0;
+  }
 }

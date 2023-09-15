@@ -36,9 +36,9 @@
     letter-spacing: 0.05rem;
     border: 2px solid $color-input;
     @extend %font-main;
-    @include font(500, 1.4rem, 100%, $color-Light-gray);
+    @include font(500, 1.4rem, 100%, $color-light-gray);
     &:hover {
-      border: 2px solid $color-Light-gray;
+      border: 2px solid $color-light-gray;
     }
   }
 
@@ -49,7 +49,7 @@
     @include font(500, 2.4rem, 100%, $color-input);
     border: none;
     &_available {
-      color: $color-Light-gray;
+      color: $color-light-gray;
       background: $color-Light-hover;
     }
     @include media-tablet {

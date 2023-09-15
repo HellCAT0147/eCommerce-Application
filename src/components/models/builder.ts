@@ -16,6 +16,10 @@ export enum Blocks {
   cart = 'cart',
   order = 'order',
   promo = 'promo',
+  about = 'about',
+  person = 'person',
+  content = 'content',
+  facts = 'facts',
 }
 
 export enum Elem {
@@ -72,6 +76,12 @@ export enum Elem {
   edit = 'edit',
   name = 'name',
   container = 'container',
+  info = 'info',
+  position = 'position',
+  git = 'git',
+  more = 'more',
+  facts = 'facts',
+  fact = 'fact',
 }
 
 export enum Mode {
@@ -159,6 +169,11 @@ export enum Mode {
   dis = 'disabled',
   base = 'base',
   remove = 'remove',
+  person = 'person',
+  pr = 'pull-requests',
+  comm = 'commits',
+  lines = 'lines',
+  branches = 'branches',
 }
 
 export enum Base {
@@ -196,6 +211,8 @@ export enum Base {
   prof_f = 'profile__forms',
   current_page = 'current-page',
   promo = 'promo',
+  person = 'person',
+  content = 'content',
 }
 
 export enum Buttons {
@@ -266,6 +283,13 @@ export enum Titles {
   PROMO_SECOND = `30% OFF `,
   PROMO_LAST = `ON EVERYTHING.`,
   PROMO_CODE = `RASDAPROJA`,
+  HAQ_TITLE = `HAQ TEAM`,
+  HAQ_SUBTITLE = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
+  FACTS = 'PROJECT FACTS',
+  FACTS_PR = 'Pulls 60',
+  FACTS_COMM = 'Commits 410',
+  FACTS_LINES = 'Lines 30k+',
+  FACTS_BRANCHES = 'Branches 32',
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;

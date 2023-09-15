@@ -59,7 +59,7 @@
   }
 
   &__header {
-    @include font(500, 1.8rem, 100%, $color-Light-gray);
+    @include font(500, 1.8rem, 100%, $color-light-gray);
   }
 
   &__item {
@@ -96,7 +96,7 @@
 
     &_base {
       &.cross {
-        @include font(500, 1.2rem, 100%, $color-Light-gray);
+        @include font(500, 1.2rem, 100%, $color-light-gray);
         text-decoration: line-through;
       }
     }
@@ -206,7 +206,7 @@
     }
 
     &_sale {
-      @include font(500, 1.8rem, 100%, $color-Light-gray);
+      @include font(500, 1.8rem, 100%, $color-light-gray);
     }
 
     &_total {
