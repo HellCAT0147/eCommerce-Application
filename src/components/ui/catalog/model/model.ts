@@ -73,7 +73,6 @@ export default class ModelCatalog {
         viewState.query
       );
       const cartResponse: Cart | ErrorObject = await this.eCommerceApi.getActiveCart();
-      const cart: Cart = cartResponse as Cart;
       const asCartError = cartResponse as ErrorObject;
       if ('message' in asCartError && 'code' in asCartError) {
         this.view.showError(asCartError.message);
@@ -84,15 +83,19 @@ export default class ModelCatalog {
           this.view.fillCategories(categoriesMap);
         }
       });
+      if ('message' in cartResponse && 'code' in cartResponse) {
+        this.view.showError(cartResponse.message);
+        return;
+      }
       if ('message' in response && 'code' in response) {
         this.view.showError(response.message);
       } else {
         if (justFill) {
-          this.view.fillCatalogPage(response, cart);
+          this.view.fillCatalogPage(response, cartResponse);
           this.view.fillPaginationButtons(response);
           return;
         }
-        this.view.constructCatalogPage(response, cart);
+        this.view.constructCatalogPage(response, cartResponse);
       }
     } catch (error) {
       if (error instanceof Error) this.view.showError(error.message);

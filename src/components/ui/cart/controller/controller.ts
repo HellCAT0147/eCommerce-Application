@@ -14,6 +14,8 @@ class ControllerCart {
   public mouseEvent(e: MouseEvent): void {
     const { target } = e;
     if (!(target instanceof HTMLElement)) return;
+    const targetHtmlElement: HTMLElement | null = target;
+    if (targetHtmlElement.closest(`.cart__button_promo`)) this.model.setPromoCode();
     e.preventDefault();
   }
 

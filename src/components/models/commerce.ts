@@ -14,3 +14,9 @@ export interface DataAddresses {
   all_bill: AddressesType;
   all_ship: AddressesType;
 }
+
+export interface DataOrder {
+  subtotal: string;
+  sale: string;
+  total: string;
+}

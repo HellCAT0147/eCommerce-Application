@@ -725,19 +725,15 @@ export default class ECommerceApi {
     }
   }
 
-  private async modifyCart(
-    cartId: string,
-    cartVersion: number,
-    actions: CartUpdateAction[]
-  ): Promise<Cart | ErrorObject> {
+  private async modifyCart(cart: Cart, actions: CartUpdateAction[]): Promise<Cart | ErrorObject> {
     try {
       return (
         await this.apiRoot
           .carts()
-          .withId({ ID: cartId })
+          .withId({ ID: cart.id })
           .post({
             body: {
-              version: cartVersion,
+              version: cart.version,
               actions,
             },
           })
@@ -753,8 +749,6 @@ export default class ECommerceApi {
       const response: Cart | ErrorObject = await this.getActiveCart();
       if ('code' in response && 'message' in response) return response;
 
-      const cartId: string = response.id;
-      const cartVersion: number = response.version;
       const actions: CartUpdateAction[] = [
         {
           action: 'addLineItem',
@@ -762,7 +756,7 @@ export default class ECommerceApi {
         },
       ];
 
-      return await this.modifyCart(cartId, cartVersion, actions);
+      return await this.modifyCart(response, actions);
     } catch (error) {
       return this.errorObjectOrThrow(error);
     }
@@ -810,8 +804,6 @@ export default class ECommerceApi {
         return this.errorObjectOrThrow(error);
       }
 
-      const cartId: string = response.id;
-      const cartVersion: number = response.version;
       const actions: CartUpdateAction[] = [];
       if (isDecrease)
         actions.push({
@@ -825,7 +817,7 @@ export default class ECommerceApi {
           lineItemId,
         });
 
-      return await this.modifyCart(cartId, cartVersion, actions);
+      return await this.modifyCart(response, actions);
     } catch (error) {
       return this.errorObjectOrThrow(error);
     }
@@ -848,8 +840,6 @@ export default class ECommerceApi {
         return this.errorObjectOrThrow(error);
       }
 
-      const cartId: string = response.id;
-      const cartVersion: number = response.version;
       const actions: CartUpdateAction[] = [
         {
           action: 'changeLineItemQuantity',
@@ -858,7 +848,42 @@ export default class ECommerceApi {
         },
       ];
 
-      return await this.modifyCart(cartId, cartVersion, actions);
+      return await this.modifyCart(response, actions);
+    } catch (error) {
+      return this.errorObjectOrThrow(error);
+    }
+  }
+
+  public async applyPromo(code: string): Promise<Cart | ErrorObject> {
+    try {
+      const response: Cart | ErrorObject = await this.getActiveCart();
+      if ('code' in response && 'message' in response) return response;
+
+      const actions: CartUpdateAction[] = [
+        {
+          action: 'addDiscountCode',
+          code,
+        },
+      ];
+
+      return await this.modifyCart(response, actions);
+    } catch (error) {
+      return this.errorObjectOrThrow(error);
+    }
+  }
+
+  public async clearCart(): Promise<Cart | ErrorObject> {
+    try {
+      const response: Cart | ErrorObject = await this.getActiveCart();
+      if ('code' in response && 'message' in response) return response;
+
+      await this.apiRoot
+        .carts()
+        .withId({ ID: response.id })
+        .delete({ queryArgs: { version: response.version } })
+        .execute();
+
+      return await this.getActiveCart();
     } catch (error) {
       return this.errorObjectOrThrow(error);
     }
