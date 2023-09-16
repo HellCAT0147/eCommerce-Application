@@ -16,6 +16,7 @@ export enum Blocks {
   cart = 'cart',
   order = 'order',
   promo = 'promo',
+  popup = 'popup',
 }
 
 export enum Elem {
@@ -72,6 +73,8 @@ export enum Elem {
   edit = 'edit',
   name = 'name',
   container = 'container',
+  popup = 'popup',
+  info = 'info',
 }
 
 export enum Mode {
@@ -159,6 +162,9 @@ export enum Mode {
   dis = 'disabled',
   base = 'base',
   remove = 'remove',
+  popup = 'popup',
+  yes = 'yes',
+  no = 'no',
 }
 
 export enum Base {

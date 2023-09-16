@@ -175,4 +175,25 @@ export default class CartModel {
       itemLocal.dataset.key = id;
     }
   }
+
+  public createPopup(): void {
+    this.view.createPopup();
+  }
+
+  public async clearCartResponse(target: HTMLElement): Promise<void> {
+    const popup: HTMLDivElement | null = document.querySelector(`.${Blocks.cart}__${Elem.popup}`);
+    if (popup) {
+      popup.outerHTML = '';
+      if (target.classList.contains(`${Blocks.popup}__${Elem.btn}_${Mode.yes}`)) {
+        const response: Cart | ErrorObject = await this.eCommerceApi.clearCart();
+        if ('message' in response && 'code' in response) {
+          // TODO this.view.showError(response.message);
+        } else {
+          const order: DataOrder = this.getOrderData(response);
+          this.view.showCart(response, order);
+          // TODO update header cart icon
+        }
+      }
+    }
+  }
 }

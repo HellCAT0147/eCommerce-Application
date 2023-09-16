@@ -1,5 +1,5 @@
 import ECommerceApi from '../../../api/e-commerce-api';
-import { Elem, Mode } from '../../../models/builder';
+import { Blocks, Elem, Mode } from '../../../models/builder';
 import CartModel from '../model/cart';
 
 class ControllerCart {
@@ -23,6 +23,8 @@ class ControllerCart {
       this.model.increase(targetHtmlElement.closest(`.${Elem.cart}__${Elem.item}`), targetHtmlElement);
     if (targetHtmlElement.closest(`.${Elem.cart}__${Elem.btn}_${Mode.dec}`))
       this.model.decrease(targetHtmlElement.closest(`.${Elem.cart}__${Elem.item}`), targetHtmlElement);
+    if (targetHtmlElement.closest(`.${Elem.cart}__${Elem.btn}_${Mode.clear}`)) this.model.createPopup();
+    if (targetHtmlElement.closest(`.${Blocks.popup}__${Elem.btn}`)) this.model.clearCartResponse(targetHtmlElement);
     e.preventDefault();
   }
 

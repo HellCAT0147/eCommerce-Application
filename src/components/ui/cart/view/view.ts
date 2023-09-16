@@ -263,4 +263,22 @@ export default class CartView {
     if (isLoading) localTarget.style.cursor = 'wait';
     else localTarget.style.cursor = '';
   }
+
+  public createPopup(): void {
+    const main: HTMLFormElement | null = document.querySelector(`.${Blocks.main}__${Pages.CART}`);
+    if (main) {
+      const popup: HTMLElement = new Builder('div', '', Blocks.cart, Elem.popup, '').element();
+      const info: HTMLParagraphElement = new Builder('', '', Blocks.popup, Elem.info, '').p();
+      const yesBtn: HTMLButtonElement = new Builder('', '', Blocks.popup, Elem.btn, Mode.yes).button();
+      const noBtn: HTMLButtonElement = new Builder('', '', Blocks.popup, Elem.btn, Mode.no).button();
+      // TODO add background blur or shadow, and disable other buttons when popup is open (background, w100vw h100vh, opacity, z-index)
+
+      info.textContent = '- "Are you sure about that?", (c) John Cena';
+      yesBtn.textContent = 'Yeah!';
+      noBtn.textContent = 'Nope';
+
+      popup.append(info, yesBtn, noBtn);
+      main.appendChild(popup);
+    }
+  }
 }
