@@ -24,6 +24,7 @@ export enum Blocks {
   bio = 'bio',
   impact = 'impact',
   teamwork = 'teamwork',
+  rss = 'rss',
 }
 
 export enum Elem {
@@ -92,6 +93,7 @@ export enum Elem {
   bio = 'bio',
   impact = 'impact',
   teamwork = 'teamwork',
+  rss = 'rss',
 }
 
 export enum Mode {
@@ -187,6 +189,7 @@ export enum Mode {
   git = 'git',
   top = 'top',
   bottom = 'bottom',
+  rss = 'rss',
 }
 
 export enum Base {
@@ -227,6 +230,7 @@ export enum Base {
   person = 'person',
   content = 'content',
   teamwork = 'teamwork',
+  rss = 'rss',
 }
 
 export enum Buttons {
@@ -312,6 +316,7 @@ export enum Titles {
   IMPACT_TITLE = 'Contributions:',
   TEAM_TITLE = 'Collaboration',
   TEAM_TEXT = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Egestas pretium aenean pharetra magna ac placerat vestibulum lectus mauris. Arcu cursus euismod quis viverra. At consectetur lorem donec massa. Sed risus pretium quam vulputate dignissim suspendisse in est. Mi quis hendrerit dolor magna. Mauris sit amet massa vitae tortor. Iaculis eu non diam phasellus vestibulum lorem sed risus. Facilisi etiam dignissim diam quis enim lobortis scelerisque fermentum dui. Cursus mattis molestie a iaculis at erat pellentesque adipiscing commodo. Lobortis scelerisque fermentum dui faucibus. Est sit amet facilisis magna etiam tempor orci.',
+  RSS_TITLE = '& RS School',
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;

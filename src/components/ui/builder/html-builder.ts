@@ -1,4 +1,4 @@
-import { Base, Buttons, HLevels, Mode } from '../../models/builder';
+import { Base, Blocks, Buttons, HLevels, Mode } from '../../models/builder';
 import { Pages } from '../../models/router';
 
 class Builder {
@@ -138,7 +138,7 @@ class Builder {
     const link: HTMLAnchorElement = document.createElement('a');
     link.className = `${this.base}`;
     this.setProperties(link);
-    if (this.mode === Mode.git) {
+    if (this.mode === Mode.git || this.mode === Mode.rss) {
       link.href = `${href}`;
       link.target = '_blank';
     } else if (this.mode === Mode.email) {

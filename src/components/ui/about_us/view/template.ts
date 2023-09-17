@@ -1,4 +1,4 @@
-import { Base, Blocks, Elem, Titles } from '../../../models/builder';
+import { Base, Blocks, Elem, Mode, Titles } from '../../../models/builder';
 import { Pages } from '../../../models/router';
 import Builder from '../../builder/html-builder';
 import createHeader from '../../main/view/header';
@@ -28,6 +28,10 @@ export default function createTemplateAboutUs(isLoggedIn?: boolean): HTMLElement
     title.textContent = `${Titles.HAQ_TITLE}`;
     subtitle.textContent = `${Titles.HAQ_SUBTITLE}`;
 
+    const rss: HTMLElement = new Builder('div', Base.rss, Blocks.about, Elem.rss, '').element();
+    const rssTitle: HTMLHeadingElement = new Builder('', Base.titles, Blocks.about, Elem.title, Mode.rss).h(2);
+    const rssLogo: HTMLElement = new Builder('', '', Blocks.about, Elem.logo, Mode.rss).a(Pages.RSS);
+
     const shortInfo: HTMLElement = renderPersonInfo();
     const facts: HTMLElement = renderFacts();
     const content: HTMLElement = renderPersonContent();
@@ -37,9 +41,11 @@ export default function createTemplateAboutUs(isLoggedIn?: boolean): HTMLElement
     const teamworkText: HTMLParagraphElement = new Builder('div', '', Blocks.teamwork, Elem.text, '').p();
     teamworkTitle.textContent = `${Titles.TEAM_TITLE}`;
     teamworkText.textContent = `${Titles.TEAM_TEXT}`;
+    rssTitle.textContent = Titles.RSS_TITLE;
 
     text.append(title, subtitle);
-    titleSection.append(text);
+    rss.append(rssTitle, rssLogo);
+    titleSection.append(text, rss);
     teamwork.append(teamworkTitle, teamworkText);
 
     main.append(titleSection, shortInfo, facts, content, teamwork);

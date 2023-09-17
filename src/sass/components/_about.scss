@@ -1,23 +1,44 @@
 .about {
   &__header {
+    display: flex;
     width: 100%;
+    padding: 60px 0 140px 90px;
     background: $color-background;
   }
 
   &__text {
     display: flex;
     flex-direction: column;
-    padding: 60px 0 140px 90px;
     width: 50%;
   }
 
   &__title {
     margin-bottom: 30px;
-    @include font(600, 6.4rem, 100%, $color-dark);
+    @include font(600, 7.2rem, 100%, $color-dark);
+    &_rss {
+      color: $color-main-second;
+    }
   }
 
   &__subtitle {
+    width: 80%;
     @include font(400, 2.4rem, 3.2rem, $color-dark);
+  }
+
+  &__rss {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__logo {
+    display: block;
+    width: 129.4px;
+    height: 109px;
+    align-self: flex-end;
+    background-image: url('../assets/ico/logo-rs.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    order: -1;
   }
 
   &__info {
