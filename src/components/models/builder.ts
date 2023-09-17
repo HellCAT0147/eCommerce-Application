@@ -23,6 +23,7 @@ export enum Blocks {
   contacts = 'contacts',
   bio = 'bio',
   impact = 'impact',
+  teamwork = 'teamwork',
 }
 
 export enum Elem {
@@ -90,6 +91,7 @@ export enum Elem {
   contacts = 'contacts',
   bio = 'bio',
   impact = 'impact',
+  teamwork = 'teamwork',
 }
 
 export enum Mode {
@@ -183,7 +185,8 @@ export enum Mode {
   lines = 'lines',
   branches = 'branches',
   git = 'git',
-  linkedIn = 'linkedIn',
+  top = 'top',
+  bottom = 'bottom',
 }
 
 export enum Base {
@@ -223,6 +226,7 @@ export enum Base {
   promo = 'promo',
   person = 'person',
   content = 'content',
+  teamwork = 'teamwork',
 }
 
 export enum Buttons {
@@ -305,9 +309,9 @@ export enum Titles {
   FACTS_BRANCHES = 'Branches ',
   BRANCHES_AMOUNT = '32',
   BIO_TITLE = 'About Me:',
-  BIO_TEXT = 'Lorem ipsum dolor sit amet. Qui minus numquam et aliquam quasi qui explicabo voluptas eum amet laborum in ipsa voluptatem. In voluptatem dolorem id beatae aliquam ab rerum error aut dolores assumenda et ratione voluptate. Rem odio sunt sed deserunt iste ut corrupti quasi et laborum dolorem. Et repellendus odit qui nobis laboriosam rem quisquam veniam aut error odio? Eum corporis cupiditate et illum deserunt et inventore alias ut eius corrupti eum minus ullam est distinctio galisum aut dolor dolorem.',
   IMPACT_TITLE = 'Contributions:',
-  IMPACT_TEXT = 'Lorem ipsum dolor sit amet. Aut exercitationem amet est dolor eaque At nemo quibusdam. Nam laborum libero a aperiam voluptas ut iusto atque et perspiciatis porro a magni distinctio ut quos voluptatem.',
+  TEAM_TITLE = 'Collaboration',
+  TEAM_TEXT = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Egestas pretium aenean pharetra magna ac placerat vestibulum lectus mauris. Arcu cursus euismod quis viverra. At consectetur lorem donec massa. Sed risus pretium quam vulputate dignissim suspendisse in est. Mi quis hendrerit dolor magna. Mauris sit amet massa vitae tortor. Iaculis eu non diam phasellus vestibulum lorem sed risus. Facilisi etiam dignissim diam quis enim lobortis scelerisque fermentum dui. Cursus mattis molestie a iaculis at erat pellentesque adipiscing commodo. Lobortis scelerisque fermentum dui faucibus. Est sit amet facilisis magna etiam tempor orci.',
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;

@@ -34,9 +34,9 @@ function renderPersonContent(): HTMLElement {
   const content: HTMLElement = new Builder('section', '', Blocks.about, Elem.contents, '').element();
   const personList: Person[] = [Person1, Person2, Person3];
   personList.forEach((person: Person): void => {
-    const left: HTMLElement = new Builder('div', '', Blocks.content, Elem.wrapper, Mode.left).element();
-    const right: HTMLElement = new Builder('div', '', Blocks.content, Elem.wrapper, Mode.right).element();
     const personBlock: HTMLElement = new Builder('div', Base.content, Blocks.about, Elem.content, '').element();
+    const top: HTMLElement = new Builder('div', '', Blocks.content, Elem.wrapper, Mode.top).element();
+    const bottom: HTMLElement = new Builder('div', '', Blocks.content, Elem.wrapper, Mode.bottom).element();
     const name: HTMLElement = new Builder('', '', Blocks.content, Elem.name, '').p();
     const contacts: HTMLElement = new Builder('div', '', Blocks.content, Elem.contacts, '').element();
     const git: HTMLElement = new Builder('div', '', Blocks.content, Elem.contact, Mode.git).a(person.git);
@@ -51,16 +51,16 @@ function renderPersonContent(): HTMLElement {
     personBlock.setAttribute('id', person.id);
     name.textContent = person.name;
     impactTitle.textContent = Titles.IMPACT_TITLE;
-    impactText.textContent = Titles.IMPACT_TEXT;
+    impactText.textContent = person.impact;
     bioTitle.textContent = Titles.BIO_TITLE;
-    bioText.textContent = Titles.BIO_TEXT;
+    bioText.textContent = person.bio;
 
     contacts.append(git, email);
     impact.append(impactTitle, impactText);
     bio.append(bioTitle, bioText);
-    left.append(name, impact);
-    right.append(bio, contacts);
-    personBlock.append(left, right);
+    top.append(name, contacts);
+    bottom.append(impact, bio);
+    personBlock.append(top, bottom);
     content.append(personBlock);
   });
 

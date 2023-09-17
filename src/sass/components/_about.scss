@@ -12,8 +12,12 @@
   }
 
   &__title {
-    width: 50%;
+    margin-bottom: 30px;
     @include font(600, 6.4rem, 100%, $color-dark);
+  }
+
+  &__subtitle {
+    @include font(400, 2.4rem, 3.2rem, $color-dark);
   }
 
   &__info {
@@ -36,6 +40,11 @@
 
   &__contents {
     width: 100%;
+  }
+
+  &__teamwork {
+    padding: 50px 21px 80px 21px;
+    text-align: center;
   }
 }
 
@@ -114,21 +123,24 @@
 
 .content {
   display: flex;
+  flex-direction: column;
+  padding: 42px 21px;
+  row-gap: 40px;
   &__name {
     @extend %font-second;
-    @include font(400, 3.2rem, 100%, $color-dark);
+    @include font(400, 3.4rem, 100%, $color-dark);
   }
 
   &__contacts {
     display: flex;
-    justify-content: flex-end;
-    order: -1;
+    align-self: flex-end;
+    column-gap: 5px;
   }
 
   &__contact {
     display: block;
-    height: 24px;
-    width: 24px;
+    height: 30px;
+    width: 30px;
     -webkit-mask-repeat: no-repeat;
     -webkit-mask-size: contain;
     mask-repeat: no-repeat;
@@ -141,6 +153,7 @@
     }
 
     &_git {
+      width: 26.2px;
       -webkit-mask-image: url('../assets/ico/git.svg');
       mask-image: url('../assets/ico/git.svg');
       background: $color-dark;
@@ -165,21 +178,35 @@
 
   &__wrapper {
     display: flex;
-    flex-direction: column;
     row-gap: 10px;
-    &_left {
-      flex-basis: 30%;
-      padding: 21px;
-    }
-
-    &_right {
+    column-gap: 40px;
+    &_top {
       justify-content: space-between;
-      flex-basis: 70%;
-      padding: 21px;
     }
+  }
+
+  &__impact,
+  &__name {
+    flex-basis: 30%;
+  }
+
+  &__bio,
+  &__contacts {
+    flex-basis: 70%;
   }
 
   &:nth-child(odd) {
     background-color: $color-background;
+  }
+}
+
+.teamwork {
+  &__title {
+    @include font(600, 2.4rem, 100%, $color-main-second);
+    margin-bottom: 30px;
+  }
+  &__text {
+    @extend %font-second;
+    @include font(400, 1.8rem, 2.8rem, $color-dark);
   }
 }

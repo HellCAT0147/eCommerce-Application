@@ -23,8 +23,8 @@ export default function createTemplateAboutUs(isLoggedIn?: boolean): HTMLElement
 
     const titleSection: HTMLElement = new Builder('section', '', Blocks.about, Elem.header, '').element();
     const text: HTMLElement = new Builder('div', '', Blocks.about, Elem.text, '').element();
-    const title: HTMLElement = new Builder('h1', Base.titles, Blocks.about, Elem.title, '').element();
-    const subtitle: HTMLElement = new Builder('h1', Base.titles, Blocks.about, Elem.subtitle, '').element();
+    const title: HTMLHeadingElement = new Builder('', Base.titles, Blocks.about, Elem.title, '').h(1);
+    const subtitle: HTMLHeadingElement = new Builder('', Base.titles, Blocks.about, Elem.subtitle, '').h(2);
     title.textContent = `${Titles.HAQ_TITLE}`;
     subtitle.textContent = `${Titles.HAQ_SUBTITLE}`;
 
@@ -32,10 +32,17 @@ export default function createTemplateAboutUs(isLoggedIn?: boolean): HTMLElement
     const facts: HTMLElement = renderFacts();
     const content: HTMLElement = renderPersonContent();
 
+    const teamwork: HTMLElement = new Builder('section', Base.teamwork, Blocks.about, Elem.teamwork, '').element();
+    const teamworkTitle: HTMLHeadingElement = new Builder('div', '', Blocks.teamwork, Elem.title, '').h(3);
+    const teamworkText: HTMLParagraphElement = new Builder('div', '', Blocks.teamwork, Elem.text, '').p();
+    teamworkTitle.textContent = `${Titles.TEAM_TITLE}`;
+    teamworkText.textContent = `${Titles.TEAM_TEXT}`;
+
     text.append(title, subtitle);
     titleSection.append(text);
+    teamwork.append(teamworkTitle, teamworkText);
 
-    main.append(titleSection, shortInfo, facts, content);
+    main.append(titleSection, shortInfo, facts, content, teamwork);
   }
 
   return newHeader;
