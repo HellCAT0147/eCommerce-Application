@@ -1,8 +1,9 @@
-import { Base, Blocks, Elem, Mode, Titles } from '../../../models/builder';
+import { Base, Blocks, Elem, Titles } from '../../../models/builder';
 import { Pages } from '../../../models/router';
 import Builder from '../../builder/html-builder';
 import createHeader from '../../main/view/header';
-import renderPerson from './person';
+import renderFacts from './facts';
+import { renderPersonContent, renderPersonInfo } from './person';
 
 export default function createTemplateAboutUs(isLoggedIn?: boolean): HTMLElement {
   const body: HTMLBodyElement | null = document.querySelector(`${Blocks.body}`);
@@ -27,26 +28,13 @@ export default function createTemplateAboutUs(isLoggedIn?: boolean): HTMLElement
     title.textContent = `${Titles.HAQ_TITLE}`;
     subtitle.textContent = `${Titles.HAQ_SUBTITLE}`;
 
-    const shortInfo: HTMLElement = new Builder('section', '', Blocks.about, Elem.info, '').element();
-    renderPerson(shortInfo);
-    const facts: HTMLElement = new Builder('section', '', Blocks.about, Elem.facts, '').element();
-    const factsTitle: HTMLHeadingElement = new Builder('', '', Blocks.facts, Elem.title, '').h(2);
-    const factPr: HTMLParagraphElement = new Builder('', '', Blocks.facts, Elem.fact, Mode.pr).p();
-    const factCommits: HTMLParagraphElement = new Builder('', '', Blocks.facts, Elem.fact, Mode.comm).p();
-    const factLines: HTMLParagraphElement = new Builder('', '', Blocks.facts, Elem.fact, Mode.lines).p();
-    const factBranches: HTMLParagraphElement = new Builder('', '', Blocks.facts, Elem.fact, Mode.branches).p();
-
-    factsTitle.textContent = Titles.FACTS;
-    factPr.textContent = Titles.FACTS_PR;
-    factCommits.textContent = Titles.FACTS_COMM;
-    factLines.textContent = Titles.FACTS_LINES;
-    factBranches.textContent = Titles.FACTS_BRANCHES;
-
-    const content: HTMLElement = new Builder('section', Base.content, Blocks.about, Elem.content, '').element();
+    const shortInfo: HTMLElement = renderPersonInfo();
+    const facts: HTMLElement = renderFacts();
+    const content: HTMLElement = renderPersonContent();
 
     text.append(title, subtitle);
     titleSection.append(text);
-    facts.append(factsTitle, factPr, factCommits, factLines, factBranches);
+
     main.append(titleSection, shortInfo, facts, content);
   }
 

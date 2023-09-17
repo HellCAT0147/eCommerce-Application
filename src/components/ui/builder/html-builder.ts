@@ -1,4 +1,4 @@
-import { Buttons, HLevels, Mode } from '../../models/builder';
+import { Base, Buttons, HLevels, Mode } from '../../models/builder';
 import { Pages } from '../../models/router';
 
 class Builder {
@@ -134,14 +134,23 @@ class Builder {
     return option;
   }
 
-  public a(): HTMLAnchorElement {
+  public a(href?: string): HTMLAnchorElement {
     const link: HTMLAnchorElement = document.createElement('a');
     link.className = `${this.base}`;
     this.setProperties(link);
-    link.textContent = `Go to ${this.mode} page`;
-    link.href = `/${this.mode}`;
-    link.setAttribute('id', `${Pages.GO_TO}-${this.mode}`);
-    link.classList.add('redirect__buttons');
+    if (this.mode === Mode.git) {
+      link.href = `${href}`;
+      link.target = '_blank';
+    } else if (this.mode === Mode.email) {
+      link.href = `mailto:${href}`;
+    } else if (this.base === Base.person) {
+      link.href = `#${href}`;
+    } else {
+      link.textContent = `Go to ${this.mode} page`;
+      link.href = `/${this.mode}`;
+      link.setAttribute('id', `${Pages.GO_TO}-${this.mode}`);
+      link.classList.add('redirect__buttons');
+    }
     return link;
   }
 

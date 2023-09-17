@@ -20,6 +20,9 @@ export enum Blocks {
   person = 'person',
   content = 'content',
   facts = 'facts',
+  contacts = 'contacts',
+  bio = 'bio',
+  impact = 'impact',
 }
 
 export enum Elem {
@@ -55,6 +58,7 @@ export enum Elem {
   account = 'account',
   modal = 'modal',
   content = 'content',
+  contents = 'contents',
   close = 'close',
   price = 'price',
   subtitle = 'subtitle',
@@ -77,11 +81,15 @@ export enum Elem {
   name = 'name',
   container = 'container',
   info = 'info',
-  position = 'position',
+  role = 'role',
   git = 'git',
   more = 'more',
   facts = 'facts',
   fact = 'fact',
+  contact = 'contact',
+  contacts = 'contacts',
+  bio = 'bio',
+  impact = 'impact',
 }
 
 export enum Mode {
@@ -174,6 +182,8 @@ export enum Mode {
   comm = 'commits',
   lines = 'lines',
   branches = 'branches',
+  git = 'git',
+  linkedIn = 'linkedIn',
 }
 
 export enum Base {
@@ -286,10 +296,18 @@ export enum Titles {
   HAQ_TITLE = `HAQ TEAM`,
   HAQ_SUBTITLE = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
   FACTS = 'PROJECT FACTS',
-  FACTS_PR = 'Pulls 60',
-  FACTS_COMM = 'Commits 410',
-  FACTS_LINES = 'Lines 30k+',
-  FACTS_BRANCHES = 'Branches 32',
+  FACTS_PR = 'Pull Requests ',
+  PR_AMOUNT = '60',
+  FACTS_COMM = 'Commits ',
+  COMM_AMOUNT = '410',
+  FACTS_LINES = 'Lines of Code ',
+  LINES_AMOUNT = '30k+',
+  FACTS_BRANCHES = 'Branches ',
+  BRANCHES_AMOUNT = '32',
+  BIO_TITLE = 'About Me:',
+  BIO_TEXT = 'Lorem ipsum dolor sit amet. Qui minus numquam et aliquam quasi qui explicabo voluptas eum amet laborum in ipsa voluptatem. In voluptatem dolorem id beatae aliquam ab rerum error aut dolores assumenda et ratione voluptate. Rem odio sunt sed deserunt iste ut corrupti quasi et laborum dolorem. Et repellendus odit qui nobis laboriosam rem quisquam veniam aut error odio? Eum corporis cupiditate et illum deserunt et inventore alias ut eius corrupti eum minus ullam est distinctio galisum aut dolor dolorem.',
+  IMPACT_TITLE = 'Contributions:',
+  IMPACT_TEXT = 'Lorem ipsum dolor sit amet. Aut exercitationem amet est dolor eaque At nemo quibusdam. Nam laborum libero a aperiam voluptas ut iusto atque et perspiciatis porro a magni distinctio ut quos voluptatem.',
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;

@@ -29,13 +29,13 @@
     justify-content: space-around;
     position: relative;
     width: 96%;
-    padding: 40px 60px;
+    padding: 40px 0;
+    margin: 60px 0;
     border: 2px solid $color-input;
   }
 
-  &__content {
+  &__contents {
     width: 100%;
-    height: 250px;
   }
 }
 
@@ -46,6 +46,7 @@
   position: relative;
   top: -60px;
   transition: all 0.3s ease;
+  text-decoration: none;
   &__image {
     flex-shrink: 0;
     width: 120px;
@@ -74,7 +75,7 @@
     @include font(600, 2rem, 100%, $color-dark-gray);
   }
 
-  &__position {
+  &__role {
     margin-top: 11px;
     @extend %font-second;
     @include font(400, 1.6rem, 100%, $color-light-gray);
@@ -85,7 +86,8 @@
   }
 
   &:hover {
-    scale: 1.1;
+    scale: 1.05;
+    text-decoration: none;
     cursor: pointer;
   }
 }
@@ -103,5 +105,81 @@
 
   &__fact {
     @include font(500, 2.2rem, 100%, $color-dark-gray);
+  }
+
+  &__amount {
+    color: $color-main-second;
+  }
+}
+
+.content {
+  display: flex;
+  &__name {
+    @extend %font-second;
+    @include font(400, 3.2rem, 100%, $color-dark);
+  }
+
+  &__contacts {
+    display: flex;
+    justify-content: flex-end;
+    order: -1;
+  }
+
+  &__contact {
+    display: block;
+    height: 24px;
+    width: 24px;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    background: $color-dark;
+    @extend %transition;
+    cursor: pointer;
+    &:hover {
+      background: $color-main-second;
+    }
+
+    &_git {
+      -webkit-mask-image: url('../assets/ico/git.svg');
+      mask-image: url('../assets/ico/git.svg');
+      background: $color-dark;
+    }
+
+    &_email {
+      -webkit-mask-image: url('../assets/ico/mail.svg');
+      mask-image: url('../assets/ico/mail.svg');
+      background: $color-dark;
+    }
+  }
+
+  &__title {
+    margin-bottom: 15px;
+    @include font(500, 2.2rem, 100%, $color-dark);
+  }
+
+  &__text {
+    @extend %font-second;
+    @include font(400, 1.6rem, 2.6rem, $color-dark);
+  }
+
+  &__wrapper {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+    &_left {
+      flex-basis: 30%;
+      padding: 21px;
+    }
+
+    &_right {
+      justify-content: space-between;
+      flex-basis: 70%;
+      padding: 21px;
+    }
+  }
+
+  &:nth-child(odd) {
+    background-color: $color-background;
   }
 }
