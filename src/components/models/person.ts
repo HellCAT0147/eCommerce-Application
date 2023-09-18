@@ -6,8 +6,8 @@ export enum Person1 {
   email = 'letscheckmail23@gmail.com',
   city = 'Tashkent',
   country = 'Uzbekistan',
-  impact = 'Lorem ipsum dolor sit amet. Aut exercitationem amet est dolor eaque At nemo quibusdam. Nam laborum libero a aperiam voluptas ut iusto atque et perspiciatis porro a magni distinctio ut quos voluptatem.',
-  bio = 'Lorem ipsum dolor sit amet. Qui minus numquam et aliquam quasi qui explicabo voluptas eum amet laborum in ipsa voluptatem. In voluptatem dolorem id beatae aliquam ab rerum error aut dolores assumenda et ratione voluptate. Rem odio sunt sed deserunt iste ut corrupti quasi et laborum dolorem. Et repellendus odit qui nobis laboriosam rem quisquam veniam aut error odio? Eum corporis cupiditate et illum deserunt et inventore alias ut eius corrupti eum minus ullam est distinctio galisum aut dolor dolorem.',
+  impact = 'Ilya mostly managed the project, assigned tasks, reflected them in Trello cards, worked with project logic such as validation, information processing, and in the last sprint the API part.',
+  bio = 'Ilya started this course from stage-0 with basic knowledge of HTML/CSS, all the time he was trying to break into the top positions, he studied hard for 60 hours a week for it. At the initial stages, when there was enough time to close tasks - he was very much engaged in theory, which helped in the future in the course interviews. Ilya loves playing guitar, Dota 2 and Diablo (3-4). He also enjoys the adrenaline of high speed racing a car and setting records on a bike. In the future he really wants to become a Team Leader and make a lot of money.',
 }
 
 export enum Person2 {
