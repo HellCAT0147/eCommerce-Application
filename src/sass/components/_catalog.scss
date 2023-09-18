@@ -1,10 +1,16 @@
+@keyframes spinner-border {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .catalog {
   &__empty-list {
     font-size: 2rem;
   }
   &__breadcrumbs_wrapper {
-    width: 94vw;
     display: flex;
+    align-self: flex-start;
     flex-direction: row;
     column-gap: 5px;
     margin-left: 35px;
@@ -209,7 +215,6 @@
     line-height: 1;
   }
   &__card_base-price {
-    text-decoration-line: line-through;
     font-size: 1.4rem;
   }
   &__card_disc-price {
@@ -217,6 +222,99 @@
     margin-left: 5px;
     font-size: 1.8rem;
   }
+
+  &__button-cart {
+    &_add,
+    &_remove {
+      width: 15vw;
+      min-width: 180px;
+      margin: 1vw 0;
+      padding: 7px 10px;
+      & span {
+        pointer-events: none;
+      }
+    }
+  }
+
+  &__pagination_wrapper {
+    display: flex;
+    flex-direction: row;
+  }
+  &__pagination_prev,
+  &__pagination_next {
+    color: white;
+    background-color: black;
+    border-radius: 0;
+    width: 100px;
+    border: none;
+    transition-duration: 0.3s;
+    &:hover {
+      background-color: #c21f39;
+      scale: 1.03;
+      transition-duration: 0.3s;
+      cursor: pointer;
+    }
+    &:disabled {
+      background-color: gray;
+      scale: 1;
+      cursor: not-allowed;
+    }
+  }
+  &__pagination_curr {
+    width: 30px;
+    text-align: center;
+    font-size: 1.3rem;
+  }
+  &__cart-buttons_wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    overflow: hidden;
+    justify-items: center;
+    & .catalog__button-cart_add,
+    & .catalog__button-cart_remove {
+      min-width: 120px;
+    }
+  }
+}
+.product__wrapper_price,
+.product__description {
+  margin-left: 10px;
+}
+.before-disc {
+  text-decoration: line-through;
+}
+:disabled {
+  background-color: gray;
+  scale: 1;
+  &:hover {
+    background-color: gray;
+    scale: 1;
+  }
+}
+.add-spinner {
+  display: inline-block;
+  width: 1.3rem;
+  height: 1.3rem;
+  vertical-align: -0.125em;
+  border: 0.2em solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  -webkit-animation: 0.75s linear infinite spinner-border;
+  animation: 0.75s linear infinite spinner-border;
+  margin-right: 10px;
+}
+
+.add-spinner_hide {
+  display: none;
+}
+
+#reset-filters_btn {
+  padding: 5px 0;
+  border: 2px solid gray;
+  color: black;
+  background-color: transparent;
+  border-radius: 3px;
 }
 
 @media (max-width: 739px) {

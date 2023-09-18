@@ -4,7 +4,7 @@ import Builder from '../../builder/html-builder';
 import { Pages } from '../../../models/router';
 import { DataAddresses } from '../../../models/commerce';
 import FormViewProfile from './form';
-import { Countries, Errors, InputType } from '../../../models/validation';
+import { Countries, Errors, InputType, IsChecked } from '../../../models/validation';
 
 export default class ViewProfile {
   protected formView: FormViewProfile;
@@ -87,7 +87,7 @@ export default class ViewProfile {
     }
   }
 
-  private getDataAddresses(customer: Customer): DataAddresses {
+  public getDataAddresses(customer: Customer): DataAddresses {
     const dataAddresses: DataAddresses = {
       billing: '',
       shipping: '',
@@ -102,7 +102,7 @@ export default class ViewProfile {
     return dataAddresses;
   }
 
-  private parseAddress(address: Address, dataAddresses: DataAddresses, field: HTMLElement): HTMLElement {
+  public parseAddress(address: Address, dataAddresses: DataAddresses, field: HTMLElement): HTMLElement {
     let type: string = '';
     let defAddress: string = '';
     if (dataAddresses.all_bill && dataAddresses.all_bill.includes(address.id)) {
@@ -137,7 +137,7 @@ export default class ViewProfile {
     return field;
   }
 
-  private createAddresses(customer: Customer): HTMLElement {
+  public createAddresses(customer: Customer): HTMLElement {
     const addresses: HTMLElement = new Builder('div', Base.form, Blocks.prof, Elem.addresses, '').element();
     const listAddresses: Address[] = customer.addresses;
     const dataAddress: DataAddresses = this.getDataAddresses(customer);
@@ -158,7 +158,7 @@ export default class ViewProfile {
     return addresses;
   }
 
-  private updateAddresses(): HTMLFieldSetElement {
+  public updateAddresses(): HTMLFieldSetElement {
     const address: HTMLFieldSetElement = this.formView.createAddressUpdateForm(
       Mode.street,
       Mode.city,
@@ -239,16 +239,29 @@ export default class ViewProfile {
     }
   }
 
-  public checkedBoxes(): void {
+  public checkedBoxes(isChecked?: IsChecked): void {
     const bill: HTMLInputElement | null = document.querySelector(`.${Blocks.prof}__${Elem.input}_${Mode.bill}`);
     const ship: HTMLInputElement | null = document.querySelector(`.${Blocks.prof}__${Elem.input}_${Mode.ship}`);
     const defBill: HTMLInputElement | null = document.querySelector(`.${Blocks.prof}__${Elem.input}_${Mode.bill_def}`);
     const defShip: HTMLInputElement | null = document.querySelector(`.${Blocks.prof}__${Elem.input}_${Mode.ship_def}`);
     if (bill && ship && defBill && defShip) {
-      bill.checked = true;
-      ship.checked = true;
-      defBill.checked = true;
-      defShip.checked = true;
+      bill.disabled = false;
+      ship.disabled = false;
+      if (isChecked) {
+        bill.checked = isChecked.isSetBill;
+        ship.checked = isChecked.isSetShip;
+        defBill.checked = isChecked.isSetBillDef;
+        defShip.checked = isChecked.isSetShipDef;
+        if (isChecked.isSetBillDef) bill.disabled = true;
+        if (isChecked.isSetShipDef) ship.disabled = true;
+      } else {
+        bill.disabled = true;
+        bill.checked = true;
+        ship.disabled = true;
+        ship.checked = true;
+        defBill.checked = true;
+        defShip.checked = true;
+      }
     }
   }
 
@@ -355,51 +368,70 @@ export default class ViewProfile {
 
   public showMessage(isSuccess?: boolean, message?: string): void {
     const body: HTMLElement | null = document.querySelector(`${Blocks.body}`);
-    const oldMessageHolder: HTMLElement | null = document.querySelector(`.${Blocks.prof}__${Elem.mess}`);
+    const oldMessageHolder: HTMLElement | null = document.querySelector(`.${Blocks.main}__${Elem.mess}`);
     if (oldMessageHolder) {
-      oldMessageHolder.classList.remove(`${Blocks.prof}__${Elem.mess}_${Mode.hidden}`);
+      oldMessageHolder.classList.remove(`${Blocks.main}__${Elem.mess}_${Mode.hidden}`);
       const messageText: HTMLElement | null = oldMessageHolder.querySelector(`.${Elem.mess}__${Elem.text}`);
       if (messageText) {
         if (isSuccess) messageText.textContent = `${Titles.SUCCESS_UPDATE}`;
         else if (message) messageText.textContent = `${message}`;
         else messageText.textContent = `${Titles.FAILED_UPDATE}`;
       }
-      if (!isSuccess) oldMessageHolder.classList.add(`${Blocks.prof}__${Elem.mess}_${Mode.fail}`);
+      if (!isSuccess) oldMessageHolder.classList.add(`${Blocks.main}__${Elem.mess}_${Mode.fail}`);
     } else {
-      const messageHolder: HTMLElement = new Builder('div', '', Blocks.prof, Elem.mess, '').element();
+      const messageHolder: HTMLElement = new Builder('div', '', Blocks.main, Elem.mess, '').element();
       const messageIcon: HTMLElement = new Builder('div', '', Elem.mess, Elem.image, '').element();
       const messageText: HTMLElement = new Builder('div', '', Elem.mess, Elem.text, '').element();
       if (isSuccess) {
         messageText.textContent = `${Titles.SUCCESS_UPDATE}`;
       } else if (message) {
         messageText.textContent = `${message}`;
-        messageHolder.classList.add(`${Blocks.prof}__${Elem.mess}_${Mode.fail}`);
+        messageHolder.classList.add(`${Blocks.main}__${Elem.mess}_${Mode.fail}`);
       } else {
         messageText.textContent = `${Titles.FAILED_UPDATE}`;
-        messageHolder.classList.add(`${Blocks.prof}__${Elem.mess}_${Mode.fail}`);
+        messageHolder.classList.add(`${Blocks.main}__${Elem.mess}_${Mode.fail}`);
       }
 
       messageHolder.append(messageIcon, messageText);
       if (body) body.appendChild(messageHolder);
       if (messageHolder) {
         setTimeout(() => {
-          messageHolder.classList.add(`${Blocks.prof}__${Elem.mess}_${Mode.hidden}`);
-          messageHolder.classList.remove(`${Blocks.prof}__${Elem.mess}_${Mode.fail}`);
+          messageHolder.classList.add(`${Blocks.main}__${Elem.mess}_${Mode.hidden}`);
+          messageHolder.classList.remove(`${Blocks.main}__${Elem.mess}_${Mode.fail}`);
         }, 1500);
       }
     }
 
     setTimeout(() => {
       if (oldMessageHolder) {
-        oldMessageHolder.classList.add(`${Blocks.prof}__${Elem.mess}_${Mode.hidden}`);
-        oldMessageHolder.classList.remove(`${Blocks.prof}__${Elem.mess}_${Mode.fail}`);
+        oldMessageHolder.classList.add(`${Blocks.main}__${Elem.mess}_${Mode.hidden}`);
+        oldMessageHolder.classList.remove(`${Blocks.main}__${Elem.mess}_${Mode.fail}`);
       }
     }, 1500);
   }
 
   public resetInputView(inputType: InputType): void {
-    const initInput: HTMLInputElement | null = document.querySelector(`.profile__input_${inputType}`);
+    let initInput: HTMLElement | null;
+    if (inputType === Mode.country) initInput = document.querySelector(`.${Blocks.prof}__${Elem.select}_${inputType}`);
+    else initInput = document.querySelector(`.${Blocks.prof}__${Elem.input}_${inputType}`);
     initInput?.classList.remove(Mode.valid);
     initInput?.classList.remove(Mode.invalid);
+  }
+
+  public setCheckBoxAndLock(isBill: boolean): void {
+    let checkBox: HTMLInputElement | null;
+    if (isBill) checkBox = document.querySelector('#profile-billing');
+    else checkBox = document.querySelector('#profile-shipping');
+    if (checkBox) {
+      checkBox.checked = true;
+      checkBox.disabled = true;
+    }
+  }
+
+  public unlockCheckBox(isBill: boolean): void {
+    let checkBox: HTMLInputElement | null;
+    if (isBill) checkBox = document.querySelector('#profile-billing');
+    else checkBox = document.querySelector('#profile-shipping');
+    if (checkBox) checkBox.disabled = false;
   }
 }

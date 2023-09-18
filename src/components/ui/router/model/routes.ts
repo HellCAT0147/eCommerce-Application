@@ -1,4 +1,6 @@
 import { Pages } from '../../../models/router';
+import createTemplateAboutUs from '../../about_us/view/template';
+import createTemplateCart from '../../cart/view/template';
 import createTemplateCatalog from '../../catalog/view/template';
 import createTemplateLogin from '../../login/view/template';
 import { createTemplateMain } from '../../main/view/template';
@@ -53,6 +55,18 @@ const basicRoutes = [
     path: `${Pages.NOT_FOUND}`,
     callback: (isLoggedIn?: boolean): void => {
       createTemplateNotFound(isLoggedIn);
+    },
+  },
+  {
+    path: `${Pages.ABOUT_US}`,
+    callback: (isLoggedIn?: boolean): void => {
+      createTemplateAboutUs(isLoggedIn);
+    },
+  },
+  {
+    path: `${Pages.CART}`,
+    callback: (isLoggedIn?: boolean): void => {
+      createTemplateCart(isLoggedIn);
     },
   },
 ];

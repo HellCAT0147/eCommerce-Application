@@ -166,10 +166,6 @@ export default class FormViewProfile extends FormViewReg {
     formTitle.textContent = `${defAddress} ${type} ${Titles.ADDRESS}`.toUpperCase().trim();
     const content: HTMLElement = new Builder('div', '', page, Elem.content, '').element();
     const info: HTMLElement = new Builder('', '', page, Elem.text, Mode.info).p();
-    const street: HTMLElement = new Builder('', '', page, Elem.text, Mode.street).p();
-    const postal: HTMLElement = new Builder('', '', page, Elem.text, Mode.postal).p();
-    const city: HTMLElement = new Builder('', '', page, Elem.text, Mode.city).p();
-    const country: HTMLElement = new Builder('', '', page, Elem.text, Mode.country).p();
     const formFieldControl: HTMLFieldSetElement = new Builder('', Base.field, page, Elem.field, Mode.control).field();
     formFieldControl.classList.add(`${page}__${Elem.wrapper}_${Mode.control}`);
     if (address && address.id) {
@@ -180,22 +176,14 @@ export default class FormViewProfile extends FormViewReg {
       buttonDelete.textContent = Buttons.DEL_ADDRESS;
       buttonDelete.setAttribute('data-id', `${address.id}`);
       formFieldControl.append(buttonEdit, buttonDelete);
-    } else {
-      const buttonAdd: HTMLButtonElement = new Builder('', Base.btns_edit, page, Elem.btn, Mode.add).button();
-      buttonAdd.textContent = Buttons.ADD_ADDRESS;
-      formFieldControl.appendChild(buttonAdd);
     }
 
     if (address) {
-      street.textContent = `${address.streetName},`;
-      postal.textContent = `${address.postalCode},`;
-      city.textContent = `${address.city},`;
-      country.textContent = `${address.country}.`;
+      info.textContent = `${address.streetName}, ${address.postalCode}, ${address.city}, ${address.country}`;
     } else {
       info.textContent = `${Titles.HAVE_NOT} ${defAddress} ${type} ${Elem.address}`;
     }
 
-    content.append(street, postal, city, country);
     addressField.append(formTitle, info, content, formFieldControl);
 
     return addressField;

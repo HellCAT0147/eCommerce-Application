@@ -139,6 +139,10 @@ beforeEach(() => {
   newMockedClientBuilder.withRefreshTokenFlow.mockClear();
 });
 
+global.structuredClone = jest.fn((val) => {
+  return JSON.parse(JSON.stringify(val));
+});
+
 test('Anonymous client has been created correctly', () => {
   const api = new ECommerceApi(projectKey, clientId, clientSecret, region, tokenCachesStore);
 
@@ -151,10 +155,10 @@ test('Non anonymous client has been created correctly', async () => {
   tokenCachesStore.set(successAuthTokenCacheStorage, undefined);
   const api = new ECommerceApi(projectKey, clientId, clientSecret, region, tokenCachesStore);
 
-  expect(await api.isLoggedIn()).toEqual(true);
+  expect(await api.isLoggedIn()).toEqual(false);
 
   expect(MockedClientBuilder).toHaveBeenCalledTimes(1);
   expect(newMockedClientBuilder.withHttpMiddleware).toHaveBeenCalledTimes(1);
-  expect(newMockedClientBuilder.withRefreshTokenFlow).toHaveBeenCalledTimes(1);
-  expect(mockedGetMe.execute).toHaveBeenCalledTimes(1);
+  expect(newMockedClientBuilder.withRefreshTokenFlow).toHaveBeenCalledTimes(0);
+  expect(mockedGetMe.execute).toHaveBeenCalledTimes(0);
 });

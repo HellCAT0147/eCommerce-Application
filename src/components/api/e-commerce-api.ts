@@ -4,7 +4,10 @@ import {
   HttpMiddlewareOptions,
   RefreshAuthMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
-import { PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2/dist/declarations/src/types/sdk';
+import {
+  PasswordAuthMiddlewareOptions,
+  TokenStore,
+} from '@commercetools/sdk-client-v2/dist/declarations/src/types/sdk';
 import {
   Address,
   CategoryPagedQueryResponse,
@@ -19,9 +22,17 @@ import {
   MyCustomerRemoveBillingAddressIdAction,
   Product,
   ProductProjection,
+  MyCustomerSetDefaultBillingAddressAction,
+  MyCustomerSetDefaultShippingAddressAction,
+  Cart,
+  CartUpdateAction,
+  LineItem,
 } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
-import { ErrorObject } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/error';
+import {
+  ErrorObject,
+  ObjectNotFoundError,
+} from '@commercetools/platform-sdk/dist/declarations/src/generated/models/error';
 import { Category } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/category';
 import TokenCachesStore from './token-caches-store';
 import compareObjects from '../utils/compare-objects';
@@ -109,7 +120,7 @@ export default class ECommerceApi {
     const creds = this.tokenCachesStore.getDefault();
     let preClient: Client = this.clientBuilder.withAnonymousSessionFlow(this.copyAuthParams()).build();
 
-    if (creds !== this.tokenCachesStore.defaultTokenStore) {
+    if (this.tokenCachesStore.getIsAuthorized()) {
       const authParams: RefreshAuthMiddlewareOptions = {
         ...this.copyAuthParams(),
         refreshToken: creds.refreshToken as string,
@@ -123,7 +134,7 @@ export default class ECommerceApi {
     this.ctpClient = preClient;
     this.apiRoot = preApiRoot;
 
-    if (creds !== this.tokenCachesStore.defaultTokenStore) {
+    if (this.tokenCachesStore.getIsAuthorized()) {
       this.updateMe(preApiRoot);
     }
   }
@@ -260,6 +271,8 @@ export default class ECommerceApi {
     const authParams: PasswordAuthMiddlewareOptions = this.copyAuthParams(); // copy of base auth params
     authParams.credentials.user.username = email;
     authParams.credentials.user.password = password;
+    const prevToken: TokenStore = this.tokenCachesStore.getDefault();
+    this.tokenCachesStore.unset();
 
     try {
       this.ctpClient = this.clientBuilder.withPasswordFlow(authParams).build();
@@ -270,11 +283,16 @@ export default class ECommerceApi {
       const meResponse: ClientResponse<Customer> = await apiRoot.me().get().execute();
 
       if (meResponse.statusCode === 200) {
+        this.tokenCachesStore.setIsAuthorized(true);
         this.initClientAndApiRoot();
         return true;
       }
     } catch (e) {
       return this.errorObjectOrThrow(e);
+    } finally {
+      if (this.tokenCachesStore.getDefault() === this.tokenCachesStore.defaultTokenStore) {
+        this.tokenCachesStore.set(prevToken);
+      }
     }
     return true;
   }
@@ -286,7 +304,7 @@ export default class ECommerceApi {
 
   public async isLoggedIn(): Promise<boolean> {
     return (
-      this.tokenCachesStore.getDefault() !== this.tokenCachesStore.defaultTokenStore &&
+      this.tokenCachesStore.getIsAuthorized() &&
       this.meLoggedInPromise !== null &&
       (await this.meLoggedInPromise) !== null
     );
@@ -331,8 +349,13 @@ export default class ECommerceApi {
           .execute()
       ).body;
       const pageNum: number = calculatePageNum(response.offset, response.limit);
-      const total: number | undefined = response.results.length + pagination.offset;
-      return new ResultPagination(response.results, total, pageNum, response.limit);
+      const { total } = response;
+      return new ResultPagination(
+        response.results,
+        total || response.results.length + pagination.offset,
+        pageNum,
+        response.limit
+      );
     } catch (e) {
       return this.errorObjectOrThrow(e);
     }
@@ -363,15 +386,16 @@ export default class ECommerceApi {
   private async wrapUserUpdateOperation(
     block: (customer: Customer) => Promise<ClientResponse<Customer>>
   ): Promise<Customer | null> {
-    const meNow = await this.meLoggedInPromise;
-    if (meNow == null) return null;
-
-    const newMePromise = block(meNow);
-    const newMe = await newMePromise;
-    if (newMe.statusCode != null && newMe.statusCode >= 200 && newMe.statusCode < 300) {
-      this.meLoggedInPromise = newMePromise.then((response) => response.body);
+    const result: Customer | ErrorObject = await this.getCustomer();
+    if ('email' in result) {
+      const newMePromise = block(result as Customer);
+      const newMe = await newMePromise;
+      if (newMe.statusCode != null && newMe.statusCode >= 200 && newMe.statusCode < 300) {
+        this.meLoggedInPromise = newMePromise.then((response) => response.body);
+      }
+      return newMe.body;
     }
-    return newMe.body;
+    return null;
   }
 
   public async getCategoriesTree(): Promise<Map<string | undefined, Array<Category>> | ErrorObject> {
@@ -417,8 +441,8 @@ export default class ECommerceApi {
 
   public async updatePassword(oldPassword: string, newPassword: string): Promise<ErrorObject | Customer | null> {
     try {
-      const response: Customer | null = await this.meLoggedInPromise;
-      if (response !== null) {
+      const response: Customer | ErrorObject = await this.getCustomer();
+      if ('email' in response) {
         await this.apiRoot
           .me()
           .password()
@@ -537,6 +561,7 @@ export default class ECommerceApi {
 
   private buildAddressModificationAction(
     id: string | undefined,
+    setDefault?: 'setDefaultBillingAddress' | 'setDefaultShippingAddress',
     addAction?: 'addBillingAddressId' | 'addShippingAddressId',
     removeAction?: 'removeBillingAddressId' | 'removeShippingAddressId'
   ): Array<
@@ -544,8 +569,10 @@ export default class ECommerceApi {
     | MyCustomerAddShippingAddressIdAction
     | MyCustomerRemoveBillingAddressIdAction
     | MyCustomerRemoveShippingAddressIdAction
+    | MyCustomerSetDefaultBillingAddressAction
+    | MyCustomerSetDefaultShippingAddressAction
   > {
-    const action = addAction || removeAction;
+    const action = setDefault || addAction || removeAction;
     if (action) {
       return [
         {
@@ -558,7 +585,7 @@ export default class ECommerceApi {
   }
 
   private async buildAndExecuteAddAddressActions(
-    address: Address,
+    id: string | undefined,
     isBillingAddress: boolean,
     isShippingAddress: boolean,
     isDefaultBillingAddress: boolean,
@@ -571,30 +598,18 @@ export default class ECommerceApi {
 
     actions.push(
       ...this.buildAddressModificationAction(
-        address.id,
+        id,
+        isDefaultBillingAddress ? 'setDefaultBillingAddress' : undefined,
         isBillingAddress ? 'addBillingAddressId' : undefined,
         removeIsBilling ? 'removeBillingAddressId' : undefined
       ),
       ...this.buildAddressModificationAction(
-        address.id,
+        id,
+        isDefaultShippingAddress ? 'setDefaultShippingAddress' : undefined,
         isShippingAddress ? 'addShippingAddressId' : undefined,
         removeIsShipping ? 'removeShippingAddressId' : undefined
       )
     );
-
-    if (isDefaultBillingAddress) {
-      actions.push({
-        action: 'setDefaultBillingAddress',
-        addressId: address.id,
-      });
-    }
-
-    if (isDefaultShippingAddress) {
-      actions.push({
-        action: 'setDefaultShippingAddress',
-        addressId: address.id,
-      });
-    }
 
     return this.apiRoot
       .me()
@@ -628,7 +643,7 @@ export default class ECommerceApi {
             if (!oldAddresses.includes(currentAddress.id)) {
               return this.wrapUserUpdateOperation((newMe) => {
                 return this.buildAndExecuteAddAddressActions(
-                  currentAddress,
+                  currentAddress.id,
                   isBillingAddress,
                   isShippingAddress,
                   isDefaultBillingAddress,
@@ -661,38 +676,216 @@ export default class ECommerceApi {
   ): Promise<ErrorObject | boolean> {
     const me = await this.meLoggedInPromise;
     if (me == null) return false;
-    const oldAddresses = me.addresses.map((oldAddress) => oldAddress.id);
     try {
       const newAddressPromise = this.wrapUserUpdateOperation((currentMe) => {
         return this.updateAddress(id, address, currentMe);
       });
       const useWithNewAddress = await newAddressPromise;
       if (useWithNewAddress != null) {
-        const newAddressesPromises = useWithNewAddress.addresses
-          .map((currentAddress) => {
-            if (!oldAddresses.includes(currentAddress.id)) {
-              return this.wrapUserUpdateOperation((newMe) => {
-                return this.buildAndExecuteAddAddressActions(
-                  currentAddress,
-                  isBillingAddress,
-                  isShippingAddress,
-                  isDefaultBillingAddress,
-                  isDefaultShippingAddress,
-                  newMe.version,
-                  currentAddress.id ? newMe.billingAddressIds?.includes(currentAddress.id) : undefined,
-                  currentAddress.id ? newMe.shippingAddressIds?.includes(currentAddress.id) : undefined
-                );
-              });
-            }
-            return null;
-          })
-          .filter((promise) => promise != null);
-        await Promise.all(newAddressesPromises);
+        await this.wrapUserUpdateOperation((newMe) => {
+          return this.buildAndExecuteAddAddressActions(
+            id,
+            isBillingAddress,
+            isShippingAddress,
+            isDefaultBillingAddress,
+            isDefaultShippingAddress,
+            newMe.version,
+            id ? newMe.billingAddressIds?.includes(id) : undefined,
+            id ? newMe.shippingAddressIds?.includes(id) : undefined
+          );
+        });
         return true;
       }
     } catch (e) {
       return this.errorObjectOrThrow(e);
     }
     return true;
+  }
+
+  public async getActiveCart(): Promise<Cart | ErrorObject> {
+    try {
+      let response: ClientResponse<Cart>;
+
+      if ((await this.apiRoot.me().carts().get().execute()).body.total)
+        response = await this.apiRoot.me().activeCart().get().execute();
+      else
+        response = await this.apiRoot
+          .me()
+          .carts()
+          .post({
+            body: {
+              currency: DataBase.currency,
+            },
+          })
+          .execute();
+
+      return response.body;
+    } catch (error) {
+      return this.errorObjectOrThrow(error);
+    }
+  }
+
+  private async modifyCart(cart: Cart, actions: CartUpdateAction[]): Promise<Cart | ErrorObject> {
+    try {
+      return (
+        await this.apiRoot
+          .carts()
+          .withId({ ID: cart.id })
+          .post({
+            body: {
+              version: cart.version,
+              actions,
+            },
+          })
+          .execute()
+      ).body;
+    } catch (error) {
+      return this.errorObjectOrThrow(error);
+    }
+  }
+
+  public async addNewProduct(id: string): Promise<Cart | ErrorObject> {
+    try {
+      const response: Cart | ErrorObject = await this.getActiveCart();
+      if ('code' in response && 'message' in response) return response;
+
+      const actions: CartUpdateAction[] = [
+        {
+          action: 'addLineItem',
+          sku: `${id}-s`,
+        },
+      ];
+
+      return await this.modifyCart(response, actions);
+    } catch (error) {
+      return this.errorObjectOrThrow(error);
+    }
+  }
+
+  public async isInCart(id: string): Promise<boolean | ErrorObject> {
+    try {
+      const response: Cart | ErrorObject = await this.getActiveCart();
+      if ('code' in response && 'message' in response) return response;
+
+      const items: LineItem[] = response.lineItems;
+      if (items.findIndex((item: LineItem): boolean => item.variant.sku === `${id}-s`) !== -1) return true;
+      return false;
+    } catch (error) {
+      return this.errorObjectOrThrow(error);
+    }
+  }
+
+  public async getCartItemsQuantity(isOnlyUnique: boolean = false): Promise<number | ErrorObject> {
+    try {
+      const response: Cart | ErrorObject = await this.getActiveCart();
+      if ('code' in response && 'message' in response) return response;
+
+      if (isOnlyUnique) return response.lineItems.length || 0;
+      return response.totalLineItemQuantity || 0;
+    } catch (error) {
+      return this.errorObjectOrThrow(error);
+    }
+  }
+
+  public async removeCartItem(id: string, isDecrease: boolean = false): Promise<Cart | ErrorObject> {
+    try {
+      const response: Cart | ErrorObject = await this.getActiveCart();
+      if ('code' in response && 'message' in response) return response;
+
+      const items: LineItem[] = response.lineItems;
+      const lineItemId: string | undefined = items.find((item: LineItem): boolean => item.variant.sku === `${id}-s`)
+        ?.id;
+
+      if (lineItemId === undefined) {
+        const error: ObjectNotFoundError = {
+          code: 'ObjectNotFound',
+          message: `Unable to find the item with ID #${id} in cart`,
+        };
+        return this.errorObjectOrThrow(error);
+      }
+
+      const actions: CartUpdateAction[] = [];
+      if (isDecrease)
+        actions.push({
+          action: 'removeLineItem',
+          lineItemId,
+          quantity: 1,
+        });
+      else
+        actions.push({
+          action: 'removeLineItem',
+          lineItemId,
+        });
+
+      return await this.modifyCart(response, actions);
+    } catch (error) {
+      return this.errorObjectOrThrow(error);
+    }
+  }
+
+  public async setCartItemQuantity(id: string, quantity: number): Promise<Cart | ErrorObject> {
+    try {
+      const response: Cart | ErrorObject = await this.getActiveCart();
+      if ('code' in response && 'message' in response) return response;
+
+      const items: LineItem[] = response.lineItems;
+      const lineItemId: string | undefined = items.find((item: LineItem): boolean => item.variant.sku === `${id}-s`)
+        ?.id;
+
+      if (lineItemId === undefined) {
+        const error: ObjectNotFoundError = {
+          code: 'ObjectNotFound',
+          message: `Unable to find the item with ID #${id} in cart`,
+        };
+        return this.errorObjectOrThrow(error);
+      }
+
+      const actions: CartUpdateAction[] = [
+        {
+          action: 'changeLineItemQuantity',
+          lineItemId,
+          quantity,
+        },
+      ];
+
+      return await this.modifyCart(response, actions);
+    } catch (error) {
+      return this.errorObjectOrThrow(error);
+    }
+  }
+
+  public async applyPromo(code: string): Promise<Cart | ErrorObject> {
+    try {
+      const response: Cart | ErrorObject = await this.getActiveCart();
+      if ('code' in response && 'message' in response) return response;
+
+      const actions: CartUpdateAction[] = [
+        {
+          action: 'addDiscountCode',
+          code,
+        },
+      ];
+
+      return await this.modifyCart(response, actions);
+    } catch (error) {
+      return this.errorObjectOrThrow(error);
+    }
+  }
+
+  public async clearCart(): Promise<Cart | ErrorObject> {
+    try {
+      const response: Cart | ErrorObject = await this.getActiveCart();
+      if ('code' in response && 'message' in response) return response;
+
+      await this.apiRoot
+        .carts()
+        .withId({ ID: response.id })
+        .delete({ queryArgs: { version: response.version } })
+        .execute();
+
+      return await this.getActiveCart();
+    } catch (error) {
+      return this.errorObjectOrThrow(error);
+    }
   }
 }

@@ -21,4 +21,49 @@
       @include font(400, 3.2rem, 100%, $color-dark);
     }
   }
+
+  &__about-us {
+    padding: 0;
+    row-gap: 0;
+  }
+
+  &__message {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    column-gap: 5px;
+    padding: 20px 30px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: $color-success;
+    z-index: 100;
+
+    .message__image {
+      background-image: url('../assets/ico/on.svg');
+      flex-shrink: 0;
+      width: 11px;
+      height: 10px;
+    }
+
+    .message__text {
+      text-align: center;
+      @include font(400, 1.6rem, 100%, $color-success-intensive);
+    }
+
+    &_hidden {
+      display: none;
+    }
+
+    &_failed {
+      background-color: $color-error;
+      .message__text {
+        @include font(400, 1.6rem, 100%, $color-error-text);
+      }
+
+      .message__image {
+        background-image: url('../assets/ico/x-marks-the-spot.svg');
+      }
+    }
+  }
 }

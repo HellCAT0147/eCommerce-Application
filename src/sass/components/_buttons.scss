@@ -3,20 +3,25 @@
   @extend %transition;
   @include font(500, 1.4rem, 100%, $color-dark);
   cursor: pointer;
+
   &_colored {
     border: none;
     padding: 18px 55px;
     color: $color-light;
     background: $color-dark;
     letter-spacing: 0.05rem;
+    @extend %font-main;
     &:hover {
       background: $color-main-second;
     }
   }
+
   &_empty {
     border: none;
     background: inherit;
+    padding: 0 6px;
   }
+
   &_edit {
     border: none;
     background: $color-main;
@@ -24,6 +29,37 @@
     max-width: fit-content;
     @include font(600, 1.4rem, 100%, $color-dark);
   }
+
+  &_bordered {
+    padding: 16px 53px;
+    background: $color-Light-hover;
+    letter-spacing: 0.05rem;
+    border: 2px solid $color-input;
+    @extend %font-main;
+    @include font(500, 1.4rem, 100%, $color-light-gray);
+    &:hover {
+      border: 2px solid $color-light-gray;
+    }
+  }
+
+  &__quantity {
+    width: 41px;
+    height: 41px;
+    background: $color-light;
+    @include font(500, 2.4rem, 100%, $color-input);
+    border: none;
+    cursor: not-allowed;
+    &_available {
+      color: $color-light-gray;
+      background: $color-Light-hover;
+      cursor: pointer;
+    }
+    @include media-tablet {
+      width: 30px;
+      height: 30px;
+    }
+  }
+
   &:active {
     scale: 0.9;
   }

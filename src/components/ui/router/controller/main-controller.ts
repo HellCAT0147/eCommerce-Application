@@ -1,5 +1,5 @@
 import TokenCachesStore from '../../../api/token-caches-store';
-import { Base, Blocks } from '../../../models/builder';
+import { Base, Blocks, Elem, Mode } from '../../../models/builder';
 import { Pages } from '../../../models/router';
 import Router from '../model/router';
 
@@ -15,7 +15,12 @@ class MainController {
 
   private RedirectButton(target: HTMLElement): HTMLElement | null {
     let navButton: HTMLElement | null = null;
-    const navButtons: NodeListOf<HTMLElement> = document.querySelectorAll('.redirect__buttons');
+    const navButtons: NodeListOf<HTMLElement> = document.querySelectorAll(`.${Base.btns_redirect}`);
+    const cartButton: HTMLElement | null = target.closest(`.${Blocks.header}__${Elem.btn}_${Mode.cart}`);
+
+    if (cartButton) {
+      navButton = cartButton;
+    }
 
     navButtons.forEach((button: HTMLElement) => {
       if (target === button) {
@@ -32,7 +37,7 @@ class MainController {
 
     if (idElement) {
       url = `${idElement}`;
-      if (url === Pages.GO_TO_MAIN || url === Pages.SIGN_OUT) {
+      if (url === Pages.GO_TO_MAIN || url === Pages.SIGN_OUT || url === Pages.LOGO_MAIN) {
         url = Pages.MAIN;
       } else if (url === Pages.GO_TO_LOGIN) {
         url = Pages.LOGIN;
@@ -40,6 +45,8 @@ class MainController {
         url = Pages.REGISTRATION;
       } else if (url === Pages.GO_TO_PROF) {
         url = Pages.PROFILE;
+      } else if (url === Pages.GO_TO_CATALOG) {
+        url = Pages.CATALOG;
       }
     }
 
@@ -52,7 +59,6 @@ class MainController {
 
   public delegateMouseEvent(e: MouseEvent): void {
     const { target } = e;
-
     if (target instanceof HTMLElement) {
       const targetHtmlElement: HTMLElement | null = target;
       const navButton: HTMLElement | null = this.RedirectButton(targetHtmlElement);
@@ -67,9 +73,9 @@ class MainController {
         this.router.navigate(urlButton);
       }
 
-      this.router.controllerMain.mouseEvent(e);
-
-      if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.MAIN}`)) {
+      if (targetHtmlElement.closest(`.${Blocks.header}`)) {
+        this.router.controllerMain.mouseEvent(e);
+      } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.MAIN}`)) {
         this.router.controllerMain.mouseEvent(e);
       } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.LOGIN}`)) {
         this.router.controllerLogin.buttonEvent(e);
@@ -77,7 +83,7 @@ class MainController {
         this.router.controllerRegistration.buttonEvent(e);
       } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.CATALOG}`)) {
         const card: HTMLElement | null = targetHtmlElement.closest(`.${Base.cards}`);
-        if (card) {
+        if (card && !targetHtmlElement.classList.contains(`${Blocks.catalog}__${Elem.btn_cart}_${Mode.add}`)) {
           const id: string = this.getUrlElement(card);
           this.router.navigate(`${Pages.CATALOG}/${id}`);
         } else {
@@ -85,6 +91,8 @@ class MainController {
         }
       } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.PROFILE}`)) {
         this.router.controllerProfile.mouseEvent(e);
+      } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.CART}`)) {
+        this.router.controllerCart.mouseEvent(e);
       }
     }
   }

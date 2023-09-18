@@ -1,6 +1,14 @@
-import { Image, ProductData, ProductVariant, ProductProjection } from '@commercetools/platform-sdk';
+import {
+  Image,
+  ProductVariant,
+  ProductProjection,
+  ErrorObject,
+  Cart,
+  ProductData,
+  Price,
+} from '@commercetools/platform-sdk';
 import { Category } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/category';
-import { Base, Blocks, Elem, Mode } from '../../../models/builder';
+import { Base, Blocks, Elem, Mode, Titles } from '../../../models/builder';
 import Builder from '../../builder/html-builder';
 import { DataBase } from '../../../models/commerce';
 import ResultPagination from '../../../models/result-pagination';
@@ -22,6 +30,14 @@ export default class ViewCatalog {
   private static colorsKeys: Array<string> = ['black', 'blue', 'white', 'yellow', 'green', 'pink', 'tiffany'];
 
   public static resetButtonId = 'reset-filters_btn';
+
+  private static searchButtonId: string = 'search-input';
+
+  public static prevPageButtonId: string = 'prev-page-button';
+
+  public static nextPageButtonId: string = 'next-page-button';
+
+  public static pageNumberDisplay: string = 'curr-page-display';
 
   public static nameAscSortingParameters: Array<SortParameter> = [
     {
@@ -55,7 +71,7 @@ export default class ViewCatalog {
     brands: [],
     colors: [],
     sizes: [],
-    maxPrice: 15000,
+    maxPrice: 200,
     categories: [],
     sortParameters: ViewCatalog.nameAscSortingParameters,
   };
@@ -74,9 +90,131 @@ export default class ViewCatalog {
 
   private categories?: Map<string | undefined, Array<Category>>;
 
-  public showError(msg: string): string {
-    // TODO implement popup with error
-    return msg;
+  public showMessage(isSuccess?: boolean, message?: string): void {
+    const body: HTMLElement | null = document.querySelector(`${Blocks.body}`);
+    const oldMessageHolder: HTMLElement | null = document.querySelector(`.${Blocks.main}__${Elem.mess}`);
+    if (oldMessageHolder) {
+      oldMessageHolder.classList.remove(`${Blocks.main}__${Elem.mess}_${Mode.hidden}`);
+      const messageText: HTMLElement | null = oldMessageHolder.querySelector(`.${Elem.mess}__${Elem.text}`);
+      if (messageText) {
+        if (message) messageText.textContent = `${message}`;
+        else messageText.textContent = `${Titles.FAILED_UPDATE_CATALOG}`;
+      }
+      if (!isSuccess) oldMessageHolder.classList.add(`${Blocks.main}__${Elem.mess}_${Mode.fail}`);
+    } else {
+      const messageHolder: HTMLElement = new Builder('div', '', Blocks.main, Elem.mess, '').element();
+      const messageIcon: HTMLElement = new Builder('div', '', Elem.mess, Elem.image, '').element();
+      const messageText: HTMLElement = new Builder('div', '', Elem.mess, Elem.text, '').element();
+      if (message) {
+        messageText.textContent = `${message}`;
+        messageHolder.classList.add(`${Blocks.main}__${Elem.mess}_${Mode.fail}`);
+      } else {
+        messageText.textContent = `${Titles.FAILED_UPDATE_CATALOG}`;
+        messageHolder.classList.add(`${Blocks.main}__${Elem.mess}_${Mode.fail}`);
+      }
+
+      messageHolder.append(messageIcon, messageText);
+      if (body) body.appendChild(messageHolder);
+      if (messageHolder) {
+        setTimeout(() => {
+          messageHolder.classList.add(`${Blocks.main}__${Elem.mess}_${Mode.hidden}`);
+          messageHolder.classList.remove(`${Blocks.main}__${Elem.mess}_${Mode.fail}`);
+        }, 1500);
+      }
+    }
+
+    setTimeout(() => {
+      if (oldMessageHolder) {
+        oldMessageHolder.classList.add(`${Blocks.main}__${Elem.mess}_${Mode.hidden}`);
+        oldMessageHolder.classList.remove(`${Blocks.main}__${Elem.mess}_${Mode.fail}`);
+      }
+    }, 1500);
+  }
+
+  public showQuantity(quantity: number): void {
+    const quantityParagraph: HTMLElement | null = document.querySelector(`.${Blocks.header}__${Elem.quantity}`);
+    if (quantityParagraph) {
+      quantityParagraph.textContent = `${quantity} ${Titles.PCS}`;
+    }
+  }
+
+  public addSpinner(): HTMLElement {
+    const spinner = document.createElement('span');
+    spinner.classList.add('add-spinner');
+    spinner.classList.add('add-spinner_hide');
+    return spinner;
+  }
+
+  public createCartButton(mode: string): HTMLButtonElement {
+    const emptyButton = document.createElement('button');
+    if (mode === Mode.add) {
+      const button = new Builder('', Base.btns_colored, Blocks.catalog, 'button-cart', Mode.add).button();
+      const text: HTMLSpanElement = document.createElement('span');
+      text.innerText = 'ADD TO CART';
+      text.classList.add('add-text');
+      button.append(this.addSpinner(), text);
+      return button;
+    }
+    if (mode === Mode.remove) {
+      const button = new Builder('', Base.btns_colored, Blocks.catalog, 'button-cart', Mode.remove).button();
+      const text: HTMLSpanElement = document.createElement('span');
+      text.innerText = 'NOT IN CART';
+      text.classList.add('add-text');
+      button.append(this.addSpinner(), text);
+      return button;
+    }
+    return emptyButton;
+  }
+
+  public updateAddCartButton(id: string, on: boolean): void {
+    const product = document.getElementById(id);
+    if (product) {
+      const button = product.getElementsByClassName('catalog__button-cart_add')[0];
+      if (button && button instanceof HTMLButtonElement) {
+        if (on && button.disabled) {
+          button.removeAttribute('disabled');
+          const textWrapper = button.getElementsByClassName('add-text')[0];
+          if (textWrapper && textWrapper instanceof HTMLSpanElement) {
+            textWrapper.innerText = 'ADD TO CART';
+          }
+        }
+        if (!on) {
+          button.setAttribute('disabled', '');
+          const textWrapper = button.getElementsByClassName('add-text')[0];
+          if (textWrapper && textWrapper instanceof HTMLSpanElement) {
+            textWrapper.innerText = 'ALREADY IN CART';
+          }
+        }
+      }
+    }
+  }
+
+  public updateRemoveCartButton(id: string, on: boolean): void {
+    const product = document.getElementById(id);
+    if (product) {
+      const button = product.getElementsByClassName('catalog__button-cart_remove')[0];
+      if (button && button instanceof HTMLButtonElement) {
+        if (on && button.disabled) {
+          button.removeAttribute('disabled');
+          const textWrapper = button.getElementsByClassName('add-text')[0];
+          if (textWrapper && textWrapper instanceof HTMLSpanElement) {
+            textWrapper.innerText = 'REMOVE FROM CART';
+          }
+        }
+      }
+      if (!on) {
+        button.setAttribute('disabled', '');
+        const textWrapper = button.getElementsByClassName('add-text')[0];
+        if (textWrapper && textWrapper instanceof HTMLSpanElement) {
+          textWrapper.innerText = 'NOT IN CART';
+        }
+      }
+    }
+  }
+
+  public updateCartButtons(id: string, addState: boolean, removeState: boolean): void {
+    this.updateAddCartButton(id, addState);
+    this.updateRemoveCartButton(id, removeState);
   }
 
   public showProduct(
@@ -85,14 +223,16 @@ export default class ViewCatalog {
     basePrice: string,
     discountPrice: string,
     description: string,
+    carted: boolean,
     images?: Image[]
   ): void {
     const main: HTMLElement | null = document.querySelector(`.${Blocks.main}__${Mode.catalog}`);
     if (main) {
       main.innerHTML = '';
-
       const product: HTMLElement = new Builder('article', '', Blocks.product, Elem.wrapper, '').element();
       const productBody: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.body).element();
+      const id: string | undefined = data.masterVariant.key;
+      if (id) productBody.setAttribute('id', id.toString().split('-')[0]);
       const productInfo: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.info).element();
       const nameHTML: HTMLHeadingElement = new Builder('', Base.titles, Blocks.product, Elem.title, Mode.big).h(2);
       const descriptionHTML: HTMLParagraphElement = new Builder('', '', Blocks.product, Elem.desc, '').p();
@@ -106,20 +246,24 @@ export default class ViewCatalog {
       ).h(4);
       const basePriceHTML: HTMLElement = new Builder('span', '', Blocks.product, Elem.price, '').element();
       const discountPriceHTML: HTMLElement = new Builder('span', '', Blocks.product, Elem.price, Mode.disc).element();
-
       nameHTML.textContent = name;
       priceHeadingHTML.textContent = 'price total'.toUpperCase();
       basePriceHTML.textContent = basePrice;
       discountPriceHTML.textContent = discountPrice;
+      if (discountPrice) basePriceHTML.classList.add('before-disc');
       descriptionHTML.textContent = description;
-
       this.addSlider(productBody, images);
-
-      priceHTML.append(priceHeadingHTML, basePriceHTML, discountPriceHTML);
+      const cartButtons: HTMLElement = new Builder('div', '', Blocks.catalog, 'cart-buttons', 'wrapper').element();
+      const addButton = this.createCartButton(Mode.add);
+      const removeButton = this.createCartButton(Mode.remove);
+      removeButton.setAttribute('disabled', '');
+      cartButtons.append(addButton, removeButton);
+      priceHTML.append(priceHeadingHTML, basePriceHTML, discountPriceHTML, cartButtons);
       productInfo.append(nameHTML, priceHTML);
       productBody.appendChild(productInfo);
       product.append(productBody, descriptionHTML);
       main.appendChild(product);
+      if (carted && id) this.updateCartButtons(id.toString().split('-')[0], false, true);
     }
   }
 
@@ -331,7 +475,7 @@ export default class ViewCatalog {
     const searchWrapper = new Builder('div', '', Blocks.catalog, 'search-wrapper', '').element();
     searchWrapper.setAttribute('id', 'search-wrapper');
     const searchInput: HTMLInputElement = new Builder('input', '', Blocks.catalog, 'search-wrapper', 'input').input();
-    searchInput.setAttribute('id', 'search-input');
+    searchInput.setAttribute('id', ViewCatalog.searchButtonId);
     searchInput.setAttribute('placeholder', 'WHAT ARE YOU LOOKING FOR?');
     searchInput.addEventListener('change', (): void => {
       this.state.query = searchInput.value;
@@ -572,21 +716,67 @@ export default class ViewCatalog {
     readMore.innerText = 'READ MORE';
     const priceTag: HTMLElement = new Builder('div', '', Blocks.catalog, 'card', 'price-tag').element();
     const basePrice: HTMLElement = new Builder('span', '', Blocks.catalog, 'card', 'base-price').element();
-    basePrice.innerText = `${product.masterVariant.prices?.[0].value.centAmount.toString().slice(0, -2)} RUB`;
-    priceTag.append(basePrice);
-    if (product.masterVariant.prices?.[0].discounted) {
-      const discountedPrice: HTMLElement = new Builder('span', '', Blocks.catalog, 'card', 'disc-price').element();
-      discountedPrice.innerText = `${product.masterVariant.prices?.[0].discounted.value.centAmount
-        .toString()
-        .slice(0, -2)} RUB`;
-      priceTag.append(discountedPrice);
+    const prices: Price | undefined = product.masterVariant.prices?.[0];
+    if (prices !== undefined) {
+      let originalPrice: number = prices.value.centAmount / 10 ** prices.value.fractionDigits;
+      basePrice.innerText = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
+        originalPrice
+      );
+      priceTag.append(basePrice);
+      if (prices.discounted) {
+        basePrice.classList.add('before-disc');
+        originalPrice = prices.discounted.value.centAmount / 10 ** prices.discounted.value.fractionDigits;
+        const discountedPrice: HTMLElement = new Builder('span', '', Blocks.catalog, 'card', 'disc-price').element();
+        discountedPrice.innerText = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
+          originalPrice
+        );
+        priceTag.append(discountedPrice);
+      }
     }
-    card.append(cardPic, nameTag, descriptionTag, readMore, priceTag);
+    card.append(cardPic, nameTag, descriptionTag, readMore, priceTag, this.createCartButton(Mode.add));
     card.setAttribute('id', (product.key || '0').split('-')[1]);
     return card;
   }
 
-  public fillCatalogPage(resultPagination: ResultPagination<ProductProjection>): HTMLElement {
+  public createPaginationButtons(): HTMLElement {
+    const buttonsWrapper = new Builder('div', '', Blocks.catalog, 'pagination', 'wrapper').element();
+    buttonsWrapper.classList.add('pagination-wrapper');
+    const prev = new Builder('button', '', Blocks.catalog, 'pagination', 'prev').button();
+    prev.setAttribute('id', ViewCatalog.prevPageButtonId);
+    prev.innerText = 'PREVIOUS';
+    const curr = new Builder('div', '', Blocks.catalog, 'pagination', 'curr').element();
+    curr.setAttribute('id', 'curr-page-display');
+    curr.innerText = '1';
+    const next = new Builder('button', '', Blocks.catalog, 'pagination', 'prev').button();
+    next.setAttribute('id', ViewCatalog.nextPageButtonId);
+    next.innerText = 'NEXT';
+    buttonsWrapper.append(prev, curr, next);
+    return buttonsWrapper;
+  }
+
+  public fillPaginationButtons(pagination: ResultPagination<ProductProjection>): void {
+    const prev = document.getElementById(ViewCatalog.prevPageButtonId);
+    const curr = document.getElementById(ViewCatalog.pageNumberDisplay);
+    const next = document.getElementById(ViewCatalog.nextPageButtonId);
+    const currentNumber = pagination.pageNumber;
+
+    if (prev && next) {
+      prev.removeAttribute('disabled');
+      next.removeAttribute('disabled');
+    }
+    if (currentNumber === 0 && prev) {
+      prev.setAttribute('disabled', '');
+    }
+    if (curr) {
+      curr.innerText = (currentNumber + 1).toString();
+    }
+    if (pagination.pageNumber >= pagination.totalPages - 1 && next) {
+      next.setAttribute('disabled', '');
+    }
+  }
+
+  public fillCatalogPage(resultPagination: ResultPagination<ProductProjection> | ErrorObject, cart: Cart): HTMLElement {
+    const productsIdsInCart: Array<string | undefined> = cart.lineItems.map((cartItem) => cartItem.productKey);
     const page: HTMLElement =
       document.getElementById(ViewCatalog.catalogContainerId) ||
       new Builder('div', '', Blocks.catalog, 'page', '').element();
@@ -601,6 +791,16 @@ export default class ViewCatalog {
       emptyList.innerText = 'SORRY, NOTHING TO SHOW';
       page.append(emptyList);
     }
+    Array.from(page.children).forEach((child) => {
+      if (productsIdsInCart.includes(`product-${child.id}`)) {
+        const button = child.getElementsByClassName('catalog__button-cart_add')[0];
+        const text = button.getElementsByClassName('add-text')[0];
+        if (text instanceof HTMLSpanElement) {
+          text.innerText = 'ALREADY IN CART';
+        }
+        button.setAttribute('disabled', '');
+      }
+    });
     return page;
   }
 
@@ -609,15 +809,86 @@ export default class ViewCatalog {
     this.fillBreadcrumbs();
   }
 
-  public constructCatalogPage(resultPagination: ResultPagination<ProductProjection>): void {
+  public constructCatalogPage(resultPagination: ResultPagination<ProductProjection>, cart: Cart): void {
     const main: HTMLFormElement | null = document.querySelector(`.${Blocks.main}__${Mode.catalog}`);
     if (main) {
       main.innerHTML = '';
       const pageAndFilters: HTMLElement = new Builder('div', '', Blocks.catalog, 'page-and-filters', '').element();
-      pageAndFilters.append(this.createFilters(), this.fillCatalogPage(resultPagination));
+      pageAndFilters.append(this.createFilters(), this.fillCatalogPage(resultPagination, cart));
       const searchAndSorting = new Builder('div', '', Blocks.catalog, 'search-and-sorting', '').element();
       searchAndSorting.append(this.createPageSettings(), this.createSearchWrapper());
-      main.append(this.createBreadCrumbs(), searchAndSorting, pageAndFilters);
+      main.append(this.createBreadCrumbs(), searchAndSorting, pageAndFilters, this.createPaginationButtons());
+      this.fillPaginationButtons(resultPagination);
+    }
+  }
+
+  public showAddSpinner(id: string): void {
+    const card = document.getElementById(id);
+    if (card) {
+      const button = card.getElementsByClassName('catalog__button-cart_add')[0];
+      if (button) {
+        const spinner = button.getElementsByClassName('add-spinner')[0];
+        if (spinner) {
+          spinner.classList.remove('add-spinner_hide');
+        }
+        const text = button.getElementsByClassName('add-text')[0];
+        if (text instanceof HTMLButtonElement) {
+          text.innerText = 'ADDING...';
+        }
+      }
+    }
+  }
+
+  public hideAddSpinner(id: string, successfully: boolean): void {
+    const card = document.getElementById(id);
+    if (card) {
+      const button = card.getElementsByClassName('catalog__button-cart_add')[0];
+      if (button) {
+        const spinner = button.getElementsByClassName('add-spinner')[0];
+        if (spinner) {
+          spinner.classList.add('add-spinner_hide');
+        }
+        const text = button.getElementsByClassName('add-text')[0];
+        if (text instanceof HTMLSpanElement && successfully === true) {
+          text.innerText = 'ALREADY IN CART';
+          button.setAttribute('disabled', '');
+        }
+      }
+    }
+  }
+
+  public showRemoveSpinner(id: string): void {
+    const card = document.getElementById(id);
+    if (card) {
+      const button = card.getElementsByClassName('catalog__button-cart_remove')[0];
+      if (button) {
+        const spinner = button.getElementsByClassName('add-spinner')[0];
+        if (spinner) {
+          spinner.classList.remove('add-spinner_hide');
+        }
+        const text = button.getElementsByClassName('add-text')[0];
+        if (text instanceof HTMLButtonElement) {
+          text.innerText = 'REMOVING...';
+        }
+      }
+    }
+  }
+
+  public hideRemoveSpinner(id: string, successfully: boolean): void {
+    const card = document.getElementById(id);
+    if (card) {
+      const button = card.getElementsByClassName('catalog__button-cart_remove')[0];
+      if (button) {
+        const spinner = button.getElementsByClassName('add-spinner')[0];
+        if (spinner) {
+          spinner.classList.add('add-spinner_hide');
+        }
+        const text = button.getElementsByClassName('add-text')[0];
+        if (text instanceof HTMLSpanElement && successfully === true) {
+          text.innerText = 'REMOVED';
+          button.setAttribute('disabled', '');
+        }
+      }
     }
   }
 
@@ -665,5 +936,12 @@ export default class ViewCatalog {
 
   public collectData(): CatalogViewControlPanelsState {
     return structuredClone(this.state);
+  }
+
+  public fillSearchInput(): void {
+    const searchInput = document.getElementById(ViewCatalog.searchButtonId);
+    if (searchInput !== null) {
+      searchInput.setAttribute('value', this.state.query || '');
+    }
   }
 }

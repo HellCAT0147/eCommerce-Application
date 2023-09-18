@@ -1,4 +1,4 @@
-import { Buttons, HLevels, Mode } from '../../models/builder';
+import { Base, Buttons, HLevels, Mode } from '../../models/builder';
 import { Pages } from '../../models/router';
 
 class Builder {
@@ -84,7 +84,10 @@ class Builder {
     const button: HTMLButtonElement = document.createElement('button');
     button.className = `${this.base}`;
     button.classList.add('redirect__buttons');
-    if (this.mode === Mode.catalog) {
+    if (this.mode === Mode.main) {
+      button.textContent = `${Buttons.HOME}`;
+      button.setAttribute('id', `${Pages.MAIN}`);
+    } else if (this.mode === Mode.catalog) {
       button.textContent = `${Buttons.CATALOG}`;
       button.setAttribute('id', `${Pages.CATALOG}`);
     } else if (this.mode === Mode.sign) {
@@ -99,6 +102,11 @@ class Builder {
     } else if (this.mode === Mode.prof) {
       button.textContent = `${Buttons.PROFILE}`;
       button.setAttribute('id', `${Pages.PROFILE}`);
+    } else if (this.mode === Mode.about) {
+      button.textContent = `${Buttons.ABOUT_US}`;
+      button.setAttribute('id', `${Pages.ABOUT_US}`);
+    } else if (this.mode === Mode.cart) {
+      button.setAttribute('id', `${Pages.CART}`);
     }
     this.setProperties(button);
 
@@ -126,14 +134,23 @@ class Builder {
     return option;
   }
 
-  public a(): HTMLAnchorElement {
+  public a(href?: string): HTMLAnchorElement {
     const link: HTMLAnchorElement = document.createElement('a');
     link.className = `${this.base}`;
     this.setProperties(link);
-    link.textContent = `Go to ${this.mode} page`;
-    link.href = `/${this.mode}`;
-    link.setAttribute('id', `${Pages.GO_TO}-${this.mode}`);
-    link.classList.add('redirect__buttons');
+    if (this.mode === Mode.git || this.mode === Mode.rss) {
+      link.href = `${href}`;
+      link.target = '_blank';
+    } else if (this.mode === Mode.email) {
+      link.href = `mailto:${href}`;
+    } else if (this.base === Base.person) {
+      link.href = `#${href}`;
+    } else {
+      link.textContent = `Go to ${this.mode} page`;
+      link.href = `/${this.mode}`;
+      link.setAttribute('id', `${Pages.GO_TO}-${this.mode}`);
+      link.classList.add('redirect__buttons');
+    }
     return link;
   }
 

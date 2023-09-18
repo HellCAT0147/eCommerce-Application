@@ -3,7 +3,6 @@
   justify-content: space-between;
   width: 100%;
   height: 115px;
-  display: flex;
   align-items: center;
   padding: 21px 21px;
   background: $color-dark;
@@ -19,18 +18,17 @@
   &__nav {
     display: flex;
     justify-content: space-between;
-    column-gap: 12px;
     @extend %transition;
-    @include media-mobile-medium {
+    @include media-large-tablet {
       position: fixed;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
       row-gap: 30px;
       width: 100%;
-      height: 100vh;
+      height: 50vh;
       background: $color-dark;
-      top: 0;
+      top: 50vh;
       right: -100%;
       z-index: 10;
       transition: all 0.2s ease-out;
@@ -38,15 +36,79 @@
     &_opened {
       right: 0;
     }
+    &_static {
+      margin-left: 145px;
+      @include media-large-tablet {
+        padding-bottom: 30px;
+        top: 0vh;
+        justify-content: flex-end;
+      }
+    }
   }
   &__button {
     position: relative;
+    min-height: 28px;
     @extend %font-main;
     @include font(600, 1.4rem, 100%, $color-light);
     @extend %transition;
-    @include media-mobile-medium {
+    @include media-large-tablet {
       width: fit-content;
       @include font(600, 2.4rem, 100%, $color-light);
+    }
+    &_cart {
+      display: flex;
+      align-items: center;
+      column-gap: 11px;
+      margin-left: 19px;
+      @extend %font-second;
+      @include media-large-tablet {
+        margin-left: 0px;
+      }
+    }
+  }
+
+  &__shopping {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    row-gap: 2px;
+  }
+
+  &__text {
+    @include font(500, 1.2rem, 100%, $color-light);
+    @include media-large-tablet {
+      @include font(500, 1.4rem, 100%, $color-light);
+    }
+  }
+
+  &__quantity {
+    height: 1.4rem;
+    @extend %smooth-appearance;
+    @include font(700, 1.4rem, 100%, $color-light);
+    @include media-large-tablet {
+      height: 1.6rem;
+      @include font(500, 1.6rem, 100%, $color-light);
+    }
+  }
+
+  &__bag {
+    display: block;
+    width: 18px;
+    height: 22px;
+    -webkit-mask-image: url('../assets/ico/bag.svg');
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
+    mask-image: url('../assets/ico/bag.svg');
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    background: $color-light;
+    @include media-large-tablet {
+      width: 27px;
+      height: 33px;
+      @include font(500, 1.4rem, 100%, $color-light);
+    }
+    &_colored {
+      background: $color-main-second;
     }
   }
 }
@@ -56,9 +118,13 @@
     content: '';
     display: block;
     position: absolute;
-    bottom: -5px;
+    bottom: 0px;
+    left: 0;
     width: 100%;
     height: 2px;
     background: $color-main-second;
+    @include media-large-tablet {
+      bottom: -5px;
+    }
   }
 }

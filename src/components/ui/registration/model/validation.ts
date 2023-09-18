@@ -367,6 +367,7 @@ export default class RegistrationValidationModel extends ValidationModel {
             const route: Routes | undefined = basicRoutes.find((routeExisting) => routeExisting.path === Pages.MAIN);
             if (route) route.callback(true);
             this.formView.showSuccessLoginMessage();
+            this.resetFields();
             window.history.pushState(null, '', `/${Pages.MAIN}`);
           } else {
             this.formView.reminder(responseLogin.message);
@@ -382,5 +383,27 @@ export default class RegistrationValidationModel extends ValidationModel {
     } else {
       this.formView.reminder(null, Blocks.reg);
     }
+  }
+
+  protected resetFields(): void {
+    this.mail = '';
+    this.password = '';
+    this.isValid = false;
+
+    this.firstName = '';
+    this.lastName = '';
+    this.date = '';
+    this.country = '';
+    this.countryBill = '';
+    this.postal = '';
+    this.postalBill = '';
+    this.city = '';
+    this.cityBill = '';
+    this.street = '';
+    this.streetBill = '';
+    this.shippingIsBilling = true;
+    this.shippingDefault = 0;
+    this.billingDefault = 0;
+    this.billingIndexAddress = 0;
   }
 }

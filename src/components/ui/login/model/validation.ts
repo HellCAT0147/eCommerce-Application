@@ -4,6 +4,8 @@ import { LoginErrors, InputTypeLogin, MailErrors, PasswordErrors } from '../../.
 import FormViewLogin from '../view/form';
 import { Pages, Routes } from '../../../models/router';
 import basicRoutes from '../../router/model/routes';
+import { selectCurrentPage } from '../../router/view/viewPage';
+import { showMessage, showQuantity } from '../view/view';
 
 export default class ValidationModel {
   protected mail: string;
@@ -22,6 +24,25 @@ export default class ValidationModel {
     this.password = '';
     this.isValid = false;
     this.formView = new FormViewLogin('login');
+  }
+
+  private async changeQuantity(): Promise<number> {
+    let quantity: number = 0;
+    try {
+      const response: number | ErrorObject = await this.eCommerceApi.getCartItemsQuantity();
+      if (typeof response === 'number') quantity = response;
+      else if ('message' in response && 'code' in response) {
+        showMessage(false, response.message);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        showMessage(false, error.message);
+      }
+    }
+
+    showQuantity(quantity);
+
+    return quantity;
   }
 
   public checkMail(mail: string): boolean {
@@ -101,7 +122,10 @@ export default class ValidationModel {
           const route: Routes | undefined = basicRoutes.find((routeExisting) => routeExisting.path === Pages.MAIN);
           window.history.pushState(null, '', `/${Pages.MAIN}`);
           this.formView.showSuccessLoginMessage();
+          this.resetFields();
           if (route) route.callback(true);
+          await this.changeQuantity();
+          selectCurrentPage(`${Pages.MAIN}`);
         } else {
           this.formView.reminder(response.message);
         }
@@ -112,5 +136,11 @@ export default class ValidationModel {
     } else {
       this.formView.reminder();
     }
+  }
+
+  protected resetFields(): void {
+    this.mail = '';
+    this.password = '';
+    this.isValid = false;
   }
 }
