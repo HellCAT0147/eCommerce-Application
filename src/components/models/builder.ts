@@ -25,6 +25,7 @@ export enum Blocks {
   impact = 'impact',
   teamwork = 'teamwork',
   rss = 'rss',
+  thanks = 'thanks',
 }
 
 export enum Elem {
@@ -94,6 +95,8 @@ export enum Elem {
   impact = 'impact',
   teamwork = 'teamwork',
   rss = 'rss',
+  locale = 'locale',
+  thanks = 'thanks',
 }
 
 export enum Mode {
@@ -228,6 +231,7 @@ export enum Base {
   current_page = 'current-page',
   promo = 'promo',
   person = 'person',
+  mentor = 'person person_mentor',
   content = 'content',
   teamwork = 'teamwork',
   rss = 'rss',
@@ -312,11 +316,13 @@ export enum Titles {
   LINES_AMOUNT = '30k+',
   FACTS_BRANCHES = 'Branches ',
   BRANCHES_AMOUNT = '32',
-  BIO_TITLE = 'About Me:',
+  BIO_TITLE = 'About:',
   IMPACT_TITLE = 'Contributions:',
   TEAM_TITLE = 'Collaboration',
   TEAM_TEXT = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Egestas pretium aenean pharetra magna ac placerat vestibulum lectus mauris. Arcu cursus euismod quis viverra. At consectetur lorem donec massa. Sed risus pretium quam vulputate dignissim suspendisse in est. Mi quis hendrerit dolor magna. Mauris sit amet massa vitae tortor. Iaculis eu non diam phasellus vestibulum lorem sed risus. Facilisi etiam dignissim diam quis enim lobortis scelerisque fermentum dui. Cursus mattis molestie a iaculis at erat pellentesque adipiscing commodo. Lobortis scelerisque fermentum dui faucibus. Est sit amet facilisis magna etiam tempor orci.',
   RSS_TITLE = '& RS School',
+  THANKS_TITLE = 'Special Thanks',
+  THANKS_TEXT = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Egestas pretium aenean pharetra magna ac placerat vestibulum lectus mauris. Arcu cursus euismod quis viverra. ',
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;

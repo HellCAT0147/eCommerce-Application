@@ -53,9 +53,9 @@
     display: flex;
     justify-content: space-around;
     position: relative;
-    width: 96%;
+    width: 93%;
     padding: 40px 0;
-    margin: 60px 0;
+    margin: 60px 0 90px 0;
     border: 2px solid $color-input;
   }
 
@@ -64,8 +64,14 @@
   }
 
   &__teamwork {
-    padding: 50px 21px 80px 21px;
+    padding: 50px 40px 50px 40px;
     text-align: center;
+  }
+
+  &__thanks {
+    padding: 50px 40px 90px 40px;
+    width: 100%;
+    background: $color-background;
   }
 }
 
@@ -77,6 +83,7 @@
   top: -60px;
   transition: all 0.3s ease;
   text-decoration: none;
+
   &__image {
     flex-shrink: 0;
     width: 120px;
@@ -96,6 +103,15 @@
 
     &_person3 {
       background-image: url('../assets/img/about_us/person3.jpg');
+    }
+
+    &_person4 {
+      background-image: url('../assets/img/about_us/person4.jpg');
+    }
+
+    &_person5 {
+      background-image: url('../assets/img/about_us/person5.jpg');
+      background-position: center;
     }
   }
 
@@ -119,6 +135,30 @@
     scale: 1.05;
     text-decoration: none;
     cursor: pointer;
+  }
+
+  &__control {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &_mentor {
+    position: relative;
+    top: 0px;
+    .content__contact {
+      width: 19.21px;
+      height: 22px;
+      background: $color-dark-gray;
+      align-self: flex-end;
+    }
+    .person__role {
+      text-align: center;
+    }
+    &:hover {
+      scale: none;
+      text-decoration: none;
+      cursor: default;
+    }
   }
 }
 
@@ -145,17 +185,27 @@
 .content {
   display: flex;
   flex-direction: column;
-  padding: 42px 21px;
+  padding: 40px;
   row-gap: 40px;
   &__name {
     @extend %font-second;
     @include font(400, 3.4rem, 100%, $color-dark);
   }
 
+  &__link {
+    display: flex;
+    column-gap: 5px;
+  }
+
   &__contacts {
     display: flex;
-    align-self: flex-end;
-    column-gap: 5px;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  &__locale {
+    @extend %font-second;
+    @include font(500, 1.6rem, 100%, $color-dark-gray);
   }
 
   &__contact {
@@ -181,6 +231,8 @@
     }
 
     &_email {
+      height: 29px;
+      width: 29px;
       -webkit-mask-image: url('../assets/ico/mail.svg');
       mask-image: url('../assets/ico/mail.svg');
       background: $color-dark;
@@ -193,6 +245,7 @@
   }
 
   &__text {
+    text-align: justify;
     @extend %font-second;
     @include font(400, 1.6rem, 2.6rem, $color-dark);
   }
@@ -226,8 +279,30 @@
     @include font(600, 2.4rem, 100%, $color-main-second);
     margin-bottom: 30px;
   }
+
   &__text {
     @extend %font-second;
     @include font(400, 1.8rem, 2.8rem, $color-dark);
+  }
+}
+
+.thanks {
+  &__title {
+    text-align: center;
+    @include font(600, 2.4rem, 100%, $color-dark-gray);
+    margin-bottom: 30px;
+  }
+
+  &__text {
+    @extend %font-second;
+    @include font(400, 1.8rem, 2.8rem, $color-dark);
+    text-align: center;
+  }
+
+  &__wrapper {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    margin-bottom: 70px;
   }
 }

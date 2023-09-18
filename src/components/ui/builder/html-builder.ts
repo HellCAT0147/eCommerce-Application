@@ -1,4 +1,4 @@
-import { Base, Blocks, Buttons, HLevels, Mode } from '../../models/builder';
+import { Base, Buttons, HLevels, Mode } from '../../models/builder';
 import { Pages } from '../../models/router';
 
 class Builder {

@@ -3,7 +3,7 @@ import { Pages } from '../../../models/router';
 import Builder from '../../builder/html-builder';
 import createHeader from '../../main/view/header';
 import renderFacts from './facts';
-import { renderPersonContent, renderPersonInfo } from './person';
+import { renderPersonContent, renderPersonInfo, renderThanksSection } from './person';
 
 export default function createTemplateAboutUs(isLoggedIn?: boolean): HTMLElement {
   const body: HTMLBodyElement | null = document.querySelector(`${Blocks.body}`);
@@ -43,12 +43,14 @@ export default function createTemplateAboutUs(isLoggedIn?: boolean): HTMLElement
     teamworkText.textContent = `${Titles.TEAM_TEXT}`;
     rssTitle.textContent = Titles.RSS_TITLE;
 
+    const thanksSection: HTMLElement = renderThanksSection();
+
     text.append(title, subtitle);
     rss.append(rssTitle, rssLogo);
     titleSection.append(text, rss);
     teamwork.append(teamworkTitle, teamworkText);
 
-    main.append(titleSection, shortInfo, facts, content, teamwork);
+    main.append(titleSection, shortInfo, facts, content, teamwork, thanksSection);
   }
 
   return newHeader;
