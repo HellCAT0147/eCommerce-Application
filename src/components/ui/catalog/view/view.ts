@@ -69,7 +69,7 @@ export default class ViewCatalog {
     brands: [],
     colors: [],
     sizes: [],
-    maxPrice: 15000,
+    maxPrice: 200,
     categories: [],
     sortParameters: ViewCatalog.nameAscSortingParameters,
   };
