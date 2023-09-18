@@ -29,7 +29,6 @@ class ControllerCart {
   }
 
   public async loadCart(): Promise<void> {
-    // TODO add method for getting cart await this.model.getCart();
     this.model.getCart();
   }
 

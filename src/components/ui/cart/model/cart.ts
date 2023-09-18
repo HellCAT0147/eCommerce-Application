@@ -51,6 +51,22 @@ export default class CartModel {
     return order;
   }
 
+  private async changeQuantity(): Promise<number> {
+    let quantity: number = 0;
+    try {
+      const response: number | ErrorObject = await this.eCommerceApi.getCartItemsQuantity();
+      if (typeof response === 'number') quantity = response;
+    } catch (error) {
+      if (error instanceof Error) {
+        // TODO implement method showError();
+      }
+    }
+
+    this.view.showQuantity(quantity);
+
+    return quantity;
+  }
+
   public async setPromoCode(): Promise<void> {
     const inputPromo: HTMLInputElement | null = document.querySelector(`.${Blocks.cart}__${Elem.input}_${Mode.promo}`);
     if (!inputPromo) return;
@@ -98,6 +114,7 @@ export default class CartModel {
     } else {
       const order: DataOrder = this.getOrderData(response);
       this.view.showCart(response, order);
+      await this.changeQuantity();
     }
     if (item) {
       const itemLocal: HTMLElement = item;
@@ -119,7 +136,7 @@ export default class CartModel {
     } else {
       const order: DataOrder = this.getOrderData(response);
       this.view.showCart(response, order);
-      // TODO update header cart icon
+      await this.changeQuantity();
     }
     if (item) {
       const itemLocal: HTMLElement = item;
@@ -146,7 +163,7 @@ export default class CartModel {
       } else {
         const order: DataOrder = this.getOrderData(response);
         this.view.showCart(response, order);
-        // TODO update header cart icon
+        await this.changeQuantity();
       }
     }
     if (item) {
@@ -168,7 +185,7 @@ export default class CartModel {
     } else {
       const order: DataOrder = this.getOrderData(response);
       this.view.showCart(response, order);
-      // TODO update header cart icon
+      await this.changeQuantity();
     }
     if (item) {
       const itemLocal: HTMLElement = item;
@@ -193,7 +210,7 @@ export default class CartModel {
         } else {
           const order: DataOrder = this.getOrderData(response);
           this.view.showCart(response, order);
-          // TODO update header cart icon
+          await this.changeQuantity();
         }
       }
     }

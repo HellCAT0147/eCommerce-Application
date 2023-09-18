@@ -55,6 +55,13 @@ export default class CartView {
     }, 1500);
   }
 
+  public showQuantity(quantity: number): void {
+    const quantityParagraph: HTMLElement | null = document.querySelector(`.${Blocks.header}__${Elem.quantity}`);
+    if (quantityParagraph) {
+      quantityParagraph.textContent = `${quantity} ${Titles.PCS}`;
+    }
+  }
+
   private createProductsList(listItem: LineItem[]): HTMLElement {
     const article: HTMLElement = new Builder('article', '', Blocks.cart, Elem.article, '').element();
     const productsList: HTMLElement = new Builder('div', '', Blocks.cart, Elem.list, '').element();
