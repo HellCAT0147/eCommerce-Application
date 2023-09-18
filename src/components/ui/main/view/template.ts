@@ -1,7 +1,8 @@
-import { Base, Blocks, Buttons, Elem, Mode, Titles } from '../../../models/builder';
+import { Base, Blocks, Elem, Mode } from '../../../models/builder';
 import { Pages } from '../../../models/router';
 import Builder from '../../builder/html-builder';
 import createHeader from './header';
+import createPromo from './promo';
 
 function createTemplate(): HTMLBodyElement | null {
   const body: HTMLBodyElement | null = document.querySelector('body');
@@ -36,31 +37,16 @@ function createTemplateMain(isLoggedIn?: boolean): HTMLBodyElement | null {
     main.innerHTML = '';
   }
 
-  const promoWrapper: HTMLElement = new Builder('section', Base.promo, Blocks.main, Elem.wrapper, '').element();
-  const promoContent: HTMLElement = new Builder('div', '', Blocks.promo, Elem.content, Mode.left).element();
-  const promoTitle: HTMLElement = new Builder('div', '', Blocks.promo, Elem.title, Mode.main).element();
-  const promoTitleFirst: HTMLHeadingElement = new Builder('', '', Blocks.promo, Elem.title, Mode.first).h(1);
-  const promoTitleSecond: HTMLHeadingElement = new Builder('', '', Blocks.promo, Elem.title, Mode.second).h(2);
-  const promoTitleLast: HTMLHeadingElement = new Builder('', '', Blocks.promo, Elem.title, Mode.last).h(2);
-  const promoButton: HTMLElement = new Builder('', Base.btns_bordered, Blocks.promo, Elem.btn, Mode.get_promo).button();
+  const promo: HTMLElement = createPromo(Mode.promo);
+  const banner: HTMLElement = createPromo(Mode.banner);
   const linksContainer: HTMLElement = new Builder('section', '', Blocks.main, Elem.container, Mode.link).element();
   const linkLogin: HTMLAnchorElement = new Builder('', Base.links, Blocks.main, Elem.link, Mode.login).a();
   const linkRegistration: HTMLElement = new Builder('', Base.links, Blocks.main, Elem.link, Mode.reg).a();
   const linkProfile: HTMLElement = new Builder('', Base.links, Blocks.main, Elem.link, Mode.prof).a();
 
-  promoTitleFirst.textContent = Titles.PROMO_FIRST;
-  promoTitleSecond.textContent = Titles.PROMO_SECOND;
-  promoTitleLast.textContent = Titles.PROMO_LAST;
-  promoButton.textContent = Buttons.GET_PROMO;
-  promoButton.setAttribute('id', Mode.get_promo);
-
-  promoTitle.append(promoTitleFirst, promoTitleSecond, promoTitleLast);
-  promoContent.append(promoTitle, promoButton);
-  promoWrapper.append(promoContent);
-  linksContainer.append(linkLogin, linkRegistration, linkProfile);
-
   if (main) {
-    main.append(promoWrapper, linksContainer);
+    linksContainer.append(linkLogin, linkRegistration, linkProfile);
+    main.append(promo, banner, linksContainer);
   }
 
   return body || null;

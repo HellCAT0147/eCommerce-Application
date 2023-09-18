@@ -181,6 +181,7 @@ export enum Mode {
   item = 'item',
   available = 'available',
   get_promo = 'get-promo',
+  get_banner = 'get-banner',
   left = 'left',
   right = 'right',
   dis = 'disabled',
@@ -199,6 +200,7 @@ export enum Mode {
   top = 'top',
   bottom = 'bottom',
   rss = 'rss',
+  banner = 'banner',
 }
 
 export enum Base {
@@ -308,8 +310,11 @@ export enum Titles {
   EMPTY_CART = `There are no products in your cart yet.`,
   GO_CATALOG = `For a selection of products please go to the`,
   PROMO_FIRST = `AUTUMN SALE GET `,
+  BANNER_FIRST = `FINALLY SALE GET `,
   PROMO_SECOND = `30% OFF `,
+  BANNER_SECOND = `40% OFF `,
   PROMO_LAST = `ON EVERYTHING.`,
+  BANNER_LAST = `ON ALL WHITE.`,
   PROMO_CODE = `RASDAPROJA`,
   PROMO_SUCCESSES = `Promo code successfully applied.`,
   FAILED_UPDATE_CART = `You failed to update the cart.`,
