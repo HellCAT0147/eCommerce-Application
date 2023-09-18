@@ -1,6 +1,6 @@
 import { ErrorObject, Product } from '@commercetools/platform-sdk';
 import { Pages, Routes, UrlParsed } from '../../../models/router';
-import { selectCurrentPage, showQuantity } from '../view/viewPage';
+import { selectCurrentPage, showMessage, showQuantity } from '../view/viewPage';
 import ControllerLogin from '../../login/controller/controller';
 import ControllerRegistration from '../../registration/controller/controller';
 import ControllerMain from '../../main/controller/controller';
@@ -143,9 +143,12 @@ class Router {
     try {
       const response: number | ErrorObject = await this.eCommerceApi.getCartItemsQuantity();
       if (typeof response === 'number') quantity = response;
+      else if ('message' in response && 'code' in response) {
+        showMessage(false, response.message);
+      }
     } catch (error) {
       if (error instanceof Error) {
-        // TODO implement method showError();
+        showMessage(false, error.message);
       }
     }
 

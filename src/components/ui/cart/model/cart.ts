@@ -51,20 +51,40 @@ export default class CartModel {
     return order;
   }
 
+  private async changeQuantity(): Promise<number> {
+    let quantity: number = 0;
+    try {
+      const response: number | ErrorObject = await this.eCommerceApi.getCartItemsQuantity();
+      if (typeof response === 'number') quantity = response;
+      else if ('message' in response && 'code' in response) {
+        this.view.showMessage(false, response.message);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        this.view.showMessage(false, error.message);
+      }
+    }
+
+    this.view.showQuantity(quantity);
+
+    return quantity;
+  }
+
   public async setPromoCode(): Promise<void> {
     const inputPromo: HTMLInputElement | null = document.querySelector(`.${Blocks.cart}__${Elem.input}_${Mode.promo}`);
     if (!inputPromo) return;
     try {
       const response: Cart | ErrorObject = await this.eCommerceApi.applyPromo(inputPromo.value);
       if ('message' in response && 'code' in response) {
-        // TODO this.view.showError(response.message);
+        this.view.showMessage(false, response.message);
       } else {
         const order: DataOrder = this.getOrderData(response);
         this.view.showCart(response, order);
+        this.view.showMessage(true, Mode.promo);
       }
     } catch (error) {
       if (error instanceof Error) {
-        // TODO call the view method to display the error message
+        this.view.showMessage(false, error.message);
       }
     }
   }
@@ -73,14 +93,14 @@ export default class CartModel {
     try {
       const response: Cart | ErrorObject = await this.eCommerceApi.getActiveCart();
       if ('message' in response && 'code' in response) {
-        // TODO this.view.showError(response.message);
+        this.view.showMessage(false, response.message);
       } else {
         const order: DataOrder = this.getOrderData(response);
         this.view.showCart(response, order);
       }
     } catch (error) {
       if (error instanceof Error) {
-        // TODO call the view method to display the error message
+        this.view.showMessage(false, error.message);
       }
     }
   }
@@ -94,10 +114,11 @@ export default class CartModel {
     this.view.changeCursor(target, true);
     const response: Cart | ErrorObject = await this.eCommerceApi.removeCartItem(id);
     if ('message' in response && 'code' in response) {
-      // TODO this.view.showError(response.message);
+      this.view.showMessage(false, response.message);
     } else {
       const order: DataOrder = this.getOrderData(response);
       this.view.showCart(response, order);
+      await this.changeQuantity();
     }
     if (item) {
       const itemLocal: HTMLElement = item;
@@ -115,11 +136,11 @@ export default class CartModel {
     this.view.changeCursor(target, true);
     const response: Cart | ErrorObject = await this.eCommerceApi.addNewProduct(id);
     if ('message' in response && 'code' in response) {
-      // TODO this.view.showError(response.message);
+      this.view.showMessage(false, response.message);
     } else {
       const order: DataOrder = this.getOrderData(response);
       this.view.showCart(response, order);
-      // TODO update header cart icon
+      await this.changeQuantity();
     }
     if (item) {
       const itemLocal: HTMLElement = item;
@@ -142,11 +163,11 @@ export default class CartModel {
     if (currentAmount !== undefined && +currentAmount > 1) {
       const response: Cart | ErrorObject = await this.eCommerceApi.removeCartItem(id, true);
       if ('message' in response && 'code' in response) {
-        // TODO this.view.showError(response.message);
+        this.view.showMessage(false, response.message);
       } else {
         const order: DataOrder = this.getOrderData(response);
         this.view.showCart(response, order);
-        // TODO update header cart icon
+        await this.changeQuantity();
       }
     }
     if (item) {
@@ -164,15 +185,39 @@ export default class CartModel {
     delete dataset?.key;
     const response: Cart | ErrorObject = await this.eCommerceApi.setCartItemQuantity(id, amount);
     if ('message' in response && 'code' in response) {
-      // TODO this.view.showError(response.message);
+      this.view.showMessage(false, response.message);
     } else {
       const order: DataOrder = this.getOrderData(response);
       this.view.showCart(response, order);
-      // TODO update header cart icon
+      await this.changeQuantity();
     }
     if (item) {
       const itemLocal: HTMLElement = item;
       itemLocal.dataset.key = id;
+    }
+  }
+
+  public createPopup(): void {
+    this.view.createPopup();
+    this.view.toggleOverlay();
+  }
+
+  public async clearCartResponse(target: HTMLElement): Promise<void> {
+    this.view.toggleOverlay();
+    const popup: HTMLDivElement | null = document.querySelector(`.${Blocks.cart}__${Elem.popup}`);
+    if (popup) {
+      popup.outerHTML = '';
+      if (target.classList.contains(`${Blocks.popup}__${Elem.btn}_${Mode.yes}`)) {
+        const response: Cart | ErrorObject = await this.eCommerceApi.clearCart();
+        if ('message' in response && 'code' in response) {
+          this.view.showMessage(false, response.message);
+        } else {
+          const order: DataOrder = this.getOrderData(response);
+          this.view.showCart(response, order);
+          this.view.showMessage(true, Mode.clear);
+          await this.changeQuantity();
+        }
+      }
     }
   }
 }

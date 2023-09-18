@@ -16,6 +16,7 @@ export enum Blocks {
   cart = 'cart',
   order = 'order',
   promo = 'promo',
+  popup = 'popup',
 }
 
 export enum Elem {
@@ -72,6 +73,8 @@ export enum Elem {
   edit = 'edit',
   name = 'name',
   container = 'container',
+  popup = 'popup',
+  info = 'info',
 }
 
 export enum Mode {
@@ -159,6 +162,10 @@ export enum Mode {
   dis = 'disabled',
   base = 'base',
   remove = 'remove',
+  popup = 'popup',
+  yes = 'yes',
+  no = 'no',
+  overlay = 'overlay',
 }
 
 export enum Base {
@@ -266,6 +273,10 @@ export enum Titles {
   PROMO_SECOND = `30% OFF `,
   PROMO_LAST = `ON EVERYTHING.`,
   PROMO_CODE = `RASDAPROJA`,
+  PROMO_SUCCESSES = `Promo code successfully applied.`,
+  FAILED_UPDATE_CART = `You failed to update the cart.`,
+  CART_CLEAR = `Your cart has been successfully cleared.`,
+  FAILED_UPDATE_CATALOG = `You failed to update the catalog.`,
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;

@@ -15,6 +15,25 @@ export default class ModelCatalog {
     this.view = new ViewCatalog();
   }
 
+  private async changeQuantity(): Promise<number> {
+    let quantity: number = 0;
+    try {
+      const response: number | ErrorObject = await this.eCommerceApi.getCartItemsQuantity();
+      if (typeof response === 'number') quantity = response;
+      else if ('message' in response && 'code' in response) {
+        this.view.showMessage(false, response.message);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        this.view.showMessage(false, error.message);
+      }
+    }
+
+    this.view.showQuantity(quantity);
+
+    return quantity;
+  }
+
   public async fetchProduct(key: string, preResponse: Product | ErrorObject): Promise<void> {
     const carted = await this.eCommerceApi.isInCart(key);
     if (preResponse && typeof carted === 'boolean') {
@@ -23,10 +42,10 @@ export default class ModelCatalog {
     }
     try {
       const response: Product | ErrorObject = await this.eCommerceApi.getProduct(key);
-      if ('message' in response && 'code' in response) this.view.showError(response.message);
+      if ('message' in response && 'code' in response) this.view.showMessage(false, response.message);
       else if (typeof carted === 'boolean') this.prepareProduct(response.masterData.current, carted);
     } catch (error) {
-      if (error instanceof Error) this.view.showError(error.message);
+      if (error instanceof Error) this.view.showMessage(false, error.message);
     }
   }
 
@@ -79,11 +98,11 @@ export default class ModelCatalog {
         }
       });
       if ('message' in cartResponse && 'code' in cartResponse) {
-        this.view.showError(cartResponse.message);
+        this.view.showMessage(false, cartResponse.message);
         return;
       }
       if ('message' in response && 'code' in response) {
-        this.view.showError(response.message);
+        this.view.showMessage(false, response.message);
       } else {
         if (justFill) {
           this.view.fillCatalogPage(response, cartResponse);
@@ -93,7 +112,7 @@ export default class ModelCatalog {
         this.view.constructCatalogPage(response, cartResponse);
       }
     } catch (error) {
-      if (error instanceof Error) this.view.showError(error.message);
+      if (error instanceof Error) this.view.showMessage(false, error.message);
     }
   }
 
@@ -130,19 +149,40 @@ export default class ModelCatalog {
   }
 
   public async addToCart(id: string): Promise<void> {
-    this.view.showAddSpinner(id);
-    const result = await this.eCommerceApi.addNewProduct(id);
-    const isSuccessful = result.lineItems !== undefined;
-    this.view.hideAddSpinner(id, isSuccessful);
-    this.view.updateCartButtons(id, false, true);
-    // TODO update header cart icon
+    try {
+      this.view.showAddSpinner(id);
+      const result = await this.eCommerceApi.addNewProduct(id);
+      if ('message' in result && 'code' in result) {
+        this.view.showMessage(false, result.message);
+      } else {
+        const isSuccessful = result.lineItems !== undefined;
+        this.view.hideAddSpinner(id, isSuccessful);
+        this.view.updateCartButtons(id, false, true);
+        await this.changeQuantity();
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        this.view.showMessage(false, error.message);
+      }
+    }
   }
 
   public async removeFromCart(id: string): Promise<void> {
-    this.view.showRemoveSpinner(id);
-    const result = await this.eCommerceApi.removeCartItem(id);
-    const isSuccessful = result.lineItems !== undefined;
-    this.view.hideRemoveSpinner(id, isSuccessful);
-    this.view.updateCartButtons(id, true, false);
+    try {
+      this.view.showRemoveSpinner(id);
+      const result = await this.eCommerceApi.removeCartItem(id);
+      if ('message' in result && 'code' in result) {
+        this.view.showMessage(false, result.message);
+      } else {
+        const isSuccessful = result.lineItems !== undefined;
+        this.view.hideRemoveSpinner(id, isSuccessful);
+        this.view.updateCartButtons(id, true, false);
+        await this.changeQuantity();
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        this.view.showMessage(false, error.message);
+      }
+    }
   }
 }

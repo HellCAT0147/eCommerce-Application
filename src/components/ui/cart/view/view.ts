@@ -13,46 +13,55 @@ export default class CartView {
 
   public showMessage(isSuccess?: boolean, message?: string): void {
     const body: HTMLElement | null = document.querySelector(`${Blocks.body}`);
-    const oldMessageHolder: HTMLElement | null = document.querySelector(`.${Blocks.prof}__${Elem.mess}`);
+    const oldMessageHolder: HTMLElement | null = document.querySelector(`.${Blocks.main}__${Elem.mess}`);
     if (oldMessageHolder) {
-      oldMessageHolder.classList.remove(`${Blocks.prof}__${Elem.mess}_${Mode.hidden}`);
+      oldMessageHolder.classList.remove(`${Blocks.main}__${Elem.mess}_${Mode.hidden}`);
       const messageText: HTMLElement | null = oldMessageHolder.querySelector(`.${Elem.mess}__${Elem.text}`);
       if (messageText) {
-        if (isSuccess) messageText.textContent = `${Titles.SUCCESS_UPDATE}`;
+        if (isSuccess && message === Mode.promo) messageText.textContent = `${Titles.PROMO_SUCCESSES}`;
+        else if (isSuccess && message === Mode.clear) messageText.textContent = `${Titles.CART_CLEAR}`;
         else if (message) messageText.textContent = `${message}`;
-        else messageText.textContent = `${Titles.FAILED_UPDATE}`;
+        else messageText.textContent = `${Titles.FAILED_UPDATE_CART}`;
       }
-      if (!isSuccess) oldMessageHolder.classList.add(`${Blocks.prof}__${Elem.mess}_${Mode.fail}`);
+      if (!isSuccess) oldMessageHolder.classList.add(`${Blocks.main}__${Elem.mess}_${Mode.fail}`);
     } else {
-      const messageHolder: HTMLElement = new Builder('div', '', Blocks.prof, Elem.mess, '').element();
+      const messageHolder: HTMLElement = new Builder('div', '', Blocks.main, Elem.mess, '').element();
       const messageIcon: HTMLElement = new Builder('div', '', Elem.mess, Elem.image, '').element();
       const messageText: HTMLElement = new Builder('div', '', Elem.mess, Elem.text, '').element();
-      if (isSuccess) {
-        messageText.textContent = `${Titles.SUCCESS_UPDATE}`;
+      if (isSuccess && message === Mode.promo) messageText.textContent = `${Titles.PROMO_SUCCESSES}`;
+      else if (isSuccess && message === Mode.clear) {
+        messageText.textContent = `${Titles.CART_CLEAR}`;
       } else if (message) {
         messageText.textContent = `${message}`;
-        messageHolder.classList.add(`${Blocks.prof}__${Elem.mess}_${Mode.fail}`);
+        messageHolder.classList.add(`${Blocks.main}__${Elem.mess}_${Mode.fail}`);
       } else {
-        messageText.textContent = `${Titles.FAILED_UPDATE}`;
-        messageHolder.classList.add(`${Blocks.prof}__${Elem.mess}_${Mode.fail}`);
+        messageText.textContent = `${Titles.FAILED_UPDATE_CART}`;
+        messageHolder.classList.add(`${Blocks.main}__${Elem.mess}_${Mode.fail}`);
       }
 
       messageHolder.append(messageIcon, messageText);
       if (body) body.appendChild(messageHolder);
       if (messageHolder) {
         setTimeout(() => {
-          messageHolder.classList.add(`${Blocks.prof}__${Elem.mess}_${Mode.hidden}`);
-          messageHolder.classList.remove(`${Blocks.prof}__${Elem.mess}_${Mode.fail}`);
+          messageHolder.classList.add(`${Blocks.main}__${Elem.mess}_${Mode.hidden}`);
+          messageHolder.classList.remove(`${Blocks.main}__${Elem.mess}_${Mode.fail}`);
         }, 1500);
       }
     }
 
     setTimeout(() => {
       if (oldMessageHolder) {
-        oldMessageHolder.classList.add(`${Blocks.prof}__${Elem.mess}_${Mode.hidden}`);
-        oldMessageHolder.classList.remove(`${Blocks.prof}__${Elem.mess}_${Mode.fail}`);
+        oldMessageHolder.classList.add(`${Blocks.main}__${Elem.mess}_${Mode.hidden}`);
+        oldMessageHolder.classList.remove(`${Blocks.main}__${Elem.mess}_${Mode.fail}`);
       }
     }, 1500);
+  }
+
+  public showQuantity(quantity: number): void {
+    const quantityParagraph: HTMLElement | null = document.querySelector(`.${Blocks.header}__${Elem.quantity}`);
+    if (quantityParagraph) {
+      quantityParagraph.textContent = `${quantity} ${Titles.PCS}`;
+    }
   }
 
   private createProductsList(listItem: LineItem[]): HTMLElement {
@@ -262,5 +271,29 @@ export default class CartView {
     const localTarget: HTMLElement = target;
     if (isLoading) localTarget.style.cursor = 'wait';
     else localTarget.style.cursor = '';
+  }
+
+  public toggleOverlay(): void {
+    const body: HTMLFormElement | null = document.querySelector(`.${Blocks.body}`);
+    if (body) body.classList.toggle(`${Blocks.body}_${Mode.overlay}`);
+  }
+
+  public createPopup(): void {
+    const main: HTMLFormElement | null = document.querySelector(`.${Blocks.main}__${Pages.CART}`);
+    if (main) {
+      const popup: HTMLElement = new Builder('div', '', Blocks.cart, Elem.popup, '').element();
+      const info: HTMLParagraphElement = new Builder('', '', Blocks.popup, Elem.info, '').p();
+      const control: HTMLElement = new Builder('div', '', Blocks.popup, Elem.control, '').element();
+      const yesBtn: HTMLButtonElement = new Builder('', Base.btns_colored, Blocks.popup, Elem.btn, Mode.yes).button();
+      const noBtn: HTMLButtonElement = new Builder('', Base.btns_empty, Blocks.popup, Elem.btn, Mode.no).button();
+
+      info.textContent = '- "Are you sure about that?", (c) John Cena';
+      yesBtn.textContent = 'Yeah!';
+      noBtn.textContent = 'Nope';
+
+      control.append(yesBtn, noBtn);
+      popup.append(info, control);
+      main.appendChild(popup);
+    }
   }
 }
