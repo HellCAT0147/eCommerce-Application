@@ -15,6 +15,22 @@ export default class ModelCatalog {
     this.view = new ViewCatalog();
   }
 
+  private async changeQuantity(): Promise<number> {
+    let quantity: number = 0;
+    try {
+      const response: number | ErrorObject = await this.eCommerceApi.getCartItemsQuantity();
+      if (typeof response === 'number') quantity = response;
+    } catch (error) {
+      if (error instanceof Error) {
+        // TODO implement method showError();
+      }
+    }
+
+    this.view.showQuantity(quantity);
+
+    return quantity;
+  }
+
   public async fetchProduct(key: string, preResponse: Product | ErrorObject): Promise<void> {
     const carted = await this.eCommerceApi.isInCart(key);
     if (preResponse && typeof carted === 'boolean') {
@@ -135,7 +151,7 @@ export default class ModelCatalog {
     const isSuccessful = result.lineItems !== undefined;
     this.view.hideAddSpinner(id, isSuccessful);
     this.view.updateCartButtons(id, false, true);
-    // TODO update header cart icon
+    await this.changeQuantity();
   }
 
   public async removeFromCart(id: string): Promise<void> {
@@ -144,5 +160,6 @@ export default class ModelCatalog {
     const isSuccessful = result.lineItems !== undefined;
     this.view.hideRemoveSpinner(id, isSuccessful);
     this.view.updateCartButtons(id, true, false);
+    await this.changeQuantity();
   }
 }
