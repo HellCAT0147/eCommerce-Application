@@ -107,9 +107,11 @@ export default class ModelCatalog {
         if (justFill) {
           this.view.fillCatalogPage(response, cartResponse);
           this.view.fillPaginationButtons(response);
+          this.view.fillSearchInput();
           return;
         }
         this.view.constructCatalogPage(response, cartResponse);
+        this.view.fillSearchInput();
       }
     } catch (error) {
       if (error instanceof Error) this.view.showMessage(false, error.message);
