@@ -338,6 +338,7 @@ export enum Titles {
   RSS_TITLE = '& RS School',
   THANKS_TITLE = 'Special Thanks',
   THANKS_TEXT = `Our mentors played a far from insignificant role in the creation of this app. Andrei is a master of his craft, a virtuoso of the front-end, friendly and attentive to detail. Throughout the whole mentorship, he tried to keep abreast of his mentee's affairs, his interviews; when contacting him, he always tried to get in touch as soon as possible and help to solve the issue. Alexey is a fullstack developer, a GitHub sorcerer, capable of destroying your code problems and your self-esteem with one breath. These awesome guys guided our young inexperienced team through the thorns to stardom. Thank you!!`,
+  LINKS = 'LINKS',
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;

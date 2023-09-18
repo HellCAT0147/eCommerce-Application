@@ -6,13 +6,6 @@
     row-gap: 20px;
   }
 
-  &__link {
-    display: inline-block;
-    width: fit-content;
-    text-decoration: none;
-    @include font(700, 2rem, 100%, $color-link);
-  }
-
   &__wrapper {
     &_promo {
       height: 24.33vw;

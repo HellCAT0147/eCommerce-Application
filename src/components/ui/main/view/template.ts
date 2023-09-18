@@ -1,4 +1,4 @@
-import { Base, Blocks, Elem, Mode } from '../../../models/builder';
+import { Base, Blocks, Elem, Mode, Titles } from '../../../models/builder';
 import { Pages } from '../../../models/router';
 import Builder from '../../builder/html-builder';
 import createHeader from './header';
@@ -13,7 +13,16 @@ function createTemplate(): HTMLBodyElement | null {
   const header: HTMLElement = new Builder('header', '', Blocks.header, '', '').element();
   const main: HTMLElement = new Builder('main', Blocks.main, Blocks.main, Blocks.main, '').element();
   const footer: HTMLElement = new Builder('footer', '', Blocks.footer, '', '').element();
+
+  const linksContainer: HTMLElement = new Builder('section', '', Blocks.footer, Elem.container, Mode.link).element();
+  const linkLogin: HTMLAnchorElement = new Builder('', Base.links, Blocks.footer, Elem.link, Mode.login).a();
+  const linkRegistration: HTMLElement = new Builder('', Base.links, Blocks.footer, Elem.link, Mode.reg).a();
+  const linkProfile: HTMLElement = new Builder('', Base.links, Blocks.footer, Elem.link, Mode.prof).a();
+  linksContainer.textContent = Titles.LINKS;
+
   if (body) {
+    linksContainer.append(linkLogin, linkRegistration, linkProfile);
+    footer.appendChild(linksContainer);
     body.append(header, main, footer);
   }
 
@@ -39,14 +48,9 @@ function createTemplateMain(isLoggedIn?: boolean): HTMLBodyElement | null {
 
   const promo: HTMLElement = createPromo(Mode.promo);
   const banner: HTMLElement = createPromo(Mode.banner);
-  const linksContainer: HTMLElement = new Builder('section', '', Blocks.main, Elem.container, Mode.link).element();
-  const linkLogin: HTMLAnchorElement = new Builder('', Base.links, Blocks.main, Elem.link, Mode.login).a();
-  const linkRegistration: HTMLElement = new Builder('', Base.links, Blocks.main, Elem.link, Mode.reg).a();
-  const linkProfile: HTMLElement = new Builder('', Base.links, Blocks.main, Elem.link, Mode.prof).a();
 
   if (main) {
-    linksContainer.append(linkLogin, linkRegistration, linkProfile);
-    main.append(promo, banner, linksContainer);
+    main.append(promo, banner);
   }
 
   return body || null;
