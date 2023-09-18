@@ -103,6 +103,7 @@ export default class ValidationModel {
           const route: Routes | undefined = basicRoutes.find((routeExisting) => routeExisting.path === Pages.MAIN);
           window.history.pushState(null, '', `/${Pages.MAIN}`);
           this.formView.showSuccessLoginMessage();
+          this.resetFields();
           const quantityContent: string = getQuantity();
           if (route) route.callback(true);
           showQuantity(quantityContent);
@@ -117,5 +118,11 @@ export default class ValidationModel {
     } else {
       this.formView.reminder();
     }
+  }
+
+  protected resetFields(): void {
+    this.mail = '';
+    this.password = '';
+    this.isValid = false;
   }
 }
