@@ -205,6 +205,7 @@ export default class ViewCatalog {
       priceHeadingHTML.textContent = 'price total'.toUpperCase();
       basePriceHTML.textContent = basePrice;
       discountPriceHTML.textContent = discountPrice;
+      if (discountPrice) basePriceHTML.classList.add('before-disc');
       descriptionHTML.textContent = description;
       this.addSlider(productBody, images);
       const cartButtons: HTMLElement = new Builder('div', '', Blocks.catalog, 'cart-buttons', 'wrapper').element();

@@ -62,7 +62,6 @@
 
   &__price {
     @include font(500, 2rem, 20px, $color-dark);
-    text-decoration: line-through;
 
     &_discounted {
       @include font(500, 2.6rem, 20px, $color-price);

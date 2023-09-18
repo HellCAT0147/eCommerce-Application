@@ -216,9 +216,6 @@
   }
   &__card_base-price {
     font-size: 1.4rem;
-    .before-disc {
-      text-decoration-line: line-through;
-    }
   }
   &__card_disc-price {
     color: $color-price;
@@ -282,7 +279,9 @@
 .product__description {
   margin-left: 10px;
 }
-
+.before-disc {
+  text-decoration: line-through;
+}
 :disabled {
   background-color: gray;
   scale: 1;
