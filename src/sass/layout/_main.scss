@@ -22,6 +22,11 @@
     }
   }
 
+  &__about-us {
+    padding: 0;
+    row-gap: 0;
+  }
+
   &__message {
     position: fixed;
     display: flex;

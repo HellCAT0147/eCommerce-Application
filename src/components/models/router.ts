@@ -31,4 +31,5 @@ export enum Pages {
   LOGO_MAIN = `${LOGO}-${MAIN}`,
   NOT_FOUND = 'not-found',
   ID = 'id',
+  RSS = 'https://rs.school/',
 }

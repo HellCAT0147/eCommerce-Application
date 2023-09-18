@@ -258,12 +258,14 @@ export default class CartView {
     const main: HTMLFormElement | null = document.querySelector(`.${Blocks.main}__${Pages.CART}`);
     if (main) {
       main.innerHTML = '';
+      const title: HTMLElement = new Builder('h1', Base.titles, Blocks.main, Elem.title, '').element();
+      title.textContent = `${Titles.SHOP_CART}`;
       const wrapper: HTMLElement = new Builder('div', '', Blocks.cart, Elem.wrapper, '').element();
       const productsList: HTMLElement = this.createProductsList(cart.lineItems);
       const aside: HTMLElement = this.createAside(order);
 
       wrapper.append(productsList, aside);
-      main.append(wrapper);
+      main.append(title, wrapper);
     }
   }
 

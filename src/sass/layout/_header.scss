@@ -19,7 +19,7 @@
     display: flex;
     justify-content: space-between;
     @extend %transition;
-    @include media-tablet {
+    @include media-large-tablet {
       position: fixed;
       flex-direction: column;
       justify-content: flex-start;
@@ -38,7 +38,7 @@
     }
     &_static {
       margin-left: 145px;
-      @include media-tablet {
+      @include media-large-tablet {
         padding-bottom: 30px;
         top: 0vh;
         justify-content: flex-end;
@@ -51,7 +51,7 @@
     @extend %font-main;
     @include font(600, 1.4rem, 100%, $color-light);
     @extend %transition;
-    @include media-tablet {
+    @include media-large-tablet {
       width: fit-content;
       @include font(600, 2.4rem, 100%, $color-light);
     }
@@ -61,7 +61,7 @@
       column-gap: 11px;
       margin-left: 19px;
       @extend %font-second;
-      @include media-tablet {
+      @include media-large-tablet {
         margin-left: 0px;
       }
     }
@@ -76,7 +76,7 @@
 
   &__text {
     @include font(500, 1.2rem, 100%, $color-light);
-    @include media-tablet {
+    @include media-large-tablet {
       @include font(500, 1.4rem, 100%, $color-light);
     }
   }
@@ -85,7 +85,7 @@
     height: 1.4rem;
     @extend %smooth-appearance;
     @include font(700, 1.4rem, 100%, $color-light);
-    @include media-tablet {
+    @include media-large-tablet {
       height: 1.6rem;
       @include font(500, 1.6rem, 100%, $color-light);
     }
@@ -102,7 +102,7 @@
     mask-repeat: no-repeat;
     mask-size: contain;
     background: $color-light;
-    @include media-tablet {
+    @include media-large-tablet {
       width: 27px;
       height: 33px;
       @include font(500, 1.4rem, 100%, $color-light);
@@ -123,7 +123,7 @@
     width: 100%;
     height: 2px;
     background: $color-main-second;
-    @include media-tablet {
+    @include media-large-tablet {
       bottom: -5px;
     }
   }
