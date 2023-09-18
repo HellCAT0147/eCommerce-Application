@@ -197,9 +197,15 @@ export default class CartModel {
     }
   }
 
-  public createPopup(): void {
-    this.view.createPopup();
-    this.view.toggleOverlay();
+  public async createPopup(): Promise<void> {
+    const response: number | ErrorObject = await this.eCommerceApi.getCartItemsQuantity();
+
+    if (typeof response === 'object' && 'message' in response && 'code' in response) {
+      this.view.showMessage(false, response.message);
+    } else if (response) {
+      this.view.createPopup();
+      this.view.toggleOverlay();
+    }
   }
 
   public async clearCartResponse(target: HTMLElement): Promise<void> {
