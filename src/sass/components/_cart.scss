@@ -142,6 +142,7 @@
       background-repeat: no-repeat;
       background-size: contain;
       cursor: pointer;
+      @extend %transition;
       &:hover {
         background: url('../assets/ico/delete_hover.svg');
       }
@@ -156,6 +157,10 @@
   &__button {
     &_clear {
       align-self: flex-end;
+      background-color: $color-main;
+      &:hover {
+        background-color: $color-hover-edit;
+      }
     }
   }
 

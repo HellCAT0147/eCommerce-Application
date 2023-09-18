@@ -310,7 +310,7 @@ export enum Titles {
   EMPTY_CART = `There are no products in your cart yet.`,
   GO_CATALOG = `For a selection of products please go to the`,
   PROMO_FIRST = `AUTUMN SALE GET `,
-  BANNER_FIRST = `FINALLY SALE GET `,
+  BANNER_FIRST = `ULTIMATE SALE GET `,
   PROMO_SECOND = `30% OFF `,
   BANNER_SECOND = `40% OFF `,
   PROMO_LAST = `ON EVERYTHING.`,
