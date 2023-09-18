@@ -113,7 +113,7 @@
     border: 2px solid $color-dark;
     @include font(500, 1.4rem, 100%, $color-dark);
     &:hover {
-      border: 2px solid $color-Light-gray;
+      border: 2px solid $color-light-gray;
     }
     @include media-laptop-small {
       padding: 12px 40px;

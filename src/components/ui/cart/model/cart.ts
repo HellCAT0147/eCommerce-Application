@@ -178,9 +178,11 @@ export default class CartModel {
 
   public createPopup(): void {
     this.view.createPopup();
+    this.view.toggleOverlay();
   }
 
   public async clearCartResponse(target: HTMLElement): Promise<void> {
+    this.view.toggleOverlay();
     const popup: HTMLDivElement | null = document.querySelector(`.${Blocks.cart}__${Elem.popup}`);
     if (popup) {
       popup.outerHTML = '';

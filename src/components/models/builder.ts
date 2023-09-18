@@ -165,6 +165,7 @@ export enum Mode {
   popup = 'popup',
   yes = 'yes',
   no = 'no',
+  overlay = 'overlay',
 }
 
 export enum Base {

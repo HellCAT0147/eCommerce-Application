@@ -59,7 +59,7 @@
   }
 
   &__header {
-    @include font(500, 1.8rem, 100%, $color-Light-gray);
+    @include font(500, 1.8rem, 100%, $color-light-gray);
   }
 
   &__item {
@@ -96,7 +96,7 @@
 
     &_base {
       &.cross {
-        @include font(500, 1.2rem, 100%, $color-Light-gray);
+        @include font(500, 1.2rem, 100%, $color-light-gray);
         text-decoration: line-through;
       }
     }
@@ -194,6 +194,44 @@
     display: inline-block;
     width: fit-content;
   }
+
+  &__popup {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    padding: 30px 50px;
+    z-index: 100;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid $color-input;
+    background: $color-light;
+    box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
+  }
+}
+
+.popup {
+  &__info {
+    @extend %font-second;
+    @include font(600, 1.6rem, 180%, $color-dark);
+    margin-bottom: 30px;
+  }
+
+  &__control {
+    display: flex;
+    justify-content: space-between;
+    column-gap: 15px;
+  }
+
+  &__button {
+    @extend %font-main;
+    &_no {
+      @include font(600, 1.4rem, 100%, $color-light-gray);
+      &:hover {
+        color: $color-main-second;
+      }
+    }
+  }
 }
 
 .order {
@@ -206,7 +244,7 @@
     }
 
     &_sale {
-      @include font(500, 1.8rem, 100%, $color-Light-gray);
+      @include font(500, 1.8rem, 100%, $color-light-gray);
     }
 
     &_total {
