@@ -1,4 +1,12 @@
-import { Image, ProductVariant, ProductProjection, ErrorObject, Cart, ProductData } from '@commercetools/platform-sdk';
+import {
+  Image,
+  ProductVariant,
+  ProductProjection,
+  ErrorObject,
+  Cart,
+  ProductData,
+  Price,
+} from '@commercetools/platform-sdk';
 import { Category } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/category';
 import { Base, Blocks, Elem, Mode, Titles } from '../../../models/builder';
 import Builder from '../../builder/html-builder';
@@ -61,7 +69,7 @@ export default class ViewCatalog {
     brands: [],
     colors: [],
     sizes: [],
-    maxPrice: 15000,
+    maxPrice: 200,
     categories: [],
     sortParameters: ViewCatalog.nameAscSortingParameters,
   };
@@ -240,6 +248,7 @@ export default class ViewCatalog {
       priceHeadingHTML.textContent = 'price total'.toUpperCase();
       basePriceHTML.textContent = basePrice;
       discountPriceHTML.textContent = discountPrice;
+      if (discountPrice) basePriceHTML.classList.add('before-disc');
       descriptionHTML.textContent = description;
       this.addSlider(productBody, images);
       const cartButtons: HTMLElement = new Builder('div', '', Blocks.catalog, 'cart-buttons', 'wrapper').element();
@@ -705,15 +714,22 @@ export default class ViewCatalog {
     readMore.innerText = 'READ MORE';
     const priceTag: HTMLElement = new Builder('div', '', Blocks.catalog, 'card', 'price-tag').element();
     const basePrice: HTMLElement = new Builder('span', '', Blocks.catalog, 'card', 'base-price').element();
-    basePrice.innerText = `${product.masterVariant.prices?.[0].value.centAmount.toString().slice(0, -2)} RUB`;
-    priceTag.append(basePrice);
-    if (product.masterVariant.prices?.[0].discounted) {
-      basePrice.classList.add('before-disc');
-      const discountedPrice: HTMLElement = new Builder('span', '', Blocks.catalog, 'card', 'disc-price').element();
-      discountedPrice.innerText = `${product.masterVariant.prices?.[0].discounted.value.centAmount
-        .toString()
-        .slice(0, -2)} RUB`;
-      priceTag.append(discountedPrice);
+    const prices: Price | undefined = product.masterVariant.prices?.[0];
+    if (prices !== undefined) {
+      let originalPrice: number = prices.value.centAmount / 10 ** prices.value.fractionDigits;
+      basePrice.innerText = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
+        originalPrice
+      );
+      priceTag.append(basePrice);
+      if (prices.discounted) {
+        basePrice.classList.add('before-disc');
+        originalPrice = prices.discounted.value.centAmount / 10 ** prices.discounted.value.fractionDigits;
+        const discountedPrice: HTMLElement = new Builder('span', '', Blocks.catalog, 'card', 'disc-price').element();
+        discountedPrice.innerText = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
+          originalPrice
+        );
+        priceTag.append(discountedPrice);
+      }
     }
     card.append(cardPic, nameTag, descriptionTag, readMore, priceTag, this.createCartButton(Mode.add));
     card.setAttribute('id', (product.key || '0').split('-')[1]);

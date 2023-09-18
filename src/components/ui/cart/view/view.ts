@@ -171,7 +171,7 @@ export default class CartView {
     let basePriceFormatted: string = '';
     if (prices !== undefined) {
       basePrice = prices.value.centAmount / 10 ** prices.value.fractionDigits;
-      basePriceFormatted = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(basePrice);
+      basePriceFormatted = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(basePrice);
     }
     const price: HTMLElement = new Builder('div', '', Blocks.cart, Elem.price, Mode.item).element();
     const basePice: HTMLElement = new Builder('', '', Blocks.cart, Elem.price, Mode.base).p();
@@ -188,7 +188,7 @@ export default class CartView {
         let discPriceFormatted: string = '';
         if (prices !== undefined) {
           discPrice = discount.centAmount / 10 ** discount.fractionDigits;
-          discPriceFormatted = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(discPrice);
+          discPriceFormatted = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(discPrice);
 
           promoPrice.textContent = discPriceFormatted;
           basePice.classList.add(Mode.cross);
@@ -216,7 +216,7 @@ export default class CartView {
     if (lineItem.name) title = lineItem.name['en-US'].toString();
 
     if (totalPrice !== undefined) {
-      totalPriceFormatted = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(totalPrice);
+      totalPriceFormatted = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(totalPrice);
     }
     const product: HTMLElement = new Builder('div', '', Blocks.cart, Elem.product, Mode.item).element();
     const img: HTMLElement = new Builder('', '', Blocks.cart, Elem.image, Mode.item).img(src, title);

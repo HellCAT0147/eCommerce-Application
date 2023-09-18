@@ -61,11 +61,11 @@ export default class ModelCatalog {
 
     if (prices !== undefined) {
       basePrice = prices.value.centAmount / 10 ** prices.value.fractionDigits;
-      basePriceFormatted = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(basePrice);
+      basePriceFormatted = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(basePrice);
 
       if (prices.discounted !== undefined) {
         discountPrice = prices.discounted.value.centAmount / 10 ** prices.discounted.value.fractionDigits;
-        discountPriceFormatted = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(
+        discountPriceFormatted = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
           discountPrice
         );
       }
