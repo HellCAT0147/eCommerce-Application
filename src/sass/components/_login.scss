@@ -30,7 +30,7 @@
   }
 
   &__message {
-    position: absolute;
+    position: fixed;
     display: flex;
     align-items: center;
     column-gap: 5px;

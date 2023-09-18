@@ -181,6 +181,7 @@ export enum Mode {
   item = 'item',
   available = 'available',
   get_promo = 'get-promo',
+  get_banner = 'get-banner',
   left = 'left',
   right = 'right',
   dis = 'disabled',
@@ -199,6 +200,7 @@ export enum Mode {
   top = 'top',
   bottom = 'bottom',
   rss = 'rss',
+  banner = 'banner',
 }
 
 export enum Base {
@@ -308,9 +310,13 @@ export enum Titles {
   EMPTY_CART = `There are no products in your cart yet.`,
   GO_CATALOG = `For a selection of products please go to the`,
   PROMO_FIRST = `AUTUMN SALE GET `,
+  BANNER_FIRST = `ULTIMATE SALE GET `,
   PROMO_SECOND = `30% OFF `,
+  BANNER_SECOND = `40% OFF `,
   PROMO_LAST = `ON EVERYTHING.`,
+  BANNER_LAST = `ON ALL WHITE.`,
   PROMO_CODE = `RASDAPROJA`,
+  BANNER_CODE = `WHITESALE40`,
   PROMO_SUCCESSES = `Promo code successfully applied.`,
   FAILED_UPDATE_CART = `You failed to update the cart.`,
   CART_CLEAR = `Your cart has been successfully cleared.`,
@@ -333,6 +339,7 @@ export enum Titles {
   RSS_TITLE = '& RS School',
   THANKS_TITLE = 'Special Thanks',
   THANKS_TEXT = `Our mentors played a far from insignificant role in the creation of this app. Andrei is a master of his craft, a virtuoso of the front-end, friendly and attentive to detail. Throughout the whole mentorship, he tried to keep abreast of his mentee's affairs, his interviews; when contacting him, he always tried to get in touch as soon as possible and help to solve the issue. Alexey is a fullstack developer, a GitHub sorcerer, capable of destroying your code problems and your self-esteem with one breath. These awesome guys guided our young inexperienced team through the thorns to stardom. Thank you!!`,
+  LINKS = 'LINKS',
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;
