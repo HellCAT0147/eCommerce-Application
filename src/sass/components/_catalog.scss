@@ -252,10 +252,12 @@
       background-color: #c21f39;
       scale: 1.03;
       transition-duration: 0.3s;
+      cursor: pointer;
     }
     &:disabled {
       background-color: gray;
       scale: 1;
+      cursor: not-allowed;
     }
   }
   &__pagination_curr {
