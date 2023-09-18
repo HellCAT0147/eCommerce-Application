@@ -306,7 +306,7 @@ export enum Titles {
   PROMO_LAST = `ON EVERYTHING.`,
   PROMO_CODE = `RASDAPROJA`,
   HAQ_TITLE = `HAQ TEAM`,
-  HAQ_SUBTITLE = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`,
+  HAQ_SUBTITLE = `A trio of outstanding frontend experts united by their unusual approach to web development.`,
   FACTS = 'PROJECT FACTS',
   FACTS_PR = 'Pull Requests ',
   PR_AMOUNT = '60',
@@ -319,10 +319,10 @@ export enum Titles {
   BIO_TITLE = 'About:',
   IMPACT_TITLE = 'Contributions:',
   TEAM_TITLE = 'Collaboration',
-  TEAM_TEXT = 'The developers of our team met here at the RSS course. Kamilla and Ilya first met while discussing the GIT test in the thematic Discord channel, and later, while working on the OOP test and developing the Minesweeper, they met Alexander. Ilya and Alexander immediately agreed on code cleanliness and neatness of development, while Kamilla took a supporting role and search for quick solutions. The team stayed in touch almost around the clock, immediately responding to problems arising during development. Every idea and subsequent solution was discussed with the entire team beforehand, and no pull-request was merged without the approval of the entire team. During the development HAQ faced various difficulties, which were mainly due to the inexperience of the team members. Mentors Aleksei and Andrey were immediately coming to the rescue, who, with their impressive experience in IT, could tell us exactly in which direction to look for a solution to a problem that arose. During the development of the project, the team members became friends and hope to continue their cooperation, or at least maintain contact, in the future.',
+  TEAM_TEXT = 'The developers of our team met here at the RSS course. Kamilla and Ilya first met while discussing the GIT test in the thematic Discord channel, and later, while working on the OOP test and developing the Minesweeper, they met Alexander. Ilya and Alexander immediately agreed on code cleanliness and neatness of development, while Kamilla took a supporting role and search for quick solutions. The team stayed in touch almost around the clock, immediately responding to problems arising during development. Every idea and subsequent solution was discussed with the entire team beforehand, and no pull-request was merged without the approval of the entire team. During the development HAQ faced various difficulties, which were mainly due to the inexperience of the team members. Mentors Aleksei and Andrei  were immediately coming to the rescue, who, with their impressive experience in IT, could tell us exactly in which direction to look for a solution to a problem that arose. During the development of the project, the team members became friends and hope to continue their cooperation, or at least maintain contact, in the future.',
   RSS_TITLE = '& RS School',
   THANKS_TITLE = 'Special Thanks',
-  THANKS_TEXT = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Egestas pretium aenean pharetra magna ac placerat vestibulum lectus mauris. Arcu cursus euismod quis viverra. ',
+  THANKS_TEXT = `Our mentors played a far from insignificant role in the creation of this app. Andrei  is a master of his craft, a virtuoso of the front-end, friendly and attentive to detail. Throughout the whole mentorship, he tried to keep abreast of his mentee's affairs, his interviews; when contacting him, he always tried to get in touch as soon as possible and help to solve the issue. Alexey is a fullstack developer, a GitHub sorcerer, capable of destroying your code problems and your self-esteem with one breath. These awesome guys guided our young inexperienced team through the thorns to stardom. Thank you!!`,
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;
