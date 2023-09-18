@@ -307,6 +307,14 @@
   display: none;
 }
 
+#reset-filters_btn {
+  padding: 5px 0;
+  border: 2px solid gray;
+  color: black;
+  background-color: transparent;
+  border-radius: 3px;
+}
+
 @media (max-width: 739px) {
   .catalog {
     &__page-and-filters {
