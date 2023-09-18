@@ -1,6 +1,14 @@
-import { Image, ProductVariant, ProductProjection, ErrorObject, Cart, ProductData } from '@commercetools/platform-sdk';
+import {
+  Image,
+  ProductVariant,
+  ProductProjection,
+  ErrorObject,
+  Cart,
+  ProductData,
+  Price,
+} from '@commercetools/platform-sdk';
 import { Category } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/category';
-import { Base, Blocks, Elem, Mode } from '../../../models/builder';
+import { Base, Blocks, Elem, Mode, Titles } from '../../../models/builder';
 import Builder from '../../builder/html-builder';
 import { DataBase } from '../../../models/commerce';
 import ResultPagination from '../../../models/result-pagination';
@@ -22,6 +30,8 @@ export default class ViewCatalog {
   private static colorsKeys: Array<string> = ['black', 'blue', 'white', 'yellow', 'green', 'pink', 'tiffany'];
 
   public static resetButtonId = 'reset-filters_btn';
+
+  private static searchButtonId: string = 'search-input';
 
   public static prevPageButtonId: string = 'prev-page-button';
 
@@ -61,7 +71,7 @@ export default class ViewCatalog {
     brands: [],
     colors: [],
     sizes: [],
-    maxPrice: 15000,
+    maxPrice: 200,
     categories: [],
     sortParameters: ViewCatalog.nameAscSortingParameters,
   };
@@ -80,9 +90,52 @@ export default class ViewCatalog {
 
   private categories?: Map<string | undefined, Array<Category>>;
 
-  public showError(msg: string): string {
-    // TODO implement popup with error
-    return msg;
+  public showMessage(isSuccess?: boolean, message?: string): void {
+    const body: HTMLElement | null = document.querySelector(`${Blocks.body}`);
+    const oldMessageHolder: HTMLElement | null = document.querySelector(`.${Blocks.main}__${Elem.mess}`);
+    if (oldMessageHolder) {
+      oldMessageHolder.classList.remove(`${Blocks.main}__${Elem.mess}_${Mode.hidden}`);
+      const messageText: HTMLElement | null = oldMessageHolder.querySelector(`.${Elem.mess}__${Elem.text}`);
+      if (messageText) {
+        if (message) messageText.textContent = `${message}`;
+        else messageText.textContent = `${Titles.FAILED_UPDATE_CATALOG}`;
+      }
+      if (!isSuccess) oldMessageHolder.classList.add(`${Blocks.main}__${Elem.mess}_${Mode.fail}`);
+    } else {
+      const messageHolder: HTMLElement = new Builder('div', '', Blocks.main, Elem.mess, '').element();
+      const messageIcon: HTMLElement = new Builder('div', '', Elem.mess, Elem.image, '').element();
+      const messageText: HTMLElement = new Builder('div', '', Elem.mess, Elem.text, '').element();
+      if (message) {
+        messageText.textContent = `${message}`;
+        messageHolder.classList.add(`${Blocks.main}__${Elem.mess}_${Mode.fail}`);
+      } else {
+        messageText.textContent = `${Titles.FAILED_UPDATE_CATALOG}`;
+        messageHolder.classList.add(`${Blocks.main}__${Elem.mess}_${Mode.fail}`);
+      }
+
+      messageHolder.append(messageIcon, messageText);
+      if (body) body.appendChild(messageHolder);
+      if (messageHolder) {
+        setTimeout(() => {
+          messageHolder.classList.add(`${Blocks.main}__${Elem.mess}_${Mode.hidden}`);
+          messageHolder.classList.remove(`${Blocks.main}__${Elem.mess}_${Mode.fail}`);
+        }, 1500);
+      }
+    }
+
+    setTimeout(() => {
+      if (oldMessageHolder) {
+        oldMessageHolder.classList.add(`${Blocks.main}__${Elem.mess}_${Mode.hidden}`);
+        oldMessageHolder.classList.remove(`${Blocks.main}__${Elem.mess}_${Mode.fail}`);
+      }
+    }, 1500);
+  }
+
+  public showQuantity(quantity: number): void {
+    const quantityParagraph: HTMLElement | null = document.querySelector(`.${Blocks.header}__${Elem.quantity}`);
+    if (quantityParagraph) {
+      quantityParagraph.textContent = `${quantity} ${Titles.PCS}`;
+    }
   }
 
   public addSpinner(): HTMLElement {
@@ -197,6 +250,7 @@ export default class ViewCatalog {
       priceHeadingHTML.textContent = 'price total'.toUpperCase();
       basePriceHTML.textContent = basePrice;
       discountPriceHTML.textContent = discountPrice;
+      if (discountPrice) basePriceHTML.classList.add('before-disc');
       descriptionHTML.textContent = description;
       this.addSlider(productBody, images);
       const cartButtons: HTMLElement = new Builder('div', '', Blocks.catalog, 'cart-buttons', 'wrapper').element();
@@ -421,7 +475,7 @@ export default class ViewCatalog {
     const searchWrapper = new Builder('div', '', Blocks.catalog, 'search-wrapper', '').element();
     searchWrapper.setAttribute('id', 'search-wrapper');
     const searchInput: HTMLInputElement = new Builder('input', '', Blocks.catalog, 'search-wrapper', 'input').input();
-    searchInput.setAttribute('id', 'search-input');
+    searchInput.setAttribute('id', ViewCatalog.searchButtonId);
     searchInput.setAttribute('placeholder', 'WHAT ARE YOU LOOKING FOR?');
     searchInput.addEventListener('change', (): void => {
       this.state.query = searchInput.value;
@@ -662,15 +716,22 @@ export default class ViewCatalog {
     readMore.innerText = 'READ MORE';
     const priceTag: HTMLElement = new Builder('div', '', Blocks.catalog, 'card', 'price-tag').element();
     const basePrice: HTMLElement = new Builder('span', '', Blocks.catalog, 'card', 'base-price').element();
-    basePrice.innerText = `${product.masterVariant.prices?.[0].value.centAmount.toString().slice(0, -2)} RUB`;
-    priceTag.append(basePrice);
-    if (product.masterVariant.prices?.[0].discounted) {
-      basePrice.classList.add('before-disc');
-      const discountedPrice: HTMLElement = new Builder('span', '', Blocks.catalog, 'card', 'disc-price').element();
-      discountedPrice.innerText = `${product.masterVariant.prices?.[0].discounted.value.centAmount
-        .toString()
-        .slice(0, -2)} RUB`;
-      priceTag.append(discountedPrice);
+    const prices: Price | undefined = product.masterVariant.prices?.[0];
+    if (prices !== undefined) {
+      let originalPrice: number = prices.value.centAmount / 10 ** prices.value.fractionDigits;
+      basePrice.innerText = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
+        originalPrice
+      );
+      priceTag.append(basePrice);
+      if (prices.discounted) {
+        basePrice.classList.add('before-disc');
+        originalPrice = prices.discounted.value.centAmount / 10 ** prices.discounted.value.fractionDigits;
+        const discountedPrice: HTMLElement = new Builder('span', '', Blocks.catalog, 'card', 'disc-price').element();
+        discountedPrice.innerText = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
+          originalPrice
+        );
+        priceTag.append(discountedPrice);
+      }
     }
     card.append(cardPic, nameTag, descriptionTag, readMore, priceTag, this.createCartButton(Mode.add));
     card.setAttribute('id', (product.key || '0').split('-')[1]);
@@ -875,5 +936,12 @@ export default class ViewCatalog {
 
   public collectData(): CatalogViewControlPanelsState {
     return structuredClone(this.state);
+  }
+
+  public fillSearchInput(): void {
+    const searchInput = document.getElementById(ViewCatalog.searchButtonId);
+    if (searchInput !== null) {
+      searchInput.setAttribute('value', this.state.query || '');
+    }
   }
 }

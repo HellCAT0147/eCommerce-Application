@@ -39,16 +39,35 @@ export default class CartModel {
     sale = total - subtotal;
 
     if (subtotal !== undefined) {
-      order.subtotal = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(subtotal);
+      order.subtotal = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(subtotal);
     }
     if (sale !== undefined) {
-      order.sale = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(sale);
+      order.sale = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(sale);
     }
     if (total !== undefined) {
-      order.total = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(total);
+      order.total = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(total);
     }
 
     return order;
+  }
+
+  private async changeQuantity(): Promise<number> {
+    let quantity: number = 0;
+    try {
+      const response: number | ErrorObject = await this.eCommerceApi.getCartItemsQuantity();
+      if (typeof response === 'number') quantity = response;
+      else if ('message' in response && 'code' in response) {
+        this.view.showMessage(false, response.message);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        this.view.showMessage(false, error.message);
+      }
+    }
+
+    this.view.showQuantity(quantity);
+
+    return quantity;
   }
 
   public async setPromoCode(): Promise<void> {
@@ -57,14 +76,15 @@ export default class CartModel {
     try {
       const response: Cart | ErrorObject = await this.eCommerceApi.applyPromo(inputPromo.value);
       if ('message' in response && 'code' in response) {
-        // TODO this.view.showError(response.message);
+        this.view.showMessage(false, response.message);
       } else {
         const order: DataOrder = this.getOrderData(response);
         this.view.showCart(response, order);
+        this.view.showMessage(true, Mode.promo);
       }
     } catch (error) {
       if (error instanceof Error) {
-        // TODO call the view method to display the error message
+        this.view.showMessage(false, error.message);
       }
     }
   }
@@ -73,14 +93,136 @@ export default class CartModel {
     try {
       const response: Cart | ErrorObject = await this.eCommerceApi.getActiveCart();
       if ('message' in response && 'code' in response) {
-        // TODO this.view.showError(response.message);
+        this.view.showMessage(false, response.message);
       } else {
         const order: DataOrder = this.getOrderData(response);
         this.view.showCart(response, order);
       }
     } catch (error) {
       if (error instanceof Error) {
-        // TODO call the view method to display the error message
+        this.view.showMessage(false, error.message);
+      }
+    }
+  }
+
+  public async removeItem(item: HTMLElement | null, target: HTMLElement): Promise<void> {
+    const dataset: DOMStringMap | undefined = item?.dataset;
+    const id: string | undefined = dataset?.key;
+    if (id === undefined) return;
+
+    delete dataset?.key;
+    this.view.changeCursor(target, true);
+    const response: Cart | ErrorObject = await this.eCommerceApi.removeCartItem(id);
+    if ('message' in response && 'code' in response) {
+      this.view.showMessage(false, response.message);
+    } else {
+      const order: DataOrder = this.getOrderData(response);
+      this.view.showCart(response, order);
+      await this.changeQuantity();
+    }
+    if (item) {
+      const itemLocal: HTMLElement = item;
+      itemLocal.dataset.key = id;
+      this.view.changeCursor(target, false);
+    }
+  }
+
+  public async increase(item: HTMLElement | null, target: HTMLElement): Promise<void> {
+    const dataset: DOMStringMap | undefined = item?.dataset;
+    const id: string | undefined = dataset?.key;
+    if (id === undefined) return;
+
+    delete dataset?.key;
+    this.view.changeCursor(target, true);
+    const response: Cart | ErrorObject = await this.eCommerceApi.addNewProduct(id);
+    if ('message' in response && 'code' in response) {
+      this.view.showMessage(false, response.message);
+    } else {
+      const order: DataOrder = this.getOrderData(response);
+      this.view.showCart(response, order);
+      await this.changeQuantity();
+    }
+    if (item) {
+      const itemLocal: HTMLElement = item;
+      itemLocal.dataset.key = id;
+      this.view.changeCursor(target, false);
+    }
+  }
+
+  public async decrease(item: HTMLElement | null, target: HTMLElement): Promise<void> {
+    const dataset: DOMStringMap | undefined = item?.dataset;
+    const id: string | undefined = dataset?.key;
+    if (id === undefined) return;
+
+    delete dataset?.key;
+    this.view.changeCursor(target, true);
+    const input: HTMLInputElement | null | undefined = item?.querySelector(
+      `.${Elem.cart}__${Elem.amount}_${Mode.edit}`
+    );
+    const currentAmount: string | undefined = input?.value;
+    if (currentAmount !== undefined && +currentAmount > 1) {
+      const response: Cart | ErrorObject = await this.eCommerceApi.removeCartItem(id, true);
+      if ('message' in response && 'code' in response) {
+        this.view.showMessage(false, response.message);
+      } else {
+        const order: DataOrder = this.getOrderData(response);
+        this.view.showCart(response, order);
+        await this.changeQuantity();
+      }
+    }
+    if (item) {
+      const itemLocal: HTMLElement = item;
+      itemLocal.dataset.key = id;
+      this.view.changeCursor(target, false);
+    }
+  }
+
+  public async setQuantity(item: HTMLElement | null, amount: number): Promise<void> {
+    const dataset: DOMStringMap | undefined = item?.dataset;
+    const id: string | undefined = dataset?.key;
+    if (id === undefined) return;
+
+    delete dataset?.key;
+    const response: Cart | ErrorObject = await this.eCommerceApi.setCartItemQuantity(id, amount);
+    if ('message' in response && 'code' in response) {
+      this.view.showMessage(false, response.message);
+    } else {
+      const order: DataOrder = this.getOrderData(response);
+      this.view.showCart(response, order);
+      await this.changeQuantity();
+    }
+    if (item) {
+      const itemLocal: HTMLElement = item;
+      itemLocal.dataset.key = id;
+    }
+  }
+
+  public async createPopup(): Promise<void> {
+    const response: number | ErrorObject = await this.eCommerceApi.getCartItemsQuantity();
+
+    if (typeof response === 'object' && 'message' in response && 'code' in response) {
+      this.view.showMessage(false, response.message);
+    } else if (response) {
+      this.view.createPopup();
+      this.view.toggleOverlay();
+    }
+  }
+
+  public async clearCartResponse(target: HTMLElement): Promise<void> {
+    this.view.toggleOverlay();
+    const popup: HTMLDivElement | null = document.querySelector(`.${Blocks.cart}__${Elem.popup}`);
+    if (popup) {
+      popup.outerHTML = '';
+      if (target.classList.contains(`${Blocks.popup}__${Elem.btn}_${Mode.yes}`)) {
+        const response: Cart | ErrorObject = await this.eCommerceApi.clearCart();
+        if ('message' in response && 'code' in response) {
+          this.view.showMessage(false, response.message);
+        } else {
+          const order: DataOrder = this.getOrderData(response);
+          this.view.showCart(response, order);
+          this.view.showMessage(true, Mode.clear);
+          await this.changeQuantity();
+        }
       }
     }
   }

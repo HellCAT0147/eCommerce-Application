@@ -216,9 +216,6 @@
   }
   &__card_base-price {
     font-size: 1.4rem;
-    .before-disc {
-      text-decoration-line: line-through;
-    }
   }
   &__card_disc-price {
     color: $color-price;
@@ -255,10 +252,12 @@
       background-color: #c21f39;
       scale: 1.03;
       transition-duration: 0.3s;
+      cursor: pointer;
     }
     &:disabled {
       background-color: gray;
       scale: 1;
+      cursor: not-allowed;
     }
   }
   &__pagination_curr {
@@ -282,7 +281,9 @@
 .product__description {
   margin-left: 10px;
 }
-
+.before-disc {
+  text-decoration: line-through;
+}
 :disabled {
   background-color: gray;
   scale: 1;
@@ -306,6 +307,14 @@
 
 .add-spinner_hide {
   display: none;
+}
+
+#reset-filters_btn {
+  padding: 5px 0;
+  border: 2px solid gray;
+  color: black;
+  background-color: transparent;
+  border-radius: 3px;
 }
 
 @media (max-width: 739px) {

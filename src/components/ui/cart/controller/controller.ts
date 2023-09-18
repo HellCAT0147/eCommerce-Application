@@ -1,4 +1,5 @@
 import ECommerceApi from '../../../api/e-commerce-api';
+import { Blocks, Elem, Mode } from '../../../models/builder';
 import CartModel from '../model/cart';
 
 class ControllerCart {
@@ -15,13 +16,25 @@ class ControllerCart {
     const { target } = e;
     if (!(target instanceof HTMLElement)) return;
     const targetHtmlElement: HTMLElement | null = target;
-    if (targetHtmlElement.closest(`.cart__button_promo`)) this.model.setPromoCode();
+    if (targetHtmlElement.closest(`.${Elem.cart}__${Elem.btn}_${Mode.promo}`)) this.model.setPromoCode();
+    if (targetHtmlElement.closest(`.${Elem.cart}__${Elem.edit}_${Mode.del}`))
+      this.model.removeItem(targetHtmlElement.closest(`.${Elem.cart}__${Elem.item}`), targetHtmlElement);
+    if (targetHtmlElement.closest(`.${Elem.cart}__${Elem.btn}_${Mode.inc}`))
+      this.model.increase(targetHtmlElement.closest(`.${Elem.cart}__${Elem.item}`), targetHtmlElement);
+    if (targetHtmlElement.closest(`.${Elem.cart}__${Elem.btn}_${Mode.dec}`))
+      this.model.decrease(targetHtmlElement.closest(`.${Elem.cart}__${Elem.item}`), targetHtmlElement);
+    if (targetHtmlElement.closest(`.${Elem.cart}__${Elem.btn}_${Mode.clear}`)) this.model.createPopup();
+    if (targetHtmlElement.closest(`.${Blocks.popup}__${Elem.btn}`)) this.model.clearCartResponse(targetHtmlElement);
     e.preventDefault();
   }
 
   public async loadCart(): Promise<void> {
-    // TODO add method for getting cart await this.model.getCart();
     this.model.getCart();
+  }
+
+  public checkField(input: HTMLInputElement): void {
+    const amount: number = +input.value;
+    this.model.setQuantity(input.closest('.cart__item'), amount);
   }
 }
 

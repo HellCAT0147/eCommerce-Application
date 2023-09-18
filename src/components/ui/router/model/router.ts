@@ -1,6 +1,6 @@
 import { ErrorObject, Product } from '@commercetools/platform-sdk';
 import { Pages, Routes, UrlParsed } from '../../../models/router';
-import { selectCurrentPage, showQuantity } from '../view/viewPage';
+import { selectCurrentPage, showMessage, showQuantity } from '../view/viewPage';
 import ControllerLogin from '../../login/controller/controller';
 import ControllerRegistration from '../../registration/controller/controller';
 import ControllerMain from '../../main/controller/controller';
@@ -9,6 +9,7 @@ import ECommerceApi from '../../../api/e-commerce-api';
 import { DataBase } from '../../../models/commerce';
 import ControllerProfile from '../../profile/controller/controller';
 import ControllerCart from '../../cart/controller/controller';
+import { Elem } from '../../../models/builder';
 
 class Router {
   public routes: Routes[];
@@ -67,6 +68,21 @@ class Router {
       input.addEventListener('input', (e: Event) => this.controllerProfile.checkField(e));
       input.addEventListener('keydown', (e: Event) => this.controllerLogin.sendLogin(e));
       input.addEventListener('keydown', (e: Event) => this.controllerRegistration.sendReg(e));
+    });
+
+    document.addEventListener('focusout', (e: Event) => {
+      const input: EventTarget | null = e.target;
+      if (input instanceof HTMLInputElement && input.closest(`.${Elem.cart}__${Elem.amount}`))
+        this.controllerCart.checkField(input);
+    });
+
+    // Submit by Enter
+    document.addEventListener('keydown', (e: Event) => {
+      if (!(e instanceof KeyboardEvent && e.key !== 'Enter')) {
+        const input: EventTarget | null = e.target;
+        if (input instanceof HTMLInputElement && input.closest(`.${Elem.cart}__${Elem.amount}`))
+          this.controllerCart.checkField(input);
+      }
     });
   }
 
@@ -127,9 +143,12 @@ class Router {
     try {
       const response: number | ErrorObject = await this.eCommerceApi.getCartItemsQuantity();
       if (typeof response === 'number') quantity = response;
+      else if ('message' in response && 'code' in response) {
+        showMessage(false, response.message);
+      }
     } catch (error) {
       if (error instanceof Error) {
-        // TODO implement method showError();
+        showMessage(false, error.message);
       }
     }
 
