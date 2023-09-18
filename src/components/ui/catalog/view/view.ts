@@ -31,6 +31,8 @@ export default class ViewCatalog {
 
   public static resetButtonId = 'reset-filters_btn';
 
+  private static searchButtonId: string = 'search-input';
+
   public static prevPageButtonId: string = 'prev-page-button';
 
   public static nextPageButtonId: string = 'next-page-button';
@@ -473,7 +475,7 @@ export default class ViewCatalog {
     const searchWrapper = new Builder('div', '', Blocks.catalog, 'search-wrapper', '').element();
     searchWrapper.setAttribute('id', 'search-wrapper');
     const searchInput: HTMLInputElement = new Builder('input', '', Blocks.catalog, 'search-wrapper', 'input').input();
-    searchInput.setAttribute('id', 'search-input');
+    searchInput.setAttribute('id', ViewCatalog.searchButtonId);
     searchInput.setAttribute('placeholder', 'WHAT ARE YOU LOOKING FOR?');
     searchInput.addEventListener('change', (): void => {
       this.state.query = searchInput.value;
@@ -934,5 +936,12 @@ export default class ViewCatalog {
 
   public collectData(): CatalogViewControlPanelsState {
     return structuredClone(this.state);
+  }
+
+  public fillSearchInput(): void {
+    const searchInput = document.getElementById(ViewCatalog.searchButtonId);
+    if (searchInput !== null) {
+      searchInput.setAttribute('value', this.state.query || '');
+    }
   }
 }
