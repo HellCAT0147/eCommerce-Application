@@ -273,6 +273,10 @@ export enum Titles {
   PROMO_SECOND = `30% OFF `,
   PROMO_LAST = `ON EVERYTHING.`,
   PROMO_CODE = `RASDAPROJA`,
+  PROMO_SUCCESSES = `Promo code successfully applied.`,
+  FAILED_UPDATE_CART = `You failed to update the cart.`,
+  CART_CLEAR = `Your cart has been successfully cleared.`,
+  FAILED_UPDATE_CATALOG = `You failed to update the catalog.`,
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;
