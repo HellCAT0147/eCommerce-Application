@@ -197,6 +197,26 @@
           &:hover {
             opacity: 0.8;
           }
+          &.disabled {
+            background: $color-main-second;
+            border: 2px solid $color-main-second;
+            -webkit-user-select: text;
+            user-select: text;
+            color: $color-light;
+            transition: all 0.5s ease-in;
+            transform: rotateY(360deg);
+            cursor: text;
+
+            &:hover {
+              opacity: 1;
+              border: 2px solid $color-main-second;
+            }
+            &:active {
+              scale: none;
+              -webkit-user-select: all;
+              user-select: all;
+            }
+          }
         }
       }
 

@@ -8,12 +8,13 @@ export default class MainView {
     this.pageName = pageName;
   }
 
-  public showPromo(): void {
-    const buttonPromo: HTMLElement | null = document.querySelector(`#${Mode.get_promo}`);
+  public showPromo(mode: string): void {
+    const buttonPromo: HTMLElement | null = document.querySelector(`#${mode}`);
     if (buttonPromo) {
       buttonPromo.classList.add(`${Mode.dis}`);
       setTimeout((): void => {
-        buttonPromo.textContent = Titles.PROMO_CODE;
+        if (mode === Mode.get_promo) buttonPromo.textContent = Titles.PROMO_CODE;
+        else if (mode === Mode.get_banner) buttonPromo.textContent = Titles.BANNER_CODE;
       }, 250);
     }
   }

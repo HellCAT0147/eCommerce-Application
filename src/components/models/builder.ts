@@ -316,6 +316,7 @@ export enum Titles {
   PROMO_LAST = `ON EVERYTHING.`,
   BANNER_LAST = `ON ALL WHITE.`,
   PROMO_CODE = `RASDAPROJA`,
+  BANNER_CODE = `WHITESALE40`,
   PROMO_SUCCESSES = `Promo code successfully applied.`,
   FAILED_UPDATE_CART = `You failed to update the cart.`,
   CART_CLEAR = `Your cart has been successfully cleared.`,

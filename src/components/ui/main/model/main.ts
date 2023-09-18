@@ -11,7 +11,7 @@ export default class MainModel {
     this.view = new MainView();
   }
 
-  public getPromoCode(): void {
-    this.view.showPromo();
+  public getPromoCode(mode: string): void {
+    this.view.showPromo(mode);
   }
 }

@@ -20,7 +20,8 @@ class ControllerMain {
     if (target instanceof HTMLElement) {
       const targetHtmlElement: HTMLElement | null = target;
       if (targetHtmlElement.closest(`#${Buttons.BURGER}`) && burgerButton) toggleBurgerMenu(burgerButton);
-      if (targetHtmlElement.closest(`#${Mode.get_promo}`)) this.model.getPromoCode();
+      if (targetHtmlElement.closest(`#${Mode.get_promo}`)) this.model.getPromoCode(Mode.get_promo);
+      if (targetHtmlElement.closest(`#${Mode.get_banner}`)) this.model.getPromoCode(Mode.get_banner);
     }
   }
 }
