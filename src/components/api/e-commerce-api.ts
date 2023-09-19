@@ -46,15 +46,9 @@ export default class ECommerceApi {
 
   private clientBuilder: ClientBuilder;
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  // Ignoring due to initialization in initClient function inside of constructor
-  private ctpClient: Client;
+  private ctpClient!: Client;
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  // Ignoring due to initialization in initClient function inside of constructor
-  private apiRoot: ByProjectKeyRequestBuilder;
+  private apiRoot!: ByProjectKeyRequestBuilder;
 
   private readonly tokenCachesStore: TokenCachesStore;
 

@@ -1,6 +1,7 @@
 import { Base, Blocks, Elem, Mode, Titles } from '../../../models/builder';
 import { Pages } from '../../../models/router';
 import Builder from '../../builder/html-builder';
+import renderBrands from './brands';
 import createHeader from './header';
 import createPromo from './promo';
 
@@ -47,10 +48,11 @@ function createTemplateMain(isLoggedIn?: boolean): HTMLBodyElement | null {
   }
 
   const promo: HTMLElement = createPromo(Mode.promo);
+  const brands: HTMLElement = renderBrands();
   const banner: HTMLElement = createPromo(Mode.banner);
 
   if (main) {
-    main.append(promo, banner);
+    main.append(promo, brands, banner);
   }
 
   return body || null;

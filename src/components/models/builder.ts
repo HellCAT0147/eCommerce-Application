@@ -27,6 +27,7 @@ export enum Blocks {
   teamwork = 'teamwork',
   rss = 'rss',
   thanks = 'thanks',
+  brands = 'brands',
 }
 
 export enum Elem {
@@ -99,6 +100,8 @@ export enum Elem {
   rss = 'rss',
   locale = 'locale',
   thanks = 'thanks',
+  brands = 'brands',
+  brand = 'brand',
 }
 
 export enum Mode {
@@ -201,6 +204,7 @@ export enum Mode {
   bottom = 'bottom',
   rss = 'rss',
   banner = 'banner',
+  select = 'select',
 }
 
 export enum Base {
@@ -243,6 +247,7 @@ export enum Base {
   content = 'content',
   teamwork = 'teamwork',
   rss = 'rss',
+  brands = 'brands',
 }
 
 export enum Buttons {
@@ -340,6 +345,14 @@ export enum Titles {
   THANKS_TITLE = 'Special Thanks',
   THANKS_TEXT = `Our mentors played a far from insignificant role in the creation of this app. Andrei is a master of his craft, a virtuoso of the front-end, friendly and attentive to detail. Throughout the whole mentorship, he tried to keep abreast of his mentee's affairs, his interviews; when contacting him, he always tried to get in touch as soon as possible and help to solve the issue. Alexey is a fullstack developer, a GitHub sorcerer, capable of destroying your code problems and your self-esteem with one breath. These awesome guys guided our young inexperienced team through the thorns to stardom. Thank you!!`,
   LINKS = 'LINKS',
+  BRAND_CHOOSE = 'chose your brand',
+  BRAND_CHANEL = 'CHANEL',
+  BRAND_BURBERRY = 'BURBERRY',
+  BRAND_FENDI = 'FENDI',
+  BRAND_DIOR = 'DIOR',
+  BRAND_VERSACE = 'VERSACE',
+  BRAND_GUCCI = 'GUCCI',
+  BRAND_ARMANI = 'ARMANI',
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;
