@@ -168,6 +168,7 @@
     }
   }
   &__page {
+    margin: 60px 0;
     width: 80vw;
     display: flex;
     flex-direction: row;
@@ -179,30 +180,24 @@
     width: 15vw;
     min-width: 180px;
     cursor: pointer;
-    transition-duration: 0.5s;
-    border-radius: 3px;
-    &:hover {
-      scale: 1.03;
-      transition-duration: 0.5s;
-      box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
-    }
   }
   &__card img {
     max-width: inherit;
     min-height: fit-content;
+    border-radius: 3px;
   }
   &__card_name-tag {
-    text-align: center;
-    padding: 3px 10px;
-    font-size: 1.5rem;
-    line-height: 1.2;
-    font-weight: bold;
-    min-height: 60px;
+    height: 44px;
+    overflow: hidden;
+    margin-top: 5px;
+    @include font(400, 1.8rem, 2.2rem, $color-dark);
   }
   &__card_description-tag {
     height: 30px;
+    margin-top: 10px;
     overflow: hidden;
-    line-height: 1.45;
+    @extend %font-second;
+    @include font(400, 1.2rem, 1.5rem, $color-dark);
   }
   &__read-more {
     text-align: center;
@@ -212,25 +207,44 @@
     font-weight: bold;
   }
   &__card_price-tag {
-    line-height: 1;
+    margin-top: 18px;
   }
   &__card_base-price {
-    font-size: 1.4rem;
+    @include font(500, 2.2rem, 100%, $color-dark);
+    &.before-disc {
+      @include font(500, 1.6rem, 100%, $color-dark);
+      text-decoration: line-through;
+    }
   }
   &__card_disc-price {
-    color: $color-price;
     margin-left: 5px;
-    font-size: 1.8rem;
+    @include font(500, 2.2rem, 100%, $color-price);
   }
 
   &__button-cart {
     position: relative;
+    padding: 18px 0px;
     &_add,
     &_remove {
       margin-top: 15px;
       width: 100%;
       & span {
         pointer-events: none;
+      }
+    }
+
+    &:disabled {
+      background-color: $color-light-hover;
+      border: 2px solid $color-input;
+      color: $color-dark-gray;
+      scale: 1;
+      padding: 16px 0px;
+      &:hover {
+        background-color: $color-light-hover;
+        border: 2px solid $color-input;
+        color: $color-dark-gray;
+        scale: 1;
+        padding: 16px 0px;
       }
     }
   }
@@ -249,11 +263,12 @@
     transition-duration: 0.3s;
     &:hover {
       background-color: #c21f39;
-      scale: 1.03;
+      scale: 1;
       transition-duration: 0.3s;
       cursor: pointer;
     }
     &:disabled {
+      padding: 0px;
       background-color: gray;
       scale: 1;
       cursor: not-allowed;
@@ -271,22 +286,23 @@
     overflow: hidden;
     justify-items: center;
   }
-}
 
-:disabled {
-  background-color: $color-light-hover;
-  border: 2px solid $color-input;
-  color: $color-dark-gray;
-  scale: 1;
-  padding: 16px 51px;
-  &:hover {
-    background-color: $color-light-hover;
-    border: 2px solid $color-input;
-    color: $color-dark-gray;
-    scale: 1;
-    padding: 16px 51px;
+  &__brand {
+    margin-top: 14px;
+    @include font(500, 1.2rem, 100%, $color-dark-gray);
   }
 }
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.5s ease-out;
+  &:hover {
+    scale: 1.1;
+  }
+}
+
 .add-spinner {
   display: inline-block;
   position: absolute;

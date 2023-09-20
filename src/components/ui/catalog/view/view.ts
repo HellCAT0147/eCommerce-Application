@@ -218,7 +218,7 @@ export default class ViewCatalog {
     this.updateRemoveCartButton(id, removeState);
   }
 
-  private getAttributes(data: ProductData): DataAttribute {
+  private getAttributes(data: ProductData | ProductProjection): DataAttribute {
     const attribute: DataAttribute = {
       color: '#ffffff',
       brand: Titles.HAQ_TITLE,
@@ -282,7 +282,6 @@ export default class ViewCatalog {
     cartButtons.classList.add(`${Blocks.product}__${Elem.control}`);
     addButton.classList.add(`${Blocks.product}__${Elem.btn}`);
     removeButton.classList.add(`${Blocks.product}__${Elem.btn}`);
-
     const attr: DataAttribute = this.getAttributes(data);
 
     brand.textContent = attr.brand.toUpperCase();
@@ -775,12 +774,13 @@ export default class ViewCatalog {
     if (images && images.length > 0) {
       cardPic.setAttribute('src', images[0].url);
     }
+    const brand: HTMLParagraphElement = new Builder('', Base.titles, Blocks.catalog, Elem.brand, '').p();
+    const attr: DataAttribute = this.getAttributes(product);
+    brand.textContent = attr.brand.toUpperCase();
     const nameTag: HTMLElement = new Builder('div', '', Blocks.catalog, 'card', 'name-tag').element();
-    nameTag.innerText = product.name['en-US'].toString().toUpperCase();
+    nameTag.innerText = product.name['en-US'].toString();
     const descriptionTag: HTMLElement = new Builder('div', '', Blocks.catalog, 'card', 'description-tag').element();
-    descriptionTag.innerText = product.description?.['en-US'].toString() || '';
-    const readMore: HTMLElement = new Builder('div', '', Blocks.catalog, 'read-more', '').element();
-    readMore.innerText = 'READ MORE';
+    descriptionTag.innerText = `${product.description?.['en-US'].toString().split('.')[0].split('!')[0]}.` || '';
     const priceTag: HTMLElement = new Builder('div', '', Blocks.catalog, 'card', 'price-tag').element();
     const basePrice: HTMLElement = new Builder('span', '', Blocks.catalog, 'card', 'base-price').element();
     const prices: Price | undefined = product.masterVariant.prices?.[0];
@@ -800,7 +800,7 @@ export default class ViewCatalog {
         priceTag.append(discountedPrice);
       }
     }
-    card.append(cardPic, nameTag, descriptionTag, readMore, priceTag, this.createCartButton(Mode.add));
+    card.append(cardPic, brand, nameTag, descriptionTag, priceTag, this.createCartButton(Mode.add));
     card.setAttribute('id', (product.key || '0').split('-')[1]);
     return card;
   }
