@@ -6,6 +6,7 @@ import {
   Cart,
   ProductData,
   Price,
+  Attribute,
 } from '@commercetools/platform-sdk';
 import { Category } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/category';
 import { Base, Blocks, Elem, Mode, Titles } from '../../../models/builder';
@@ -217,6 +218,50 @@ export default class ViewCatalog {
     this.updateRemoveCartButton(id, removeState);
   }
 
+  private renderProductInfo(data: ProductData, name: string, basePrice: string, discountPrice: string): HTMLElement {
+    const productInfo: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.info).element();
+    const brand: HTMLParagraphElement = new Builder('', Base.titles, Blocks.product, Elem.brand, '').p();
+    const nameHTML: HTMLHeadingElement = new Builder('', Base.titles, Blocks.product, Elem.title, Mode.big).h(2);
+    const priceHTML: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.price).element();
+    const priceHeadingHTML: HTMLHeadingElement = new Builder('', Base.titles, Blocks.product, Elem.title, Mode.price).h(
+      4
+    );
+    const basePriceHTML: HTMLElement = new Builder('span', '', Blocks.product, Elem.price, '').element();
+    const discountPriceHTML: HTMLElement = new Builder('span', '', Blocks.product, Elem.price, Mode.disc).element();
+    const cartButtons: HTMLElement = new Builder('div', '', Blocks.catalog, 'cart-buttons', 'wrapper').element();
+    const addButton = this.createCartButton(Mode.add);
+    const removeButton = this.createCartButton(Mode.remove);
+    removeButton.setAttribute('disabled', '');
+    cartButtons.classList.add(`${Blocks.product}__${Elem.control}`);
+    addButton.classList.add(`${Blocks.product}__${Elem.btn}`);
+    removeButton.classList.add(`${Blocks.product}__${Elem.btn}`);
+
+    const { attributes } = data.masterVariant;
+    let brandName: string = Titles.BRAND_HAQ;
+    if (attributes) {
+      attributes.forEach((attr: Attribute) => {
+        if (attr.name === Elem.brand) {
+          if (attr.value.length && typeof attr.value[0].key !== 'undefined') {
+            brandName = attr.value[0].key;
+          }
+        }
+      });
+    }
+
+    brand.textContent = brandName.toUpperCase();
+    nameHTML.textContent = name;
+    priceHeadingHTML.textContent = 'price total'.toUpperCase();
+    basePriceHTML.textContent = basePrice;
+    discountPriceHTML.textContent = discountPrice;
+    if (discountPrice) basePriceHTML.classList.add('before-disc');
+
+    cartButtons.append(addButton, removeButton);
+    priceHTML.append(priceHeadingHTML, basePriceHTML, discountPriceHTML);
+    productInfo.append(brand, nameHTML, priceHTML, cartButtons);
+
+    return productInfo;
+  }
+
   public showProduct(
     data: ProductData,
     name: string,
@@ -229,39 +274,23 @@ export default class ViewCatalog {
     const main: HTMLElement | null = document.querySelector(`.${Blocks.main}__${Mode.catalog}`);
     if (main) {
       main.innerHTML = '';
-      const product: HTMLElement = new Builder('article', '', Blocks.product, Elem.wrapper, '').element();
+      const product: HTMLElement = new Builder('article', '', Blocks.product, Elem.article, '').element();
       const productBody: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.body).element();
+      const productInfo: HTMLElement = this.renderProductInfo(data, name, basePrice, discountPrice);
       const id: string | undefined = data.masterVariant.key;
       if (id) productBody.setAttribute('id', id.toString().split('-')[0]);
-      const productInfo: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.info).element();
-      const nameHTML: HTMLHeadingElement = new Builder('', Base.titles, Blocks.product, Elem.title, Mode.big).h(2);
-      const descriptionHTML: HTMLParagraphElement = new Builder('', '', Blocks.product, Elem.desc, '').p();
-      const priceHTML: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.price).element();
-      const priceHeadingHTML: HTMLHeadingElement = new Builder(
-        '',
-        Base.titles,
-        Blocks.product,
-        Elem.title,
-        Mode.price
-      ).h(4);
-      const basePriceHTML: HTMLElement = new Builder('span', '', Blocks.product, Elem.price, '').element();
-      const discountPriceHTML: HTMLElement = new Builder('span', '', Blocks.product, Elem.price, Mode.disc).element();
-      nameHTML.textContent = name;
-      priceHeadingHTML.textContent = 'price total'.toUpperCase();
-      basePriceHTML.textContent = basePrice;
-      discountPriceHTML.textContent = discountPrice;
-      if (discountPrice) basePriceHTML.classList.add('before-disc');
+      const content: HTMLElement = new Builder('div', '', Blocks.product, Elem.content, '').element();
+      const descTitle: HTMLParagraphElement = new Builder('', '', Blocks.product, Elem.desc, Mode.title).p();
+      const descSubTitle: HTMLParagraphElement = new Builder('', '', Blocks.product, Elem.desc, Mode.subtitle).p();
+      const descriptionHTML: HTMLParagraphElement = new Builder('', '', Blocks.product, Elem.desc, Mode.text).p();
+      descTitle.textContent = Titles.DESC_TITLE;
+      descSubTitle.textContent = Titles.DESC_SUBTITLE;
       descriptionHTML.textContent = description;
       this.addSlider(productBody, images);
-      const cartButtons: HTMLElement = new Builder('div', '', Blocks.catalog, 'cart-buttons', 'wrapper').element();
-      const addButton = this.createCartButton(Mode.add);
-      const removeButton = this.createCartButton(Mode.remove);
-      removeButton.setAttribute('disabled', '');
-      cartButtons.append(addButton, removeButton);
-      priceHTML.append(priceHeadingHTML, basePriceHTML, discountPriceHTML, cartButtons);
-      productInfo.append(nameHTML, priceHTML);
+
+      content.append(descTitle, descSubTitle, descriptionHTML);
       productBody.appendChild(productInfo);
-      product.append(productBody, descriptionHTML);
+      product.append(productBody, content);
       main.appendChild(product);
       if (carted && id) this.updateCartButtons(id.toString().split('-')[0], false, true);
     }

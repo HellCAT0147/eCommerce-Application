@@ -205,6 +205,9 @@ export enum Mode {
   rss = 'rss',
   banner = 'banner',
   select = 'select',
+  title = 'title',
+  subtitle = 'subtitle',
+  text = 'text',
 }
 
 export enum Base {
@@ -353,6 +356,9 @@ export enum Titles {
   BRAND_VERSACE = 'VERSACE',
   BRAND_GUCCI = 'GUCCI',
   BRAND_ARMANI = 'ARMANI',
+  BRAND_HAQ = 'HAQ-INC',
+  DESC_TITLE = 'Details',
+  DESC_SUBTITLE = 'ABOUT PRODUCT',
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;

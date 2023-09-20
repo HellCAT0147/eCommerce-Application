@@ -78,7 +78,6 @@ class ControllerCatalog {
   }
 
   public loadProduct(key: string, response: Product | ErrorObject): void {
-    // TODO load a specific product card when navigating through the browser bar.
     this.model.fetchProduct(key, response);
   }
 
