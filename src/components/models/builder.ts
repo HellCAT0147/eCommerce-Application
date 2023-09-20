@@ -29,6 +29,7 @@ export enum Blocks {
   thanks = 'thanks',
   brands = 'brands',
   colors = 'colors',
+  size = 'size',
 }
 
 export enum Elem {
@@ -105,6 +106,8 @@ export enum Elem {
   brand = 'brand',
   color = 'color',
   colors = 'colors',
+  sizes = 'sizes',
+  size = 'size',
 }
 
 export enum Mode {
@@ -212,6 +215,10 @@ export enum Mode {
   subtitle = 'subtitle',
   text = 'text',
   color = 'color',
+  size = 'size',
+  wrapper = 'wrapper',
+  medium = 'medium',
+  large = 'large',
 }
 
 export enum Base {
@@ -364,6 +371,8 @@ export enum Titles {
   DESC_TITLE = 'Details',
   DESC_SUBTITLE = 'ABOUT PRODUCT',
   COLOR = 'Color',
+  PRICE_TOTAL = 'Price Total',
+  SIZES = 'Select size (Inches)',
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;

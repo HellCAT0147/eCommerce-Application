@@ -243,6 +243,24 @@ export default class ViewCatalog {
     return attribute;
   }
 
+  private createSelectSize(): HTMLElement {
+    const sizes: HTMLElement = new Builder('div', '', Blocks.product, Elem.sizes, '').element();
+    const sizesTitle: HTMLHeadingElement = new Builder('', Base.titles, Blocks.product, Elem.title, Mode.size).h(4);
+    const sizeContainer: HTMLElement = new Builder('div', '', Blocks.product, Elem.container, '').element();
+    const sizeSmall: HTMLElement = new Builder('div', '', Blocks.product, Elem.size, Mode.small).element();
+    const sizeMedium: HTMLElement = new Builder('div', '', Blocks.product, Elem.size, Mode.medium).element();
+    const sizeLarge: HTMLElement = new Builder('div', '', Blocks.product, Elem.size, Mode.large).element();
+    sizesTitle.textContent = Titles.SIZES.toUpperCase();
+    sizeSmall.textContent = 'S';
+    sizeMedium.textContent = 'M';
+    sizeLarge.textContent = 'L';
+
+    sizeContainer.append(sizeSmall, sizeMedium, sizeLarge);
+    sizes.append(sizesTitle, sizeContainer);
+
+    return sizes;
+  }
+
   private renderProductInfo(data: ProductData, name: string, basePrice: string, discountPrice: string): HTMLElement {
     const productInfo: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.info).element();
     const brand: HTMLParagraphElement = new Builder('', Base.titles, Blocks.product, Elem.brand, '').p();
@@ -250,6 +268,7 @@ export default class ViewCatalog {
     const colors: HTMLElement = new Builder('div', '', Blocks.product, Elem.colors, '').element();
     const colorsTitle: HTMLHeadingElement = new Builder('', Base.titles, Blocks.product, Elem.title, Mode.color).h(4);
     const color: HTMLElement = new Builder('div', '', Blocks.product, Elem.color, '').element();
+    const sizes: HTMLElement = this.createSelectSize();
     const priceHTML: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.price).element();
     const priceHeadingHTML: HTMLHeadingElement = new Builder('', Base.titles, Blocks.product, Elem.title, Mode.price).h(
       4
@@ -268,9 +287,9 @@ export default class ViewCatalog {
 
     brand.textContent = attr.brand.toUpperCase();
     nameHTML.textContent = name;
-    colorsTitle.textContent = Titles.COLOR;
+    colorsTitle.textContent = Titles.COLOR.toUpperCase();
     color.style.background = attr.color;
-    priceHeadingHTML.textContent = 'price total'.toUpperCase();
+    priceHeadingHTML.textContent = Titles.PRICE_TOTAL.toUpperCase();
     basePriceHTML.textContent = basePrice;
     discountPriceHTML.textContent = discountPrice;
     if (discountPrice) basePriceHTML.classList.add('before-disc');
@@ -278,7 +297,7 @@ export default class ViewCatalog {
     colors.append(colorsTitle, color);
     cartButtons.append(addButton, removeButton);
     priceHTML.append(priceHeadingHTML, basePriceHTML, discountPriceHTML);
-    productInfo.append(brand, nameHTML, colors, priceHTML, cartButtons);
+    productInfo.append(brand, nameHTML, colors, sizes, priceHTML, cartButtons);
 
     return productInfo;
   }

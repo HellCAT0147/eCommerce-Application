@@ -33,7 +33,8 @@
     }
 
     &_price,
-    &_color {
+    &_color,
+    &_size {
       font-size: 1.8rem;
 
       @include media-laptop-large {
@@ -75,15 +76,13 @@
       flex-direction: column;
       justify-content: flex-start;
       flex-basis: 50%;
-      @include media-tablet-landscape {
-        flex-basis: 40%;
-      }
       @include media-tablet {
         flex-direction: row;
-        flex-basis: 100%;
+        // width: 100%;
         order: -1;
         margin-bottom: 30px;
         flex-wrap: wrap;
+        flex-basis: 100%;
       }
     }
 
@@ -144,7 +143,53 @@
     }
 
     @include media-tablet {
-      flex-basis: 48%;
+      margin-top: 14px;
+      margin-right: 50px;
+    }
+  }
+
+  &__sizes {
+    margin-top: 22px;
+    @include media-tablet {
+      margin-top: 28px;
+    }
+  }
+
+  &__container {
+    display: flex;
+    column-gap: 9px;
+    margin-top: 11px;
+  }
+
+  &__size {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 45px;
+    height: 45px;
+    @include font(600, 1.4rem, 100%, $color-dark);
+    border: 2px solid $color-dark;
+
+    &_medium,
+    &_large {
+      position: relative;
+      color: $color-input;
+      border: 1px solid $color-input;
+      &:after {
+        content: '';
+        position: absolute;
+        width: 61px;
+        height: 1px;
+        background-color: $color-input;
+        transform: rotateZ(45deg);
+        @include media-laptop-large {
+          width: 42px;
+        }
+      }
+    }
+    @include media-laptop-large {
+      width: 30px;
+      height: 30px;
     }
   }
 
