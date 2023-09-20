@@ -20,3 +20,8 @@ export interface DataOrder {
   sale: string;
   total: string;
 }
+
+export interface DataAttribute {
+  color: string;
+  brand: string;
+}

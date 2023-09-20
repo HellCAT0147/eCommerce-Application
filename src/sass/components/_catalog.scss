@@ -278,12 +278,13 @@
   border: 2px solid $color-input;
   color: $color-dark-gray;
   scale: 1;
-  padding: 14px 51px;
+  padding: 16px 51px;
   &:hover {
     background-color: $color-light-hover;
     border: 2px solid $color-input;
     color: $color-dark-gray;
     scale: 1;
+    padding: 16px 51px;
   }
 }
 .add-spinner {

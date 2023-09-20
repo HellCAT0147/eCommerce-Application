@@ -28,6 +28,7 @@ export enum Blocks {
   rss = 'rss',
   thanks = 'thanks',
   brands = 'brands',
+  colors = 'colors',
 }
 
 export enum Elem {
@@ -102,6 +103,8 @@ export enum Elem {
   thanks = 'thanks',
   brands = 'brands',
   brand = 'brand',
+  color = 'color',
+  colors = 'colors',
 }
 
 export enum Mode {
@@ -208,6 +211,7 @@ export enum Mode {
   title = 'title',
   subtitle = 'subtitle',
   text = 'text',
+  color = 'color',
 }
 
 export enum Base {
@@ -359,6 +363,7 @@ export enum Titles {
   BRAND_HAQ = 'HAQ-INC',
   DESC_TITLE = 'Details',
   DESC_SUBTITLE = 'ABOUT PRODUCT',
+  COLOR = 'Color',
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;

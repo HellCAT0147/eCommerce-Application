@@ -35,23 +35,7 @@
 @import '../abstracts/mixins';
 
 .swiper {
-  width: calc($tablet-landscape-width / 2);
-
-  @include media-tablet-landscape {
-    width: calc($tablet-width / 2);
-  }
-
-  @include media-small-desktop {
-    width: calc($tablet-landscape-width / 2);
-  }
-
-  @include media-mobile-large {
-    width: calc($tablet-width / 2);
-  }
-
-  @include media-mobile-medium {
-    width: calc($mobile-large-width / 2);
-  }
+  width: 100%;
 
   height: fit-content;
   margin-left: auto;

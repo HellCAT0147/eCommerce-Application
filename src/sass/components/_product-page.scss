@@ -27,9 +27,13 @@
       @include media-small-desktop {
         @include font(500, 2.4rem, 2.8rem, $color-dark);
       }
+      @include media-tablet {
+        flex-basis: 100%;
+      }
     }
 
-    &_price {
+    &_price,
+    &_color {
       font-size: 1.8rem;
 
       @include media-laptop-large {
@@ -75,14 +79,21 @@
         flex-basis: 40%;
       }
       @include media-tablet {
+        flex-direction: row;
         flex-basis: 100%;
         order: -1;
         margin-bottom: 30px;
+        flex-wrap: wrap;
       }
     }
 
     &_price {
       margin: 36px 0 42px;
+
+      @include media-tablet {
+        flex-grow: 1;
+        text-align: end;
+      }
     }
   }
 
@@ -100,6 +111,40 @@
     }
     @include media-tablet-landscape {
       @include font(500, 1.2rem, 100%, $color-dark-gray);
+    }
+  }
+
+  &__colors {
+    margin-top: 28px;
+  }
+
+  &__color {
+    position: relative;
+    width: 27px;
+    height: 27px;
+    border: 2px solid $color-dark;
+    margin-top: 10px;
+    &:after {
+      content: '';
+      position: absolute;
+      display: block;
+      width: 17px;
+      height: 17px;
+      border: 3px solid $color-light;
+    }
+    &:before {
+      content: '';
+      position: absolute;
+      display: block;
+      width: 15px;
+      height: 15px;
+      border: 1px solid $color-dark;
+      left: 3px;
+      top: 3px;
+    }
+
+    @include media-tablet {
+      flex-basis: 48%;
     }
   }
 
@@ -195,6 +240,7 @@
       flex-direction: column;
     }
     @include media-tablet {
+      width: 100%;
       flex-direction: row;
       flex-wrap: wrap;
       justify-content: center;

@@ -11,7 +11,7 @@ import {
 import { Category } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/category';
 import { Base, Blocks, Elem, Mode, Titles } from '../../../models/builder';
 import Builder from '../../builder/html-builder';
-import { DataBase } from '../../../models/commerce';
+import { DataAttribute, DataBase } from '../../../models/commerce';
 import ResultPagination from '../../../models/result-pagination';
 import SortParameter from '../../../models/sort-parameter';
 import CatalogViewControlPanelsState from '../../../models/catalog-view-control-panels-state';
@@ -218,10 +218,38 @@ export default class ViewCatalog {
     this.updateRemoveCartButton(id, removeState);
   }
 
+  private getAttributes(data: ProductData): DataAttribute {
+    const attribute: DataAttribute = {
+      color: '#ffffff',
+      brand: Titles.HAQ_TITLE,
+    };
+
+    const { attributes } = data.masterVariant;
+    if (attributes) {
+      attributes.forEach((attr: Attribute) => {
+        if (attr.name === Elem.brand) {
+          if (attr.value.length && typeof attr.value[0].key !== 'undefined') {
+            attribute.brand = attr.value[0].key;
+          }
+        } else if (attr.name === Elem.color) {
+          if (attr.value.length && typeof attr.value[0].key !== 'undefined') {
+            const index: number = ViewCatalog.colorsKeys.indexOf(attr.value[0].key);
+            if (index >= 0) attribute.color = ViewCatalog.colorsHexes[index];
+          }
+        }
+      });
+    }
+
+    return attribute;
+  }
+
   private renderProductInfo(data: ProductData, name: string, basePrice: string, discountPrice: string): HTMLElement {
     const productInfo: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.info).element();
     const brand: HTMLParagraphElement = new Builder('', Base.titles, Blocks.product, Elem.brand, '').p();
     const nameHTML: HTMLHeadingElement = new Builder('', Base.titles, Blocks.product, Elem.title, Mode.big).h(2);
+    const colors: HTMLElement = new Builder('div', '', Blocks.product, Elem.colors, '').element();
+    const colorsTitle: HTMLHeadingElement = new Builder('', Base.titles, Blocks.product, Elem.title, Mode.color).h(4);
+    const color: HTMLElement = new Builder('div', '', Blocks.product, Elem.color, '').element();
     const priceHTML: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.price).element();
     const priceHeadingHTML: HTMLHeadingElement = new Builder('', Base.titles, Blocks.product, Elem.title, Mode.price).h(
       4
@@ -236,28 +264,21 @@ export default class ViewCatalog {
     addButton.classList.add(`${Blocks.product}__${Elem.btn}`);
     removeButton.classList.add(`${Blocks.product}__${Elem.btn}`);
 
-    const { attributes } = data.masterVariant;
-    let brandName: string = Titles.BRAND_HAQ;
-    if (attributes) {
-      attributes.forEach((attr: Attribute) => {
-        if (attr.name === Elem.brand) {
-          if (attr.value.length && typeof attr.value[0].key !== 'undefined') {
-            brandName = attr.value[0].key;
-          }
-        }
-      });
-    }
+    const attr: DataAttribute = this.getAttributes(data);
 
-    brand.textContent = brandName.toUpperCase();
+    brand.textContent = attr.brand.toUpperCase();
     nameHTML.textContent = name;
+    colorsTitle.textContent = Titles.COLOR;
+    color.style.background = attr.color;
     priceHeadingHTML.textContent = 'price total'.toUpperCase();
     basePriceHTML.textContent = basePrice;
     discountPriceHTML.textContent = discountPrice;
     if (discountPrice) basePriceHTML.classList.add('before-disc');
 
+    colors.append(colorsTitle, color);
     cartButtons.append(addButton, removeButton);
     priceHTML.append(priceHeadingHTML, basePriceHTML, discountPriceHTML);
-    productInfo.append(brand, nameHTML, priceHTML, cartButtons);
+    productInfo.append(brand, nameHTML, colors, priceHTML, cartButtons);
 
     return productInfo;
   }
@@ -726,8 +747,6 @@ export default class ViewCatalog {
     });
 
     return sortingDropdown;
-
-    // TODO add products per page section if necessary
   }
 
   private createCatalogCard(product: ProductProjection): HTMLElement {
