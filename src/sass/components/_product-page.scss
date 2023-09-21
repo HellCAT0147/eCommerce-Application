@@ -121,7 +121,7 @@
     position: relative;
     width: 27px;
     height: 27px;
-    border: 2px solid $color-dark;
+    border: 2px solid $color-light;
     margin-top: 10px;
     &:after {
       content: '';
@@ -140,6 +140,10 @@
       border: 1px solid $color-dark;
       left: 3px;
       top: 3px;
+    }
+
+    &_check {
+      border: 2px solid $color-dark;
     }
 
     @include media-tablet {

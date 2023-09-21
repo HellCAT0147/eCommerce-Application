@@ -268,7 +268,7 @@ export default class ViewCatalog {
     const nameHTML: HTMLHeadingElement = new Builder('', Base.titles, Blocks.product, Elem.title, Mode.big).h(2);
     const colors: HTMLElement = new Builder('div', '', Blocks.product, Elem.colors, '').element();
     const colorsTitle: HTMLHeadingElement = new Builder('', Base.titles, Blocks.product, Elem.title, Mode.color).h(4);
-    const color: HTMLElement = new Builder('div', '', Blocks.product, Elem.color, '').element();
+    const color: HTMLElement = new Builder('div', '', Blocks.product, Elem.color, Mode.check).element();
     const sizes: HTMLElement = this.createSelectSize();
     const priceHTML: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.price).element();
     const priceHeadingHTML: HTMLHeadingElement = new Builder('', Base.titles, Blocks.product, Elem.title, Mode.price).h(
@@ -563,7 +563,7 @@ export default class ViewCatalog {
   public createBrandFilterBox(): HTMLElement {
     const brandFilter: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter', 'brand').element();
     const brandFilterHeader: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter-box', 'header').element();
-    brandFilterHeader.innerText = 'BRAND';
+    brandFilterHeader.innerText = Titles.BRAND;
     brandFilter.append(brandFilterHeader);
     const brands = ['HAQ-inc', 'RS-fashion', 'Bold Italics'];
     brands.forEach((brand: string, index: number) => {
@@ -602,7 +602,7 @@ export default class ViewCatalog {
   public createSizeFilterBox(): HTMLElement {
     const sizeFilter: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter', 'size').element();
     const sizeFilterHeader: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter-box', 'header').element();
-    sizeFilterHeader.innerText = 'SIZE';
+    sizeFilterHeader.innerText = Titles.SIZE;
     sizeFilter.append(sizeFilterHeader);
     const sizes = ['small', 'medium', 'large'];
     sizes.forEach((size: string, index: number) => {
@@ -638,15 +638,20 @@ export default class ViewCatalog {
     return sizeFilter;
   }
 
+  private toggleCheckColor(target: HTMLElement): void {
+    target.classList.toggle(`${Blocks.product}__${Elem.color}_${Mode.check}`);
+  }
+
   public createColorFilterBox(): HTMLElement {
     const colorFilter: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter', 'color').element();
     const colorFilterHeader: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter-box', 'header').element();
-    colorFilterHeader.innerText = 'COLOR';
+    const colors: HTMLElement = new Builder('div', '', Blocks.catalog, Elem.colors, '').element();
+    colorFilterHeader.innerText = Titles.COLOR;
     colorFilter.append(colorFilterHeader);
     ViewCatalog.colorsHexes.forEach((color: string, index: number) => {
       const colorName = ViewCatalog.colorsKeys[index];
       const label: HTMLLabelElement = document.createElement('label');
-      label.className = 'catalog__filter-box_variant';
+      label.className = 'catalog__filter-box_variant product__color';
       const colorCheck: HTMLInputElement = new Builder(
         'input',
         Base.check,
@@ -666,22 +671,26 @@ export default class ViewCatalog {
       });
       colorCheck.checked = this.state.colors.includes(color);
       label.onclick = (e): void => {
-        const target = e.target as HTMLElement;
+        const { target } = e;
+        if (!(target instanceof HTMLElement)) return;
         if (target.tagName !== 'INPUT') {
+          this.toggleCheckColor(target);
           colorCheck.click();
         }
       };
       label.append(colorCheck);
       label.setAttribute('style', `background-color: ${color}`);
-      colorFilter.append(label);
+      colors.appendChild(label);
     });
+
+    colorFilter.append(colors);
     return colorFilter;
   }
 
   public createPriceFilter(): HTMLElement {
     const priceFilter: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter', 'price').element();
     const priceFilterHeader: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter-box', 'header').element();
-    priceFilterHeader.innerText = 'MAX PRICE';
+    priceFilterHeader.innerText = Titles.PRICE_RANGE;
     priceFilter.append(priceFilterHeader);
     const curr: HTMLSpanElement = document.createElement('span');
     const range: HTMLInputElement = new Builder('input', '', Blocks.catalog, 'filter-box', 'range').input();
@@ -696,13 +705,13 @@ export default class ViewCatalog {
       }
       this.state.maxPrice = parsed;
       document.dispatchEvent(ViewCatalog.OnViewChangedEvent);
-      curr.innerText = `0 - ${this.state.maxPrice}`;
+      curr.innerText = `0.00 $ - ${this.state.maxPrice}.00 $`;
     });
     range.value = this.state.maxPrice.toString();
     const label: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter-box', 'range-label').element();
 
     curr.setAttribute('id', 'price-limit_label');
-    curr.innerText = `0 - ${range.value}`;
+    curr.innerText = `0.00 $ - ${range.value}.00 $`;
     label.append(curr);
     priceFilter.append(range, label);
     return priceFilter;
@@ -710,8 +719,6 @@ export default class ViewCatalog {
 
   public createFilters(): HTMLElement {
     const filters: HTMLElement = ViewCatalog.filtersWrapperBuilder.element();
-    const filtersHeader: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter', 'header').element();
-    filtersHeader.innerText = 'FILTERS';
     const brandFilter: HTMLElement = this.createBrandFilterBox();
     brandFilter.classList.add('shown');
     const sizeFilter: HTMLElement = this.createSizeFilterBox();
@@ -720,7 +727,7 @@ export default class ViewCatalog {
     const resetFiltersBtn = new Builder('button', Base.btns_bordered, Blocks.catalog, 'filter', 'button').element();
     resetFiltersBtn.innerText = 'RESET';
     resetFiltersBtn.setAttribute('id', ViewCatalog.resetButtonId);
-    filters.append(filtersHeader, brandFilter, sizeFilter, colorFilter, priceFilter, resetFiltersBtn);
+    filters.append(brandFilter, sizeFilter, colorFilter, priceFilter, resetFiltersBtn);
     filters.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
       if (target && target.tagName !== 'INPUT' && target.tagName !== 'LABEL') {
@@ -984,7 +991,7 @@ export default class ViewCatalog {
       });
       const priceLabel: HTMLElement | null = document.getElementById('price-limit_label');
       if (priceLabel) {
-        priceLabel.innerText = `0 - ${this.state.maxPrice.toString()}`;
+        priceLabel.innerText = `0.00 $ - ${this.state.maxPrice.toString()}.00 $`;
       }
       const sortingDropdown: Element = document.getElementsByClassName('catalog__sorting-dropdown')[0];
       if (sortingDropdown) {

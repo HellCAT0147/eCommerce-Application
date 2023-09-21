@@ -375,6 +375,9 @@ export enum Titles {
   PRICE_TOTAL = 'Price Total',
   SIZES = 'Select size (Inches)',
   SEARCH = 'Searh',
+  BRAND = 'Brand',
+  SIZE = 'Size (Inches)',
+  PRICE_RANGE = 'Price Range',
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;
