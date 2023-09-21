@@ -8,35 +8,77 @@
   &__empty-list {
     font-size: 2rem;
   }
+
+  &__control {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 114px;
+  }
+
+  &__search-and-sorting {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-grow: 1;
+    padding-bottom: 15px;
+  }
+
   &__breadcrumbs_wrapper {
     display: flex;
     align-self: flex-start;
     flex-direction: row;
-    column-gap: 5px;
-    margin-left: 35px;
+    column-gap: 10px;
   }
   &__breadcrumbs_button {
-    background-color: white;
-    border: 2px solid gray;
-    border-radius: 3px;
-    min-height: 30px;
-    padding: 0 10px;
-    transition-duration: 0.5s;
-    font-weight: bold;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border: none;
+    @extend %transition;
+    @extend %font-second;
+    @include font(400, 1.4rem, 100%, $color-light-gray);
+    background-color: $color-light;
+    cursor: pointer;
     &:hover {
-      scale: 1.03;
-      transition-duration: 0.5s;
+      @include font(400, 1.4rem, 100%, $color-dark-gray);
+    }
+
+    &:after {
+      content: '/';
+      position: absolute;
+      right: -8px;
+    }
+    &:last-child {
+      &:after {
+        content: '';
+      }
+    }
+
+    &.opened {
+      @extend %transition;
+      @include font(600, 1.4rem, 100%, $color-light-gray);
     }
   }
+
   &__breadcrumbs_button-variant {
-    background-color: white;
-    border: 2px solid gray;
-    border-radius: 3px;
+    width: 100%;
+    padding: 3px 0;
+    margin: 0;
+    background-color: $color-light;
+    border: none;
+    outline: none;
+    text-align: start;
+    @include font(400, 1.4rem, 100%, $color-light-gray);
+    cursor: pointer;
+    @extend %transition;
     &:hover {
-      font-weight: bold;
+      @extend %transition;
+      scale: 1.1;
+      @include font(400, 1.4rem, 100%, $color-main-second);
     }
-    padding: 2px 10px;
-    margin: 3px 3px;
   }
   &__page-and-filters {
     display: flex;
@@ -88,87 +130,97 @@
     width: 100%;
     text-align: center;
   }
-  &__search-and-sorting {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 94vw;
-  }
+
   &__search-wrapper {
+    position: relative;
     display: flex;
     flex-direction: row;
-    gap: 10px;
+    align-items: center;
+    order: -1;
     * {
-      transition-duration: 0.2s;
+      @extend %transition;
       &:hover {
-        scale: 1.03;
-        transition-duration: 0.2s;
+        @extend %transition;
       }
     }
-  }
-  &__search-wrapper_input {
-    border-radius: 3px;
-    border: 2px solid gray;
-    min-width: 250px;
-    padding: 0 20px;
-    &:focus {
-      min-width: 500px;
+
+    &_input {
+      padding: 0 35px 5px 5px;
+      width: 0;
+      min-width: 200px;
+      border: none;
+      outline: none;
+      border-bottom: 1px solid $color-dark-gray;
+      @extend %font-second;
+      @include font(300, 1.6rem, 100%, $color-dark);
+      &:focus {
+        min-width: 500px;
+      }
+    }
+
+    &_button {
+      position: absolute;
+      height: 20px;
+      width: 20px;
+      bottom: 5px;
+      right: 5px;
+      padding: 0;
+      background: url('../assets/ico/search.svg');
+      background-repeat: no-repeat;
+      background-size: contain;
     }
   }
-  &__search-wrapper_button {
-    border-radius: 3px;
-    border: 2px solid gray;
-    text-align: center;
-    height: 33px;
-    width: 33px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+
   &__sorting-dropdown {
-    min-width: 20vw;
-    max-width: 75vw;
-    height: 30px;
-    align-self: end;
-    text-align: right;
-    font-size: 1.5rem;
-    border: 2px solid gray;
-    border-radius: 3px;
-    cursor: pointer;
-    transition-duration: 0.5s;
     display: flex;
-    flex-direction: row;
-    box-sizing: unset;
-    gap: 15px;
+    position: relative;
     justify-content: space-between;
-    padding: 0 15px;
+    padding: 9px 35px 9px 15px;
+    width: 250px;
+    @include font(400, 1.4rem, 2.4rem, $color-dark-gray);
+    border: 1px solid $color-input;
+    column-gap: 10px;
+    @extend %transition;
+    cursor: pointer;
     * {
       display: none;
-      transition-duration: 0.2s;
-      &:hover {
-        scale: 1.03;
-        font-weight: 900;
-        transition-duration: 0.2s;
-      }
     }
-    &:hover {
-      scale: 1.03;
-      transition-duration: 0.5s;
-      box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
+
+    &:after {
+      content: '';
+      position: absolute;
+      right: 14px;
+      top: 17px;
+      width: 8px;
+      height: 8px;
+      border-top: 1px solid $color-dark;
+      border-left: 1px solid $color-dark;
+      transform: rotate(315deg);
+      @extend %transition;
     }
     &.dropped-down {
+      width: fit-content;
+      @extend %transition;
       * {
         display: unset;
+
+        &:hover {
+          @extend %transition;
+          @include font(400, 1.4rem, 2.4rem, $color-dark);
+        }
+      }
+
+      &:after {
+        transform: rotate(135deg);
       }
     }
     .sorted {
-      font-weight: bold;
       display: flex;
       justify-content: flex-end;
+      @include font(400, 1.4rem, 2.4rem, $color-dark);
     }
   }
   &__page {
-    margin: 60px 0;
     width: 80vw;
     display: flex;
     flex-direction: row;
@@ -380,43 +432,4 @@
       }
     }
   }
-}
-
-@media ((min-width: 740px) and (max-width: 780px)) {
-  .catalog {
-    &__search-and-sorting {
-      flex-direction: column;
-      row-gap: 10px;
-      align-items: baseline;
-    }
-    &__sorting-dropdown {
-      align-self: baseline;
-      width: 72vw;
-      align-items: baseline;
-      transition-duration: 0.5s;
-    }
-  }
-}
-
-@media (max-width: 500px) {
-  .catalog__sorting-dropdown {
-    align-self: center;
-    flex-direction: column;
-    width: 72vw;
-    align-items: baseline;
-    transition-duration: 0.5s;
-  }
-  .catalog__breadcrumbs_button {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-}
-.dropped-down {
-  max-height: 570px;
-  background-color: white;
-  z-index: 2;
-  height: fit-content;
-  transition-duration: 0.5s;
 }

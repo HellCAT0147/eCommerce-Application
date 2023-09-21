@@ -16,6 +16,7 @@ import ResultPagination from '../../../models/result-pagination';
 import SortParameter from '../../../models/sort-parameter';
 import CatalogViewControlPanelsState from '../../../models/catalog-view-control-panels-state';
 import Controls from '../../../models/swiper';
+import { Pages } from '../../../models/router';
 
 export default class ViewCatalog {
   private static colorsHexes: Array<string> = [
@@ -494,7 +495,7 @@ export default class ViewCatalog {
       document.dispatchEvent(ViewCatalog.OnViewChangedEvent);
     };
     const root = new Builder('button', '', Blocks.catalog, 'breadcrumbs', 'button').button();
-    root.innerText = 'HAQ';
+    root.innerText = `${Pages.CATALOG[0].toUpperCase()}${Pages.CATALOG.slice(1)}`;
     root.setAttribute('id', 'cat-root-btn');
     root.addEventListener('click', () => {
       this.state.categories = [];
@@ -514,12 +515,13 @@ export default class ViewCatalog {
       this.state.categories.length > 0 ? this.state.categories[this.state.categories.length - 1] : undefined;
     const subcategories = this.categories?.get(latestCategory?.id);
     if (subcategories) {
-      // TODO:: draw dropdown with subcategories
       const addCategoryButton = new Builder('button', '', Blocks.catalog, 'breadcrumbs', 'button').button();
-      addCategoryButton.innerText = '+';
+      addCategoryButton.innerText = 'Category';
       noParamBreadcrumbsWrapper.append(addCategoryButton);
       addCategoryButton.addEventListener('click', () => {
+        if (addCategoryButton.querySelector('.catalog__breadcrumbs_button-variant')) return;
         subcategories.forEach((subcategory) => {
+          addCategoryButton.classList.add(Mode.opened);
           const subVar = new Builder('button', '', Blocks.catalog, 'breadcrumbs', 'button-variant').button();
           subVar.innerText = subcategory.name['en-US'];
           addCategoryButton.append(subVar);
@@ -544,13 +546,12 @@ export default class ViewCatalog {
     searchWrapper.setAttribute('id', 'search-wrapper');
     const searchInput: HTMLInputElement = new Builder('input', '', Blocks.catalog, 'search-wrapper', 'input').input();
     searchInput.setAttribute('id', ViewCatalog.searchButtonId);
-    searchInput.setAttribute('placeholder', 'WHAT ARE YOU LOOKING FOR?');
+    searchInput.setAttribute('placeholder', Titles.SEARCH);
     searchInput.addEventListener('change', (): void => {
       this.state.query = searchInput.value;
     });
     const searchButton = new Builder('button', Base.btns_empty, Blocks.catalog, 'search-wrapper', 'button').button();
     searchButton.setAttribute('id', 'search-button');
-    searchButton.textContent = `🔍`;
     searchButton.addEventListener('click', () => {
       searchInput.setAttribute(':focus', 'false');
       document.dispatchEvent(ViewCatalog.OnViewChangedEvent);
@@ -883,8 +884,10 @@ export default class ViewCatalog {
       const pageAndFilters: HTMLElement = new Builder('div', '', Blocks.catalog, 'page-and-filters', '').element();
       pageAndFilters.append(this.createFilters(), this.fillCatalogPage(resultPagination, cart));
       const searchAndSorting = new Builder('div', '', Blocks.catalog, 'search-and-sorting', '').element();
+      const control = new Builder('div', '', Blocks.catalog, Elem.control, '').element();
       searchAndSorting.append(this.createPageSettings(), this.createSearchWrapper());
-      main.append(this.createBreadCrumbs(), searchAndSorting, pageAndFilters, this.createPaginationButtons());
+      control.append(this.createBreadCrumbs(), searchAndSorting);
+      main.append(control, pageAndFilters, this.createPaginationButtons());
       this.fillPaginationButtons(resultPagination);
     }
   }

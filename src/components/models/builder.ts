@@ -374,6 +374,7 @@ export enum Titles {
   COLOR = 'Color',
   PRICE_TOTAL = 'Price Total',
   SIZES = 'Select size (Inches)',
+  SEARCH = 'Searh',
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;

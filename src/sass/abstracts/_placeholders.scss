@@ -106,3 +106,19 @@
     }
   }
 }
+
+%displayDelay {
+  animation: displayDelay 1s ease-in-out;
+  animation-iteration-count: 1;
+  @keyframes displayDelay {
+    0% {
+      display: block;
+    }
+    50% {
+      display: unset;
+    }
+    100% {
+      display: unset;
+    }
+  }
+}
