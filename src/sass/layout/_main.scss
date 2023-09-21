@@ -66,4 +66,33 @@
       }
     }
   }
+
+  &__loader {
+    color: $color-dark;
+    position: fixed;
+    font-size: 11px;
+    background: $color-dark;
+    width: 0.8em;
+    height: 1em;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: -0.16s;
+    @extend %loader;
+    &:before,
+    &:after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 1.6em;
+      background: $color-dark;
+      width: 0.8em;
+      height: 1em;
+      @extend %loader;
+    }
+    &:before {
+      left: -1.6em;
+      animation-delay: -0.32s;
+    }
+  }
 }

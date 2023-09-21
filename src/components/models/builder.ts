@@ -108,6 +108,7 @@ export enum Elem {
   colors = 'colors',
   sizes = 'sizes',
   size = 'size',
+  loader = 'loader',
 }
 
 export enum Mode {
