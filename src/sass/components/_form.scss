@@ -30,6 +30,7 @@
   &__label {
     width: 100%;
     max-width: 130px;
+    cursor: pointer;
   }
 
   &__input,
@@ -97,5 +98,72 @@
 
   .required {
     color: $color-main-second;
+  }
+}
+
+input[type='checkbox'] {
+  position: relative;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 11px;
+  height: 11px;
+  visibility: hidden;
+  cursor: pointer;
+  @extend %transition;
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 11px;
+    height: 11px;
+    border: 1px solid $color-light-gray;
+    visibility: visible;
+    @extend %transition;
+  }
+
+  &:hover {
+    @extend %transition;
+    &::after {
+      border: 1px solid $color-dark-gray;
+    }
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 7px;
+    height: 3.5px;
+    border-right: 2px solid $color-light;
+    border-top: 2px solid $color-light;
+    transform: rotate(135deg);
+    visibility: visible;
+    z-index: 2;
+    &:hover {
+      border: 1px solid $color-dark-gray;
+    }
+  }
+
+  &:checked {
+    &::after {
+      content: '';
+      background-color: $color-dark;
+      border: 1px solid $color-dark;
+      &:hover {
+        border: 1px solid $color-dark;
+      }
+    }
+  }
+
+  &:disabled {
+    &::after {
+      content: '';
+      background-color: $color-input;
+      border: 1px solid $color-input;
+      &:hover {
+        border: 1px solid $color-input;
+      }
+    }
   }
 }

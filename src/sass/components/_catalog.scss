@@ -122,6 +122,17 @@
 
     &_color {
       row-gap: 10px;
+
+      input[type='checkbox'] {
+        visibility: hidden;
+        &::after {
+          visibility: hidden;
+        }
+
+        &::before {
+          visibility: hidden;
+        }
+      }
     }
   }
 
@@ -167,6 +178,7 @@
       @extend %font-second;
       @include font(400, 1.4rem, 100%, $color-dark);
       column-gap: 9px;
+      cursor: pointer;
     }
 
     &_color-variant {
@@ -381,13 +393,11 @@
       background-color: $color-light-hover;
       border: 2px solid $color-input;
       color: $color-dark-gray;
-      scale: 1;
       padding: 16px 0px;
       &:hover {
         background-color: $color-light-hover;
         border: 2px solid $color-input;
         color: $color-dark-gray;
-        scale: 1;
         padding: 16px 0px;
       }
     }
@@ -411,14 +421,12 @@
     transition-duration: 0.3s;
     &:hover {
       background-color: #c21f39;
-      scale: 1;
       transition-duration: 0.3s;
       cursor: pointer;
     }
     &:disabled {
       padding: 0px;
       background-color: gray;
-      scale: 1;
       cursor: not-allowed;
     }
   }
@@ -473,8 +481,60 @@
 #reset-filters_btn {
   width: fit-content;
   align-self: flex-end;
-  padding: 10px 20px;
-  border: 2px solid gray;
-  color: black;
-  background-color: transparent;
+  background-color: $color-main;
+  &:hover {
+    background-color: $color-hover-edit;
+  }
+}
+
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  width: 20rem;
+}
+
+input[type='range']::-webkit-slider-runnable-track {
+  background-color: $color-dark;
+  border-radius: 0rem;
+  height: 0.5rem;
+}
+
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: -10px;
+  background-color: $color-dark;
+  border-radius: 0rem;
+  height: 2.5rem;
+  width: 0.5rem;
+}
+
+input[type='range']::-moz-range-track {
+  background-color: $color-dark;
+  border-radius: 0rem;
+  height: 0.5rem;
+}
+
+input[type='range']::-moz-range-thumb {
+  background-color: $color-dark;
+  border: none;
+  border-radius: 0rem;
+  height: 2.5rem;
+  width: 0.5rem;
+}
+
+input[type='range']:focus::-moz-range-thumb {
+  outline: 3px solid $color-dark;
+  outline-offset: 0.125rem;
+}
+
+input[type='range']:focus {
+  outline: none;
+}
+
+input[type='range']:focus::-webkit-slider-thumb {
+  outline: 3px solid $color-dark;
+  outline-offset: 0.125rem;
 }

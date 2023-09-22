@@ -143,7 +143,6 @@
         border: 2px solid $color-main-second;
       }
       &:active {
-        scale: none;
         -webkit-user-select: all;
         user-select: all;
       }
@@ -212,7 +211,6 @@
               border: 2px solid $color-main-second;
             }
             &:active {
-              scale: none;
               -webkit-user-select: all;
               user-select: all;
             }
@@ -249,8 +247,8 @@
   padding: 28px 11px;
   margin: 15px 0 12px;
   @include media-tablet {
-    row-gap: 20px;
-    column-gap: 20px;
+    row-gap: 10px;
+    column-gap: 5px;
   }
 
   &__title {
@@ -313,15 +311,20 @@
       @include font(600, 1rem, 100%, $color-dark-gray);
     }
 
+    @include media-tablet {
+      width: fit-content;
+      height: auto;
+    }
+
     &_select {
       color: $color-dark;
       background-color: $color-light-hover;
+
+      @include media-tablet {
+        width: fit-content;
+        height: auto;
+        background-color: $color-light;
+      }
     }
-    // &:nth-child(2) {
-    //   @extend %select1;
-    // }
-    // &:nth-child(3) {
-    //   @extend %select2;
-    // }
   }
 }
