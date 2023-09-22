@@ -28,11 +28,13 @@ function createRights(): HTMLElement {
   const rightsPhotos: HTMLElement = new Builder('footer', Base.links, Blocks.footer, Elem.right, Mode.photos).a(
     Pages.PHOTOS
   );
+  const rightsTeam: HTMLElement = new Builder('footer', '', Blocks.footer, Elem.title, '').p();
 
   rightsDesign.textContent = `Based on: ${Titles.RIGHTS_DESIGN}`;
   rightsPhotos.textContent = `Inspired by: ${Titles.RIGHTS_PHOTOS}`;
+  rightsTeam.textContent = Titles.RIGHTS_TEAM;
 
-  footerRights.append(rightsDesign, rightsPhotos);
+  footerRights.append(rightsDesign, rightsTeam, rightsPhotos);
 
   return footerRights;
 }
@@ -65,13 +67,13 @@ function createFooter(): HTMLElement {
 
   footerContacts.textContent = Titles.CONTACTS;
   addressTitle.textContent = `${Titles.ADDRESS}:`.toUpperCase();
-  addressText.textContent = `${Titles.ADDRESS_COMPANY}:`.toUpperCase();
+  addressText.textContent = `${Titles.ADDRESS_COMPANY}`.toUpperCase();
   emailTitle.textContent = `${Titles.EMAIL}:`.toUpperCase();
-  emailText.textContent = `${Titles.EMAIL_COMPANY}:`.toUpperCase();
+  emailText.textContent = `${Titles.EMAIL_COMPANY}`.toUpperCase();
   phoneTitle.textContent = `${Titles.PHONE}:`.toUpperCase();
-  phoneText.textContent = `${Titles.PHONE_COMPANY}:`.toUpperCase();
+  phoneText.textContent = `${Titles.PHONE_COMPANY}`.toUpperCase();
   workTitle.textContent = `${Titles.WORK}:`.toUpperCase();
-  workText.textContent = `${Titles.WORK_COMPANY}:`.toUpperCase();
+  workText.textContent = `${Titles.WORK_COMPANY}`.toUpperCase();
 
   addressContact.append(addressTitle, addressText);
   emailContact.append(emailTitle, emailText);

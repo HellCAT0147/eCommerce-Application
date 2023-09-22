@@ -85,7 +85,7 @@
 
   &__right {
     @extend %font-second;
-    @include font(700, 1.2rem, 100%, $color-light);
+    @include font(400, 1.2rem, 100%, $color-light);
 
     &:visited {
       color: $color-light;
@@ -95,6 +95,11 @@
       @extend %transition;
       color: $color-light-gray;
     }
+  }
+
+  &__title {
+    @include font(400, 1.2rem, 100%, $color-light);
+    margin-right: 115px;
   }
 
   &__logo {

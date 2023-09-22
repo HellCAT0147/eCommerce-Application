@@ -397,6 +397,7 @@ export enum Titles {
   WORK = 'WORK',
   RIGHTS_DESIGN = '© 2019. Crisp theme Developed by Belvg',
   RIGHTS_PHOTOS = 'Shop Lovely Style',
+  RIGHTS_TEAM = 'HAQ © 2023',
 }
 
 export type HLevels = 1 | 2 | 3 | 4 | 5 | 6;
