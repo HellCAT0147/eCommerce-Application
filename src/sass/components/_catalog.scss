@@ -100,7 +100,6 @@
   }
   &__page-and-filters {
     display: flex;
-    align-items: center;
     width: 100%;
 
     @include media-tablet {
@@ -480,10 +479,10 @@
 
 #reset-filters_btn {
   width: fit-content;
-  align-self: flex-end;
-  background-color: $color-main;
-  &:hover {
-    background-color: $color-hover-edit;
+  align-self: flex-start;
+
+  @include media-tablet {
+    align-self: flex-end;
   }
 }
 

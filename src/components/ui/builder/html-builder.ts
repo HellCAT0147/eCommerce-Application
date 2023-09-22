@@ -138,7 +138,7 @@ class Builder {
     const link: HTMLAnchorElement = document.createElement('a');
     link.className = `${this.base}`;
     this.setProperties(link);
-    if (this.mode === Mode.git || this.mode === Mode.rss) {
+    if (this.mode === Mode.git || this.mode === Mode.rss || this.mode === Mode.design || this.mode === Mode.photos) {
       link.href = `${href}`;
       link.target = '_blank';
     } else if (this.mode === Mode.email) {

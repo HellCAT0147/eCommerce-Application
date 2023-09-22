@@ -1,13 +1,45 @@
 .footer {
   width: 100%;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   padding: 21px 21px;
   background: $color-dark;
 
-  &__container {
+  &__content {
+    display: flex;
+    justify-content: space-between;
+    padding: 40px 0px 50px;
+    border-bottom: 1px solid $color-light-gray;
+
+    @include media-mobile-large {
+      flex-wrap: wrap;
+      row-gap: 20px;
+      > * {
+        flex-basis: 50%;
+      }
+    }
+  }
+
+  .header__logo {
+    z-index: 0;
+  }
+
+  @include media-mobile-large {
+    .header__logo {
+      order: -2;
+    }
+
+    .footer__logo {
+      order: -1;
+    }
+  }
+
+  &__menu,
+  &__contacts {
     display: flex;
     flex-direction: column;
+    flex-wrap: wrap;
+    row-gap: 15px;
     @include font(500, 1.8rem, 100%, $color-light);
   }
 
@@ -16,14 +48,72 @@
     width: fit-content;
     text-decoration: none;
     @extend %font-second;
-    @include font(400, 1.4rem, 2.8rem, $color-light-gray);
+    @extend %transition;
+    @include font(400, 1.2rem, 110%, $color-light-gray);
 
-    &_login {
-      margin-top: 30px;
+    &:first-child {
+      margin-top: 15px;
     }
 
     &:visited {
       color: $color-light-gray;
     }
+
+    &:hover {
+      @extend %transition;
+      color: $color-light;
+    }
+  }
+
+  &__contacts {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__contact {
+    &:first-child {
+      margin-top: 15px;
+    }
+  }
+
+  &__rights {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 0 19px;
+    column-gap: 20px;
+  }
+
+  &__right {
+    @extend %font-second;
+    @include font(700, 1.2rem, 100%, $color-light);
+
+    &:visited {
+      color: $color-light;
+    }
+
+    &:hover {
+      @extend %transition;
+      color: $color-light-gray;
+    }
+  }
+
+  &__logo {
+    width: 121px;
+    height: 45px;
+    background: url('../assets/ico/rs_logo.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+}
+
+.contact {
+  &__title {
+    @include font(400, 1.2rem, 100%, $color-light);
+    margin-bottom: 5px;
+  }
+
+  &__text {
+    @extend %font-second;
+    @include font(400, 1.2rem, 100%, $color-light-gray);
   }
 }

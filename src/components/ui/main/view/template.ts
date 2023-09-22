@@ -1,7 +1,8 @@
-import { Base, Blocks, Elem, Mode, Titles } from '../../../models/builder';
+import { Blocks, Mode } from '../../../models/builder';
 import { Pages } from '../../../models/router';
 import Builder from '../../builder/html-builder';
 import renderBrands from './brands';
+import { createFooter } from './footer';
 import createHeader from './header';
 import createPromo from './promo';
 
@@ -13,17 +14,9 @@ function createTemplate(): HTMLBodyElement | null {
   }
   const header: HTMLElement = new Builder('header', '', Blocks.header, '', '').element();
   const main: HTMLElement = new Builder('main', Blocks.main, Blocks.main, Blocks.main, '').element();
-  const footer: HTMLElement = new Builder('footer', '', Blocks.footer, '', '').element();
-
-  const linksContainer: HTMLElement = new Builder('section', '', Blocks.footer, Elem.container, Mode.link).element();
-  const linkLogin: HTMLAnchorElement = new Builder('', Base.links, Blocks.footer, Elem.link, Mode.login).a();
-  const linkRegistration: HTMLElement = new Builder('', Base.links, Blocks.footer, Elem.link, Mode.reg).a();
-  const linkProfile: HTMLElement = new Builder('', Base.links, Blocks.footer, Elem.link, Mode.prof).a();
-  linksContainer.textContent = Titles.LINKS;
+  const footer: HTMLElement = createFooter();
 
   if (body) {
-    linksContainer.append(linkLogin, linkRegistration, linkProfile);
-    footer.appendChild(linksContainer);
     body.append(header, main, footer);
   }
 
@@ -43,7 +36,7 @@ function createTemplateMain(isLoggedIn?: boolean): HTMLBodyElement | null {
   const main: HTMLElement | null = document.querySelector('main');
 
   if (main) {
-    main.className = `main main__${Pages.MAIN}`;
+    main.className = `${Blocks.main} ${Blocks.main}__${Pages.MAIN}`;
     main.innerHTML = '';
   }
 

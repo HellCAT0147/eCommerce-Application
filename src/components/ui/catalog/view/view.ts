@@ -724,7 +724,7 @@ export default class ViewCatalog {
     const sizeFilter: HTMLElement = this.createSizeFilterBox();
     const colorFilter: HTMLElement = this.createColorFilterBox();
     const priceFilter: HTMLElement = this.createPriceFilter();
-    const resetFiltersBtn = new Builder('button', Base.btns_bordered, Blocks.catalog, 'filter', 'button').element();
+    const resetFiltersBtn = new Builder('button', Base.btns_colored, Blocks.catalog, 'filter', 'button').element();
     resetFiltersBtn.innerText = 'RESET';
     resetFiltersBtn.setAttribute('id', ViewCatalog.resetButtonId);
     filters.append(brandFilter, sizeFilter, colorFilter, priceFilter, resetFiltersBtn);

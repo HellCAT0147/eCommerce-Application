@@ -27,9 +27,12 @@ export enum Pages {
   GO_TO_REG = `${GO_TO}-${REGISTRATION}`,
   GO_TO_PROF = `${GO_TO}-${PROFILE}`,
   GO_TO_CATALOG = `${GO_TO}-${CATALOG}`,
+  GO_TO_ABOUT = `${GO_TO}-${ABOUT_US}`,
   LOGO = 'logo',
   LOGO_MAIN = `${LOGO}-${MAIN}`,
   NOT_FOUND = 'not-found',
   ID = 'id',
   RSS = 'https://rs.school/',
+  DESIGN = 'https://www.figma.com/file/pyriaNMaPDrvmzSicUinkm/Crisp?type=design&node-id=0-1&mode=design&t=qTbeRyjWZWTES6OB-0',
+  PHOTOS = 'https://vk.com/lovely_style_spb',
 }

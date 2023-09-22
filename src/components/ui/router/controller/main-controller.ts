@@ -47,6 +47,8 @@ class MainController {
         url = Pages.PROFILE;
       } else if (url === Pages.GO_TO_CATALOG) {
         url = Pages.CATALOG;
+      } else if (url === Pages.GO_TO_ABOUT) {
+        url = Pages.ABOUT_US;
       }
     }
 
@@ -65,6 +67,7 @@ class MainController {
       const signOutButton: HTMLElement | null = document.querySelector(`#${Pages.SIGN_OUT}`);
 
       if (navButton) {
+        window.scrollTo(0, 0);
         e.preventDefault();
         if (navButton === signOutButton) {
           this.tokenCachesStore.unset();
