@@ -246,6 +246,13 @@
   border: 2px solid $color-input;
   padding: 28px 11px;
   margin: 15px 0 12px;
+  text-decoration: none;
+  @extend %transition;
+
+  &:hover {
+    @extend %transition;
+    border: 2px solid $color-dark;
+  }
   @include media-tablet {
     row-gap: 10px;
     column-gap: 5px;
