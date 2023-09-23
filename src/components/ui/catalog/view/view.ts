@@ -20,13 +20,13 @@ import { Pages } from '../../../models/router';
 
 export default class ViewCatalog {
   private static colorsHexes: Array<string> = [
-    '#000000',
-    '#0000ff',
-    '#ffffff',
-    '#ffff00',
-    '#00ff00',
-    '#ff99cc',
-    '#99ffff',
+    '#292A2D',
+    '#24426A',
+    '#F3ECE2',
+    '#CBA13E',
+    '#18574A',
+    '#DAB1B1',
+    '#2B9FA7',
   ];
 
   private static colorsKeys: Array<string> = ['black', 'blue', 'white', 'yellow', 'green', 'pink', 'tiffany'];
@@ -632,7 +632,7 @@ export default class ViewCatalog {
           sizeCheck.click();
         }
       };
-      label.append(sizeCheck, size);
+      label.append(sizeCheck, `${size[0].toUpperCase()}${size.slice(1)}`);
       sizeFilter.append(label);
     });
     return sizeFilter;

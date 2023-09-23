@@ -131,16 +131,6 @@
       height: 17px;
       border: 3px solid $color-light;
     }
-    &:before {
-      content: '';
-      position: absolute;
-      display: block;
-      width: 15px;
-      height: 15px;
-      border: 1px solid $color-dark;
-      left: 3px;
-      top: 3px;
-    }
 
     &_check {
       border: 2px solid $color-dark;
