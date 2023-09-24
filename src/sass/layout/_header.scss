@@ -37,7 +37,13 @@
       right: 0;
     }
     &_static {
-      margin-left: 145px;
+      margin-left: 271px;
+      @include media-laptop-large {
+        margin-left: 226px;
+      }
+      @include media-small-desktop {
+        margin-left: 0px;
+      }
       @include media-large-tablet {
         padding-bottom: 30px;
         top: 0vh;
@@ -49,8 +55,11 @@
     position: relative;
     min-height: 28px;
     @extend %font-main;
-    @include font(600, 1.4rem, 100%, $color-light);
+    @include font(600, 1.8rem, 100%, $color-light);
     @extend %transition;
+    @include media-laptop-large {
+      @include font(600, 1.4rem, 100%, $color-light);
+    }
     @include media-large-tablet {
       width: fit-content;
       @include font(600, 2.4rem, 100%, $color-light);
@@ -64,6 +73,19 @@
       @include media-large-tablet {
         margin-left: 0px;
       }
+
+      &:hover {
+        color: $color-main-second;
+
+        & .header__bag {
+          @extend %transition;
+          background: $color-main-second;
+        }
+      }
+    }
+
+    &:hover {
+      color: $color-main-second;
     }
   }
 
@@ -102,6 +124,7 @@
     mask-repeat: no-repeat;
     mask-size: contain;
     background: $color-light;
+    @extend %transition;
     @include media-large-tablet {
       width: 27px;
       height: 33px;

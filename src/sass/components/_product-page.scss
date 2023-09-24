@@ -275,7 +275,7 @@
   }
 
   &__control {
-    @include media-tablet-landscape {
+    @include media-laptop-small {
       flex-direction: column;
     }
     @include media-tablet {
