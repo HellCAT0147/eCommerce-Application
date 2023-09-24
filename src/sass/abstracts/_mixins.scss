@@ -5,6 +5,12 @@
   color: $color;
 }
 
+@mixin media-desktop {
+  @media (max-width: $desktop-width) {
+    @content;
+  }
+}
+
 @mixin media-laptop-large {
   @media (max-width: $laptop-large-width) {
     @content;

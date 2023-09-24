@@ -9,7 +9,6 @@ export default function createTemplateAboutUs(isLoggedIn?: boolean): HTMLElement
   const body: HTMLBodyElement | null = document.querySelector(`${Blocks.body}`);
   const header: HTMLElement | null = document.querySelector(`${Blocks.header}`);
   const newHeader: HTMLElement = createHeader(isLoggedIn);
-
   if (body && header) {
     body.removeChild(header);
     body.prepend(newHeader);

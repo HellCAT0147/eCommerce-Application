@@ -112,9 +112,12 @@
     background: none;
     max-width: fit-content;
     border: 2px solid $color-dark;
-    @include font(500, 1.4rem, 100%, $color-dark);
+    @include font(500, 2rem, 100%, $color-dark);
     &:hover {
       border: 2px solid $color-light-gray;
+    }
+    @include media-laptop-large {
+      @include font(500, 1.4rem, 100%, $color-dark);
     }
     @include media-laptop-small {
       padding: 12px 40px;
@@ -143,7 +146,6 @@
         border: 2px solid $color-main-second;
       }
       &:active {
-        scale: none;
         -webkit-user-select: all;
         user-select: all;
       }
@@ -212,7 +214,6 @@
               border: 2px solid $color-main-second;
             }
             &:active {
-              scale: none;
               -webkit-user-select: all;
               user-select: all;
             }
@@ -234,6 +235,105 @@
       }
       @include media-mobile-medium {
         padding: 40px 20px;
+      }
+    }
+  }
+}
+
+.brands {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  position: relative;
+  width: 100%;
+  border: 2px solid $color-input;
+  padding: 28px 11px;
+  margin: 15px 0 12px;
+  text-decoration: none;
+  @extend %transition;
+
+  &:hover {
+    @extend %transition;
+    border: 2px solid $color-dark;
+  }
+  @include media-tablet {
+    row-gap: 10px;
+    column-gap: 5px;
+  }
+
+  &__title {
+    position: absolute;
+    text-align: center;
+    width: 300px;
+    top: -15px;
+    left: calc(50% - 150px);
+    @include font(400, 2.4rem, 100%, $color-dark);
+    background: $color-light;
+    @include media-laptop-large {
+      top: -13px;
+      @include font(400, 2.2rem, 100%, $color-dark);
+    }
+    @include media-laptop {
+      top: -11px;
+      @include font(400, 2rem, 100%, $color-dark);
+    }
+    @include media-tablet-landscape {
+      top: -9px;
+      width: 250px;
+      left: calc(50% - 125px);
+      @include font(400, 1.6rem, 100%, $color-dark);
+    }
+    @include media-tablet {
+      top: -9px;
+      width: 200px;
+      left: calc(50% - 100px);
+      @include font(400, 1.6rem, 100%, $color-dark);
+    }
+  }
+
+  &__brand {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 235px;
+    height: 141px;
+    @extend %font-second;
+    @include font(600, 2.2rem, 100%, $color-dark-gray);
+
+    @include media-desktop {
+      width: 190px;
+      height: 114px;
+      @include font(600, 2rem, 100%, $color-dark-gray);
+    }
+    @include media-laptop-large {
+      width: 150px;
+      height: 90px;
+      @include font(600, 1.6rem, 100%, $color-dark-gray);
+    }
+    @include media-laptop {
+      width: 120px;
+      height: 72px;
+      @include font(600, 1.2rem, 100%, $color-dark-gray);
+    }
+    @include media-tablet-landscape {
+      width: 90px;
+      height: 54px;
+      @include font(600, 1rem, 100%, $color-dark-gray);
+    }
+
+    @include media-tablet {
+      width: fit-content;
+      height: auto;
+    }
+
+    &_select {
+      color: $color-dark;
+      background-color: $color-light-hover;
+
+      @include media-tablet {
+        width: fit-content;
+        height: auto;
+        background-color: $color-light;
       }
     }
   }

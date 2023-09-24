@@ -1,4 +1,6 @@
+import { Blocks, Elem } from '../../../models/builder';
 import { Pages } from '../../../models/router';
+import Builder from '../../builder/html-builder';
 import createHeader from '../../main/view/header';
 
 export default function createTemplateCatalog(isLoggedIn?: boolean): HTMLElement {
@@ -12,10 +14,12 @@ export default function createTemplateCatalog(isLoggedIn?: boolean): HTMLElement
   }
 
   const main: HTMLElement | null = document.querySelector('main');
+  const loader: HTMLElement = new Builder('span', '', Blocks.main, Elem.loader, '').element();
 
   if (main) {
     main.className = `main main__${Pages.CATALOG}`;
     main.innerHTML = '';
+    main.appendChild(loader);
   }
 
   return newHeader;

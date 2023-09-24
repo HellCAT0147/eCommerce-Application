@@ -25,13 +25,6 @@
     }
 
     &.form__check {
-      > * {
-        padding: 0;
-        border: none;
-        flex-shrink: 0;
-        width: auto;
-        max-width: 100%;
-      }
       justify-content: flex-start;
       @include media-mobile-large {
         flex-direction: row;

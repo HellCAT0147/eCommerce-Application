@@ -9,23 +9,41 @@
   }
 
   &__title {
-    @include font(500, 1rem, 20px, $color-dark);
+    @include font(500, 1rem, 100%, $color-dark);
 
     &_big {
       font-size: 4.8rem;
       line-height: 56px;
 
+      @include media-laptop-large {
+        @include font(500, 3.6rem, 4.2rem, $color-dark);
+      }
+      @include media-laptop {
+        @include font(500, 3.2rem, 3.8rem, $color-dark);
+      }
+      @include media-tablet-landscape {
+        @include font(500, 2.6rem, 3.2rem, $color-dark);
+      }
+      @include media-small-desktop {
+        @include font(500, 2.4rem, 2.8rem, $color-dark);
+      }
       @include media-tablet {
-        text-align: center;
+        flex-basis: 100%;
       }
     }
 
-    &_price {
-      font-size: 1.4rem;
+    &_price,
+    &_color,
+    &_size {
+      font-size: 1.8rem;
+
+      @include media-laptop-large {
+        font-size: 1.4rem;
+      }
     }
 
     @include media-mobile-large {
-      @include font(500, 1, 20px, $color-dark);
+      @include font(500, 1, 100%, $color-dark);
 
       &_big {
         font-size: 3.5rem;
@@ -34,21 +52,22 @@
     }
   }
 
+  &__article {
+    display: flex;
+    flex-direction: column;
+    max-width: 80%;
+    padding: 42px 0;
+  }
+
   &__wrapper {
-    max-width: $tablet-landscape-width;
-
     &_body {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 71px;
+      column-gap: 69px;
 
-      @include media-tablet-landscape {
-        grid-template-columns: 1fr 2fr;
-      }
-
-      @include media-small-desktop {
-        grid-template-columns: 1fr;
+      @include media-tablet {
+        flex-direction: column;
       }
     }
 
@@ -56,22 +75,187 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
-      gap: 20px;
+      flex-basis: 50%;
+      @include media-tablet {
+        flex-direction: row;
+        order: -1;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+        flex-basis: 100%;
+      }
+    }
+
+    &_price {
+      margin: 36px 0 42px;
+
+      @include media-tablet {
+        flex-grow: 1;
+        text-align: end;
+      }
+    }
+  }
+
+  &__brand {
+    max-width: fit-content;
+    padding: 11px 12px;
+    margin-bottom: 5px;
+    @include font(500, 1.8rem, 100%, $color-dark-gray);
+    background-color: $color-light-hover;
+    @include media-laptop-large {
+      @include font(500, 1.6rem, 100%, $color-dark-gray);
+    }
+    @include media-laptop {
+      @include font(500, 1.4rem, 100%, $color-dark-gray);
+    }
+    @include media-tablet-landscape {
+      @include font(500, 1.2rem, 100%, $color-dark-gray);
+    }
+  }
+
+  &__colors {
+    margin-top: 28px;
+  }
+
+  &__color {
+    position: relative;
+    width: 27px;
+    height: 27px;
+    border: 2px solid $color-light;
+    margin-top: 10px;
+    &:after {
+      content: '';
+      position: absolute;
+      display: block;
+      width: 17px;
+      height: 17px;
+      border: 3px solid $color-light;
+    }
+
+    &_check {
+      border: 2px solid $color-dark;
+    }
+
+    @include media-tablet {
+      margin-top: 14px;
+      margin-right: 50px;
+    }
+  }
+
+  &__sizes {
+    margin-top: 22px;
+    @include media-tablet {
+      margin-top: 28px;
+    }
+  }
+
+  &__container {
+    display: flex;
+    column-gap: 9px;
+    margin-top: 11px;
+  }
+
+  &__size {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 45px;
+    height: 45px;
+    @include font(600, 1.4rem, 100%, $color-dark);
+    border: 2px solid $color-dark;
+
+    &_medium,
+    &_large {
+      position: relative;
+      color: $color-input;
+      border: 1px solid $color-input;
+      &:after {
+        content: '';
+        position: absolute;
+        width: 61px;
+        height: 1px;
+        background-color: $color-input;
+        transform: rotateZ(45deg);
+        @include media-laptop-large {
+          width: 42px;
+        }
+      }
+    }
+    @include media-laptop-large {
+      width: 30px;
+      height: 30px;
     }
   }
 
   &__price {
-    @include font(500, 2rem, 20px, $color-dark);
+    @include font(500, 2.8rem, 3.9rem, $color-dark);
 
+    @include media-laptop-large {
+      @include font(500, 2.6rem, 3.9rem, $color-dark);
+    }
+    @include media-tablet-landscape {
+      @include font(500, 2.2rem, 3.2rem, $color-dark);
+    }
     &_discounted {
-      @include font(500, 2.6rem, 20px, $color-price);
+      @include font(500, 2.8rem, 3.9rem, $color-price);
       margin-left: 7px;
       text-decoration: none;
+      @include media-laptop-large {
+        @include font(500, 2.6rem, 3.9rem, $color-price);
+      }
+      @include media-tablet-landscape {
+        @include font(500, 2.2rem, 3.2rem, $color-price);
+      }
+    }
+
+    &.before-disc {
+      @include font(500, 2.4rem, 3.9rem, $color-dark);
+      text-decoration: line-through;
+      @include media-laptop-large {
+        @include font(500, 2rem, 3.9rem, $color-dark);
+      }
+      @include media-tablet-landscape {
+        @include font(500, 1.8rem, 3.2rem, $color-dark);
+      }
     }
   }
 
+  &__content {
+    padding: 25px 27px;
+    background-color: $color-background;
+  }
+
   &__description {
-    @include font(normal, 1.9rem, 140%, $color-dark);
+    &_title {
+      @include font(400, 3rem, 100%, $color-dark);
+      padding-bottom: 23px;
+      border-bottom: 1px solid $color-input;
+      @include media-laptop-large {
+        @include font(400, 2.8rem, 100%, $color-dark);
+      }
+      @include media-small-desktop {
+        @include font(400, 2.4rem, 100%, $color-dark);
+      }
+    }
+    &_subtitle {
+      margin: 32px 0 16px;
+      @include font(400, 2rem, 100%, $color-dark);
+      @include media-laptop-large {
+        @include font(400, 1.8rem, 100%, $color-dark);
+      }
+      @include media-small-desktop {
+        @include font(400, 1.4rem, 100%, $color-dark);
+      }
+    }
+    &_text {
+      @extend %font-second;
+      @include font(400, 1.8rem, 2.8rem, $color-dark-gray);
+      @include media-laptop-large {
+        @include font(400, 1.6rem, 2.5rem, $color-dark-gray);
+      }
+      @include media-small-desktop {
+        @include font(400, 1.4rem, 2rem, $color-dark-gray);
+      }
+    }
   }
 
   &__modal {
@@ -86,6 +270,35 @@
 
     & .swiper {
       width: unset;
+    }
+  }
+
+  &__control {
+    @include media-laptop-small {
+      flex-direction: column;
+    }
+    @include media-tablet {
+      width: 100%;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  }
+
+  &__button {
+    flex-shrink: 0;
+    width: fit-content;
+    min-width: 265px;
+    margin-top: 0;
+    font-size: 1.8rem;
+
+    @include media-laptop-large {
+      min-width: 235px;
+      font-size: 1.4rem;
+    }
+    @include media-laptop {
+      min-width: 220px;
+      font-size: 1.2rem;
     }
   }
 }

@@ -58,7 +58,6 @@ export default class ViewProfile {
   }
 
   public showError(msg: string): string {
-    // TODO display error message;
     return msg;
   }
 

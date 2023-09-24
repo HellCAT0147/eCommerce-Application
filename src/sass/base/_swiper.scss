@@ -35,27 +35,10 @@
 @import '../abstracts/mixins';
 
 .swiper {
-  width: calc($tablet-landscape-width / 2);
-
-  @include media-tablet-landscape {
-    width: calc($tablet-width / 2);
-  }
-
-  @include media-small-desktop {
-    width: calc($tablet-landscape-width / 2);
-  }
-
-  @include media-mobile-large {
-    width: calc($tablet-width / 2);
-  }
-
-  @include media-mobile-medium {
-    width: calc($mobile-large-width / 2);
-  }
+  width: 32%;
 
   height: fit-content;
   margin-left: auto;
-  margin-right: auto;
   position: relative;
   overflow: hidden;
   overflow: clip;
@@ -64,6 +47,16 @@
   /* Fix of Webkit flickering */
   z-index: 1;
   display: block;
+
+  @include media-laptop {
+    width: 45%;
+  }
+  @include media-laptop-small {
+    width: 65%;
+  }
+  @include media-small-desktop {
+    width: 100%;
+  }
 }
 .swiper-vertical > .swiper-wrapper {
   flex-direction: column;

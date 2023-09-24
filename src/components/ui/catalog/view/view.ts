@@ -6,25 +6,27 @@ import {
   Cart,
   ProductData,
   Price,
+  Attribute,
 } from '@commercetools/platform-sdk';
 import { Category } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/category';
 import { Base, Blocks, Elem, Mode, Titles } from '../../../models/builder';
 import Builder from '../../builder/html-builder';
-import { DataBase } from '../../../models/commerce';
+import { DataAttribute, DataBase } from '../../../models/commerce';
 import ResultPagination from '../../../models/result-pagination';
 import SortParameter from '../../../models/sort-parameter';
 import CatalogViewControlPanelsState from '../../../models/catalog-view-control-panels-state';
 import Controls from '../../../models/swiper';
+import { Pages } from '../../../models/router';
 
 export default class ViewCatalog {
   private static colorsHexes: Array<string> = [
-    '#000000',
-    '#0000ff',
-    '#ffffff',
-    '#ffff00',
-    '#00ff00',
-    '#ff99cc',
-    '#99ffff',
+    '#292A2D',
+    '#24426A',
+    '#F3ECE2',
+    '#CBA13E',
+    '#18574A',
+    '#DAB1B1',
+    '#2B9FA7',
   ];
 
   private static colorsKeys: Array<string> = ['black', 'blue', 'white', 'yellow', 'green', 'pink', 'tiffany'];
@@ -217,6 +219,89 @@ export default class ViewCatalog {
     this.updateRemoveCartButton(id, removeState);
   }
 
+  private getAttributes(data: ProductData | ProductProjection): DataAttribute {
+    const attribute: DataAttribute = {
+      color: '#ffffff',
+      brand: Titles.HAQ_TITLE,
+    };
+
+    const { attributes } = data.masterVariant;
+    if (attributes) {
+      attributes.forEach((attr: Attribute) => {
+        if (attr.name === Elem.brand) {
+          if (attr.value.length && typeof attr.value[0].key !== 'undefined') {
+            attribute.brand = attr.value[0].key;
+          }
+        } else if (attr.name === Elem.color) {
+          if (attr.value.length && typeof attr.value[0].key !== 'undefined') {
+            const index: number = ViewCatalog.colorsKeys.indexOf(attr.value[0].key);
+            if (index >= 0) attribute.color = ViewCatalog.colorsHexes[index];
+          }
+        }
+      });
+    }
+
+    return attribute;
+  }
+
+  private createSelectSize(): HTMLElement {
+    const sizes: HTMLElement = new Builder('div', '', Blocks.product, Elem.sizes, '').element();
+    const sizesTitle: HTMLHeadingElement = new Builder('', Base.titles, Blocks.product, Elem.title, Mode.size).h(4);
+    const sizeContainer: HTMLElement = new Builder('div', '', Blocks.product, Elem.container, '').element();
+    const sizeSmall: HTMLElement = new Builder('div', '', Blocks.product, Elem.size, Mode.small).element();
+    const sizeMedium: HTMLElement = new Builder('div', '', Blocks.product, Elem.size, Mode.medium).element();
+    const sizeLarge: HTMLElement = new Builder('div', '', Blocks.product, Elem.size, Mode.large).element();
+    sizesTitle.textContent = Titles.SIZES.toUpperCase();
+    sizeSmall.textContent = 'S';
+    sizeMedium.textContent = 'M';
+    sizeLarge.textContent = 'L';
+
+    sizeContainer.append(sizeSmall, sizeMedium, sizeLarge);
+    sizes.append(sizesTitle, sizeContainer);
+
+    return sizes;
+  }
+
+  private renderProductInfo(data: ProductData, name: string, basePrice: string, discountPrice: string): HTMLElement {
+    const productInfo: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.info).element();
+    const brand: HTMLParagraphElement = new Builder('', Base.titles, Blocks.product, Elem.brand, '').p();
+    const nameHTML: HTMLHeadingElement = new Builder('', Base.titles, Blocks.product, Elem.title, Mode.big).h(2);
+    const colors: HTMLElement = new Builder('div', '', Blocks.product, Elem.colors, '').element();
+    const colorsTitle: HTMLHeadingElement = new Builder('', Base.titles, Blocks.product, Elem.title, Mode.color).h(4);
+    const color: HTMLElement = new Builder('div', '', Blocks.product, Elem.color, Mode.check).element();
+    const sizes: HTMLElement = this.createSelectSize();
+    const priceHTML: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.price).element();
+    const priceHeadingHTML: HTMLHeadingElement = new Builder('', Base.titles, Blocks.product, Elem.title, Mode.price).h(
+      4
+    );
+    const basePriceHTML: HTMLElement = new Builder('span', '', Blocks.product, Elem.price, '').element();
+    const discountPriceHTML: HTMLElement = new Builder('span', '', Blocks.product, Elem.price, Mode.disc).element();
+    const cartButtons: HTMLElement = new Builder('div', '', Blocks.catalog, 'cart-buttons', 'wrapper').element();
+    const addButton = this.createCartButton(Mode.add);
+    const removeButton = this.createCartButton(Mode.remove);
+    removeButton.setAttribute('disabled', '');
+    cartButtons.classList.add(`${Blocks.product}__${Elem.control}`);
+    addButton.classList.add(`${Blocks.product}__${Elem.btn}`);
+    removeButton.classList.add(`${Blocks.product}__${Elem.btn}`);
+    const attr: DataAttribute = this.getAttributes(data);
+
+    brand.textContent = attr.brand.toUpperCase();
+    nameHTML.textContent = name;
+    colorsTitle.textContent = Titles.COLOR.toUpperCase();
+    color.style.background = attr.color;
+    priceHeadingHTML.textContent = Titles.PRICE_TOTAL.toUpperCase();
+    basePriceHTML.textContent = basePrice;
+    discountPriceHTML.textContent = discountPrice;
+    if (discountPrice) basePriceHTML.classList.add('before-disc');
+
+    colors.append(colorsTitle, color);
+    cartButtons.append(addButton, removeButton);
+    priceHTML.append(priceHeadingHTML, basePriceHTML, discountPriceHTML);
+    productInfo.append(brand, nameHTML, colors, sizes, priceHTML, cartButtons);
+
+    return productInfo;
+  }
+
   public showProduct(
     data: ProductData,
     name: string,
@@ -229,39 +314,23 @@ export default class ViewCatalog {
     const main: HTMLElement | null = document.querySelector(`.${Blocks.main}__${Mode.catalog}`);
     if (main) {
       main.innerHTML = '';
-      const product: HTMLElement = new Builder('article', '', Blocks.product, Elem.wrapper, '').element();
+      const product: HTMLElement = new Builder('article', '', Blocks.product, Elem.article, '').element();
       const productBody: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.body).element();
+      const productInfo: HTMLElement = this.renderProductInfo(data, name, basePrice, discountPrice);
       const id: string | undefined = data.masterVariant.key;
       if (id) productBody.setAttribute('id', id.toString().split('-')[0]);
-      const productInfo: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.info).element();
-      const nameHTML: HTMLHeadingElement = new Builder('', Base.titles, Blocks.product, Elem.title, Mode.big).h(2);
-      const descriptionHTML: HTMLParagraphElement = new Builder('', '', Blocks.product, Elem.desc, '').p();
-      const priceHTML: HTMLElement = new Builder('div', '', Blocks.product, Elem.wrapper, Mode.price).element();
-      const priceHeadingHTML: HTMLHeadingElement = new Builder(
-        '',
-        Base.titles,
-        Blocks.product,
-        Elem.title,
-        Mode.price
-      ).h(4);
-      const basePriceHTML: HTMLElement = new Builder('span', '', Blocks.product, Elem.price, '').element();
-      const discountPriceHTML: HTMLElement = new Builder('span', '', Blocks.product, Elem.price, Mode.disc).element();
-      nameHTML.textContent = name;
-      priceHeadingHTML.textContent = 'price total'.toUpperCase();
-      basePriceHTML.textContent = basePrice;
-      discountPriceHTML.textContent = discountPrice;
-      if (discountPrice) basePriceHTML.classList.add('before-disc');
+      const content: HTMLElement = new Builder('div', '', Blocks.product, Elem.content, '').element();
+      const descTitle: HTMLParagraphElement = new Builder('', '', Blocks.product, Elem.desc, Mode.title).p();
+      const descSubTitle: HTMLParagraphElement = new Builder('', '', Blocks.product, Elem.desc, Mode.subtitle).p();
+      const descriptionHTML: HTMLParagraphElement = new Builder('', '', Blocks.product, Elem.desc, Mode.text).p();
+      descTitle.textContent = Titles.DESC_TITLE;
+      descSubTitle.textContent = Titles.DESC_SUBTITLE;
       descriptionHTML.textContent = description;
       this.addSlider(productBody, images);
-      const cartButtons: HTMLElement = new Builder('div', '', Blocks.catalog, 'cart-buttons', 'wrapper').element();
-      const addButton = this.createCartButton(Mode.add);
-      const removeButton = this.createCartButton(Mode.remove);
-      removeButton.setAttribute('disabled', '');
-      cartButtons.append(addButton, removeButton);
-      priceHTML.append(priceHeadingHTML, basePriceHTML, discountPriceHTML, cartButtons);
-      productInfo.append(nameHTML, priceHTML);
+
+      content.append(descTitle, descSubTitle, descriptionHTML);
       productBody.appendChild(productInfo);
-      product.append(productBody, descriptionHTML);
+      product.append(productBody, content);
       main.appendChild(product);
       if (carted && id) this.updateCartButtons(id.toString().split('-')[0], false, true);
     }
@@ -426,7 +495,7 @@ export default class ViewCatalog {
       document.dispatchEvent(ViewCatalog.OnViewChangedEvent);
     };
     const root = new Builder('button', '', Blocks.catalog, 'breadcrumbs', 'button').button();
-    root.innerText = 'HAQ';
+    root.innerText = `${Pages.CATALOG[0].toUpperCase()}${Pages.CATALOG.slice(1)}`;
     root.setAttribute('id', 'cat-root-btn');
     root.addEventListener('click', () => {
       this.state.categories = [];
@@ -446,12 +515,13 @@ export default class ViewCatalog {
       this.state.categories.length > 0 ? this.state.categories[this.state.categories.length - 1] : undefined;
     const subcategories = this.categories?.get(latestCategory?.id);
     if (subcategories) {
-      // TODO:: draw dropdown with subcategories
       const addCategoryButton = new Builder('button', '', Blocks.catalog, 'breadcrumbs', 'button').button();
-      addCategoryButton.innerText = '+';
+      addCategoryButton.innerText = 'Category';
       noParamBreadcrumbsWrapper.append(addCategoryButton);
       addCategoryButton.addEventListener('click', () => {
+        if (addCategoryButton.querySelector('.catalog__breadcrumbs_button-variant')) return;
         subcategories.forEach((subcategory) => {
+          addCategoryButton.classList.add(Mode.opened);
           const subVar = new Builder('button', '', Blocks.catalog, 'breadcrumbs', 'button-variant').button();
           subVar.innerText = subcategory.name['en-US'];
           addCategoryButton.append(subVar);
@@ -476,13 +546,12 @@ export default class ViewCatalog {
     searchWrapper.setAttribute('id', 'search-wrapper');
     const searchInput: HTMLInputElement = new Builder('input', '', Blocks.catalog, 'search-wrapper', 'input').input();
     searchInput.setAttribute('id', ViewCatalog.searchButtonId);
-    searchInput.setAttribute('placeholder', 'WHAT ARE YOU LOOKING FOR?');
+    searchInput.setAttribute('placeholder', Titles.SEARCH);
     searchInput.addEventListener('change', (): void => {
       this.state.query = searchInput.value;
     });
     const searchButton = new Builder('button', Base.btns_empty, Blocks.catalog, 'search-wrapper', 'button').button();
     searchButton.setAttribute('id', 'search-button');
-    searchButton.textContent = `🔍`;
     searchButton.addEventListener('click', () => {
       searchInput.setAttribute(':focus', 'false');
       document.dispatchEvent(ViewCatalog.OnViewChangedEvent);
@@ -494,7 +563,7 @@ export default class ViewCatalog {
   public createBrandFilterBox(): HTMLElement {
     const brandFilter: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter', 'brand').element();
     const brandFilterHeader: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter-box', 'header').element();
-    brandFilterHeader.innerText = 'BRAND';
+    brandFilterHeader.innerText = Titles.BRAND;
     brandFilter.append(brandFilterHeader);
     const brands = ['HAQ-inc', 'RS-fashion', 'Bold Italics'];
     brands.forEach((brand: string, index: number) => {
@@ -533,7 +602,7 @@ export default class ViewCatalog {
   public createSizeFilterBox(): HTMLElement {
     const sizeFilter: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter', 'size').element();
     const sizeFilterHeader: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter-box', 'header').element();
-    sizeFilterHeader.innerText = 'SIZE';
+    sizeFilterHeader.innerText = Titles.SIZE;
     sizeFilter.append(sizeFilterHeader);
     const sizes = ['small', 'medium', 'large'];
     sizes.forEach((size: string, index: number) => {
@@ -563,21 +632,26 @@ export default class ViewCatalog {
           sizeCheck.click();
         }
       };
-      label.append(sizeCheck, size);
+      label.append(sizeCheck, `${size[0].toUpperCase()}${size.slice(1)}`);
       sizeFilter.append(label);
     });
     return sizeFilter;
   }
 
+  private toggleCheckColor(target: HTMLElement): void {
+    target.classList.toggle(`${Blocks.product}__${Elem.color}_${Mode.check}`);
+  }
+
   public createColorFilterBox(): HTMLElement {
     const colorFilter: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter', 'color').element();
     const colorFilterHeader: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter-box', 'header').element();
-    colorFilterHeader.innerText = 'COLOR';
+    const colors: HTMLElement = new Builder('div', '', Blocks.catalog, Elem.colors, '').element();
+    colorFilterHeader.innerText = Titles.COLOR;
     colorFilter.append(colorFilterHeader);
     ViewCatalog.colorsHexes.forEach((color: string, index: number) => {
       const colorName = ViewCatalog.colorsKeys[index];
       const label: HTMLLabelElement = document.createElement('label');
-      label.className = 'catalog__filter-box_variant';
+      label.className = 'catalog__filter-box_variant product__color';
       const colorCheck: HTMLInputElement = new Builder(
         'input',
         Base.check,
@@ -597,22 +671,26 @@ export default class ViewCatalog {
       });
       colorCheck.checked = this.state.colors.includes(color);
       label.onclick = (e): void => {
-        const target = e.target as HTMLElement;
+        const { target } = e;
+        if (!(target instanceof HTMLElement)) return;
         if (target.tagName !== 'INPUT') {
+          this.toggleCheckColor(target);
           colorCheck.click();
         }
       };
       label.append(colorCheck);
       label.setAttribute('style', `background-color: ${color}`);
-      colorFilter.append(label);
+      colors.appendChild(label);
     });
+
+    colorFilter.append(colors);
     return colorFilter;
   }
 
   public createPriceFilter(): HTMLElement {
     const priceFilter: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter', 'price').element();
     const priceFilterHeader: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter-box', 'header').element();
-    priceFilterHeader.innerText = 'MAX PRICE';
+    priceFilterHeader.innerText = Titles.PRICE_RANGE;
     priceFilter.append(priceFilterHeader);
     const curr: HTMLSpanElement = document.createElement('span');
     const range: HTMLInputElement = new Builder('input', '', Blocks.catalog, 'filter-box', 'range').input();
@@ -627,13 +705,13 @@ export default class ViewCatalog {
       }
       this.state.maxPrice = parsed;
       document.dispatchEvent(ViewCatalog.OnViewChangedEvent);
-      curr.innerText = `0 - ${this.state.maxPrice}`;
+      curr.innerText = `0.00 $ - ${this.state.maxPrice}.00 $`;
     });
     range.value = this.state.maxPrice.toString();
     const label: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter-box', 'range-label').element();
 
     curr.setAttribute('id', 'price-limit_label');
-    curr.innerText = `0 - ${range.value}`;
+    curr.innerText = `0.00 $ - ${range.value}.00 $`;
     label.append(curr);
     priceFilter.append(range, label);
     return priceFilter;
@@ -641,17 +719,15 @@ export default class ViewCatalog {
 
   public createFilters(): HTMLElement {
     const filters: HTMLElement = ViewCatalog.filtersWrapperBuilder.element();
-    const filtersHeader: HTMLElement = new Builder('div', '', Blocks.catalog, 'filter', 'header').element();
-    filtersHeader.innerText = 'FILTERS';
     const brandFilter: HTMLElement = this.createBrandFilterBox();
     brandFilter.classList.add('shown');
     const sizeFilter: HTMLElement = this.createSizeFilterBox();
     const colorFilter: HTMLElement = this.createColorFilterBox();
     const priceFilter: HTMLElement = this.createPriceFilter();
-    const resetFiltersBtn = new Builder('button', Base.btns_bordered, Blocks.catalog, 'filter', 'button').element();
+    const resetFiltersBtn = new Builder('button', Base.btns_colored, Blocks.catalog, 'filter', 'button').element();
     resetFiltersBtn.innerText = 'RESET';
     resetFiltersBtn.setAttribute('id', ViewCatalog.resetButtonId);
-    filters.append(filtersHeader, brandFilter, sizeFilter, colorFilter, priceFilter, resetFiltersBtn);
+    filters.append(brandFilter, sizeFilter, colorFilter, priceFilter, resetFiltersBtn);
     filters.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
       if (target && target.tagName !== 'INPUT' && target.tagName !== 'LABEL') {
@@ -697,8 +773,6 @@ export default class ViewCatalog {
     });
 
     return sortingDropdown;
-
-    // TODO add products per page section if necessary
   }
 
   private createCatalogCard(product: ProductProjection): HTMLElement {
@@ -708,12 +782,13 @@ export default class ViewCatalog {
     if (images && images.length > 0) {
       cardPic.setAttribute('src', images[0].url);
     }
+    const brand: HTMLParagraphElement = new Builder('', Base.titles, Blocks.catalog, Elem.brand, '').p();
+    const attr: DataAttribute = this.getAttributes(product);
+    brand.textContent = attr.brand.toUpperCase();
     const nameTag: HTMLElement = new Builder('div', '', Blocks.catalog, 'card', 'name-tag').element();
-    nameTag.innerText = product.name['en-US'].toString().toUpperCase();
+    nameTag.innerText = product.name['en-US'].toString();
     const descriptionTag: HTMLElement = new Builder('div', '', Blocks.catalog, 'card', 'description-tag').element();
-    descriptionTag.innerText = product.description?.['en-US'].toString() || '';
-    const readMore: HTMLElement = new Builder('div', '', Blocks.catalog, 'read-more', '').element();
-    readMore.innerText = 'READ MORE';
+    descriptionTag.innerText = `${product.description?.['en-US'].toString().split('.')[0].split('!')[0]}.` || '';
     const priceTag: HTMLElement = new Builder('div', '', Blocks.catalog, 'card', 'price-tag').element();
     const basePrice: HTMLElement = new Builder('span', '', Blocks.catalog, 'card', 'base-price').element();
     const prices: Price | undefined = product.masterVariant.prices?.[0];
@@ -733,7 +808,7 @@ export default class ViewCatalog {
         priceTag.append(discountedPrice);
       }
     }
-    card.append(cardPic, nameTag, descriptionTag, readMore, priceTag, this.createCartButton(Mode.add));
+    card.append(cardPic, brand, nameTag, descriptionTag, priceTag, this.createCartButton(Mode.add));
     card.setAttribute('id', (product.key || '0').split('-')[1]);
     return card;
   }
@@ -816,8 +891,10 @@ export default class ViewCatalog {
       const pageAndFilters: HTMLElement = new Builder('div', '', Blocks.catalog, 'page-and-filters', '').element();
       pageAndFilters.append(this.createFilters(), this.fillCatalogPage(resultPagination, cart));
       const searchAndSorting = new Builder('div', '', Blocks.catalog, 'search-and-sorting', '').element();
+      const control = new Builder('div', '', Blocks.catalog, Elem.control, '').element();
       searchAndSorting.append(this.createPageSettings(), this.createSearchWrapper());
-      main.append(this.createBreadCrumbs(), searchAndSorting, pageAndFilters, this.createPaginationButtons());
+      control.append(this.createBreadCrumbs(), searchAndSorting);
+      main.append(control, pageAndFilters, this.createPaginationButtons());
       this.fillPaginationButtons(resultPagination);
     }
   }
@@ -914,7 +991,7 @@ export default class ViewCatalog {
       });
       const priceLabel: HTMLElement | null = document.getElementById('price-limit_label');
       if (priceLabel) {
-        priceLabel.innerText = `0 - ${this.state.maxPrice.toString()}`;
+        priceLabel.innerText = `0.00 $ - ${this.state.maxPrice.toString()}.00 $`;
       }
       const sortingDropdown: Element = document.getElementsByClassName('catalog__sorting-dropdown')[0];
       if (sortingDropdown) {

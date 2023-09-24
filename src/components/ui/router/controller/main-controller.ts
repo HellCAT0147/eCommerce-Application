@@ -47,6 +47,8 @@ class MainController {
         url = Pages.PROFILE;
       } else if (url === Pages.GO_TO_CATALOG) {
         url = Pages.CATALOG;
+      } else if (url === Pages.GO_TO_ABOUT) {
+        url = Pages.ABOUT_US;
       }
     }
 
@@ -65,6 +67,7 @@ class MainController {
       const signOutButton: HTMLElement | null = document.querySelector(`#${Pages.SIGN_OUT}`);
 
       if (navButton) {
+        window.scrollTo(0, 0);
         e.preventDefault();
         if (navButton === signOutButton) {
           this.tokenCachesStore.unset();
@@ -84,6 +87,7 @@ class MainController {
       } else if (targetHtmlElement.closest(`.${Blocks.main}__${Pages.CATALOG}`)) {
         const card: HTMLElement | null = targetHtmlElement.closest(`.${Base.cards}`);
         if (card && !targetHtmlElement.classList.contains(`${Blocks.catalog}__${Elem.btn_cart}_${Mode.add}`)) {
+          window.scrollTo(0, 0);
           const id: string = this.getUrlElement(card);
           this.router.navigate(`${Pages.CATALOG}/${id}`);
         } else {

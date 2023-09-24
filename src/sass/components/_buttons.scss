@@ -32,7 +32,7 @@
 
   &_bordered {
     padding: 16px 53px;
-    background: $color-Light-hover;
+    background: $color-light-hover;
     letter-spacing: 0.05rem;
     border: 2px solid $color-input;
     @extend %font-main;
@@ -51,16 +51,12 @@
     cursor: not-allowed;
     &_available {
       color: $color-light-gray;
-      background: $color-Light-hover;
+      background: $color-light-hover;
       cursor: pointer;
     }
     @include media-tablet {
       width: 30px;
       height: 30px;
     }
-  }
-
-  &:active {
-    scale: 0.9;
   }
 }

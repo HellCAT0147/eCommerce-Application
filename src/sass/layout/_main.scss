@@ -7,6 +7,11 @@
   position: relative;
   padding: 21px;
   row-gap: 15px;
+
+  &__catalog {
+    min-height: 100vh;
+  }
+
   &__not-found {
     align-items: center;
     justify-content: center;
@@ -48,7 +53,10 @@
 
     .message__text {
       text-align: center;
-      @include font(400, 1.6rem, 100%, $color-success-intensive);
+      @include font(400, 2rem, 100%, $color-success-intensive);
+      @include media-laptop-large {
+        @include font(400, 1.6rem, 100%, $color-success-intensive);
+      }
     }
 
     &_hidden {
@@ -58,12 +66,44 @@
     &_failed {
       background-color: $color-error;
       .message__text {
-        @include font(400, 1.6rem, 100%, $color-error-text);
+        @include font(400, 2rem, 100%, $color-error-text);
+        @include media-laptop-large {
+          @include font(400, 1.6rem, 100%, $color-error-text);
+        }
       }
 
       .message__image {
         background-image: url('../assets/ico/x-marks-the-spot.svg');
       }
+    }
+  }
+
+  &__loader {
+    color: $color-dark;
+    position: fixed;
+    font-size: 11px;
+    background: $color-dark;
+    width: 0.8em;
+    height: 1em;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: -0.16s;
+    @extend %loader;
+    &:before,
+    &:after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 1.6em;
+      background: $color-dark;
+      width: 0.8em;
+      height: 1em;
+      @extend %loader;
+    }
+    &:before {
+      left: -1.6em;
+      animation-delay: -0.32s;
     }
   }
 }
