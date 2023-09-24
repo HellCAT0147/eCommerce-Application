@@ -78,7 +78,6 @@
       flex-basis: 50%;
       @include media-tablet {
         flex-direction: row;
-        // width: 100%;
         order: -1;
         margin-bottom: 30px;
         flex-wrap: wrap;
