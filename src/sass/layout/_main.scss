@@ -1,0 +1,109 @@
+.main {
+  display: flex;
+  position: relative;
+  align-items: center;
+  flex-direction: column;
+  flex-grow: 1;
+  position: relative;
+  padding: 21px;
+  row-gap: 15px;
+
+  &__catalog {
+    min-height: 100vh;
+  }
+
+  &__not-found {
+    align-items: center;
+    justify-content: center;
+    row-gap: 30px;
+  }
+  &__title {
+    @include font(400, 4.8rem, 9rem, $color-dark);
+  }
+
+  @include media-mobile-large {
+    &__title {
+      @include font(400, 3.2rem, 100%, $color-dark);
+    }
+  }
+
+  &__about-us {
+    padding: 0;
+    row-gap: 0;
+  }
+
+  &__message {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    column-gap: 5px;
+    padding: 20px 30px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: $color-success;
+    z-index: 100;
+
+    .message__image {
+      background-image: url('../assets/ico/on.svg');
+      flex-shrink: 0;
+      width: 11px;
+      height: 10px;
+    }
+
+    .message__text {
+      text-align: center;
+      @include font(400, 2rem, 100%, $color-success-intensive);
+      @include media-laptop-large {
+        @include font(400, 1.6rem, 100%, $color-success-intensive);
+      }
+    }
+
+    &_hidden {
+      display: none;
+    }
+
+    &_failed {
+      background-color: $color-error;
+      .message__text {
+        @include font(400, 2rem, 100%, $color-error-text);
+        @include media-laptop-large {
+          @include font(400, 1.6rem, 100%, $color-error-text);
+        }
+      }
+
+      .message__image {
+        background-image: url('../assets/ico/x-marks-the-spot.svg');
+      }
+    }
+  }
+
+  &__loader {
+    color: $color-dark;
+    position: fixed;
+    font-size: 11px;
+    background: $color-dark;
+    width: 0.8em;
+    height: 1em;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: -0.16s;
+    @extend %loader;
+    &:before,
+    &:after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 1.6em;
+      background: $color-dark;
+      width: 0.8em;
+      height: 1em;
+      @extend %loader;
+    }
+    &:before {
+      left: -1.6em;
+      animation-delay: -0.32s;
+    }
+  }
+}

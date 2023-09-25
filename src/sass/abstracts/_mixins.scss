@@ -1,0 +1,94 @@
+@mixin font($weight, $size, $height, $color) {
+  font-weight: $weight;
+  font-size: $size;
+  line-height: $height;
+  color: $color;
+}
+
+@mixin media-desktop {
+  @media (max-width: $desktop-width) {
+    @content;
+  }
+}
+
+@mixin media-laptop-large {
+  @media (max-width: $laptop-large-width) {
+    @content;
+  }
+}
+
+@mixin media-laptop {
+  @media (max-width: $laptop-width) {
+    @content;
+  }
+}
+
+@mixin media-laptop-small {
+  @media (max-width: $laptop-small-width) {
+    @content;
+  }
+}
+
+@mixin media-tablet-landscape {
+  @media (max-width: $tablet-landscape-width) {
+    @content;
+  }
+}
+
+@mixin media-small-desktop {
+  @media (max-width: $small-desktop-width) {
+    @content;
+  }
+}
+
+@mixin media-large-tablet {
+  @media (max-width: $tablet-large-width) {
+    @content;
+  }
+}
+
+@mixin media-tablet {
+  @media (max-width: $tablet-width) {
+    @content;
+  }
+}
+
+@mixin media-mobile-large {
+  @media (max-width: $mobile-large-width) {
+    @content;
+  }
+}
+
+@mixin media-mobile-medium {
+  @media (max-width: $mobile-medium-width) {
+    @content;
+  }
+}
+
+@mixin media-hover-mobile {
+  @media (hover: none) and (pointer: coarse) {
+    @content;
+  }
+}
+
+@mixin media-hover-desktop {
+  @media (hover: hover) and (pointer: fine) {
+    @content;
+  }
+}
+
+@mixin eye-wrapper {
+  position: absolute;
+  height: 35px;
+  width: 35px;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-size: contain;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  @include media-mobile-large {
+    top: 60%;
+  }
+}

@@ -1,0 +1,25 @@
+@import 'base/fonts';
+
+@import 'abstracts/constants';
+@import 'abstracts/mixins';
+@import 'abstracts/placeholders';
+
+@import 'base/base';
+@import 'base/swiper';
+
+@import 'components/buttons';
+@import 'components/hamburger';
+@import 'components/not-found';
+@import 'components/form';
+@import 'components/main-page';
+@import 'components/login';
+@import 'components/profile';
+@import 'components/registration';
+@import 'components/catalog';
+@import 'components/product-page';
+@import 'components/cart';
+@import 'components/about';
+
+@import 'layout/header';
+@import 'layout/main';
+@import 'layout/footer';

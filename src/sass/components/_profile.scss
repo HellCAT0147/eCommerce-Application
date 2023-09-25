@@ -1,0 +1,194 @@
+.profile {
+  &__form {
+    @include media-mobile-large {
+      align-items: center;
+    }
+    &.hidden {
+      display: none;
+    }
+  }
+
+  &__forms {
+    display: flex;
+    flex-direction: column;
+    border: none;
+    row-gap: 10px;
+    &_default {
+      order: -1;
+    }
+  }
+
+  &__field {
+    &_check {
+      flex-direction: column;
+      row-gap: 10px;
+    }
+
+    &.form__check {
+      justify-content: flex-start;
+      @include media-mobile-large {
+        flex-direction: row;
+      }
+    }
+
+    &_control {
+      @include media-mobile-large {
+        row-gap: 20px;
+      }
+    }
+    @include media-mobile-large {
+      flex-direction: column;
+    }
+  }
+
+  &__input,
+  &__label,
+  &__select {
+    @include media-mobile-large {
+      width: 100%;
+      max-width: 100%;
+    }
+  }
+
+  &__wrapper {
+    &_account {
+      flex-grow: 1;
+      max-width: 50%;
+      @include media-mobile-large {
+        max-width: 100%;
+        align-items: center;
+      }
+    }
+
+    &_control {
+      justify-content: flex-start;
+      column-gap: 20px;
+      @include media-mobile-large {
+        flex-direction: row;
+      }
+    }
+  }
+
+  &__addresses {
+    flex-direction: row;
+    flex-wrap: wrap;
+    row-gap: 40px;
+  }
+
+  &__address {
+    flex-grow: 1;
+    max-width: 48%;
+    min-width: 250px;
+    &_billing-default {
+      order: -2;
+      padding-bottom: 20px;
+      border-bottom: solid 1px $color-light-gray;
+    }
+    &_shipping-default {
+      order: -1;
+      padding-bottom: 20px;
+      border-bottom: solid 1px $color-light-gray;
+    }
+    @include media-mobile-large {
+      max-width: 100%;
+      min-width: none;
+      align-items: center;
+    }
+  }
+
+  &__content {
+    display: flex;
+    column-gap: 3px;
+  }
+
+  &__text {
+    @include font(400, 1.6rem, 100%, $color-light-gray);
+  }
+
+  &__title {
+    margin-top: 40px;
+    @extend %font-main;
+    @include font(400, 2.4rem, 100%, $color-dark);
+  }
+
+  &__subtitle {
+    @extend %font-main;
+    @include font(600, 1.8rem, 100%, $color-dark-gray);
+  }
+
+  &__modal {
+    display: none;
+    width: 70%;
+    margin-top: 40px;
+    &.opened {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: $color-light;
+    }
+    &.profile__field {
+      @include media-mobile-large {
+        flex-direction: column;
+        max-width: 100%;
+        align-items: center;
+      }
+    }
+  }
+
+  &__button {
+    @extend %font-main;
+    &_back {
+      @include font(600, 1.4rem, 100%, $color-light-gray);
+      &:hover {
+        color: $color-main-second;
+      }
+    }
+    &_add {
+      border: none;
+      padding: 18px 55px;
+      color: $color-light;
+      background: $color-dark;
+      letter-spacing: 0.05rem;
+      &:hover {
+        background: $color-main-second;
+      }
+    }
+  }
+
+  &__errors {
+    max-width: fit-content;
+    width: 100%;
+    margin-top: -$base-intend;
+    padding: 5px 10px;
+    align-self: flex-end;
+    text-align: right;
+    background-color: $color-error;
+
+    &_response {
+      margin-top: 0;
+      animation: disappear 0.5s linear 4.5s forwards;
+    }
+  }
+
+  &__error {
+    padding: 5px 20px 5px 5px;
+    background-image: url('../assets/ico/x-marks-the-spot.svg');
+    background-repeat: no-repeat;
+    background-position: right;
+  }
+}
+
+@keyframes disappear {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.modal {
+  &_hidden {
+    display: none;
+  }
+}

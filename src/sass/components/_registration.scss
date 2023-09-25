@@ -1,0 +1,47 @@
+.registration {
+  &__button {
+    max-width: fit-content;
+  }
+
+  &__address {
+    &_hidden {
+      display: none;
+    }
+  }
+
+  &__field {
+    &_both-address {
+      margin-bottom: 10px;
+    }
+  }
+
+  &__check {
+    margin: 20px 0;
+  }
+
+  &__input_password {
+    padding-right: 30px;
+  }
+
+  &__wrapper {
+    align-self: flex-end;
+    margin-bottom: 10px;
+  }
+
+  &__errors {
+    max-width: fit-content;
+    width: 100%;
+    margin-top: -$base-intend;
+    padding: 5px 10px;
+    align-self: flex-end;
+    text-align: right;
+    background-color: $color-error;
+  }
+
+  &__error {
+    padding: 5px 20px 5px 5px;
+    background-image: url('../assets/ico/x-marks-the-spot.svg');
+    background-repeat: no-repeat;
+    background-position: right;
+  }
+}

@@ -1,0 +1,360 @@
+.about {
+  &__header {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 60px 0 140px 0;
+    background: $color-background;
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+  }
+
+  &__title {
+    margin-bottom: 30px;
+    @include font(600, 7.2rem, 100%, $color-dark);
+
+    @include media-small-desktop {
+      @include font(600, 5.2rem, 100%, $color-dark);
+    }
+
+    @include media-mobile-large {
+      @include font(600, 3.4rem, 100%, $color-dark);
+    }
+
+    &_rss {
+      color: $color-main-second;
+    }
+  }
+
+  &__subtitle {
+    width: 80%;
+    @include font(400, 2.4rem, 3.2rem, $color-dark);
+    @include media-small-desktop {
+      @include font(400, 1.8rem, 2.8rem, $color-dark);
+    }
+  }
+
+  &__rss {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__logo {
+    display: block;
+    width: 129.4px;
+    height: 109px;
+    align-self: flex-end;
+    background-image: url('../assets/ico/logo-rs.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    order: -1;
+
+    @include media-small-desktop {
+      width: 95px;
+      height: 80px;
+    }
+
+    @extend %transition;
+    &:hover {
+      scale: 1.05;
+    }
+  }
+
+  &__info {
+    display: flex;
+    justify-content: space-around;
+    position: relative;
+    flex-wrap: wrap;
+    width: 100%;
+
+    @include media-mobile-large {
+      flex-direction: column;
+      row-gap: 30px;
+      position: relative;
+      top: -60px;
+    }
+  }
+
+  &__facts {
+    display: flex;
+    justify-content: space-around;
+    position: relative;
+    width: 93%;
+    padding: 40px 0;
+    margin: 60px 0 90px 0;
+    border: 2px solid $color-input;
+    @include media-mobile-large {
+      text-align: center;
+      flex-direction: column;
+      row-gap: 15px;
+    }
+  }
+
+  &__contents {
+    width: 100%;
+  }
+
+  &__teamwork {
+    padding: 50px 40px 50px 40px;
+    text-align: center;
+  }
+
+  &__thanks {
+    padding: 50px 40px 90px 40px;
+    width: 100%;
+    background: $color-background;
+  }
+}
+
+.person {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  top: -60px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+
+  @include media-mobile-large {
+    position: static;
+    top: 0px;
+  }
+
+  &__image {
+    flex-shrink: 0;
+    width: 120px;
+    height: 120px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    border-radius: 50%;
+    outline: 5px solid $color-light;
+    &_person1 {
+      background-image: url('../assets/img/about_us/person1.jpg');
+    }
+
+    &_person2 {
+      background-image: url('../assets/img/about_us/person2.jpg');
+    }
+
+    &_person3 {
+      background-image: url('../assets/img/about_us/person3.jpg');
+    }
+
+    &_person4 {
+      background-image: url('../assets/img/about_us/person4.jpg');
+    }
+
+    &_person5 {
+      background-image: url('../assets/img/about_us/person5.jpg');
+      background-position: center;
+    }
+  }
+
+  &__name {
+    margin-top: 11px;
+    @extend %font-main;
+    @include font(600, 2rem, 100%, $color-dark-gray);
+  }
+
+  &__role {
+    margin-top: 11px;
+    @extend %font-second;
+    @include font(400, 1.6rem, 100%, $color-light-gray);
+  }
+
+  &__git {
+    font-size: 1.4rem;
+  }
+
+  &:hover {
+    scale: 1.05;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  &__control {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &_mentor {
+    position: relative;
+    top: 0px;
+    .content__contact {
+      width: 19.21px;
+      height: 22px;
+      background: $color-dark-gray;
+      align-self: flex-end;
+    }
+    .person__role {
+      text-align: center;
+    }
+    &:hover {
+      scale: none;
+      text-decoration: none;
+      cursor: default;
+    }
+  }
+}
+
+.facts {
+  &__title {
+    position: absolute;
+    text-align: center;
+    width: 200px;
+    top: -15px;
+    left: calc(50% - 100px);
+    @include font(400, 2.4rem, 100%, $color-dark);
+    background: $color-light;
+  }
+
+  &__fact {
+    @include font(500, 2.2rem, 100%, $color-dark-gray);
+    @include media-tablet {
+      @include font(500, 1.8rem, 100%, $color-dark-gray);
+    }
+    @include media-mobile-large {
+      width: 100%;
+      @include font(500, 2.2rem, 100%, $color-dark-gray);
+    }
+  }
+
+  &__amount {
+    color: $color-main-second;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+  row-gap: 40px;
+  &__name {
+    @extend %font-second;
+    @include font(400, 3.4rem, 100%, $color-dark);
+  }
+
+  &__link {
+    display: flex;
+    column-gap: 5px;
+  }
+
+  &__contacts {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  &__locale {
+    @extend %font-second;
+    @include font(500, 1.6rem, 100%, $color-dark-gray);
+  }
+
+  &__contact {
+    display: block;
+    height: 30px;
+    width: 30px;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    background: $color-dark;
+    @extend %transition;
+    cursor: pointer;
+    &:hover {
+      background: $color-main-second;
+    }
+
+    &_git {
+      width: 26.2px;
+      -webkit-mask-image: url('../assets/ico/git.svg');
+      mask-image: url('../assets/ico/git.svg');
+      background: $color-dark;
+    }
+
+    &_email {
+      height: 29px;
+      width: 29px;
+      -webkit-mask-image: url('../assets/ico/mail.svg');
+      mask-image: url('../assets/ico/mail.svg');
+      background: $color-dark;
+    }
+  }
+
+  &__title {
+    margin-bottom: 15px;
+    @include font(500, 2.2rem, 100%, $color-dark);
+  }
+
+  &__text {
+    text-align: justify;
+    @extend %font-second;
+    @include font(400, 1.6rem, 2.6rem, $color-dark);
+  }
+
+  &__wrapper {
+    display: flex;
+    row-gap: 10px;
+    column-gap: 40px;
+    &_top {
+      justify-content: space-between;
+    }
+
+    @include media-small-desktop {
+      flex-direction: column;
+      row-gap: 20px;
+    }
+  }
+
+  &__impact,
+  &__name {
+    flex-basis: 30%;
+  }
+
+  &__bio,
+  &__contacts {
+    flex-basis: 70%;
+  }
+
+  &:nth-child(odd) {
+    background-color: $color-background;
+  }
+}
+
+.teamwork {
+  &__title {
+    @include font(600, 2.4rem, 100%, $color-main-second);
+    margin-bottom: 30px;
+  }
+
+  &__text {
+    @extend %font-second;
+    @include font(400, 1.8rem, 2.8rem, $color-dark);
+  }
+}
+
+.thanks {
+  &__title {
+    text-align: center;
+    @include font(600, 2.4rem, 100%, $color-dark-gray);
+    margin-bottom: 30px;
+  }
+
+  &__text {
+    @extend %font-second;
+    @include font(400, 1.8rem, 2.8rem, $color-dark);
+    text-align: center;
+  }
+
+  &__wrapper {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    margin-bottom: 70px;
+  }
+}

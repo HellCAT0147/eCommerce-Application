@@ -1,0 +1,260 @@
+.cart {
+  &__wrapper {
+    display: flex;
+    column-gap: 70px;
+    width: 100%;
+    justify-content: center;
+    margin: 40px 0;
+    @include media-laptop {
+      column-gap: 40px;
+    }
+    @include media-tablet-landscape {
+      align-items: center;
+      flex-direction: column;
+      row-gap: 60px;
+    }
+  }
+
+  &__article {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 753px;
+    row-gap: 24px;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 24px 0;
+    row-gap: 18px;
+    border-top: 1px solid $color-input;
+    border-bottom: 1px solid $color-input;
+    @include font(500, 2.8rem, 100%, $color-dark);
+  }
+
+  &__header,
+  &__item {
+    display: grid;
+    justify-content: space-between;
+    grid-template-columns: 283px 78px 120px 78px 24px;
+    column-gap: 40px;
+    @include media-laptop {
+      grid-template-columns: 240px 70px 120px 70px 24px;
+      column-gap: 20px;
+    }
+    @include media-tablet-landscape {
+      grid-template-columns: 283px 78px 120px 78px 24px;
+      column-gap: 40px;
+    }
+    @include media-tablet {
+      grid-template-columns: 180px 50px 90px 50px 24px;
+      column-gap: 20px;
+    }
+    @include media-mobile-large {
+      grid-template-columns: 90px 50px 90px 50px 24px;
+      column-gap: 10px;
+    }
+  }
+
+  &__header {
+    @include font(500, 1.8rem, 100%, $color-light-gray);
+  }
+
+  &__item {
+    align-items: center;
+  }
+
+  &__product {
+    display: flex;
+    @include media-mobile-large {
+      flex-direction: column;
+    }
+  }
+
+  &__image {
+    max-width: 83px;
+  }
+
+  &__name {
+    padding: 0 18px;
+    @include font(500, 1.8rem, 100%, $color-dark);
+    @include media-mobile-large {
+      padding: 5px 0px;
+    }
+  }
+
+  &__price {
+    &_item {
+      display: flex;
+      flex-direction: column;
+      row-gap: 5px;
+      @extend %font-second;
+      @include font(500, 1.4rem, 100%, $color-dark);
+    }
+
+    &_base {
+      &.cross {
+        @include font(500, 1.2rem, 100%, $color-light-gray);
+        text-decoration: line-through;
+      }
+    }
+
+    &_promo {
+      @include font(600, 1.4rem, 100%, $color-main-second);
+    }
+  }
+
+  &__quantity {
+    &_item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid $color-input;
+    }
+  }
+
+  &__amount {
+    width: 0;
+    flex-grow: 1;
+    flex-shrink: 0;
+    text-align: center;
+    border: none;
+    border-collapse: collapse;
+    outline: none;
+    @include font(400, 1.6rem, 100%, $color-dark);
+  }
+
+  &__total {
+    &_item {
+      @extend %font-second;
+      @include font(500, 1.4rem, 100%, $color-dark);
+    }
+  }
+
+  &__edit {
+    flex-shrink: 0;
+    &_delete {
+      height: 24px;
+      width: 24px;
+      background: url('../assets/ico/delete.svg');
+      background-repeat: no-repeat;
+      background-size: contain;
+      cursor: pointer;
+      @extend %transition;
+      &:hover {
+        background: url('../assets/ico/delete_hover.svg');
+      }
+    }
+  }
+
+  &__control {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__button {
+    &_clear {
+      align-self: flex-end;
+      background-color: $color-main;
+      &:hover {
+        background-color: $color-hover-edit;
+      }
+    }
+  }
+
+  &__aside {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 500px;
+    row-gap: 24px;
+  }
+
+  &__promo,
+  &__order {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid $color-input;
+    background: $color-light-hover;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    padding: 36px 32px;
+    row-gap: 22px;
+  }
+
+  &__label {
+    font-size: 2.4rem;
+  }
+
+  &__input {
+    width: 100%;
+  }
+
+  &__link {
+    display: inline-block;
+    width: fit-content;
+  }
+
+  &__popup {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    padding: 30px 50px;
+    z-index: 100;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid $color-input;
+    background: $color-light;
+    box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
+  }
+}
+
+.popup {
+  &__info {
+    @extend %font-second;
+    @include font(600, 1.6rem, 180%, $color-dark);
+    margin-bottom: 30px;
+  }
+
+  &__control {
+    display: flex;
+    justify-content: space-between;
+    column-gap: 15px;
+  }
+
+  &__button {
+    @extend %font-main;
+    &_no {
+      @include font(600, 1.4rem, 100%, $color-light-gray);
+      &:hover {
+        color: $color-main-second;
+      }
+    }
+  }
+}
+
+.order {
+  &__field {
+    display: flex;
+    justify-content: space-between;
+
+    &_subtotal {
+      @include font(500, 1.8rem, 100%, $color-dark);
+    }
+
+    &_sale {
+      @include font(500, 1.8rem, 100%, $color-light-gray);
+    }
+
+    &_total {
+      margin-top: 5px;
+      @include font(400, 2.4rem, 100%, $color-dark);
+    }
+  }
+}
